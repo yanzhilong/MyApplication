@@ -27,12 +27,33 @@ public final class SentencePersistenceContract {
     // give it an empty constructor.
     public SentencePersistenceContract() {}
 
-    /* Inner class that defines the table contents */
-    public static abstract class TaskEntry implements BaseColumns {
+    /**
+     * 句子表
+     */
+    public static abstract class SentenceEntry implements BaseColumns {
         public static final String TABLE_NAME = "sentence";
         public static final String COLUMN_NAME_ENTRY_ID = "sentenceid";
-        public static final String COLUMN_NAME_TITLE = "title";
-        public static final String COLUMN_NAME_DESCRIPTION = "description";
-        public static final String COLUMN_NAME_COMPLETED = "completed";
+        public static final String COLUMN_NAME_CONTENT = "content";
+        public static final String COLUMN_NAME_TRANSLATE = "translate";
+    }
+
+    /**
+     * 语法表
+     */
+    public static abstract class GrammarEntry implements BaseColumns {
+        public static final String TABLE_NAME = "grammar";
+        public static final String COLUMN_NAME_ENTRY_ID = "grammarid";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_CONTENT = "content";
+    }
+
+    /**
+     * 句子语法关系表
+     */
+    public static abstract class SentenceGrammarContactsEntry implements BaseColumns {
+        public static final String TABLE_NAME = "sentencegrammar";
+        public static final String COLUMN_NAME_ENTRY_ID = "grammarsentenceid";
+        public static final String COLUMN_NAME_SENTENCE_ID = "sentenceid";
+        public static final String COLUMN_NAME_GRAMMAR_ID = "grammarid";
     }
 }

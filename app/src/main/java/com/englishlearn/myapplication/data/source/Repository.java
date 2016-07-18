@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-package com.englishlearn.myapplication.data.source.local;
-
-import android.content.Context;
-import android.support.annotation.NonNull;
+package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.source.DataSource;
 
 import java.util.List;
 
-/**
- * Concrete implementation of a data source as a db.
- */
-public class LocalDataSource implements DataSource {
+public class Repository implements DataSource {
 
-    private static LocalDataSource INSTANCE;
+    private static Repository INSTANCE = null;
 
-    private DbHelper mDbHelper;
+    private final DataSource mRemoteDataSource;
 
-    // Prevent direct instantiation.
-    private LocalDataSource(@NonNull Context context) {
-        mDbHelper = new DbHelper(context);
+    private final DataSource mLocalDataSource;
+
+    boolean mCacheIsDirty = false;
+
+    private Repository(DataSource tasksRemoteDataSource,
+                       DataSource tasksLocalDataSource) {
+        mRemoteDataSource = tasksRemoteDataSource;
+        mLocalDataSource = tasksLocalDataSource;
     }
 
-    public static LocalDataSource getInstance(@NonNull Context context) {
+    public static Repository getInstance(DataSource tasksRemoteDataSource,
+                                         DataSource tasksLocalDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new LocalDataSource(context);
+            INSTANCE = new Repository(tasksRemoteDataSource, tasksLocalDataSource);
         }
         return INSTANCE;
     }
+
 
     @Override
     public List<Sentence> getSentences() {

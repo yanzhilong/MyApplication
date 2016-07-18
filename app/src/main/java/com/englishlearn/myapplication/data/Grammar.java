@@ -1,6 +1,5 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -10,16 +9,17 @@ import java.util.UUID;
 public class Grammar {
     private final String mId;//id
 
-    private String mLabel;//语法标签
+    private String name;//语法标签
 
-    private String mContent;//说明
+    private String content;//说明
 
     public Grammar(){
         mId = UUID.randomUUID().toString();
     }
 
-    public Grammar(String content,String label){
+    public Grammar(String content,String name){
         mId = UUID.randomUUID().toString();
-        mContent = content;
+        this.name = name;
+        this.content = content;
     }
 }
