@@ -20,7 +20,7 @@ public class Sentence {
         mId = UUID.randomUUID().toString();
     }
 
-    public Sentence(String content,String translate,List<Grammar> grammars){
+    public Sentence(String id,String content,String translate,List<Grammar> grammars){
         mId = UUID.randomUUID().toString();
         this.content = content;
         this.translate = translate;

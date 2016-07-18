@@ -21,11 +21,11 @@ import android.provider.BaseColumns;
 /**
  * The contract used for the db to save the tasks locally.
  */
-public final class SentencePersistenceContract {
+public final class PersistenceContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    public SentencePersistenceContract() {}
+    public PersistenceContract() {}
 
     /**
      * 句子表
@@ -52,7 +52,6 @@ public final class SentencePersistenceContract {
      */
     public static abstract class SentenceGrammarContactsEntry implements BaseColumns {
         public static final String TABLE_NAME = "sentencegrammar";
-        public static final String COLUMN_NAME_ENTRY_ID = "grammarsentenceid";
         public static final String COLUMN_NAME_SENTENCE_ID = "sentenceid";
         public static final String COLUMN_NAME_GRAMMAR_ID = "grammarid";
     }

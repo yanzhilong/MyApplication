@@ -16,35 +16,36 @@ public class DbSqlContract {
 
     public static final List<String> V1;
 
-    public static final List<String> V1TOV2;
+    public static final List<String> V2;
 
     public static final String V1_CreateSentence =
-            "CREATE TABLE " + SentencePersistenceContract.SentenceEntry.TABLE_NAME + " (" +
-                    SentencePersistenceContract.SentenceEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                    SentencePersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.SentenceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.SentenceEntry.COLUMN_NAME_TRANSLATE + TEXT_TYPE +
+            "CREATE TABLE " + PersistenceContract.SentenceEntry.TABLE_NAME + " (" +
+                    PersistenceContract.SentenceEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    PersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
+                    PersistenceContract.SentenceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
+                    PersistenceContract.SentenceEntry.COLUMN_NAME_TRANSLATE + TEXT_TYPE +
                     " )";
 
     public static final String V1_CreateGrammar =
-            "CREATE TABLE " + SentencePersistenceContract.GrammarEntry.TABLE_NAME + " (" +
-                    SentencePersistenceContract.GrammarEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                    SentencePersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.GrammarEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.GrammarEntry.COLUMN_NAME_CONTENT + TEXT_TYPE +
+            "CREATE TABLE " + PersistenceContract.GrammarEntry.TABLE_NAME + " (" +
+                    PersistenceContract.GrammarEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    PersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
+                    PersistenceContract.GrammarEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                    PersistenceContract.GrammarEntry.COLUMN_NAME_CONTENT + TEXT_TYPE +
                     " )";
 
     public static final String V1_CreateSentenceGrammar =
-            "CREATE TABLE " + SentencePersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
-                    SentencePersistenceContract.SentenceGrammarContactsEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                    SentencePersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID + TEXT_TYPE + COMMA_SEP +
-                    SentencePersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID + TEXT_TYPE +
+            "CREATE TABLE " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
+                    PersistenceContract.SentenceGrammarContactsEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    "FOREIGN KEY(" + PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID  + ") REFERENCES " +
+                    PersistenceContract.SentenceEntry.TABLE_NAME + "(" + PersistenceContract.SentenceEntry._ID +")" + COMMA_SEP +
+                    "FOREIGN KEY(" + PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID  + ") REFERENCES " +
+                    PersistenceContract.GrammarEntry.TABLE_NAME + "(" + PersistenceContract.GrammarEntry._ID +")" + COMMA_SEP +
                     " )";
 
     static{
         V1 = new ArrayList<>();
-        V1TOV2 = new ArrayList<>();
+        V2 = new ArrayList<>();
 
 
 

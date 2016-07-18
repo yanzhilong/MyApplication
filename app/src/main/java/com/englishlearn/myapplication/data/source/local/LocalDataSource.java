@@ -17,12 +17,16 @@
 package com.englishlearn.myapplication.data.source.local;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.DataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +52,40 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public List<Sentence> getSentences() {
-        return null;
+        List<Sentence> sentences = new ArrayList<Sentence>();
+
+        SQLiteDatabase sqLiteDatabase = mDbHelper.getReadableDatabase();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                SentenceEntry._ID,
+                SentenceEntry.COLUMN_NAME_ENTRY_ID,
+                SentenceEntry.COLUMN_NAME_CONTENT,
+                SentenceEntry.COLUMN_NAME_TRANSLATE,
+        };
+
+        Cursor c = db.query(
+                SentenceEntry.TABLE_NAME, projection, null, null, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+            while (c.moveToNext()) {
+                String id = c.getString(c.getColumnIndexOrThrow(SentenceEntry._ID));
+                String mId = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_ENTRY_ID));
+                String content = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_CONTENT));
+                String translate =
+                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATE));
+
+
+                Sentence sentence = new Sentence(mId,content,translate,null);
+                sentences.add(sentence);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        db.close();
+        return sentences;
     }
 
     @Override
