@@ -55,12 +55,10 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void deleteSentence() {
-
+    public void deleteSentence(String sid) {
     }
 
     @Override
-    public void deleteGrammar() {
-
+    public void deleteGrammar(String gid) {
     }
 }

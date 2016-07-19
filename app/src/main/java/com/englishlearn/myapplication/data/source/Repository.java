@@ -31,10 +31,10 @@ public class Repository implements DataSource {
 
     boolean mCacheIsDirty = false;
 
-    private Repository(DataSource tasksRemoteDataSource,
-                       DataSource tasksLocalDataSource) {
-        mRemoteDataSource = tasksRemoteDataSource;
-        mLocalDataSource = tasksLocalDataSource;
+    private Repository(DataSource remoteDataSource,
+                       DataSource localDataSource) {
+        mRemoteDataSource = remoteDataSource;
+        mLocalDataSource = localDataSource;
     }
 
     public static Repository getInstance(DataSource tasksRemoteDataSource,
@@ -77,12 +77,10 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void deleteSentence() {
-
+    public void deleteSentence(String sid) {
     }
 
     @Override
-    public void deleteGrammar() {
-
+    public void deleteGrammar(String gid) {
     }
 }

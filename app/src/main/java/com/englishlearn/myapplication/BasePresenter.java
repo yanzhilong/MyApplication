@@ -14,37 +14,10 @@
  * limitations under the License.
  */
 
-package com.englishlearn.myapplication.data.source;
+package com.englishlearn.myapplication;
 
-import android.support.annotation.NonNull;
+public interface BasePresenter {
 
-import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
-
-import java.util.List;
-
-
-/**
- * 数据接口
- */
-public interface
-
-DataSource {
-
-    List<Sentence> getSentences();
-
-    List<Sentence> getSentences(String searchword);
-
-    List<Grammar> getGrammars();
-
-    List<Grammar> getGrammars(String searchword);
-
-    void addSentence(Sentence sentence);
-
-    void addGrammar(Grammar grammar);
-
-    void deleteSentence(String sid);
-
-    void deleteGrammar(String gid);
+    void start();
 
 }

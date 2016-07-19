@@ -1,9 +1,10 @@
-package com.englishlearn.myapplication;
+package com.englishlearn.myapplication.main;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.local.DbHelper;
 
 public class MainActivity extends AppCompatActivity {

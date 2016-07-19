@@ -26,4 +26,32 @@ public class Sentence {
         this.translate = translate;
         this.grammarList = grammarList;
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTranslate() {
+        return translate;
+    }
+
+    public void setTranslate(String translate) {
+        this.translate = translate;
+    }
+
+    public List<Grammar> getGrammarList() {
+        return grammarList;
+    }
+
+    public void setGrammarList(List<Grammar> grammarList) {
+        this.grammarList = grammarList;
+    }
+
+    public String getmId() {
+        return mId;
+    }
 }

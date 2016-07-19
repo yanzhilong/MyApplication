@@ -22,4 +22,30 @@ public class Grammar {
         this.name = name;
         this.content = content;
     }
+
+    public Grammar(String id,String content,String name){
+        mId = id;
+        this.name = name;
+        this.content = content;
+    }
+
+    public String getmId() {
+        return mId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
