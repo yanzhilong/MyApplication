@@ -33,6 +33,11 @@ DataSource {
 
     List<Sentence> getSentences();
 
+    /**
+     * 根据指定的搜索词搜索相关的句子
+     * @param searchword
+     * @return
+     */
     List<Sentence> getSentences(String searchword);
 
     List<Grammar> getGrammars();

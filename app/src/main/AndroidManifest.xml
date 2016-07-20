@@ -19,6 +19,10 @@
 
         <activity android:name=".sentences.SentencesActivity"/>
 
+        <activity android:name=".grammars.GrammarsActivity"/>
+
+        <activity android:name=".addeditsentence.AddEditSentenceActivity"/>
+
     </application>
 
 </manifest>

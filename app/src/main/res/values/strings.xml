@@ -14,8 +14,12 @@
     <string name="grammar_btn">grammars</string>
 
 
-    <!-- SentencesActivity -->
+    <!-- AddEditSentenceActivity -->
     <string name="sentences_title">Sentences</string>
 
+    <!-- GrammarsActivity -->
+    <string name="grammar_title">Grammars</string>
 
+    <!-- GrammarsActivity -->
+    <string name="addeditsentence_title">Add Edit Sentence</string>
 </resources>

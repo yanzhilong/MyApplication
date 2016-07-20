@@ -1,6 +1,5 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.addeditsentence;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,8 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Sentence;
 
 import java.util.List;
@@ -21,17 +21,20 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View {
+public class AddEditSentenceFragment extends Fragment implements AddEditSentenceContract.View {
 
-    private static final String TAG = SentencesFragment.class.getSimpleName();
+    private static final String TAG = AddEditSentenceFragment.class.getSimpleName();
 
-    private SentencesContract.Presenter mPresenter;
-    public static SentencesFragment newInstance() {
-        return new SentencesFragment();
+    private EditText content;
+    private EditText translate;
+
+    private AddEditSentenceContract.Presenter mPresenter;
+    public static AddEditSentenceFragment newInstance() {
+        return new AddEditSentenceFragment();
     }
 
     @Override
-    public void setPresenter(SentencesContract.Presenter presenter) {
+    public void setPresenter(AddEditSentenceContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -44,18 +47,18 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.sentences_frag, container, false);
+        View root = inflater.inflate(R.layout.addeditsentence_frag, container, false);
 
 
         // Set up floating action button
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence_done);
 
-        fab.setImageResource(R.drawable.ic_add);
+        fab.setImageResource(R.drawable.ic_done);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.addSentence();
+                mPresenter.saveSentence(content.getText().toString(),translate.getText().toString());
             }
         });
 
@@ -68,7 +71,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.getSentences();
+
     }
 
     @Override
@@ -87,27 +90,25 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         return true;
     }
 
-    @Override
-    public void showSentences(List<Sentence> sentences) {
-        Log.d(TAG,"showSentences" + sentences.size());
-    }
-
-    @Override
-    public void emptySentences() {
-        Log.d(TAG,"emptySentences");
-    }
-
-    @Override
-    public void showaddSentence() {
-
-        Log.d(TAG,"showaddSentence");
-        Intent ahowAddSentenctIntent = new Intent(this.getContext(), AddEditSentenceActivity.class);
-        startActivity(ahowAddSentenctIntent);
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.unsubscribe();
+    }
+
+    @Override
+    public void setContent() {
+
+    }
+
+    @Override
+    public void settranslate() {
+
+    }
+
+    @Override
+    public void showSentences() {
+
     }
 }

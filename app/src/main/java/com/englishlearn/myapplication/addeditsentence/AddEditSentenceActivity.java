@@ -1,7 +1,6 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.addeditsentence;
 
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,13 +10,13 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
-public class SentencesActivity extends AppCompatActivity {
+public class AddEditSentenceActivity extends AppCompatActivity {
 
-    private SentencesContract.Presenter presenter;
+    private AddEditSentenceContract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentences_act);
+        setContentView(R.layout.addeditsentence_act);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -26,14 +25,14 @@ public class SentencesActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle(R.string.sentences_title);
+        actionBar.setTitle(R.string.addeditsentence_title);
 
-        SentencesFragment cleanFragment = (SentencesFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (cleanFragment == null) {
-            cleanFragment = SentencesFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), cleanFragment, R.id.contentFrame);
+        AddEditSentenceFragment addEditSentenceFragment = (AddEditSentenceFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (addEditSentenceFragment == null) {
+            addEditSentenceFragment = AddEditSentenceFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditSentenceFragment, R.id.contentFrame);
         }
-        presenter = new SentencesPresenter( cleanFragment);
+        presenter = new AddEditSentencePresenter(addEditSentenceFragment);
     }
 
     @Override

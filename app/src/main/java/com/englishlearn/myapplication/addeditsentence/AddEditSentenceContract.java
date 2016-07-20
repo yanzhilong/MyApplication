@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.addeditsentence;
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
@@ -10,17 +10,16 @@ import java.util.List;
  * Created by yanzl on 16-7-20.
  * 用于约定view 和 presenter的实现接口
  */
-public class SentencesContract {
+public class AddEditSentenceContract {
 
     public interface View extends BaseView<Presenter> {
-        void showSentences(List<Sentence> sentences);
-        void emptySentences();
-        void showaddSentence();
+
+        void setContent();
+        void settranslate();
+        void showSentences();
     }
 
     abstract static class Presenter extends BasePresenter {
-        abstract void getSentences();
-        abstract void getSentences(String searchword);
-        abstract void addSentence();
+        abstract void saveSentence(String content,String translate);
     }
 }

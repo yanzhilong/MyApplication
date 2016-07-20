@@ -1,9 +1,7 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.grammars;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
+import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 
 import java.util.List;
@@ -21,17 +20,17 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View {
+public class GrammarsFragment extends Fragment implements GrammarsContract.View {
 
-    private static final String TAG = SentencesFragment.class.getSimpleName();
+    private static final String TAG = GrammarsFragment.class.getSimpleName();
 
-    private SentencesContract.Presenter mPresenter;
-    public static SentencesFragment newInstance() {
-        return new SentencesFragment();
+    private GrammarsContract.Presenter mPresenter;
+    public static GrammarsFragment newInstance() {
+        return new GrammarsFragment();
     }
 
     @Override
-    public void setPresenter(SentencesContract.Presenter presenter) {
+    public void setPresenter(GrammarsContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -46,19 +45,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.sentences_frag, container, false);
 
-
-        // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
-
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addSentence();
-            }
-        });
-
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -68,7 +54,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.getSentences();
+        mPresenter.getGrammars();
     }
 
     @Override
@@ -88,21 +74,13 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     }
 
     @Override
-    public void showSentences(List<Sentence> sentences) {
-        Log.d(TAG,"showSentences" + sentences.size());
+    public void showGrammars(List<Grammar> grammars) {
+        Log.d(TAG,"showGrammars" + grammars.size());
     }
 
     @Override
-    public void emptySentences() {
-        Log.d(TAG,"emptySentences");
-    }
-
-    @Override
-    public void showaddSentence() {
-
-        Log.d(TAG,"showaddSentence");
-        Intent ahowAddSentenctIntent = new Intent(this.getContext(), AddEditSentenceActivity.class);
-        startActivity(ahowAddSentenctIntent);
+    public void emptyGrammars() {
+        Log.d(TAG,"emptyGrammars");
     }
 
     @Override

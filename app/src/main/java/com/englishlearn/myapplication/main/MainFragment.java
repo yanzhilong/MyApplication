@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.sentences.SentencesActivity;
 
 /**
@@ -77,10 +78,12 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sentences:
-                Intent intent = new Intent(this.getContext(),SentencesActivity.class);
-                this.startActivity(intent);
+                Intent sentenceintent = new Intent(this.getContext(),SentencesActivity.class);
+                this.startActivity(sentenceintent);
                 break;
             case R.id.grammars:
+                Intent grammarintent = new Intent(this.getContext(),GrammarsActivity.class);
+                this.startActivity(grammarintent);
                 break;
             default:
                 break;
