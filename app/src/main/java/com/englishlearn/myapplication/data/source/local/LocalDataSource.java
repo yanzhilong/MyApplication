@@ -63,7 +63,7 @@ public class LocalDataSource implements DataSource {
                 SentenceEntry._ID,
                 SentenceEntry.COLUMN_NAME_ENTRY_ID,
                 SentenceEntry.COLUMN_NAME_CONTENT,
-                SentenceEntry.COLUMN_NAME_TRANSLATE,
+                SentenceEntry.COLUMN_NAME_TRANSLATION,
         };
 
         Cursor c = db.query(
@@ -74,7 +74,7 @@ public class LocalDataSource implements DataSource {
                 String mId = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_ENTRY_ID));
                 String content = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_CONTENT));
                 String translate =
-                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATE));
+                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
                 Sentence sentence = new Sentence(mId,content,translate,null);
                 sentences.add(sentence);
@@ -98,7 +98,7 @@ public class LocalDataSource implements DataSource {
                 SentenceEntry._ID,
                 SentenceEntry.COLUMN_NAME_ENTRY_ID,
                 SentenceEntry.COLUMN_NAME_CONTENT,
-                SentenceEntry.COLUMN_NAME_TRANSLATE,
+                SentenceEntry.COLUMN_NAME_TRANSLATION,
         };
 
         Cursor c = db.query(
@@ -110,7 +110,7 @@ public class LocalDataSource implements DataSource {
                 String mId = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_ENTRY_ID));
                 String content = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_CONTENT));
                 String translate =
-                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATE));
+                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
                 Sentence sentence = new Sentence(mId,content,translate,null);
                 sentences.add(sentence);
@@ -201,7 +201,7 @@ public class LocalDataSource implements DataSource {
         ContentValues values = new ContentValues();
         values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getmId());
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
-        values.put(SentenceEntry.COLUMN_NAME_TRANSLATE, sentence.getTranslate());
+        values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
         db.insert(SentenceEntry.TABLE_NAME,null,values);
 

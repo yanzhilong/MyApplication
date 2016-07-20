@@ -23,7 +23,7 @@ public class DbSqlContract {
                     PersistenceContract.SentenceEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
-                    PersistenceContract.SentenceEntry.COLUMN_NAME_TRANSLATE + TEXT_TYPE +
+                    PersistenceContract.SentenceEntry.COLUMN_NAME_TRANSLATION + TEXT_TYPE +
                     " )";
 
     public static final String V1_CreateGrammar =

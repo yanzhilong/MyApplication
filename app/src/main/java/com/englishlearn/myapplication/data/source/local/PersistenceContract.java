@@ -34,7 +34,7 @@ public final class PersistenceContract {
         public static final String TABLE_NAME = "sentence";
         public static final String COLUMN_NAME_ENTRY_ID = "sentenceid";
         public static final String COLUMN_NAME_CONTENT = "content";
-        public static final String COLUMN_NAME_TRANSLATE = "translate";
+        public static final String COLUMN_NAME_TRANSLATION = "translate";
     }
 
     /**

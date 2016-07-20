@@ -26,7 +26,7 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     private static final String TAG = AddEditSentenceFragment.class.getSimpleName();
 
     private EditText content;
-    private EditText translate;
+    private EditText translation;
 
     private AddEditSentenceContract.Presenter mPresenter;
     public static AddEditSentenceFragment newInstance() {
@@ -49,7 +49,8 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.addeditsentence_frag, container, false);
 
-
+        content = (EditText) root.findViewById(R.id.content);
+        translation = (EditText) root.findViewById(R.id.translation);
         // Set up floating action button
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence_done);
@@ -58,7 +59,7 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.saveSentence(content.getText().toString(),translate.getText().toString());
+                mPresenter.saveSentence(content.getText().toString(),translation.getText().toString());
             }
         });
 

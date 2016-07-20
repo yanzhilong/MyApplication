@@ -12,7 +12,7 @@ public class Sentence {
 
     private String content;//内容
 
-    private String translate;//翻译
+    private String translation;//翻译
 
     private List<Grammar> grammarList;//相关语法
 
@@ -20,10 +20,10 @@ public class Sentence {
         mId = UUID.randomUUID().toString();
     }
 
-    public Sentence(String id,String content,String translate,List<Grammar> grammars){
+    public Sentence(String id,String content,String translation,List<Grammar> grammars){
         mId = UUID.randomUUID().toString();
         this.content = content;
-        this.translate = translate;
+        this.translation = translation;
         this.grammarList = grammarList;
     }
 
@@ -35,12 +35,12 @@ public class Sentence {
         this.content = content;
     }
 
-    public String getTranslate() {
-        return translate;
+    public String getTranslation() {
+        return translation;
     }
 
-    public void setTranslate(String translate) {
-        this.translate = translate;
+    public void setTtranslation(String translation) {
+        this.translation = translation;
     }
 
     public List<Grammar> getGrammarList() {
