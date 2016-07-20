@@ -16,54 +16,55 @@
 
 package com.englishlearn.myapplication;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 /**
  * Use cases are the entry points to the domain layer.
  *
- * @param <Q> the request type
+ * @param <T> the request type
  * @param <P> the response type
  */
-public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase.ResponseValue> {
+public abstract class UseCase<T , P extends UseCase.Params> {
 
-    private Q mRequestValues;
 
-    private UseCaseCallback<P> mUseCaseCallback;
+    protected abstract Observable<T> execute(P p);
 
-    public void setRequestValues(Q requestValues) {
-        mRequestValues = requestValues;
+    /**
+     * 在子线程执行
+     * @return
+     */
+    public Observable<T> excuteIo(final P p){
+        return Observable.just("")
+                .observeOn(Schedulers.io()) // 指定 Subscriber发生在 IO 线程
+                .flatMap(new Func1<String, Observable<T>>() {
+                    @Override
+                    public Observable call(String s) {
+                        return execute(p);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()); // 指定 Subscriber 的回调发生在主线程;
     }
 
-    public Q getRequestValues() {
-        return mRequestValues;
+    /**
+     * 在子线程执行
+     * @return
+     */
+    public Observable<T> excuteMain(final P p){
+        return Observable.just("")
+                .flatMap(new Func1<String, Observable<T>>() {
+                    @Override
+                    public Observable call(String s) {
+                        return execute(p);
+                    }
+                }); // 指定 Subscriber 的回调发生在主线程;
     }
-
-    public UseCaseCallback<P> getUseCaseCallback() {
-        return mUseCaseCallback;
-    }
-
-    public void setUseCaseCallback(UseCaseCallback<P> useCaseCallback) {
-        mUseCaseCallback = useCaseCallback;
-    }
-
-    void run() {
-       executeUseCase(mRequestValues);
-    }
-
-    protected abstract void executeUseCase(Q requestValues);
 
     /**
      * Data passed to a request.
      */
-    public interface RequestValues {
+    public interface Params {
     }
 
-    /**
-     * Data received from a request.
-     */
-    public interface ResponseValue {
-    }
-
-    public interface UseCaseCallback<R> {
-        void onSuccess(R response);
-        void onError();
-    }
 }

@@ -18,6 +18,7 @@ package com.englishlearn.myapplication;
 
 public interface BaseView<T extends BasePresenter> {
 
+
     void setPresenter(T presenter);
 
 }

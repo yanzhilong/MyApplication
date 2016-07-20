@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">MyApplication</string>
+
+
+    <!-- MainActivity -->
+    <string name="main_title">English learn</string>
+    <!-- 菜单 -->
+    <string name="menu_test">菜单测试</string>
+    <string name="menu_base_test">菜单</string>
+    <string name="title_activity_list_view_height_change">ListViewHeightChange</string>
+
+    <!-- 按钮 -->
+    <string name="sentence_btn">sentences</string>
+    <string name="grammar_btn">grammars</string>
+
+
+    <!-- SentencesActivity -->
+    <string name="sentences_title">Sentences</string>
+
+
 </resources>

@@ -16,8 +16,27 @@
 
 package com.englishlearn.myapplication;
 
-public interface BasePresenter {
+import android.util.Log;
 
-    void start();
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
+public abstract class BasePresenter {
+
+    private CompositeSubscription mSubscriptions;
+
+    protected synchronized void add(Subscription subscription){
+        if(mSubscriptions == null){
+            mSubscriptions = new CompositeSubscription();
+        }
+        mSubscriptions.add(subscription);
+    }
+
+    public void unsubscribe(){
+        Log.d(BasePresenter.class.getSimpleName(),"取消订阅");
+        if(mSubscriptions != null){
+            mSubscriptions.clear();
+        }
+    }
 
 }
