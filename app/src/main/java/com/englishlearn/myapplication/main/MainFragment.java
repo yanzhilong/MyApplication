@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.sentences.SentencesActivity;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -75,10 +77,10 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sentences:
-
+                Intent intent = new Intent(this.getContext(),SentencesActivity.class);
+                this.startActivity(intent);
                 break;
             case R.id.grammars:
-
                 break;
             default:
                 break;

@@ -13,4 +13,13 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     }
 
 
+    @Override
+    void getSentences() {
+
+    }
+
+    @Override
+    void getSentences(String searchword) {
+
+    }
 }

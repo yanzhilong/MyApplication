@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Sentence;
+
+import java.util.List;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -47,6 +50,12 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.getSentences();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_base, menu);
     }
@@ -62,4 +71,19 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         return true;
     }
 
+    @Override
+    public void showSentences(List<Sentence> sentences) {
+
+    }
+
+    @Override
+    public void emptySentences(List<Sentence> sentences) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.unsubscribe();
+    }
 }
