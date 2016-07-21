@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.addeditsentence;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +15,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Sentence;
-
-import java.util.List;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -111,5 +109,14 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     @Override
     public void showSentences() {
 
+    }
+
+    @Override
+    public void addSentencesSuccess() {
+        Log.d(TAG, "addSentencesSuccess");
+        content.setText("");
+        translation.setText("");
+        Snackbar.make(this.getView(),getResources().getString(R.string.addsentencesuccess), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

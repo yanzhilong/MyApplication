@@ -24,6 +24,7 @@
     <string name="addeditsentence_title">Add Edit Sentence</string>
     <string name="content_hilnt">Content</string>
     <string name="translation_hilnt">Enter your translation here</string>
+    <string name="addsentencesuccess">add success</string>
 
 
 </resources>

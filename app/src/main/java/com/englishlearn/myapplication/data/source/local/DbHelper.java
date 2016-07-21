@@ -19,11 +19,13 @@ package com.englishlearn.myapplication.data.source.local;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     public static final String DATABASE_NAME = "english.db";//数据库名
+    private static final String TAG = DbHelper.class.getSimpleName();
 
 
     public DbHelper(Context context) {
@@ -32,6 +34,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         for(String sql:DbSqlContract.V1){
+            Log.d(TAG,sql);
             db.execSQL(sql);
         }
     }

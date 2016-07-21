@@ -37,10 +37,12 @@ public class DbSqlContract {
     public static final String V1_CreateSentenceGrammar =
             "CREATE TABLE " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
                     PersistenceContract.SentenceGrammarContactsEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID + TEXT_TYPE + COMMA_SEP +
+                    PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID + TEXT_TYPE + COMMA_SEP +
                     "FOREIGN KEY(" + PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID  + ") REFERENCES " +
                     PersistenceContract.SentenceEntry.TABLE_NAME + "(" + PersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID +")" + COMMA_SEP +
                     "FOREIGN KEY(" + PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID  + ") REFERENCES " +
-                    PersistenceContract.GrammarEntry.TABLE_NAME + "(" + PersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID +")" + COMMA_SEP +
+                    PersistenceContract.GrammarEntry.TABLE_NAME + "(" + PersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID +")" +
                     " )";
 
     static{

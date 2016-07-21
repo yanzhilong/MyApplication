@@ -2,9 +2,6 @@ package com.englishlearn.myapplication.addeditsentence;
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
-import com.englishlearn.myapplication.data.Sentence;
-
-import java.util.List;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -17,6 +14,7 @@ public class AddEditSentenceContract {
         void setContent();
         void settranslate();
         void showSentences();
+        void addSentencesSuccess();
     }
 
     abstract static class Presenter extends BasePresenter {

@@ -17,11 +17,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".sentences.SentencesActivity"/>
+        <activity android:name=".sentences.SentencesActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".grammars.GrammarsActivity"/>
+        <activity android:name=".grammars.GrammarsActivity"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".addeditsentence.AddEditSentenceActivity"/>
+        <activity android:name=".addeditsentence.AddEditSentenceActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

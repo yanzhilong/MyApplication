@@ -48,12 +48,12 @@ public class Repository implements DataSource {
 
     @Override
     public List<Sentence> getSentences() {
-        return null;
+        return mLocalDataSource.getSentences();
     }
 
     @Override
     public List<Sentence> getSentences(String searchword) {
-        return null;
+        return mLocalDataSource.getSentences(searchword);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class Repository implements DataSource {
 
     @Override
     public void addSentence(Sentence sentence) {
-
+        mLocalDataSource.addSentence(sentence);
     }
 
     @Override

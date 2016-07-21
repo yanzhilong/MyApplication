@@ -12,10 +12,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
+import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,8 +30,11 @@ import java.util.List;
 public class SentencesFragment extends Fragment implements SentencesContract.View {
 
     private static final String TAG = SentencesFragment.class.getSimpleName();
-
+    private SentencesAdapter sentencesAdapter;
     private SentencesContract.Presenter mPresenter;
+
+    private ListView sentences_listview;
+
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
     }
@@ -38,6 +47,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sentencesAdapter = new SentencesAdapter(new ArrayList<Sentence>());
     }
 
     @Nullable
@@ -46,7 +56,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.sentences_frag, container, false);
 
-
+        sentences_listview = (ListView) root.findViewById(R.id.sentences_listview);
+        sentences_listview.setAdapter(sentencesAdapter);
         // Set up floating action button
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
@@ -90,6 +101,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void showSentences(List<Sentence> sentences) {
         Log.d(TAG,"showSentences" + sentences.size());
+        sentencesAdapter.replace(sentences);
     }
 
     @Override
@@ -109,5 +121,73 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     public void onDestroy() {
         super.onDestroy();
         mPresenter.unsubscribe();
+    }
+
+    private class SentencesAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+        private List<Sentence> sentences;
+
+        public void replace(List<Sentence> sentences){
+            this.sentences = sentences;
+            notifyDataSetChanged();
+        }
+
+        public void addSentences(List<Sentence> sentences){
+            this.sentences.addAll(sentences);
+            notifyDataSetChanged();
+        }
+
+        public SentencesAdapter(List<Sentence> sentences){
+            this.sentences = sentences;
+        }
+
+        @Override
+        public int getCount() {
+            return sentences.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return sentences.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(inflater == null){
+                inflater = LayoutInflater.from(parent.getContext());
+            }
+            ViewHolder viewHolder;
+            if(convertView == null){
+                convertView = inflater.inflate(R.layout.sentence_item,parent,false);
+                viewHolder = new ViewHolder();
+                viewHolder.content = (TextView) convertView.findViewById(R.id.content);
+                viewHolder.translation = (TextView) convertView.findViewById(R.id.translation);
+                viewHolder.grammar = (TextView) convertView.findViewById(R.id.grammars);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            final Sentence sentence = sentences.get(position);
+            viewHolder.content.setText(sentence.getContent());
+            viewHolder.translation.setText(sentence.getTranslation());
+            //显示语法
+            List<Grammar> grammars = sentence.getGrammarList();
+            if(grammars != null){
+                viewHolder.grammar.setText(sentence.getGrammarList().toString());
+            }
+            return convertView;
+        }
+    }
+
+    static class ViewHolder{
+        TextView content;//内容
+        TextView translation;//译文
+        TextView grammar;//语法
     }
 }

@@ -22,15 +22,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
-import static com.englishlearn.myapplication.data.source.local.PersistenceContract.GrammarEntry;
-
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.englishlearn.myapplication.data.source.local.PersistenceContract.GrammarEntry;
+import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
 
 /**
  * Concrete implementation of a data source as a db.
