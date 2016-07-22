@@ -21,8 +21,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.List;
+
 public class DbHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = DbSqlContract.getVersion();
 
     public static final String DATABASE_NAME = "english.db";//数据库名
     private static final String TAG = DbHelper.class.getSimpleName();
@@ -33,13 +35,18 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        for(String sql:DbSqlContract.V1){
+        List<String> creates = DbSqlContract.getCreates();
+        for(String sql:creates){
             Log.d(TAG,sql);
             db.execSQL(sql);
         }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        List<String> updates = DbSqlContract.getUpdates(oldVersion, newVersion);
+        for(String sql:updates){
+            db.execSQL(sql);
+        }
         // Not required as at version 1
     }
 

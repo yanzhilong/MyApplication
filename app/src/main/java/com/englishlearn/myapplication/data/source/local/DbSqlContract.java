@@ -1,7 +1,10 @@
 package com.englishlearn.myapplication.data.source.local;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yanzl on 16-7-18.
@@ -14,8 +17,22 @@ public class DbSqlContract {
 
     private static final String COMMA_SEP = ",";
 
+    public static final Map<Integer,List<String>> DBCREATEANDUPDATE;
+
+    /**
+     * 版本1
+     * 说明：
+     * 句子表
+     * 词法表
+     * 句子语法关系表
+     */
     public static final List<String> V1;
 
+    /**
+     * 版本2
+     * 说明：
+     *
+     */
     public static final List<String> V2;
 
     public static final String V1_CreateSentence =
@@ -46,16 +63,59 @@ public class DbSqlContract {
                     " )";
 
     static{
+        DBCREATEANDUPDATE = new LinkedHashMap<>();
+
         V1 = new ArrayList<>();
         V2 = new ArrayList<>();
-
-
 
 
         V1.add(V1_CreateSentence);
         V1.add(V1_CreateGrammar);
         V1.add(V1_CreateSentenceGrammar);
+
+
+        DBCREATEANDUPDATE.put(1,V1);
+        DBCREATEANDUPDATE.put(2,V2);
+
     }
 
+    /**
+     * 最新版本号
+     */
+    public static int getVersion(){
+        Object[] versions = DBCREATEANDUPDATE.keySet().toArray();
+        int version = (int) versions[versions.length - 1];
+        return version;
+    }
 
+    /**
+     * 初始创建语句
+     * @return
+     */
+    public static List<String> getCreates(){
+        List<String> list = new ArrayList<>();
+        Object[] versions = DBCREATEANDUPDATE.keySet().toArray();
+        if(versions.length > 0){
+            list.addAll(DBCREATEANDUPDATE.get(versions[0]));
+        }
+        return list;
+    }
+
+    /**
+     * 获取升级语句
+     * @param oldVersion
+     * @param newVersion
+     * @return
+     */
+    public static List<String> getUpdates(int oldVersion, int newVersion){
+        List<String> list = new ArrayList<>();
+        Iterator<Map.Entry<Integer,List<String>>> iterator = DBCREATEANDUPDATE.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry<Integer,List<String>> entry = iterator.next();
+            if(entry.getKey() >= oldVersion){
+                list.addAll(entry.getValue());
+            }
+        }
+        return list;
+    }
 }
