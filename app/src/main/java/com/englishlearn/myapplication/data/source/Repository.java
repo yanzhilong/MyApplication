@@ -58,12 +58,12 @@ public class Repository implements DataSource {
 
     @Override
     public List<Grammar> getGrammars() {
-        return null;
+        return mLocalDataSource.getGrammars();
     }
 
     @Override
     public List<Grammar> getGrammars(String searchword) {
-        return null;
+        return mLocalDataSource.getGrammars(searchword);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Repository implements DataSource {
 
     @Override
     public void addGrammar(Grammar grammar) {
-
+        mLocalDataSource.addGrammar(grammar);
     }
 
     @Override

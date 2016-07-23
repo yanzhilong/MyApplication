@@ -20,8 +20,6 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
 
     private GetGrammars getGrammars;
     private GrammarsContract.View mainView;
-    @Inject
-    Repository repository;
     public GrammarsPresenter(GrammarsContract.View vew){
         mainView = vew;
         getGrammars = new GetGrammars();
@@ -56,5 +54,10 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
                 }
             }
         });
+    }
+
+    @Override
+    void addGrammar() {
+        mainView.showaddGrammar();
     }
 }

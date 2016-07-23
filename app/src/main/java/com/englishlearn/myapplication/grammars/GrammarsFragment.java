@@ -1,7 +1,9 @@
 package com.englishlearn.myapplication.grammars;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +12,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarActivity;
+import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +33,9 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     private static final String TAG = GrammarsFragment.class.getSimpleName();
 
     private GrammarsContract.Presenter mPresenter;
+    private ListView grammars_listview;
+    private GrammarsAdapter grammarsAdapter;
+
     public static GrammarsFragment newInstance() {
         return new GrammarsFragment();
     }
@@ -37,13 +48,29 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        grammarsAdapter = new GrammarsAdapter(new ArrayList<Grammar>());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.sentences_frag, container, false);
+        View root = inflater.inflate(R.layout.grammars_frag, container, false);
+
+        grammars_listview = (ListView) root.findViewById(R.id.grammars_listview);
+        grammars_listview.setAdapter(grammarsAdapter);
+
+        // Set up floating action button
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_grammar);
+
+        fab.setImageResource(R.drawable.ic_add);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.addGrammar();
+            }
+        });
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -76,6 +103,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     @Override
     public void showGrammars(List<Grammar> grammars) {
         Log.d(TAG,"showGrammars" + grammars.size());
+        grammarsAdapter.replace(grammars);
     }
 
     @Override
@@ -84,8 +112,76 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     }
 
     @Override
+    public void showaddGrammar() {
+        Log.d(TAG,"showaddGrammar");
+        Intent ahowAddGrammarIntent = new Intent(this.getContext(), AddEditGrammarActivity.class);
+        startActivity(ahowAddGrammarIntent);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.unsubscribe();
+    }
+
+    private class GrammarsAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+        private List<Grammar> grammars;
+
+        public void replace(List<Grammar> grammars){
+            this.grammars = grammars;
+            notifyDataSetChanged();
+        }
+
+        public void addSentences(List<Grammar> grammars){
+            this.grammars.addAll(grammars);
+            notifyDataSetChanged();
+        }
+
+        public GrammarsAdapter(List<Grammar> grammars){
+            this.grammars = grammars;;
+        }
+
+        @Override
+        public int getCount() {
+            return grammars.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return grammars.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(inflater == null){
+                inflater = LayoutInflater.from(parent.getContext());
+            }
+            ViewHolder viewHolder;
+            if(convertView == null){
+                convertView = inflater.inflate(R.layout.grammar_item,parent,false);
+                viewHolder = new ViewHolder();
+                viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+                viewHolder.content = (TextView) convertView.findViewById(R.id.content);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            final Grammar grammar = grammars.get(position);
+            viewHolder.name.setText(grammar.getName());
+            viewHolder.content.setText(grammar.getContent());
+            return convertView;
+        }
+    }
+
+    static class ViewHolder{
+        TextView name;//名称
+        TextView content;//说明
     }
 }

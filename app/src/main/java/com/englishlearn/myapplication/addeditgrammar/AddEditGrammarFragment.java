@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.addeditsentence;
+package com.englishlearn.myapplication.addeditgrammar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,20 +19,20 @@ import com.englishlearn.myapplication.R;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class AddEditSentenceFragment extends Fragment implements AddEditSentenceContract.View {
+public class AddEditGrammarFragment extends Fragment implements AddEditGrammarContract.View {
 
-    private static final String TAG = AddEditSentenceFragment.class.getSimpleName();
+    private static final String TAG = AddEditGrammarFragment.class.getSimpleName();
 
+    private EditText name;
     private EditText content;
-    private EditText translation;
 
-    private AddEditSentenceContract.Presenter mPresenter;
-    public static AddEditSentenceFragment newInstance() {
-        return new AddEditSentenceFragment();
+    private AddEditGrammarContract.Presenter mPresenter;
+    public static AddEditGrammarFragment newInstance() {
+        return new AddEditGrammarFragment();
     }
 
     @Override
-    public void setPresenter(AddEditSentenceContract.Presenter presenter) {
+    public void setPresenter(AddEditGrammarContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -43,21 +43,21 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.addeditsentence_frag, container, false);
+        View root = inflater.inflate(R.layout.addeditgrammar_frag, container, false);
 
+        name = (EditText) root.findViewById(R.id.name);
         content = (EditText) root.findViewById(R.id.content);
-        translation = (EditText) root.findViewById(R.id.translation);
         // Set up floating action button
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence_done);
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_grammar_done);
 
         fab.setImageResource(R.drawable.ic_done);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.saveSentence(content.getText().toString(),translation.getText().toString());
+                mPresenter.saveSentence(name.getText().toString(),content.getText().toString());
             }
         });
 
@@ -97,26 +97,27 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     }
 
     @Override
+    public void setName() {
+
+    }
+
+    @Override
     public void setContent() {
 
     }
 
     @Override
-    public void settranslate() {
+    public void showGrammars() {
 
     }
 
-    @Override
-    public void showSentences() {
-
-    }
 
     @Override
-    public void addSentenceSuccess() {
-        Log.d(TAG, "addSentencesSuccess");
+    public void addGrammarSuccess() {
+        Log.d(TAG, "addGrammarSuccess");
+        name.setText("");
         content.setText("");
-        translation.setText("");
-        Snackbar.make(this.getView(),getResources().getString(R.string.addsentencesuccess), Snackbar.LENGTH_LONG)
+        Snackbar.make(this.getView(),getResources().getString(R.string.addgrammarsuccess), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 }

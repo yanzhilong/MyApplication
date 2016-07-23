@@ -14,7 +14,7 @@
     <string name="grammar_btn">grammars</string>
 
 
-    <!-- AddEditSentenceActivity -->
+    <!-- AddEditGrammarActivity -->
     <string name="sentences_title">Sentences</string>
 
     <!-- GrammarsActivity -->
@@ -26,5 +26,10 @@
     <string name="translation_hilnt">Enter your translation here</string>
     <string name="addsentencesuccess">add success</string>
 
+    <!-- AddEditGrammarActivity -->
+    <string name="addeditgrammar_title">Add Edit Grammar</string>
+    <string name="grammar_name_hilnt">name</string>
+    <string name="grammar_content_hilnt">Enter your content here</string>
+    <string name="addgrammarsuccess">add success</string>
 
 </resources>

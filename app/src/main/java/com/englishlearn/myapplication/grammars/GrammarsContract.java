@@ -17,10 +17,12 @@ public class GrammarsContract {
     public interface View extends BaseView<Presenter> {
         void showGrammars(List<Grammar> grammars);
         void emptyGrammars();
+        void showaddGrammar();
     }
 
     abstract static class Presenter extends BasePresenter {
         abstract void getGrammars();
         abstract void getGrammars(String searchword);
+        abstract void addGrammar();
     }
 }

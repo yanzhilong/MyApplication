@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.grammars;
+package com.englishlearn.myapplication.addeditgrammar;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -10,13 +10,14 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
-public class GrammarsActivity extends AppCompatActivity {
+public class AddEditGrammarActivity extends AppCompatActivity {
 
-    private GrammarsContract.Presenter presenter;
+    private AddEditGrammarContract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grammars_act);
+        setContentView(R.layout.addeditgrammar_act);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -24,14 +25,14 @@ public class GrammarsActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle(R.string.grammar_title);
+        actionBar.setTitle(R.string.addeditgrammar_title);
 
-        GrammarsFragment cleanFragment = (GrammarsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (cleanFragment == null) {
-            cleanFragment = GrammarsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), cleanFragment, R.id.contentFrame);
+        AddEditGrammarFragment addEditSentenceFragment = (AddEditGrammarFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (addEditSentenceFragment == null) {
+            addEditSentenceFragment = AddEditGrammarFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditSentenceFragment, R.id.contentFrame);
         }
-        presenter = new GrammarsPresenter( cleanFragment);
+        presenter = new AddEditGrammarPresenter(addEditSentenceFragment);
     }
 
     @Override

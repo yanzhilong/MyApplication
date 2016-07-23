@@ -138,7 +138,7 @@ public class LocalDataSource implements DataSource {
         };
 
         Cursor c = db.query(
-                SentenceEntry.TABLE_NAME, projection, null, null, null, null, null);
+                GrammarEntry.TABLE_NAME, projection, null, null, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -172,7 +172,7 @@ public class LocalDataSource implements DataSource {
         };
 
         Cursor c = db.query(
-                SentenceEntry.TABLE_NAME, projection, GrammarEntry.COLUMN_NAME_NAME + "LIKE '%?%'", new String[]{searchword}, null, null, null);
+                GrammarEntry.TABLE_NAME, projection, GrammarEntry.COLUMN_NAME_NAME + "LIKE '%?%'", new String[]{searchword}, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -218,7 +218,7 @@ public class LocalDataSource implements DataSource {
         values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
-        db.insert(SentenceEntry.TABLE_NAME,null,values);
+        db.insert(GrammarEntry.TABLE_NAME,null,values);
 
         db.close();
     }

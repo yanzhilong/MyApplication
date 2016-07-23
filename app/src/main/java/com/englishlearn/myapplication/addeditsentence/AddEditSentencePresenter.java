@@ -16,8 +16,6 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
     private AddSentences addSentences;
     private AddEditSentenceContract.View mainView;
-    @Inject
-    Repository repository;
     public AddEditSentencePresenter(AddEditSentenceContract.View vew){
         mainView = vew;
         addSentences = new AddSentences();
@@ -43,7 +41,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
             @Override
             public void onNext(Boolean aBoolean) {
-                mainView.addSentencesSuccess();
+                mainView.addSentenceSuccess();
             }
         });
     }
