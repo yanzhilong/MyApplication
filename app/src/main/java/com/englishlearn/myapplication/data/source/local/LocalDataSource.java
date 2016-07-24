@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ import static com.englishlearn.myapplication.data.source.local.PersistenceContra
 /**
  * Concrete implementation of a data source as a db.
  */
-public class LocalDataSource implements DataSource {
+public class LocalDataSource implements LocalData {
 
     private static LocalDataSource INSTANCE;
 
@@ -102,7 +101,7 @@ public class LocalDataSource implements DataSource {
         };
 
         Cursor c = db.query(
-                SentenceEntry.TABLE_NAME, projection, SentenceEntry.COLUMN_NAME_CONTENT + "LIKE '%?%'", new String[]{searchword}, null, null, null);
+                SentenceEntry.TABLE_NAME, projection, SentenceEntry.COLUMN_NAME_CONTENT + " LIKE ?", new String[]{"%" + searchword + "%"}, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -161,7 +160,7 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public List<Grammar> getGrammars(String searchword) {
-        List<Grammar> grammars = new ArrayList<Grammar>();
+        List<Grammar> grammars = new ArrayList<>();
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -172,7 +171,7 @@ public class LocalDataSource implements DataSource {
         };
 
         Cursor c = db.query(
-                GrammarEntry.TABLE_NAME, projection, GrammarEntry.COLUMN_NAME_NAME + "LIKE '%?%'", new String[]{searchword}, null, null, null);
+                GrammarEntry.TABLE_NAME, projection, GrammarEntry.COLUMN_NAME_NAME + " LIKE ?", new String[]{"%" + searchword + "%"}, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -191,6 +190,24 @@ public class LocalDataSource implements DataSource {
 
         db.close();
         return grammars;
+    }
+
+    @Override
+    public void deleteAllSentences() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        db.delete(SentenceEntry.TABLE_NAME,null,null);
+
+        db.close();
+    }
+
+    @Override
+    public void deleteAllGrammars() {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        db.delete(GrammarEntry.TABLE_NAME,null,null);
+
+        db.close();
     }
 
     @Override

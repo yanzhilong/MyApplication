@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--  句子列表 -->
+    <color name="sentence_content">#4480A8</color>
+    <color name="sentence_translation">#5F5F5F</color>
+
 </resources>

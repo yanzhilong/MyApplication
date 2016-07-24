@@ -20,7 +20,14 @@ public class Sentence {
         mId = UUID.randomUUID().toString();
     }
 
-    public Sentence(String id,String content,String translation,List<Grammar> grammars){
+    public Sentence(String mId, String content, String translation, List<Grammar> grammarList) {
+        this.mId = mId;
+        this.content = content;
+        this.translation = translation;
+        this.grammarList = grammarList;
+    }
+
+    public Sentence(String content, String translation, List<Grammar> grammarList){
         mId = UUID.randomUUID().toString();
         this.content = content;
         this.translation = translation;
@@ -54,4 +61,5 @@ public class Sentence {
     public String getmId() {
         return mId;
     }
+
 }

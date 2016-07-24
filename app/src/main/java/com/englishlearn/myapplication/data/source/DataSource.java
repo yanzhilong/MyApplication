@@ -16,8 +16,6 @@
 
 package com.englishlearn.myapplication.data.source;
 
-import android.support.annotation.NonNull;
-
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 
@@ -43,6 +41,10 @@ DataSource {
     List<Grammar> getGrammars();
 
     List<Grammar> getGrammars(String searchword);
+
+    void deleteAllSentences();
+
+    void deleteAllGrammars();
 
     void addSentence(Sentence sentence);
 

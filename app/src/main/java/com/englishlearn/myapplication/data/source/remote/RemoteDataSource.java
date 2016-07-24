@@ -45,6 +45,16 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public void deleteAllSentences() {
+
+    }
+
+    @Override
+    public void deleteAllGrammars() {
+
+    }
+
+    @Override
     public void addSentence(Sentence sentence) {
 
     }

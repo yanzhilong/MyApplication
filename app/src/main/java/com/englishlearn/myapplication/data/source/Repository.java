@@ -67,6 +67,16 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public void deleteAllSentences() {
+        mLocalDataSource.deleteAllSentences();
+    }
+
+    @Override
+    public void deleteAllGrammars() {
+        mLocalDataSource.deleteAllGrammars();
+    }
+
+    @Override
     public void addSentence(Sentence sentence) {
         mLocalDataSource.addSentence(sentence);
     }

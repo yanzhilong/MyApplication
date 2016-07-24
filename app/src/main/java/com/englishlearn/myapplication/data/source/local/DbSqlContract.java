@@ -11,13 +11,31 @@ import java.util.Map;
  */
 public class DbSqlContract {
 
-    private static final String TEXT_TYPE = " TEXT";//数据类型
+    private static final String TEXT_TYPE = " TEXT";//文本类型
 
-    private static final String BOOLEAN_TYPE = " INTEGER";//布尔值的数据类型
+    private static final String INTEGER_TYPE = " INTEGER";//数值类型
+
+    private static final String BOOLEAN_TYPE = " INTEGER";//布尔值的数据类型,大于1是true，小于1是false
 
     private static final String COMMA_SEP = ",";
 
     public static final Map<Integer,List<String>> DBCREATEANDUPDATE;
+
+    //统一数字的布尔类型
+    public static boolean integer2boolean(int request){
+        if(request >= 1){
+            return true;
+        }
+        return false;
+    }
+
+    //统一数字的布尔类型
+    public static int boolean2integer(boolean request){
+        if(request){
+            return 1;
+        }
+        return 0;
+    }
 
     /**
      * 版本1
@@ -36,7 +54,7 @@ public class DbSqlContract {
     public static final List<String> V2;
 
     public static final String V1_CreateSentence =
-            "CREATE TABLE " + PersistenceContract.SentenceEntry.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.SentenceEntry.TABLE_NAME + " (" +
                     PersistenceContract.SentenceEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
@@ -44,7 +62,7 @@ public class DbSqlContract {
                     " )";
 
     public static final String V1_CreateGrammar =
-            "CREATE TABLE " + PersistenceContract.GrammarEntry.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.GrammarEntry.TABLE_NAME + " (" +
                     PersistenceContract.GrammarEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.GrammarEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
@@ -52,7 +70,7 @@ public class DbSqlContract {
                     " )";
 
     public static final String V1_CreateSentenceGrammar =
-            "CREATE TABLE " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
                     PersistenceContract.SentenceGrammarContactsEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID + TEXT_TYPE + COMMA_SEP +
