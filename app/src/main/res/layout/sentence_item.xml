@@ -24,10 +24,14 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/sentences_item_translation_size"/>
 
-    <TextView
-        android:id="@+id/grammar"
+    <!-- 存放语法标签 -->
+    <LinearLayout
+        android:id="@+id/grammars"
+        android:layout_marginTop="@dimen/sentences_item_padding_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
 </LinearLayout>

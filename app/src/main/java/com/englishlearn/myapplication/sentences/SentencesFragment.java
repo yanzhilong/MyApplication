@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +170,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 viewHolder = new ViewHolder();
                 viewHolder.content = (TextView) convertView.findViewById(R.id.content);
                 viewHolder.translation = (TextView) convertView.findViewById(R.id.translation);
-                viewHolder.grammar = (TextView) convertView.findViewById(R.id.grammars);
+                viewHolder.grammars = (LinearLayout) convertView.findViewById(R.id.grammars);
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -179,15 +181,46 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             //显示语法
             List<Grammar> grammars = sentence.getGrammarList();
             if(grammars != null){
-                viewHolder.grammar.setText(sentence.getGrammarList().toString());
+                initGrammars(viewHolder.grammars,grammars);
             }
             return convertView;
+        }
+    }
+
+    /**
+     * 添加TextView到LinearLayout中
+     * @param linearLayout
+     * @param grammars
+     */
+    private void initGrammars(LinearLayout linearLayout,List<Grammar> grammars){
+        for(Grammar grammar:grammars){
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.leftMargin = (int) AndroidUtils.dipToPixels(this.getContext(),10f);
+
+            //Button button = new Button(this.getContext());
+            /*Button button = (Button) getActivity().getLayoutInflater().inflate(R.layout.button_default, null);
+            button.setText(grammar.getName());
+            button.setLayoutParams(layoutParams);
+            linearLayout.addView(button);*/
+
+            //TextView textView = (TextView) getActivity().getLayoutInflater().inflate(R.layout.button_default, null);
+            TextView textView = new TextView(this.getContext());
+            textView.setText(grammar.getName());
+            textView.setLayoutParams(layoutParams);
+            linearLayout.addView(textView);
+
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG,"点击语法");
+                }
+            });
         }
     }
 
     static class ViewHolder{
         TextView content;//内容
         TextView translation;//译文
-        TextView grammar;//语法
+        LinearLayout grammars;//语法
     }
 }

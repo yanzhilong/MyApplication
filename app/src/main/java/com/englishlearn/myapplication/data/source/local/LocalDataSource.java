@@ -75,7 +75,14 @@ public class LocalDataSource implements LocalData {
                 String translate =
                         c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
-                Sentence sentence = new Sentence(mId,content,translate,null);
+                List<Grammar> list = new ArrayList<>();
+                for(int i = 0; i < 10; i++){
+                    Grammar grammar = new Grammar();
+                    grammar.setName("进行时" + i);
+                    list.add(grammar);
+                }
+
+                Sentence sentence = new Sentence(mId,content,translate,list);
                 sentences.add(sentence);
             }
         }
