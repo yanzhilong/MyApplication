@@ -32,4 +32,12 @@
     <string name="grammar_content_hilnt">Enter your content here</string>
     <string name="addgrammarsuccess">add success</string>
 
+    <!-- GrammarDetailActivity -->
+    <string name="grammardetail_title">Grammar Detail</string>
+
+
+
+    <!-- SentenceDetailActivity -->
+    <string name="sentencedetail_title">Sentence Detail</string>
+
 </resources>

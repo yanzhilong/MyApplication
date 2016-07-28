@@ -45,6 +45,16 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public Sentence getSentenceById(String sentenceid) {
+        return null;
+    }
+
+    @Override
+    public Grammar getGrammarById(String grammarid) {
+        return null;
+    }
+
+    @Override
     public void deleteAllSentences() {
 
     }

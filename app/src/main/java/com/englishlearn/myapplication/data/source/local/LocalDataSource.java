@@ -76,11 +76,11 @@ public class LocalDataSource implements LocalData {
                         c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
                 List<Grammar> list = new ArrayList<>();
-                for(int i = 0; i < 10; i++){
+                /*for(int i = 0; i < 7; i++){
                     Grammar grammar = new Grammar();
                     grammar.setName("进行时" + i);
                     list.add(grammar);
-                }
+                }*/
 
                 Sentence sentence = new Sentence(mId,content,translate,list);
                 sentences.add(sentence);
@@ -197,6 +197,73 @@ public class LocalDataSource implements LocalData {
 
         db.close();
         return grammars;
+    }
+
+    @Override
+    public Sentence getSentenceById(String sentenceid) {
+
+        Sentence sentence = null;
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                SentenceEntry._ID,
+                SentenceEntry.COLUMN_NAME_ENTRY_ID,
+                SentenceEntry.COLUMN_NAME_CONTENT,
+                SentenceEntry.COLUMN_NAME_TRANSLATION,
+        };
+
+        Cursor c = db.query(
+                SentenceEntry.TABLE_NAME, projection, SentenceEntry.COLUMN_NAME_ENTRY_ID + " = ?", new String[]{sentenceid}, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                String mId = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_ENTRY_ID));
+                String content = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_CONTENT));
+                String translate =
+                        c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
+
+                sentence = new Sentence(mId,content,translate,null);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        db.close();
+        return sentence;
+    }
+
+    @Override
+    public Grammar getGrammarById(String grammarid) {
+        Grammar grammar = null;
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                GrammarEntry.COLUMN_NAME_ENTRY_ID,
+                GrammarEntry.COLUMN_NAME_NAME,
+                GrammarEntry.COLUMN_NAME_CONTENT,
+        };
+
+        Cursor c = db.query(
+                GrammarEntry.TABLE_NAME, projection, GrammarEntry.COLUMN_NAME_ENTRY_ID + " = ?", new String[]{grammarid}, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+            if (c.moveToFirst()) {
+                String mid = c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_ENTRY_ID));
+                String name = c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_NAME));
+                String content =
+                        c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
+
+                grammar = new Grammar(mid,content,name);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        db.close();
+        return grammar;
     }
 
     @Override

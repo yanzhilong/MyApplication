@@ -1,26 +1,25 @@
-package com.englishlearn.myapplication.grammars;
+package com.englishlearn.myapplication.grammardetail;
+
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
 import com.englishlearn.myapplication.data.Grammar;
 
-import java.util.List;
-
 /**
  * Created by yanzl on 16-7-28.
  * 用于约定view 和 presenter的实现接口
  */
-public class GrammarsContract {
+public class GrammarDetailContract {
 
     public interface View extends BaseView<Presenter> {
-        void showGrammars(List<Grammar> grammars);
-        void emptyGrammars();
-        void showaddGrammar();
+
+        void showGrammar(Grammar grammar);//显示Grammar内容
+
     }
 
     abstract static class Presenter extends BasePresenter {
-        abstract void getGrammars();
-        abstract void getGrammars(String searchword);
-        abstract void addGrammar();
+
+        abstract void getGrammar();
+
     }
 }

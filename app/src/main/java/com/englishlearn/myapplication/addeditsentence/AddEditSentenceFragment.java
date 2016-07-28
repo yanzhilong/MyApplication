@@ -60,7 +60,7 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
                 mPresenter.saveSentence(content.getText().toString(),translation.getText().toString());
             }
         });
-
+        
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -97,13 +97,13 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     }
 
     @Override
-    public void setContent() {
-
+    public void setContent(String content) {
+        this.content.setText(content);
     }
 
     @Override
-    public void settranslate() {
-
+    public void setTranslate(String translate) {
+        this.translation.setText(translate);
     }
 
     @Override

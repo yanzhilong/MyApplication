@@ -27,7 +27,7 @@
     <!-- 存放语法标签 -->
     <LinearLayout
         android:id="@+id/grammars"
-        android:layout_marginTop="@dimen/sentences_item_padding_top"
+        android:layout_marginTop="@dimen/sentences_item_padding_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

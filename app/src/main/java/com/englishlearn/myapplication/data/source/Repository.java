@@ -67,6 +67,16 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Sentence getSentenceById(String sentenceid) {
+        return mLocalDataSource.getSentenceById(sentenceid);
+    }
+
+    @Override
+    public Grammar getGrammarById(String grammarid) {
+        return mLocalDataSource.getGrammarById(grammarid);
+    }
+
+    @Override
     public void deleteAllSentences() {
         mLocalDataSource.deleteAllSentences();
     }

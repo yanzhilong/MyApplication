@@ -12,21 +12,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarActivity;
-import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by yanzl on 16-7-20.
+ * Created by yanzl on 16-7-28.
  */
 public class GrammarsFragment extends Fragment implements GrammarsContract.View {
 
@@ -69,6 +69,16 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             @Override
             public void onClick(View v) {
                 mPresenter.addGrammar();
+            }
+        });
+
+        grammars_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Grammar grammar = grammarsAdapter.getGrammars().get(position);
+                Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
+                detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getmId());
+                startActivity(detail);
             }
         });
 
@@ -132,6 +142,10 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
         public void replace(List<Grammar> grammars){
             this.grammars = grammars;
             notifyDataSetChanged();
+        }
+
+        public List<Grammar> getGrammars() {
+            return grammars;
         }
 
         public void addSentences(List<Grammar> grammars){

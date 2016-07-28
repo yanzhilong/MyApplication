@@ -4,8 +4,13 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!--  常用颜色 -->
+    <color name="text_color_grey">#9da1a0</color>
+    
     <!--  句子列表 -->
     <color name="sentence_content">#4480A8</color>
     <color name="sentence_translation">#5F5F5F</color>
+    <color name="sentence_tip_around">#dbdfde</color>
+    
 
 </resources>

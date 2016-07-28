@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,6 +23,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.util.ArrayList;
@@ -72,8 +75,20 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             }
         });
 
+        sentences_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Sentence sentence = sentencesAdapter.getSentences().get(position);
+                Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
+                detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getmId());
+                startActivity(detail);
+            }
+        });
+
+
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
+
 
         return root;
     }
@@ -128,6 +143,11 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private class SentencesAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
+
+        public List<Sentence> getSentences() {
+            return sentences;
+        }
+
         private List<Sentence> sentences;
 
         public void replace(List<Sentence> sentences){
@@ -181,6 +201,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             //显示语法
             List<Grammar> grammars = sentence.getGrammarList();
             if(grammars != null){
+                viewHolder.grammars.removeAllViews();
                 initGrammars(viewHolder.grammars,grammars);
             }
             return convertView;
@@ -196,25 +217,14 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         for(Grammar grammar:grammars){
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.leftMargin = (int) AndroidUtils.dipToPixels(this.getContext(),10f);
-
-            //Button button = new Button(this.getContext());
-            /*Button button = (Button) getActivity().getLayoutInflater().inflate(R.layout.button_default, null);
-            button.setText(grammar.getName());
-            button.setLayoutParams(layoutParams);
-            linearLayout.addView(button);*/
-
-            //TextView textView = (TextView) getActivity().getLayoutInflater().inflate(R.layout.button_default, null);
             TextView textView = new TextView(this.getContext());
             textView.setText(grammar.getName());
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+            textView.setTextColor(getResources().getColor(R.color.text_color_grey));
+            textView.setBackgroundResource(R.drawable.grammar_tip);
+            textView.setPadding(10,3,10,3);
             textView.setLayoutParams(layoutParams);
             linearLayout.addView(textView);
-
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"点击语法");
-                }
-            });
         }
     }
 

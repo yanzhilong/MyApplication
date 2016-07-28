@@ -42,6 +42,10 @@ DataSource {
 
     List<Grammar> getGrammars(String searchword);
 
+    Sentence getSentenceById(String sentenceid);
+
+    Grammar getGrammarById(String grammarid);
+
     void deleteAllSentences();
 
     void deleteAllGrammars();

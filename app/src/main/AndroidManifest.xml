@@ -29,6 +29,12 @@
         <activity android:name=".addeditgrammar.AddEditGrammarActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".grammardetail.GrammarDetailActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".sentencedetail.SentenceDetailActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

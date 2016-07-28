@@ -1,23 +1,25 @@
-package com.englishlearn.myapplication.addeditsentence;
+package com.englishlearn.myapplication.sentencedetail;
+
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
+import com.englishlearn.myapplication.data.Sentence;
 
 /**
  * Created by yanzl on 16-7-20.
  * 用于约定view 和 presenter的实现接口
  */
-public class AddEditSentenceContract {
+public class SentenceDetailContract {
 
     public interface View extends BaseView<Presenter> {
 
-        void setContent(String content);
-        void setTranslate(String translate);
-        void showSentences();
-        void addSentenceSuccess();
+        void showSentence(Sentence sentence);//显示Sentence内容
+
     }
 
     abstract static class Presenter extends BasePresenter {
-        abstract void saveSentence(String content,String translate);
+
+        abstract void getSentence();
+
     }
 }
