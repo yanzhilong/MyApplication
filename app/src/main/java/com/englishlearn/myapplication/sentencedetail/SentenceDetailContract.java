@@ -14,12 +14,14 @@ public class SentenceDetailContract {
     public interface View extends BaseView<Presenter> {
 
         void showSentence(Sentence sentence);//显示Sentence内容
-
+        void showEditSentence();//显示编辑句子
+        void showEmptySentence();//句子信息未查到
     }
 
     abstract static class Presenter extends BasePresenter {
 
         abstract void getSentence();
+        abstract void editSentence();
 
     }
 }

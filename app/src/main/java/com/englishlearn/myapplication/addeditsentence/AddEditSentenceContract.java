@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.addeditsentence;
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
+import com.englishlearn.myapplication.data.Sentence;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -11,13 +12,14 @@ public class AddEditSentenceContract {
 
     public interface View extends BaseView<Presenter> {
 
-        void setContent(String content);
-        void setTranslate(String translate);
-        void showSentences();
         void addSentenceSuccess();
+        void updateSentenceSuccess();
+        void showSentence(Sentence sentence);
+        void showSentenceFail();
     }
 
     abstract static class Presenter extends BasePresenter {
         abstract void saveSentence(String content,String translate);
+        abstract void start();
     }
 }

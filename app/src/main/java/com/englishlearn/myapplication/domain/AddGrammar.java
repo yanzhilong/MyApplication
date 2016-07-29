@@ -3,7 +3,6 @@ package com.englishlearn.myapplication.domain;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
 
 import javax.inject.Inject;
@@ -14,17 +13,17 @@ import rx.Subscriber;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class AddGrammars extends UseCase<Boolean,AddGrammars.AddGrammarsParame> {
+public class AddGrammar extends UseCase<Boolean,AddGrammar.AddGrammarsParame> {
 
     @Inject
     Repository repository;
 
-    public AddGrammars(){
+    public AddGrammar(){
         MyApplication.instance.getAppComponent().inject(this);
     }
 
     @Override
-    protected Observable<Boolean> execute(final AddGrammars.AddGrammarsParame addGrammarsParame) {
+    protected Observable<Boolean> execute(final AddGrammar.AddGrammarsParame addGrammarsParame) {
 
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override

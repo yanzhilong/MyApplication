@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Grammar;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -70,7 +71,7 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
     @Override
     public void onResume() {
         super.onResume();
-
+        mPresenter.start();
     }
 
     @Override
@@ -96,21 +97,6 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
         mPresenter.unsubscribe();
     }
 
-    @Override
-    public void setName() {
-
-    }
-
-    @Override
-    public void setContent() {
-
-    }
-
-    @Override
-    public void showGrammars() {
-
-    }
-
 
     @Override
     public void addGrammarSuccess() {
@@ -120,4 +106,25 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
         Snackbar.make(this.getView(),getResources().getString(R.string.addgrammarsuccess), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
+
+    @Override
+    public void updateGrammarSuccess() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void showGrammar(Grammar grammar) {
+        Log.d(TAG,"showGrammar");
+        if(grammar != null){
+            name.setText(grammar.getName());
+            content.setText(grammar.getContent());
+        }
+    }
+
+    @Override
+    public void showGrammarFail() {
+
+    }
+
+
 }

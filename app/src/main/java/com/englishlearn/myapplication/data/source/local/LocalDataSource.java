@@ -153,7 +153,7 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                Grammar grammar = new Grammar(mid,content,name);
+                Grammar grammar = new Grammar(mid,name,content);
                 grammars.add(grammar);
             }
         }
@@ -187,7 +187,7 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                Grammar grammar = new Grammar(mid,content,name);
+                Grammar grammar = new Grammar(mid,name,content);
                 grammars.add(grammar);
             }
         }
@@ -255,7 +255,7 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                grammar = new Grammar(mid,content,name);
+                grammar = new Grammar(mid,name,content);
             }
         }
         if (c != null) {
@@ -310,6 +310,41 @@ public class LocalDataSource implements LocalData {
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
         db.insert(GrammarEntry.TABLE_NAME,null,values);
+
+        db.close();
+    }
+
+    @Override
+    public void updateSentence(Sentence sentence) {
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getmId());
+        values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
+        values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
+
+        String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
+        String[] selectionArgs = {sentence.getmId()};
+
+        db.update(SentenceEntry.TABLE_NAME,values,selection,selectionArgs);
+
+        db.close();
+    }
+
+    @Override
+    public void updateGrammar(Grammar grammar) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getmId());
+        values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
+        values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
+
+        String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
+        String[] selectionArgs = {grammar.getmId()};
+
+        db.update(GrammarEntry.TABLE_NAME,values,selection,selectionArgs);
 
         db.close();
     }

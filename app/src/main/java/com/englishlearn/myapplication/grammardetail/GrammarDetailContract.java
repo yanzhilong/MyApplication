@@ -14,12 +14,14 @@ public class GrammarDetailContract {
     public interface View extends BaseView<Presenter> {
 
         void showGrammar(Grammar grammar);//显示Grammar内容
-
+        void showEditGrammar();//显示编辑语法
+        void showEmptyGrammar();//语法信息未查到
     }
 
     abstract static class Presenter extends BasePresenter {
 
         abstract void getGrammar();
+        abstract void editGrammar();
 
     }
 }

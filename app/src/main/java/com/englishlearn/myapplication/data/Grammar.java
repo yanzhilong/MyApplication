@@ -17,13 +17,13 @@ public class Grammar {
         mId = UUID.randomUUID().toString();
     }
 
-    public Grammar(String content,String name){
+    public Grammar(String name,String content){
         mId = UUID.randomUUID().toString();
         this.name = name;
         this.content = content;
     }
 
-    public Grammar(String id,String content,String name){
+    public Grammar(String id,String name,String content){
         mId = id;
         this.name = name;
         this.content = content;

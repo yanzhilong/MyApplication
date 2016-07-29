@@ -45,4 +45,9 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
             add(subscription);
         }
     }
+
+    @Override
+    void editSentence() {
+        mView.showEditSentence();
+    }
 }

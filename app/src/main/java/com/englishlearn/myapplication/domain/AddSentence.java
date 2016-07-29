@@ -5,8 +5,6 @@ import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import rx.Observable;
@@ -15,17 +13,17 @@ import rx.Subscriber;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class AddSentences extends UseCase<Boolean,AddSentences.AddSentencesParame> {
+public class AddSentence extends UseCase<Boolean,AddSentence.AddSentencesParame> {
 
     @Inject
     Repository repository;
 
-    public AddSentences(){
+    public AddSentence(){
         MyApplication.instance.getAppComponent().inject(this);
     }
 
     @Override
-    protected Observable<Boolean> execute(final AddSentences.AddSentencesParame addSentencesParame) {
+    protected Observable<Boolean> execute(final AddSentence.AddSentencesParame addSentencesParame) {
 
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override

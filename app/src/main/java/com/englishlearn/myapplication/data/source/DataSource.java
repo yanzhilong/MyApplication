@@ -54,6 +54,10 @@ DataSource {
 
     void addGrammar(Grammar grammar);
 
+    void updateSentence(Sentence sentence);
+
+    void updateGrammar(Grammar grammar);
+
     void deleteSentence(String sid);
 
     void deleteGrammar(String gid);

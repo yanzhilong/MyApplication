@@ -45,4 +45,9 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
             add(subscription);
         }
     }
+
+    @Override
+    void editGrammar() {
+        mView.showEditGrammar();
+    }
 }

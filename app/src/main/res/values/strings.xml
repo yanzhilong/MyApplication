@@ -34,10 +34,11 @@
 
     <!-- GrammarDetailActivity -->
     <string name="grammardetail_title">Grammar Detail</string>
-
+    <string name="grammardetail_empty_grammar">do not found grammar</string>
 
 
     <!-- SentenceDetailActivity -->
     <string name="sentencedetail_title">Sentence Detail</string>
+    <string name="sentencedetail_empty_sentence">do not found sentence</string>
 
 </resources>

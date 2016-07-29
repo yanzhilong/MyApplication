@@ -1,8 +1,10 @@
 package com.englishlearn.myapplication.grammardetail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarActivity;
 import com.englishlearn.myapplication.data.Grammar;
 
 
@@ -23,9 +26,9 @@ import com.englishlearn.myapplication.data.Grammar;
 public class GrammarDetailFragment extends Fragment implements GrammarDetailContract.View {
 
     private static final String TAG = GrammarDetailFragment.class.getSimpleName();
-
     private TextView name;
     private TextView content;
+    private Grammar grammar;
 
     private GrammarDetailContract.Presenter mPresenter;
     public static GrammarDetailFragment newInstance() {
@@ -53,13 +56,12 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
 
         // Set up floating action button
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_grammar);
 
-        fab.setImageResource(R.drawable.ic_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mPresenter.addSentence();
+                mPresenter.editGrammar();
             }
         });
 
@@ -100,9 +102,29 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
     @Override
     public void showGrammar(Grammar grammar) {
         Log.d(TAG,"showGrammar");
+        this.grammar = grammar;
         if(grammar != null){
             name.setText(grammar.getName());
             content.setText(grammar.getContent());
+        }else{
+            showEmptyGrammar();
         }
     }
+
+    @Override
+    public void showEditGrammar() {
+        if(grammar == null){
+            showEmptyGrammar();
+            return;
+        }
+        Intent edit = new Intent(GrammarDetailFragment.this.getContext(), AddEditGrammarActivity.class);
+        edit.putExtra(AddEditGrammarActivity.GRAMMAR_ID,grammar.getmId());
+        startActivity(edit);
+    }
+
+    @Override
+    public void showEmptyGrammar() {
+        Snackbar.make(this.getView(),getResources().getString(R.string.grammardetail_empty_grammar), Snackbar.LENGTH_LONG).show();
+    }
+
 }

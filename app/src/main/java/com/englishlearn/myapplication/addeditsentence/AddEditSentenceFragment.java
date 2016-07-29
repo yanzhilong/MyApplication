@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Sentence;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -70,7 +71,7 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     @Override
     public void onResume() {
         super.onResume();
-
+        mPresenter.start();
     }
 
     @Override
@@ -97,26 +98,30 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     }
 
     @Override
-    public void setContent(String content) {
-        this.content.setText(content);
-    }
-
-    @Override
-    public void setTranslate(String translate) {
-        this.translation.setText(translate);
-    }
-
-    @Override
-    public void showSentences() {
-
-    }
-
-    @Override
     public void addSentenceSuccess() {
         Log.d(TAG, "addSentencesSuccess");
         content.setText("");
         translation.setText("");
         Snackbar.make(this.getView(),getResources().getString(R.string.addsentencesuccess), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+    }
+
+    @Override
+    public void updateSentenceSuccess() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void showSentence(Sentence sentence) {
+        Log.d(TAG,"showSentence");
+        if(sentence != null){
+            content.setText(sentence.getContent());
+            translation.setText(sentence.getTranslation());
+        }
+    }
+
+    @Override
+    public void showSentenceFail() {
+
     }
 }

@@ -1,8 +1,10 @@
 package com.englishlearn.myapplication.sentencedetail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Sentence;
 
 
@@ -23,9 +26,9 @@ import com.englishlearn.myapplication.data.Sentence;
 public class SentenceDetailFragment extends Fragment implements SentenceDetailContract.View {
 
     private static final String TAG = SentenceDetailFragment.class.getSimpleName();
-
     private TextView content;
     private TextView translation;
+    private Sentence sentence;
 
     private SentenceDetailContract.Presenter mPresenter;
     public static SentenceDetailFragment newInstance() {
@@ -53,13 +56,12 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
 
         // Set up floating action button
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_sentence);
 
-        fab.setImageResource(R.drawable.ic_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mPresenter.addSentence();
+                mPresenter.editSentence();
             }
         });
 
@@ -101,9 +103,28 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
     @Override
     public void showSentence(Sentence sentence) {
         Log.d(TAG,"showSentence");
+        this.sentence = sentence;
         if(sentence != null){
             content.setText(sentence.getContent());
             translation.setText(sentence.getTranslation());
+        }else{
+            showEmptySentence();
         }
+    }
+
+    @Override
+    public void showEditSentence() {
+        if(sentence == null){
+            showEmptySentence();
+            return;
+        }
+        Intent edit = new Intent(SentenceDetailFragment.this.getContext(), AddEditSentenceActivity.class);
+        edit.putExtra(AddEditSentenceActivity.SENTENCE_ID,sentence.getmId());
+        startActivity(edit);
+    }
+
+    @Override
+    public void showEmptySentence() {
+        Snackbar.make(this.getView(),getResources().getString(R.string.sentencedetail_empty_sentence), Snackbar.LENGTH_LONG).show();
     }
 }
