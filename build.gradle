@@ -16,6 +16,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        //Bmob需要的1,Bmob的maven仓库地址--必填
+        maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
     }
 }
 
@@ -26,7 +28,7 @@ task clean(type: Delete) {
 //定义全局的变量用于版本引用的时候始终是同一个版本
 ext {
     // Sdk and tools
-    minSdkVersion = 11
+    minSdkVersion = 14
     targetSdkVersion = 22
     compileSdkVersion = 23
     buildToolsVersion = '23.0.2'
