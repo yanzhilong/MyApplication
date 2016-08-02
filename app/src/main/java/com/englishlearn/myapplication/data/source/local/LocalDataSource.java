@@ -267,25 +267,29 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public void deleteAllSentences() {
+    public boolean deleteAllSentences() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        db.delete(SentenceEntry.TABLE_NAME,null,null);
+        int result = db.delete(SentenceEntry.TABLE_NAME,null,null);
 
         db.close();
+
+        return(result > 0);
     }
 
     @Override
-    public void deleteAllGrammars() {
+    public boolean deleteAllGrammars() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        db.delete(GrammarEntry.TABLE_NAME,null,null);
+        int result = db.delete(GrammarEntry.TABLE_NAME,null,null);
 
         db.close();
+
+        return(result > 0);
     }
 
     @Override
-    public void addSentence(Sentence sentence) {
+    public boolean addSentence(Sentence sentence) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -294,13 +298,15 @@ public class LocalDataSource implements LocalData {
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
         values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
-        db.insert(SentenceEntry.TABLE_NAME,null,values);
+        long result = db.insert(SentenceEntry.TABLE_NAME,null,values);
 
         db.close();
+
+        return(result != -1);
     }
 
     @Override
-    public void addGrammar(Grammar grammar) {
+    public boolean addGrammar(Grammar grammar) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -309,13 +315,15 @@ public class LocalDataSource implements LocalData {
         values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
-        db.insert(GrammarEntry.TABLE_NAME,null,values);
+        long result = db.insert(GrammarEntry.TABLE_NAME,null,values);
 
         db.close();
+
+        return(result != -1);
     }
 
     @Override
-    public void updateSentence(Sentence sentence) {
+    public boolean updateSentence(Sentence sentence) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -327,13 +335,15 @@ public class LocalDataSource implements LocalData {
         String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
         String[] selectionArgs = {sentence.getmId()};
 
-        db.update(SentenceEntry.TABLE_NAME,values,selection,selectionArgs);
+        int result = db.update(SentenceEntry.TABLE_NAME,values,selection,selectionArgs);
 
         db.close();
+
+        return(result > 0);
     }
 
     @Override
-    public void updateGrammar(Grammar grammar) {
+    public boolean updateGrammar(Grammar grammar) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
@@ -344,33 +354,39 @@ public class LocalDataSource implements LocalData {
         String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
         String[] selectionArgs = {grammar.getmId()};
 
-        db.update(GrammarEntry.TABLE_NAME,values,selection,selectionArgs);
+        int result = db.update(GrammarEntry.TABLE_NAME,values,selection,selectionArgs);
 
         db.close();
+
+        return(result > 0);
     }
 
     @Override
-    public void deleteSentence(String sid) {
+    public boolean deleteSentence(String sid) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
         String[] selectionArgs = {sid};
 
-        db.delete(SentenceEntry.TABLE_NAME,selection,selectionArgs);
+        int result = db.delete(SentenceEntry.TABLE_NAME,selection,selectionArgs);
 
         db.close();
+
+        return(result > 0);
     }
 
     @Override
-    public void deleteGrammar(String gid) {
+    public boolean deleteGrammar(String gid) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
         String[] selectionArgs = {gid};
 
-        db.delete(GrammarEntry.TABLE_NAME,selection,selectionArgs);
+        int result = db.delete(GrammarEntry.TABLE_NAME,selection,selectionArgs);
 
         db.close();
+
+        return(result > 0);
     }
 }

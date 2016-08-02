@@ -7,6 +7,8 @@ import com.englishlearn.myapplication.dagger.AppComponent;
 import com.englishlearn.myapplication.dagger.AppModule;
 import com.englishlearn.myapplication.dagger.DaggerAppComponent;
 
+import cn.bmob.v3.Bmob;
+
 
 /**
  * Created by yanzl on 16-6-24.
@@ -28,5 +30,6 @@ public class MyApplication extends Application{
         mContext = getApplicationContext();
 
         appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+        Bmob.initialize(this, "02b18803d9dbb1956c99ef7896fe4466");
     }
 }

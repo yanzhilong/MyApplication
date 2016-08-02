@@ -18,8 +18,11 @@ package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
 import java.util.List;
+
+import cn.bmob.v3.exception.BmobException;
 
 public class Repository implements DataSource {
 
@@ -29,12 +32,15 @@ public class Repository implements DataSource {
 
     private final DataSource mLocalDataSource;
 
+    private final BmobDataSource mBmobDataSource;
+
     boolean mCacheIsDirty = false;
 
     private Repository(DataSource remoteDataSource,
                        DataSource localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
+        mBmobDataSource = BmobDataSource.getInstance();
     }
 
     public static Repository getInstance(DataSource tasksRemoteDataSource,
@@ -47,8 +53,8 @@ public class Repository implements DataSource {
 
 
     @Override
-    public List<Sentence> getSentences() {
-        return mLocalDataSource.getSentences();
+    public List<Sentence> getSentences() throws BmobException {
+        return mBmobDataSource.getSentences();
     }
 
     @Override
@@ -57,8 +63,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public List<Grammar> getGrammars() {
-        return mLocalDataSource.getGrammars();
+    public List<Grammar> getGrammars() throws BmobException {
+        return mBmobDataSource.getGrammars();
     }
 
     @Override
@@ -77,40 +83,46 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void deleteAllSentences() {
+    public boolean deleteAllSentences() {
         mLocalDataSource.deleteAllSentences();
+        return false;
     }
 
     @Override
-    public void deleteAllGrammars() {
+    public boolean deleteAllGrammars() {
         mLocalDataSource.deleteAllGrammars();
+        return false;
     }
 
     @Override
-    public void addSentence(Sentence sentence) {
-        mLocalDataSource.addSentence(sentence);
+    public boolean addSentence(final Sentence sentence) throws BmobException {
+        return mBmobDataSource.addSentence(sentence);
     }
 
     @Override
-    public void addGrammar(Grammar grammar) {
-        mLocalDataSource.addGrammar(grammar);
+    public boolean addGrammar(final Grammar grammar) throws BmobException {
+        return mBmobDataSource.addGrammar(grammar);
     }
 
     @Override
-    public void updateSentence(Sentence sentence) {
+    public boolean updateSentence(Sentence sentence) {
         mLocalDataSource.updateSentence(sentence);
+        return false;
     }
 
     @Override
-    public void updateGrammar(Grammar grammar) {
+    public boolean updateGrammar(Grammar grammar) {
         mLocalDataSource.updateGrammar(grammar);
+        return false;
     }
 
     @Override
-    public void deleteSentence(String sid) {
+    public boolean deleteSentence(String sid) {
+        return false;
     }
 
     @Override
-    public void deleteGrammar(String gid) {
+    public boolean deleteGrammar(String gid) {
+        return false;
     }
 }

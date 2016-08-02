@@ -55,40 +55,42 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void deleteAllSentences() {
-
+    public boolean deleteAllSentences() {
+        return false;
     }
 
     @Override
-    public void deleteAllGrammars() {
-
+    public boolean deleteAllGrammars() {
+        return false;
     }
 
     @Override
-    public void addSentence(Sentence sentence) {
-
+    public boolean addSentence(Sentence sentence) {
+        return false;
     }
 
     @Override
-    public void addGrammar(Grammar grammar) {
-
+    public boolean addGrammar(Grammar grammar) {
+        return false;
     }
 
     @Override
-    public void updateSentence(Sentence sentence) {
-
+    public boolean updateSentence(Sentence sentence) {
+        return false;
     }
 
     @Override
-    public void updateGrammar(Grammar grammar) {
-
+    public boolean updateGrammar(Grammar grammar) {
+        return false;
     }
 
     @Override
-    public void deleteSentence(String sid) {
+    public boolean deleteSentence(String sid) {
+        return false;
     }
 
     @Override
-    public void deleteGrammar(String gid) {
+    public boolean deleteGrammar(String gid) {
+        return false;
     }
 }

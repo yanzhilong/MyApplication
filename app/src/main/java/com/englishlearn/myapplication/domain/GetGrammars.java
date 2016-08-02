@@ -3,13 +3,13 @@ package com.englishlearn.myapplication.domain;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -31,13 +31,18 @@ public class GetGrammars extends UseCase<List<Grammar>,GetGrammars.GetGrammarsPa
         return Observable.create(new Observable.OnSubscribe<List<Grammar>>() {
             @Override
             public void call(Subscriber<? super List<Grammar>> subscriber) {
-                List<Grammar> grammars;
+                List<Grammar> grammars = null;
                 //判断是否有关键词
                 if(getGrammarsParame != null){
                     String searchword = getGrammarsParame.getSearchword();
                     grammars = repository.getGrammars(searchword);
                 }else{
-                    grammars = repository.getGrammars();
+                    try {
+                        grammars = repository.getGrammars();
+                    } catch (BmobException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
                 }
                 subscriber.onNext(grammars);
                 subscriber.onCompleted();

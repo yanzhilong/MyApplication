@@ -21,6 +21,8 @@ import com.englishlearn.myapplication.data.Sentence;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+
 
 /**
  * 数据接口
@@ -29,7 +31,7 @@ public interface
 
 DataSource {
 
-    List<Sentence> getSentences();
+    List<Sentence> getSentences() throws BmobException;
 
     /**
      * 根据指定的搜索词搜索相关的句子
@@ -38,7 +40,7 @@ DataSource {
      */
     List<Sentence> getSentences(String searchword);
 
-    List<Grammar> getGrammars();
+    List<Grammar> getGrammars() throws BmobException;
 
     List<Grammar> getGrammars(String searchword);
 
@@ -46,20 +48,20 @@ DataSource {
 
     Grammar getGrammarById(String grammarid);
 
-    void deleteAllSentences();
+    boolean deleteAllSentences();
 
-    void deleteAllGrammars();
+    boolean deleteAllGrammars();
 
-    void addSentence(Sentence sentence);
+    boolean addSentence(Sentence sentence) throws BmobException;
 
-    void addGrammar(Grammar grammar);
+    boolean addGrammar(Grammar grammar) throws BmobException;
 
-    void updateSentence(Sentence sentence);
+    boolean updateSentence(Sentence sentence);
 
-    void updateGrammar(Grammar grammar);
+    boolean updateGrammar(Grammar grammar);
 
-    void deleteSentence(String sid);
+    boolean deleteSentence(String sid);
 
-    void deleteGrammar(String gid);
+    boolean deleteGrammar(String gid);
 
 }

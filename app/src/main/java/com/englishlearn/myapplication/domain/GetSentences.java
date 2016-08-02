@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -30,13 +31,18 @@ public class GetSentences extends UseCase<List<Sentence>,GetSentences.GetSentenc
         return Observable.create(new Observable.OnSubscribe<List<Sentence>>() {
             @Override
             public void call(Subscriber<? super List<Sentence>> subscriber) {
-                List<Sentence> sentences;
+                List<Sentence> sentences = null;
                 //判断是否有关键词
                 if(getSentencesParame != null){
                     String searchword = getSentencesParame.getSearchword();
                     sentences = repository.getSentences(searchword);
                 }else{
-                    sentences = repository.getSentences();
+                    try {
+                        sentences = repository.getSentences();
+                    } catch (BmobException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
                 }
                 subscriber.onNext(sentences);
                 subscriber.onCompleted();

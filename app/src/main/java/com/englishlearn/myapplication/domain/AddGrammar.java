@@ -7,6 +7,7 @@ import com.englishlearn.myapplication.data.source.Repository;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -32,7 +33,12 @@ public class AddGrammar extends UseCase<Boolean,AddGrammar.AddGrammarsParame> {
                     subscriber.onError(new Exception());
                 }
                 Grammar grammar = addGrammarsParame.getGrammar();
-                repository.addGrammar(grammar);
+                try {
+                    repository.addGrammar(grammar);
+                } catch (BmobException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
                 subscriber.onNext(true);
                 subscriber.onCompleted();
             }

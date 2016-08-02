@@ -37,6 +37,7 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 mainView.emptyGrammars();
             }
 
