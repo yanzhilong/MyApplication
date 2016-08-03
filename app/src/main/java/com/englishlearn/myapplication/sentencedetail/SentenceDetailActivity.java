@@ -12,6 +12,7 @@ import com.englishlearn.myapplication.util.ActivityUtils;
 public class SentenceDetailActivity extends AppCompatActivity {
 
     public static final String SENTENCE_ID = "sentence_id";
+    public static final String ID = "id";
 
     private SentenceDetailContract.Presenter presenter;
     @Override
@@ -30,13 +31,14 @@ public class SentenceDetailActivity extends AppCompatActivity {
         ab.setTitle(R.string.sentencedetail_title);
 
         String sentenceid = getIntent().getStringExtra(SENTENCE_ID);
+        String id = getIntent().getStringExtra(ID);
 
         SentenceDetailFragment fragment = (SentenceDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {
             fragment = SentenceDetailFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        presenter = new SentenceDetailPresenter(fragment,sentenceid);
+        presenter = new SentenceDetailPresenter(fragment,id,sentenceid);
     }
 
     @Override

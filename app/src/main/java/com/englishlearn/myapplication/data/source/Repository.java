@@ -73,13 +73,23 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Sentence getSentenceById(String sentenceid) {
-        return mLocalDataSource.getSentenceById(sentenceid);
+    public Sentence getSentenceBySentenceId(String sentenceid) throws BmobException {
+        return mLocalDataSource.getSentenceBySentenceId(sentenceid);
     }
 
     @Override
-    public Grammar getGrammarById(String grammarid) {
-        return mLocalDataSource.getGrammarById(grammarid);
+    public Grammar getGrammarByGrammarId(String grammarid) throws BmobException {
+        return mLocalDataSource.getGrammarByGrammarId(grammarid);
+    }
+
+    @Override
+    public Sentence getSentenceById(String id) throws BmobException {
+        return mBmobDataSource.getSentenceById(id);
+    }
+
+    @Override
+    public Grammar getGrammarById(String id) throws BmobException {
+        return mBmobDataSource.getGrammarById(id);
     }
 
     @Override
@@ -105,15 +115,13 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public boolean updateSentence(Sentence sentence) {
-        mLocalDataSource.updateSentence(sentence);
-        return false;
+    public boolean updateSentence(Sentence sentence) throws BmobException {
+        return mBmobDataSource.updateSentence(sentence);
     }
 
     @Override
-    public boolean updateGrammar(Grammar grammar) {
-        mLocalDataSource.updateGrammar(grammar);
-        return false;
+    public boolean updateGrammar(Grammar grammar) throws BmobException {
+        return mBmobDataSource.updateGrammar(grammar);
     }
 
     @Override

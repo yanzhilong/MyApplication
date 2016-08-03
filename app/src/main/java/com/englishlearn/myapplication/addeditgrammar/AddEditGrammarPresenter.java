@@ -18,8 +18,10 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     private GetGrammar getGrammar;
     private UpdateGrammar updateGrammar;
     private String grammarid;
-    public AddEditGrammarPresenter(AddEditGrammarContract.View vew,String grammarid){
+    private String id;
+    public AddEditGrammarPresenter(AddEditGrammarContract.View vew,String id,String grammarid){
         mainView = vew;
+        this.id = id;
         this.grammarid = grammarid;
         getGrammar = new GetGrammar();
         updateGrammar = new UpdateGrammar();
@@ -58,10 +60,10 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     }
 
     private void updateGrammar(String name, String content){
-        if(grammarid == null){
+        if(grammarid == null || id == null){
             throw new RuntimeException("updateGrammar() was called but grammar is new.");
         }
-        Grammar grammar = new Grammar(grammarid,name,content);
+        Grammar grammar = new Grammar(id,grammarid,name,content);
         UpdateGrammar.UpdateGrammarParame updateGrammarParame = new UpdateGrammar.UpdateGrammarParame(grammar);
         updateGrammar.excuteIo(updateGrammarParame).subscribe(new Subscriber<Boolean>() {
             @Override
@@ -90,7 +92,7 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     @Override
     void start() {
         if(grammarid != null){
-            getGrammar.excuteIo(new GetGrammar.GetGrammarParame(grammarid)).subscribe(new Subscriber<Grammar>() {
+            getGrammar.excuteIo(new GetGrammar.GetGrammarParame(id,grammarid)).subscribe(new Subscriber<Grammar>() {
                 @Override
                 public void onCompleted() {
 

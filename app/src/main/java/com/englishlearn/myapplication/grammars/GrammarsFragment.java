@@ -77,7 +77,8 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Grammar grammar = grammarsAdapter.getGrammars().get(position);
                 Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
-                detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getmId());
+                detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getGrammarid());
+                detail.putExtra(GrammarDetailActivity.ID,grammar.getId());
                 startActivity(detail);
             }
         });

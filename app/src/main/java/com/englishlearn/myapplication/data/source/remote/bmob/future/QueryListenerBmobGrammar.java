@@ -1,31 +1,30 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.future;
 
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
 
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 
 /**
  * Created by yanzl on 16-8-2.
  */
-public class FindBmobSentence extends FindListener<BmobSentence>{
+public class QueryListenerBmobGrammar extends QueryListener<BmobGrammar> {
 
-    private volatile List<BmobSentence> result = null;
+    private volatile BmobGrammar bmobGrammar = null;
     private BmobException bmobException;
     private final CountDownLatch countDownLatch;
 
-    public FindBmobSentence(){
+    public QueryListenerBmobGrammar(){
         countDownLatch = new CountDownLatch(1);
     }
 
     @Override
-    public void done(List<BmobSentence> list, BmobException e) {
+    public void done(BmobGrammar bmobGrammar, BmobException e) {
         bmobException = e;
-        this.result = list;
+        this.bmobGrammar = bmobGrammar;
         countDownLatch.countDown();
     }
 
@@ -33,8 +32,8 @@ public class FindBmobSentence extends FindListener<BmobSentence>{
         return bmobException;
     }
 
-    public List<BmobSentence> get() throws InterruptedException, ExecutionException {
+    public BmobGrammar get() throws InterruptedException, ExecutionException {
         countDownLatch.await();
-        return result;
+        return bmobGrammar;
     }
 }

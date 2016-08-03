@@ -13,6 +13,7 @@ import com.englishlearn.myapplication.util.ActivityUtils;
 public class AddEditGrammarActivity extends AppCompatActivity {
 
     public static final String GRAMMAR_ID = "grammar_id";
+    public static final String ID = "id";
     private AddEditGrammarContract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class AddEditGrammarActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
 
         String grammarid = null;
+        String id = null;
 
         AddEditGrammarFragment addEditSentenceFragment = (AddEditGrammarFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (addEditSentenceFragment == null) {
@@ -35,13 +37,15 @@ public class AddEditGrammarActivity extends AppCompatActivity {
 
             if(getIntent().hasExtra(GRAMMAR_ID)){
                 grammarid = getIntent().getStringExtra(GRAMMAR_ID);
+                id = getIntent().getStringExtra(ID);
+                actionBar.setTitle(R.string.editgrammar_title);
             }else {
-                actionBar.setTitle(R.string.addeditgrammar_title);
+                actionBar.setTitle(R.string.addgrammar_title);
             }
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditSentenceFragment, R.id.contentFrame);
         }
-        presenter = new AddEditGrammarPresenter(addEditSentenceFragment,grammarid);
+        presenter = new AddEditGrammarPresenter(addEditSentenceFragment,id,grammarid);
     }
 
     @Override

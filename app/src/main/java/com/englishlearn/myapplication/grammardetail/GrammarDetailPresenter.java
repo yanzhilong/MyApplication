@@ -13,10 +13,12 @@ import rx.Subscription;
 public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
 
     private GrammarDetailContract.View mView;
+    private String id;
     private String grammarid;
     private GetGrammar getGrammar;
-    public GrammarDetailPresenter(GrammarDetailContract.View vew,String grammarid){
+    public GrammarDetailPresenter(GrammarDetailContract.View vew,String id,String grammarid){
         mView = vew;
+        this.id = id;
         this.grammarid = grammarid;
         getGrammar = new GetGrammar();
         mView.setPresenter(this);
@@ -26,7 +28,7 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
     @Override
     void getGrammar() {
         if(grammarid != null && !grammarid.isEmpty()){
-            Subscription subscription = getGrammar.excuteIo(new GetGrammar.GetGrammarParame(grammarid)).subscribe(new Subscriber<Grammar>() {
+            Subscription subscription = getGrammar.excuteIo(new GetGrammar.GetGrammarParame(id,grammarid)).subscribe(new Subscriber<Grammar>() {
                 @Override
                 public void onCompleted() {
 

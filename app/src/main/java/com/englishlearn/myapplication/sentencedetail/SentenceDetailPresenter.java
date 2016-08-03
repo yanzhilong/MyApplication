@@ -14,10 +14,12 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
 
     private SentenceDetailContract.View mView;
     private String sentenceid;
+    private String id;
     private GetSentence getSentence;
-    public SentenceDetailPresenter(SentenceDetailContract.View vew,String sentenceid){
+    public SentenceDetailPresenter(SentenceDetailContract.View vew,String id,String sentenceid){
         mView = vew;
         this.sentenceid = sentenceid;
+        this.id = id;
         getSentence = new GetSentence();
         mView.setPresenter(this);
     }
@@ -26,7 +28,7 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
     @Override
     void getSentence() {
         if(sentenceid != null && !sentenceid.isEmpty()){
-            Subscription subscription = getSentence.excuteIo(new GetSentence.GetSentenceParame(sentenceid)).subscribe(new Subscriber<Sentence>() {
+            Subscription subscription = getSentence.excuteIo(new GetSentence.GetSentenceParame(id,sentenceid)).subscribe(new Subscriber<Sentence>() {
                 @Override
                 public void onCompleted() {
 

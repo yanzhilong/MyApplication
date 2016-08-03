@@ -7,6 +7,7 @@ import com.englishlearn.myapplication.data.source.Repository;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -32,8 +33,14 @@ public class UpdateGrammar extends UseCase<Boolean,UpdateGrammar.UpdateGrammarPa
                     subscriber.onError(new Exception());
                 }
                 Grammar grammar = updateGrammarParame.getGrammar();
-                repository.updateGrammar(grammar);
-                subscriber.onNext(true);
+                boolean result = false;
+                try {
+                    result = repository.updateGrammar(grammar);
+                } catch (BmobException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
+                subscriber.onNext(result);
                 subscriber.onCompleted();
             }
         });

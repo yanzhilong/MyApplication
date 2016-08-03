@@ -7,6 +7,7 @@ import com.englishlearn.myapplication.data.source.Repository;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -32,8 +33,14 @@ public class UpdateSentence extends UseCase<Boolean,UpdateSentence.UpdateSentenc
                     subscriber.onError(new Exception());
                 }
                 Sentence sentence = updateSentenceParame.getSentence();
-                repository.updateSentence(sentence);
-                subscriber.onNext(true);
+                boolean result = false;
+                try {
+                    result = repository.updateSentence(sentence);
+                } catch (BmobException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
+                subscriber.onNext(result);
                 subscriber.onCompleted();
             }
         });

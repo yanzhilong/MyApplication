@@ -3,9 +3,12 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.future.FindBmobGrammar;
-import com.englishlearn.myapplication.data.source.remote.bmob.future.FindBmobSentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.future.FindListenerBmobGrammar;
+import com.englishlearn.myapplication.data.source.remote.bmob.future.FindListenerBmobSentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.future.QueryListenerBmobGrammar;
+import com.englishlearn.myapplication.data.source.remote.bmob.future.QueryListenerBmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.future.SaveFuture;
+import com.englishlearn.myapplication.data.source.remote.bmob.future.UpdateListenerFuture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,7 @@ public class BmobDataSource implements DataSource {
     @Override
     public List<Sentence> getSentences() throws BmobException {
         BmobQuery<BmobSentence> bmobQuery = new BmobQuery<>();
-        FindBmobSentence findBmob = new FindBmobSentence();
+        FindListenerBmobSentence findBmob = new FindListenerBmobSentence();
         bmobQuery.findObjects(findBmob);
         List<BmobSentence> list = null;
         try {
@@ -49,7 +52,7 @@ public class BmobDataSource implements DataSource {
             }
         }else{
             for(BmobSentence bmobSentence : list){
-                Sentence sentence = new Sentence(bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
                 sentences.add(sentence);
             }
         }
@@ -64,7 +67,7 @@ public class BmobDataSource implements DataSource {
     @Override
     public List<Grammar> getGrammars() throws BmobException {
         BmobQuery<BmobGrammar> bmobQuery = new BmobQuery<>();
-        FindBmobGrammar findBmob = new FindBmobGrammar();
+        FindListenerBmobGrammar findBmob = new FindListenerBmobGrammar();
         bmobQuery.findObjects(findBmob);
         List<BmobGrammar> list = null;
         try {
@@ -81,7 +84,7 @@ public class BmobDataSource implements DataSource {
             }
         }else{
             for(BmobGrammar bmobGrammar : list){
-                Grammar grammar = new Grammar(bmobGrammar.getName(),bmobGrammar.getContent());
+                Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
                 grammars.add(grammar);
             }
         }
@@ -94,13 +97,61 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
-    public Sentence getSentenceById(String sentenceid) {
+    public Sentence getSentenceBySentenceId(String sentenceid) throws BmobException {
         return null;
     }
 
     @Override
-    public Grammar getGrammarById(String grammarid) {
+    public Grammar getGrammarByGrammarId(String grammarid) throws BmobException {
         return null;
+    }
+
+    @Override
+    public Sentence getSentenceById(String id) throws BmobException {
+
+        BmobQuery<BmobSentence> bmobQuery = new BmobQuery<>();
+        QueryListenerBmobSentence queryListenerBmobSentence = new QueryListenerBmobSentence();
+        bmobQuery.getObject(id, queryListenerBmobSentence);
+        BmobSentence bmobSentence = null;
+        try {
+            bmobSentence = queryListenerBmobSentence.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Sentence sentence = null;
+        if(queryListenerBmobSentence .getBmobException() != null){
+            throw queryListenerBmobSentence.getBmobException();
+        }
+        if(bmobSentence != null){
+            sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+        }
+        return sentence;
+    }
+
+    @Override
+    public Grammar getGrammarById(String id) throws BmobException {
+
+        BmobQuery<BmobGrammar> bmobQuery = new BmobQuery<>();
+        QueryListenerBmobGrammar queryListenerBmobGrammar = new QueryListenerBmobGrammar();
+        bmobQuery.getObject(id, queryListenerBmobGrammar);
+        BmobGrammar bmobGrammar = null;
+        try {
+            bmobGrammar = queryListenerBmobGrammar.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Grammar grammar = null;
+        if(queryListenerBmobGrammar .getBmobException() != null){
+            throw queryListenerBmobGrammar.getBmobException();
+        }
+        if(bmobGrammar != null){
+            grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+        }
+        return grammar;
     }
 
     @Override
@@ -115,7 +166,7 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public boolean addSentence(Sentence sentence) throws BmobException {
-        BmobSentence bmobSentence = new BmobSentence(sentence.getmId(),sentence.getContent(),sentence.getTranslation());
+        BmobSentence bmobSentence = new BmobSentence(sentence.getSentenceid(),sentence.getContent(),sentence.getTranslation());
         SaveFuture saveFuture = new SaveFuture();
         bmobSentence.save(saveFuture);
         String result = null;
@@ -136,7 +187,7 @@ public class BmobDataSource implements DataSource {
     @Override
     public boolean addGrammar(Grammar grammar) throws BmobException {
 
-        BmobGrammar bmobGrammar = new BmobGrammar(grammar.getmId(),grammar.getName(),grammar.getContent());
+        BmobGrammar bmobGrammar = new BmobGrammar(grammar.getGrammarid(),grammar.getName(),grammar.getContent());
         SaveFuture saveFuture = new SaveFuture();
         bmobGrammar.save(saveFuture);
         String result = null;
@@ -154,13 +205,45 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
-    public boolean updateSentence(Sentence sentence) {
-        return false;
+    public boolean updateSentence(Sentence sentence) throws BmobException {
+
+        BmobSentence bmobSentence = new BmobSentence(sentence.getSentenceid(),sentence.getContent(),sentence.getTranslation());
+        bmobSentence.setObjectId(sentence.getId());
+        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
+        bmobSentence.update(updateListenerFuture);
+        boolean result = false;
+        try {
+            result = updateListenerFuture.save();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (BmobException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
     }
 
     @Override
-    public boolean updateGrammar(Grammar grammar) {
-        return false;
+    public boolean updateGrammar(Grammar grammar) throws BmobException {
+
+        BmobGrammar bmobGrammar = new BmobGrammar(grammar.getGrammarid(),grammar.getName(),grammar.getContent());
+        bmobGrammar.setObjectId(grammar.getId());
+        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
+        bmobGrammar.update(updateListenerFuture);
+        boolean result = false;
+        try {
+            result = updateListenerFuture.save();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (BmobException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
     }
 
     @Override

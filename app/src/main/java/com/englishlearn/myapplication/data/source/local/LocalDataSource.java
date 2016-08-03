@@ -28,6 +28,8 @@ import com.englishlearn.myapplication.data.Sentence;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.GrammarEntry;
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
 
@@ -200,7 +202,7 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public Sentence getSentenceById(String sentenceid) {
+    public Sentence getSentenceBySentenceId(String sentenceid) {
 
         Sentence sentence = null;
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -234,7 +236,7 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public Grammar getGrammarById(String grammarid) {
+    public Grammar getGrammarByGrammarId(String grammarid) {
         Grammar grammar = null;
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -267,6 +269,16 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
+    public Sentence getSentenceById(String id) throws BmobException {
+        return null;
+    }
+
+    @Override
+    public Grammar getGrammarById(String id) throws BmobException {
+        return null;
+    }
+
+    @Override
     public boolean deleteAllSentences() {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -294,7 +306,7 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getmId());
+        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceid());
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
         values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
@@ -311,7 +323,7 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getmId());
+        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarid());
         values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
@@ -328,12 +340,12 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getmId());
+        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceid());
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
         values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
         String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {sentence.getmId()};
+        String[] selectionArgs = {sentence.getSentenceid()};
 
         int result = db.update(SentenceEntry.TABLE_NAME,values,selection,selectionArgs);
 
@@ -347,12 +359,12 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getmId());
+        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarid());
         values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
         String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {grammar.getmId()};
+        String[] selectionArgs = {grammar.getGrammarid()};
 
         int result = db.update(GrammarEntry.TABLE_NAME,values,selection,selectionArgs);
 

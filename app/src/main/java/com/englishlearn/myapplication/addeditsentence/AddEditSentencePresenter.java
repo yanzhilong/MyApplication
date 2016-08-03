@@ -18,8 +18,10 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     private GetSentence getSentence;
     private UpdateSentence updateSentence;
     private String sentenceid;
-    public AddEditSentencePresenter(AddEditSentenceContract.View vew,String sentenceid){
+    private String id;
+    public AddEditSentencePresenter(AddEditSentenceContract.View vew,String id,String sentenceid){
         mainView = vew;
+        this.id = id;
         this.sentenceid = sentenceid;
         addSentences = new AddSentence();
         getSentence = new GetSentence();
@@ -60,10 +62,10 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     }
 
     private void updateSentence(String content, String translate){
-        if(sentenceid == null){
+        if(sentenceid == null || id == null){
             throw new RuntimeException("updateSentence() was called but sentence is new.");
         }
-        Sentence sentence = new Sentence(sentenceid,content,translate,null);
+        Sentence sentence = new Sentence(id,sentenceid,content,translate,null);
         UpdateSentence.UpdateSentenceParame updateSentenceParame = new UpdateSentence.UpdateSentenceParame(sentence);
         updateSentence.excuteIo(updateSentenceParame).subscribe(new Subscriber<Boolean>() {
             @Override
@@ -92,7 +94,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     @Override
     void start() {
         if(sentenceid != null){
-            getSentence.excuteIo(new GetSentence.GetSentenceParame(sentenceid)).subscribe(new Subscriber<Sentence>() {
+            getSentence.excuteIo(new GetSentence.GetSentenceParame(id,sentenceid)).subscribe(new Subscriber<Sentence>() {
                 @Override
                 public void onCompleted() {
 

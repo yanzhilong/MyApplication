@@ -8,7 +8,10 @@ import java.util.UUID;
  * 句子
  */
 public class Sentence {
-    private final String mId;//id
+
+    private String id;//数据庫唯一id
+
+    private final String sentenceid;//句子唯一id
 
     private String content;//内容
 
@@ -17,21 +20,41 @@ public class Sentence {
     private List<Grammar> grammarList;//相关语法
 
     public Sentence(){
-        mId = UUID.randomUUID().toString();
+        sentenceid = UUID.randomUUID().toString();
     }
 
     public Sentence(String mId, String content, String translation, List<Grammar> grammarList) {
-        this.mId = mId;
+        this.sentenceid = mId;
         this.content = content;
         this.translation = translation;
         this.grammarList = grammarList;
     }
 
     public Sentence(String content, String translation, List<Grammar> grammarList){
-        mId = UUID.randomUUID().toString();
+        sentenceid = UUID.randomUUID().toString();
         this.content = content;
         this.translation = translation;
         this.grammarList = grammarList;
+    }
+
+    public Sentence(String id, String sentenceid, String content, String translation, List<Grammar> grammarList) {
+        this.id = id;
+        this.sentenceid = sentenceid;
+        this.content = content;
+        this.translation = translation;
+        this.grammarList = grammarList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     public String getContent() {
@@ -46,10 +69,6 @@ public class Sentence {
         return translation;
     }
 
-    public void setTtranslation(String translation) {
-        this.translation = translation;
-    }
-
     public List<Grammar> getGrammarList() {
         return grammarList;
     }
@@ -58,8 +77,7 @@ public class Sentence {
         this.grammarList = grammarList;
     }
 
-    public String getmId() {
-        return mId;
+    public String getSentenceid() {
+        return sentenceid;
     }
-
 }

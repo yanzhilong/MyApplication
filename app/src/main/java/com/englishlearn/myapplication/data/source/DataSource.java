@@ -44,9 +44,13 @@ DataSource {
 
     List<Grammar> getGrammars(String searchword);
 
-    Sentence getSentenceById(String sentenceid);
+    Sentence getSentenceBySentenceId(String sentenceid) throws BmobException;
 
-    Grammar getGrammarById(String grammarid);
+    Grammar getGrammarByGrammarId(String grammarid) throws BmobException;
+
+    Sentence getSentenceById(String id) throws BmobException;
+
+    Grammar getGrammarById(String id) throws BmobException;
 
     boolean deleteAllSentences();
 
@@ -56,9 +60,9 @@ DataSource {
 
     boolean addGrammar(Grammar grammar) throws BmobException;
 
-    boolean updateSentence(Sentence sentence);
+    boolean updateSentence(Sentence sentence) throws BmobException;
 
-    boolean updateGrammar(Grammar grammar);
+    boolean updateGrammar(Grammar grammar) throws BmobException;
 
     boolean deleteSentence(String sid);
 

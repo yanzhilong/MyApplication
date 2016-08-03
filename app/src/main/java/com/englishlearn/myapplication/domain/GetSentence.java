@@ -7,6 +7,7 @@ import com.englishlearn.myapplication.data.source.Repository;
 
 import javax.inject.Inject;
 
+import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -30,7 +31,23 @@ public class GetSentence extends UseCase<Sentence,GetSentence.GetSentenceParame>
             public void call(Subscriber<? super Sentence> subscriber) {
                 if(getSentenceParame != null) {
                     String sentenceid = getSentenceParame.getSentenceid();
-                    Sentence sentence = repository.getSentenceById(sentenceid);
+                    String id = getSentenceParame.getId();
+                    Sentence sentence = null;
+                    if(id != null){
+                        try {
+                            sentence = repository.getSentenceById(id);
+                        } catch (BmobException e) {
+                            e.printStackTrace();
+                            subscriber.onError(e);
+                        }
+                    }else if(sentenceid != null){
+                        try {
+                            sentence = repository.getSentenceBySentenceId(sentenceid);
+                        } catch (BmobException e) {
+                            e.printStackTrace();
+                            subscriber.onError(e);
+                        }
+                    }
                     subscriber.onNext(sentence);
                     subscriber.onCompleted();
                 }
@@ -39,13 +56,19 @@ public class GetSentence extends UseCase<Sentence,GetSentence.GetSentenceParame>
     }
 
     public static class GetSentenceParame implements UseCase.Params{
+        private String id;
         private String sentenceid;
 
-        public GetSentenceParame(String sentenceid){
+        public GetSentenceParame(String id, String sentenceid) {
+            this.id = id;
             this.sentenceid = sentenceid;
         }
 
         public GetSentenceParame() {
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getSentenceid() {

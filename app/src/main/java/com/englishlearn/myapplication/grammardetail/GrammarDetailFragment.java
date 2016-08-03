@@ -118,7 +118,8 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
             return;
         }
         Intent edit = new Intent(GrammarDetailFragment.this.getContext(), AddEditGrammarActivity.class);
-        edit.putExtra(AddEditGrammarActivity.GRAMMAR_ID,grammar.getmId());
+        edit.putExtra(AddEditGrammarActivity.GRAMMAR_ID,grammar.getGrammarid());
+        edit.putExtra(AddEditGrammarActivity.ID,grammar.getId());
         startActivity(edit);
     }
 

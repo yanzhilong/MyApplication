@@ -80,7 +80,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Sentence sentence = sentencesAdapter.getSentences().get(position);
                 Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getmId());
+                detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceid());
+                detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
                 startActivity(detail);
             }
         });

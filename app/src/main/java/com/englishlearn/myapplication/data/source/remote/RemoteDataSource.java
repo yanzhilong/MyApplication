@@ -7,6 +7,8 @@ import com.englishlearn.myapplication.data.source.DataSource;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+
 /**
  * 从网络操作数据
  */
@@ -45,12 +47,22 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public Sentence getSentenceById(String sentenceid) {
+    public Sentence getSentenceBySentenceId(String sentenceid) {
         return null;
     }
 
     @Override
-    public Grammar getGrammarById(String grammarid) {
+    public Grammar getGrammarByGrammarId(String grammarid) {
+        return null;
+    }
+
+    @Override
+    public Sentence getSentenceById(String id) throws BmobException {
+        return null;
+    }
+
+    @Override
+    public Grammar getGrammarById(String id) throws BmobException {
         return null;
     }
 
