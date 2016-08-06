@@ -1,7 +1,6 @@
 package com.englishlearn.myapplication.sentences;
 
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +13,7 @@ import com.englishlearn.myapplication.util.ActivityUtils;
 public class SentencesActivity extends AppCompatActivity {
 
     private SentencesContract.Presenter presenter;
+    private SelectContract.Presenter selectPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +34,7 @@ public class SentencesActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), cleanFragment, R.id.contentFrame);
         }
         presenter = new SentencesPresenter( cleanFragment);
+        selectPresenter = new SelectPresenter(cleanFragment);
     }
 
     @Override

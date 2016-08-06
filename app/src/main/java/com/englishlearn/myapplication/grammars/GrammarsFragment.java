@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +36,8 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     private GrammarsContract.Presenter mPresenter;
     private ListView grammars_listview;
     private GrammarsAdapter grammarsAdapter;
+    private boolean isEdit;
+    private SelectListener selectListener;
 
     public static GrammarsFragment newInstance() {
         return new GrammarsFragment();
@@ -97,15 +100,17 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_base, menu);
+        inflater.inflate(R.menu.grammars_frag_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "点击菜单Item");
         switch (item.getItemId()) {
-            case R.id.menu_base:
-                Log.d(TAG, "点击菜单项");
+            case R.id.grammars_edit:
+                Log.d(TAG, "点击编辑项");
+                break;
+            case R.id.grammars_setting:
+                Log.d(TAG, "点击设置项");
                 break;
         }
         return true;
@@ -139,6 +144,8 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
 
         private LayoutInflater inflater;
         private List<Grammar> grammars;
+        private boolean isEdit;
+        private SelectListener selectListener;
 
         public void replace(List<Grammar> grammars){
             this.grammars = grammars;
@@ -182,6 +189,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             if(convertView == null){
                 convertView = inflater.inflate(R.layout.grammar_item,parent,false);
                 viewHolder = new ViewHolder();
+                viewHolder.select = (CheckBox) convertView.findViewById(R.id.select);
                 viewHolder.name = (TextView) convertView.findViewById(R.id.name);
                 viewHolder.content = (TextView) convertView.findViewById(R.id.content);
                 convertView.setTag(viewHolder);
@@ -191,11 +199,23 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             final Grammar grammar = grammars.get(position);
             viewHolder.name.setText(grammar.getName());
             viewHolder.content.setText(grammar.getContent());
+            //是否显示复选框
+            if(isEdit){
+                viewHolder.select.setVisibility(View.VISIBLE);
+            }else{
+                viewHolder.select.setVisibility(View.GONE);
+            }
             return convertView;
         }
     }
 
+    public interface SelectListener{
+        void select(int position);
+        void unselect(int position);
+    }
+
     static class ViewHolder{
+        CheckBox select;//选中
         TextView name;//名称
         TextView content;//说明
     }

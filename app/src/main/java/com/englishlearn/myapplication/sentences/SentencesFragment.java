@@ -15,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
@@ -32,13 +35,17 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View {
+public class SentencesFragment extends Fragment implements SentencesContract.View,SelectContract.View {
 
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private SentencesAdapter sentencesAdapter;
     private SentencesContract.Presenter mPresenter;
-
+    private SelectContract.Presenter selectPresenter;
     private ListView sentences_listview;
+    private RelativeLayout sentences_edit_rela;
+    private Button deletes;
+    private CheckBox allSelect;
+    private FloatingActionButton fab;
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -52,7 +59,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sentencesAdapter = new SentencesAdapter(new ArrayList<Sentence>());
     }
 
     @Nullable
@@ -61,11 +67,20 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.sentences_frag, container, false);
 
+        sentencesAdapter = new SentencesAdapter(new ArrayList<Sentence>(),selectPresenter);
         sentences_listview = (ListView) root.findViewById(R.id.sentences_listview);
+        sentences_edit_rela = (RelativeLayout) root.findViewById(R.id.sentences_edit_rela);
+        deletes = (Button) root.findViewById(R.id.deletes);
+        allSelect = (CheckBox) root.findViewById(R.id.allSelect);
+        allSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectPresenter.allSelectClick();
+            }
+        });
         sentences_listview.setAdapter(sentencesAdapter);
         // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
 
         fab.setImageResource(R.drawable.ic_add);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,19 +89,26 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 mPresenter.addSentence();
             }
         });
-
         sentences_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Sentence sentence = sentencesAdapter.getSentences().get(position);
-                Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceid());
-                detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
-                startActivity(detail);
+                if(selectPresenter.isEdit()){
+                    selectPresenter.onClick(sentencesAdapter.getSentences().get(position));
+                }else{
+                    Sentence sentence = sentencesAdapter.getSentences().get(position);
+                    Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
+                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceid());
+                    detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
+                    startActivity(detail);
+                }
             }
         });
 
-
+        if(selectPresenter.isEdit()){
+            showaddSentence();
+        }else{
+            hideSentencesEdit();
+        }
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -102,15 +124,18 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_base, menu);
+        inflater.inflate(R.menu.sentences_frag_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "点击菜单Item");
         switch (item.getItemId()) {
-            case R.id.menu_base:
-                Log.d(TAG, "点击菜单项");
+            case R.id.sentences_edit:
+                Log.d(TAG, "点击编辑项");
+                selectPresenter.edit();
+                break;
+            case R.id.sentences_setting:
+                Log.d(TAG, "点击设置项");
                 break;
         }
         return true;
@@ -141,15 +166,63 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         mPresenter.unsubscribe();
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        sentencesAdapter.notifyDataSetChanged();
+    }
+
+    public void setPresenter(SelectContract.Presenter presenter) {
+        selectPresenter = presenter;
+    }
+
+    @Override
+    public void showSentencesEdit() {
+        sentences_edit_rela.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideSentencesEdit() {
+        sentences_edit_rela.setVisibility(View.GONE);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showEditCount(int count) {
+        deletes.setText(getString(R.string.sentences_edit_delete) + (count > 0 ? "(" +count+")" : ""));
+    }
+
+    @Override
+    public List<Sentence> getSentences() {
+        return sentencesAdapter.getSentences();
+    }
+
+    @Override
+    public void showDeleteEnabled(Boolean enabled) {
+        deletes.setEnabled(enabled);
+    }
+
+    @Override
+    public void showAllSelect() {
+        allSelect.setChecked(true);
+    }
+
+    @Override
+    public void hideAllSelect() {
+        allSelect.setChecked(false);
+    }
+
     private class SentencesAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
 
+        private List<Sentence> sentences;
+
+        private SelectContract.Presenter selectPresenter;
+
         public List<Sentence> getSentences() {
             return sentences;
         }
-
-        private List<Sentence> sentences;
 
         public void replace(List<Sentence> sentences){
             this.sentences = sentences;
@@ -161,8 +234,9 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             notifyDataSetChanged();
         }
 
-        public SentencesAdapter(List<Sentence> sentences){
+        public SentencesAdapter(List<Sentence> sentences,SelectContract.Presenter selectPresenter){
             this.sentences = sentences;
+            this.selectPresenter = selectPresenter;
         }
 
         @Override
@@ -181,14 +255,15 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if(inflater == null){
                 inflater = LayoutInflater.from(parent.getContext());
             }
-            ViewHolder viewHolder;
+            final ViewHolder viewHolder;
             if(convertView == null){
                 convertView = inflater.inflate(R.layout.sentence_item,parent,false);
                 viewHolder = new ViewHolder();
+                viewHolder.select = (CheckBox) convertView.findViewById(R.id.select);
                 viewHolder.content = (TextView) convertView.findViewById(R.id.content);
                 viewHolder.translation = (TextView) convertView.findViewById(R.id.translation);
                 viewHolder.grammars = (LinearLayout) convertView.findViewById(R.id.grammars);
@@ -205,8 +280,26 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 viewHolder.grammars.removeAllViews();
                 initGrammars(viewHolder.grammars,grammars);
             }
+            //是否显示复选框
+            if(selectPresenter.isEdit()){
+                viewHolder.select.setVisibility(View.VISIBLE);
+                if(selectPresenter.isSelect(sentence)){
+                    viewHolder.select.setChecked(true);
+                }else{
+                    viewHolder.select.setChecked(false);
+                }
+            }else{
+                viewHolder.select.setVisibility(View.GONE);
+            }
+            viewHolder.select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectPresenter.onClick(sentence);
+                }
+            });
             return convertView;
         }
+
     }
 
     /**
@@ -230,6 +323,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     }
 
     static class ViewHolder{
+        CheckBox select;//选中
         TextView content;//内容
         TextView translation;//译文
         LinearLayout grammars;//语法

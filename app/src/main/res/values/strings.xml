@@ -14,11 +14,17 @@
     <string name="grammar_btn">grammars</string>
 
 
-    <!-- AddEditGrammarActivity -->
+    <!-- SentencesActivity -->
     <string name="sentences_title">Sentences</string>
+    <string name="sentences_menu_edit">Edit</string>
+    <string name="sentences_menu_setting">Setting</string>
+    <string name="sentences_edit_allselect">all select</string>
+    <string name="sentences_edit_delete">Delete</string>
 
     <!-- GrammarsActivity -->
     <string name="grammar_title">Grammars</string>
+    <string name="grammars_menu_edit">Edit</string>
+    <string name="grammars_menu_setting">Setting</string>
 
     <!-- AddEditSentenceActivity -->
     <string name="addsentence_title">Add Sentence</string>
