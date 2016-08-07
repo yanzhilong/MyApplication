@@ -7,12 +7,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.sentences.SentencesSelectPresenter;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
 public class GrammarsActivity extends AppCompatActivity {
 
     private GrammarsContract.Presenter presenter;
+    private GrammarsSelectContract.Presenter selectPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,7 @@ public class GrammarsActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), cleanFragment, R.id.contentFrame);
         }
         presenter = new GrammarsPresenter( cleanFragment);
+        selectPresenter = new GrammarsSelectPresenter(cleanFragment);
     }
 
     @Override

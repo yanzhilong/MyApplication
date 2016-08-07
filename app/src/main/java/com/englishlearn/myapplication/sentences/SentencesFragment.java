@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
@@ -35,12 +36,12 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View,SelectContract.View {
+public class SentencesFragment extends Fragment implements SentencesContract.View,SentencesSelectContract.View, View.OnClickListener {
 
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private SentencesAdapter sentencesAdapter;
     private SentencesContract.Presenter mPresenter;
-    private SelectContract.Presenter selectPresenter;
+    private SentencesSelectContract.Presenter selectPresenter;
     private ListView sentences_listview;
     private RelativeLayout sentences_edit_rela;
     private Button deletes;
@@ -72,23 +73,15 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         sentences_edit_rela = (RelativeLayout) root.findViewById(R.id.sentences_edit_rela);
         deletes = (Button) root.findViewById(R.id.deletes);
         allSelect = (CheckBox) root.findViewById(R.id.allSelect);
-        allSelect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectPresenter.allSelectClick();
-            }
-        });
         sentences_listview.setAdapter(sentencesAdapter);
         // Set up floating action button
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
-
         fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addSentence();
-            }
-        });
+
+        allSelect.setOnClickListener(this);
+        deletes.setOnClickListener(this);
+        fab.setOnClickListener(this);
+
         sentences_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,7 +105,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
-
         return root;
     }
 
@@ -120,6 +112,28 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     public void onResume() {
         super.onResume();
         mPresenter.getSentences();
+    }
+
+    private Menu menu;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        this.menu = menu;
+        Log.d(TAG,"onPrepareOptionsMenu");
+        MenuItem edit = menu.findItem(R.id.sentences_edit);
+        MenuItem cancel = menu.findItem(R.id.menu_cancel);
+
+        if(selectPresenter.isEdit())
+        {
+            edit.setVisible(false);
+            cancel.setVisible(true);
+
+        }
+        else
+        {
+            edit.setVisible(true);
+            cancel.setVisible(false);
+        }
     }
 
     @Override
@@ -133,9 +147,15 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             case R.id.sentences_edit:
                 Log.d(TAG, "点击编辑项");
                 selectPresenter.edit();
+                onPrepareOptionsMenu(menu);
                 break;
             case R.id.sentences_setting:
                 Log.d(TAG, "点击设置项");
+                break;
+            case R.id.menu_cancel:
+                Log.d(TAG, "点击取消项");
+                selectPresenter.unedit();
+                onPrepareOptionsMenu(menu);
                 break;
         }
         return true;
@@ -150,6 +170,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void emptySentences() {
         Log.d(TAG,"emptySentences");
+        sentencesAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -158,6 +179,15 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         Log.d(TAG,"showaddSentence");
         Intent ahowAddSentenctIntent = new Intent(this.getContext(), AddEditSentenceActivity.class);
         startActivity(ahowAddSentenctIntent);
+    }
+
+    @Override
+    public void showDeleteResult(int success, int fail) {
+        selectPresenter.unedit();
+        onPrepareOptionsMenu(menu);
+        mPresenter.getSentences();
+        Snackbar.make(this.getView(),getResources().getString(R.string.delete_result,success,fail), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override
@@ -171,7 +201,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         sentencesAdapter.notifyDataSetChanged();
     }
 
-    public void setPresenter(SelectContract.Presenter presenter) {
+    public void setPresenter(SentencesSelectContract.Presenter presenter) {
         selectPresenter = presenter;
     }
 
@@ -189,7 +219,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
 
     @Override
     public void showEditCount(int count) {
-        deletes.setText(getString(R.string.sentences_edit_delete) + (count > 0 ? "(" +count+")" : ""));
+        deletes.setText(getString(R.string.edit_delete) + (count > 0 ? "(" +count+")" : ""));
     }
 
     @Override
@@ -212,13 +242,28 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         allSelect.setChecked(false);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.deletes:
+                mPresenter.deleteSentences(selectPresenter.getSelects());
+                break;
+            case R.id.fab_add_sentence:
+                mPresenter.addSentence();
+                break;
+            case R.id.allSelect:
+                selectPresenter.allSelectClick();
+                break;
+        }
+    }
+
     private class SentencesAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
 
         private List<Sentence> sentences;
 
-        private SelectContract.Presenter selectPresenter;
+        private SentencesSelectContract.Presenter selectPresenter;
 
         public List<Sentence> getSentences() {
             return sentences;
@@ -234,7 +279,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             notifyDataSetChanged();
         }
 
-        public SentencesAdapter(List<Sentence> sentences,SelectContract.Presenter selectPresenter){
+        public SentencesAdapter(List<Sentence> sentences,SentencesSelectContract.Presenter selectPresenter){
             this.sentences = sentences;
             this.selectPresenter = selectPresenter;
         }
@@ -282,12 +327,12 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             }
             //是否显示复选框
             if(selectPresenter.isEdit()){
-                viewHolder.select.setVisibility(View.VISIBLE);
                 if(selectPresenter.isSelect(sentence)){
                     viewHolder.select.setChecked(true);
                 }else{
                     viewHolder.select.setChecked(false);
                 }
+                viewHolder.select.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.select.setVisibility(View.GONE);
             }

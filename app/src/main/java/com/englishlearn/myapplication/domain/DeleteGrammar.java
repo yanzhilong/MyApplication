@@ -14,31 +14,37 @@ import rx.Subscriber;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class UpdateGrammar extends UseCase<Boolean,UpdateGrammar.UpdateGrammarParame> {
+public class DeleteGrammar extends UseCase<Boolean,DeleteGrammar.DeleteGrammarParame> {
 
     @Inject
     Repository repository;
 
-    public UpdateGrammar(){
+    public DeleteGrammar(){
         MyApplication.instance.getAppComponent().inject(this);
     }
 
     @Override
-    protected Observable<Boolean> execute(final UpdateGrammar.UpdateGrammarParame updateGrammarParame) {
+    protected Observable<Boolean> execute(final DeleteGrammar.DeleteGrammarParame deleteGrammarParame) {
 
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
-                if(updateGrammarParame == null || updateGrammarParame.getGrammar() == null){
+                if(deleteGrammarParame == null || deleteGrammarParame.getGrammar() == null){
                     subscriber.onError(new NullPointerException());
                 }
-                Grammar grammar = updateGrammarParame.getGrammar();
+                Grammar grammar = deleteGrammarParame.grammar;
+                String grammarid = grammar.getGrammarid();
+                String id = grammar.getId();
                 boolean result = false;
-                try {
-                    result = repository.updateGrammar(grammar);
-                } catch (BmobException e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
+                if(id != null){
+                    try {
+                        result = repository.deleteGrammarById(id);
+                    } catch (BmobException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
+                }else if(grammarid != null){
+                    result = repository.deleteGrammar(grammarid);
                 }
                 subscriber.onNext(result);
                 subscriber.onCompleted();
@@ -46,14 +52,14 @@ public class UpdateGrammar extends UseCase<Boolean,UpdateGrammar.UpdateGrammarPa
         });
     }
 
-    public static class UpdateGrammarParame implements UseCase.Params{
+    public static class DeleteGrammarParame implements UseCase.Params{
         private Grammar grammar;
 
-        public UpdateGrammarParame(Grammar grammar){
+        public DeleteGrammarParame(Grammar grammar){
             this.grammar = grammar;
         }
 
-        public UpdateGrammarParame() {
+        public DeleteGrammarParame() {
         }
 
         public Grammar getGrammar() {

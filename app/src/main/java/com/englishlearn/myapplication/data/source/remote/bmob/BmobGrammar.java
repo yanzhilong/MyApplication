@@ -12,6 +12,10 @@ public class BmobGrammar extends BmobObject {
 
     private String content;//说明
 
+    public BmobGrammar(String grammarid) {
+        this.grammarid = grammarid;
+    }
+
     public BmobGrammar(String grammarid, String name, String content) {
         this.grammarid = grammarid;
         this.name = name;

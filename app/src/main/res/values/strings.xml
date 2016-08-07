@@ -19,12 +19,16 @@
     <string name="sentences_menu_edit">Edit</string>
     <string name="sentences_menu_setting">Setting</string>
     <string name="sentences_edit_allselect">all select</string>
-    <string name="sentences_edit_delete">Delete</string>
 
     <!-- GrammarsActivity -->
     <string name="grammar_title">Grammars</string>
     <string name="grammars_menu_edit">Edit</string>
     <string name="grammars_menu_setting">Setting</string>
+
+    <!-- GrammarsActivity and SentencesActivity -->
+    <string name="edit_delete">Delete</string>
+    <string name="delete_result" formatted="false">Delete success %d,fail %d.</string>
+    <string name="menu_cancel">Cancel</string>
 
     <!-- AddEditSentenceActivity -->
     <string name="addsentence_title">Add Sentence</string>

@@ -16,11 +16,13 @@ public class SentencesContract {
         void showSentences(List<Sentence> sentences);
         void emptySentences();
         void showaddSentence();
+        void showDeleteResult(int success,int fail);
     }
 
     abstract static class Presenter extends BasePresenter {
         abstract void getSentences();
         abstract void getSentences(String searchword);
         abstract void addSentence();
+        abstract void deleteSentences(List<Sentence> sentences);
     }
 }

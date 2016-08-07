@@ -13,7 +13,7 @@ import com.englishlearn.myapplication.util.ActivityUtils;
 public class SentencesActivity extends AppCompatActivity {
 
     private SentencesContract.Presenter presenter;
-    private SelectContract.Presenter selectPresenter;
+    private SentencesSelectContract.Presenter selectPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +34,7 @@ public class SentencesActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), cleanFragment, R.id.contentFrame);
         }
         presenter = new SentencesPresenter( cleanFragment);
-        selectPresenter = new SelectPresenter(cleanFragment);
+        selectPresenter = new SentencesSelectPresenter(cleanFragment);
     }
 
     @Override

@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@android:color/holo_red_dark"
-            android:text="@string/sentences_edit_delete"/>
+            android:enabled="false"
+            android:text="@string/edit_delete"/>
     </RelativeLayout>
 </LinearLayout>

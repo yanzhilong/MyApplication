@@ -12,6 +12,10 @@ public class BmobSentence extends BmobObject {
 
     private String translation;//翻译
 
+    public BmobSentence(String sentenceid) {
+        this.sentenceid = sentenceid;
+    }
+
     public BmobSentence(String sentenceid, String content, String translation) {
         this.sentenceid = sentenceid;
         this.content = content;

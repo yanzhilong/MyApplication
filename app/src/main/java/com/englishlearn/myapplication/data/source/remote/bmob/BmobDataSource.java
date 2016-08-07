@@ -247,13 +247,54 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
-    public boolean deleteSentence(String sid) {
+    public boolean deleteSentence(String sentenceid) {
         return false;
     }
 
     @Override
-    public boolean deleteGrammar(String gid) {
+    public boolean deleteGrammar(String grammarid) {
         return false;
     }
+
+    @Override
+    public boolean deleteSentenceById(String id) throws BmobException {
+        BmobSentence bmobSentence = new BmobSentence(null);
+        bmobSentence.setObjectId(id);
+        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
+        bmobSentence.delete(updateListenerFuture);
+        boolean result = false;
+        try {
+            result = updateListenerFuture.save();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (BmobException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deleteGrammarById(String id) throws BmobException {
+        BmobGrammar bmobGrammar = new BmobGrammar(null);
+        bmobGrammar.setObjectId(id);
+        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
+        bmobGrammar.delete(updateListenerFuture);
+        boolean result = false;
+        try {
+            result = updateListenerFuture.save();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (BmobException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
 
 }

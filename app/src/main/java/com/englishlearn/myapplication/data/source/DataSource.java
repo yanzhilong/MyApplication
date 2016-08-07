@@ -64,8 +64,11 @@ DataSource {
 
     boolean updateGrammar(Grammar grammar) throws BmobException;
 
-    boolean deleteSentence(String sid);
+    boolean deleteSentence(String sentenceid);
 
-    boolean deleteGrammar(String gid);
+    boolean deleteGrammar(String grammarid);
 
+    boolean deleteSentenceById(String id) throws BmobException;
+
+    boolean deleteGrammarById(String id) throws BmobException;
 }

@@ -374,12 +374,12 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public boolean deleteSentence(String sid) {
+    public boolean deleteSentence(String sentenceid) {
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {sid};
+        String[] selectionArgs = {sentenceid};
 
         int result = db.delete(SentenceEntry.TABLE_NAME,selection,selectionArgs);
 
@@ -389,16 +389,26 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public boolean deleteGrammar(String gid) {
+    public boolean deleteGrammar(String grammarid) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {gid};
+        String[] selectionArgs = {grammarid};
 
         int result = db.delete(GrammarEntry.TABLE_NAME,selection,selectionArgs);
 
         db.close();
 
         return(result > 0);
+    }
+
+    @Override
+    public boolean deleteSentenceById(String id) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteGrammarById(String id) {
+        return false;
     }
 }

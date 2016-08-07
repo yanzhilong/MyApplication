@@ -14,16 +14,16 @@ import java.util.Map;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SelectPresenter extends SelectContract.Presenter{
+public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
 
-    private static final String TAG = SelectPresenter.class.getSimpleName();
+    private static final String TAG = SentencesSelectPresenter.class.getSimpleName();
     private boolean isEdit;
     private Map<String,Boolean> selects;
-    private SelectContract.View view;
+    private SentencesSelectContract.View view;
     private List<Sentence> selecteds;
     private boolean isAllSelect;
 
-    public SelectPresenter(SelectContract.View view){
+    public SentencesSelectPresenter(SentencesSelectContract.View view){
         this.view = view;
         this.view.setPresenter(this);
         selects = new HashMap<>();
@@ -44,13 +44,15 @@ public class SelectPresenter extends SelectContract.Presenter{
 
     @Override
     void unedit() {
-        isEdit = false;
-        Iterator<Map.Entry<String,Boolean>> iterator = selects.entrySet().iterator();
-        while (iterator.hasNext()){
-            iterator.remove();
-        }
+        selects.clear();
+        selecteds.clear();
         view.hideSentencesEdit();
+        view.hideAllSelect();
+        view.showDeleteEnabled(false);
+        view.showEditCount(0);
         view.notifyDataSetChanged();
+        isEdit = false;
+        isAllSelect = false;
     }
 
     @Override

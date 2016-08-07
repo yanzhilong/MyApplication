@@ -97,12 +97,24 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public boolean deleteSentence(String sid) {
+    public boolean deleteSentence(String sentenceid) {
         return false;
     }
 
     @Override
-    public boolean deleteGrammar(String gid) {
+    public boolean deleteGrammar(String grammarid) {
         return false;
     }
+
+    @Override
+    public boolean deleteSentenceById(String id) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteGrammarById(String id) {
+        return false;
+    }
+
+
 }

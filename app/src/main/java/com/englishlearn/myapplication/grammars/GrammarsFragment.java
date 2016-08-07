@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
@@ -29,15 +32,18 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-28.
  */
-public class GrammarsFragment extends Fragment implements GrammarsContract.View {
+public class GrammarsFragment extends Fragment implements GrammarsContract.View,GrammarsSelectContract.View, View.OnClickListener {
 
     private static final String TAG = GrammarsFragment.class.getSimpleName();
 
     private GrammarsContract.Presenter mPresenter;
+    private GrammarsSelectContract.Presenter selectPresenter;
     private ListView grammars_listview;
     private GrammarsAdapter grammarsAdapter;
-    private boolean isEdit;
-    private SelectListener selectListener;
+    private RelativeLayout grammars_edit_rela;
+    private Button deletes;
+    private CheckBox allSelect;
+    private FloatingActionButton fab;
 
     public static GrammarsFragment newInstance() {
         return new GrammarsFragment();
@@ -51,7 +57,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        grammarsAdapter = new GrammarsAdapter(new ArrayList<Grammar>());
+
     }
 
     @Nullable
@@ -60,29 +66,34 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.grammars_frag, container, false);
 
+        grammarsAdapter = new GrammarsAdapter(new ArrayList<Grammar>(),selectPresenter);
         grammars_listview = (ListView) root.findViewById(R.id.grammars_listview);
+        grammars_edit_rela = (RelativeLayout) root.findViewById(R.id.sentences_edit_rela);
+        deletes = (Button) root.findViewById(R.id.deletes);
+        allSelect = (CheckBox) root.findViewById(R.id.allSelect);
         grammars_listview.setAdapter(grammarsAdapter);
-
         // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_grammar);
+        fab =(FloatingActionButton) getActivity().findViewById(R.id.fab_add_grammar);
 
         fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addGrammar();
-            }
-        });
+
+        allSelect.setOnClickListener(this);
+        deletes.setOnClickListener(this);
+        fab.setOnClickListener(this);
 
         grammars_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Grammar grammar = grammarsAdapter.getGrammars().get(position);
-                Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
-                detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getGrammarid());
-                detail.putExtra(GrammarDetailActivity.ID,grammar.getId());
-                startActivity(detail);
+
+                if(selectPresenter.isEdit()){
+                    selectPresenter.onClick(grammarsAdapter.getGrammars().get(position));
+                }else{
+                    Grammar grammar = grammarsAdapter.getGrammars().get(position);
+                    Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
+                    detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getGrammarid());
+                    detail.putExtra(GrammarDetailActivity.ID,grammar.getId());
+                    startActivity(detail);
+                }
             }
         });
 
@@ -103,14 +114,43 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
         inflater.inflate(R.menu.grammars_frag_menu, menu);
     }
 
+    private Menu menu;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        this.menu = menu;
+        Log.d(TAG,"onPrepareOptionsMenu");
+        MenuItem edit = menu.findItem(R.id.grammars_edit);
+        MenuItem cancel = menu.findItem(R.id.menu_cancel);
+
+        if(selectPresenter.isEdit())
+        {
+            edit.setVisible(false);
+            cancel.setVisible(true);
+
+        }
+        else
+        {
+            edit.setVisible(true);
+            cancel.setVisible(false);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.grammars_edit:
                 Log.d(TAG, "点击编辑项");
+                selectPresenter.edit();
+                onPrepareOptionsMenu(menu);
                 break;
             case R.id.grammars_setting:
                 Log.d(TAG, "点击设置项");
+                break;
+            case R.id.menu_cancel:
+                Log.d(TAG, "点击取消项");
+                selectPresenter.unedit();
+                onPrepareOptionsMenu(menu);
                 break;
         }
         return true;
@@ -125,6 +165,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     @Override
     public void emptyGrammars() {
         Log.d(TAG,"emptyGrammars");
+        grammarsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -135,17 +176,89 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
     }
 
     @Override
+    public void showDeleteResult(int success, int fail) {
+        selectPresenter.unedit();
+        onPrepareOptionsMenu(menu);
+        mPresenter.getGrammars();
+        Snackbar.make(this.getView(),getResources().getString(R.string.delete_result,success,fail), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.unsubscribe();
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        grammarsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPresenter(GrammarsSelectContract.Presenter presenter) {
+        selectPresenter = presenter;
+    }
+
+    @Override
+    public void showGrammarsEdit() {
+        grammars_edit_rela.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideGrammarsEdit() {
+        grammars_edit_rela.setVisibility(View.GONE);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showEditCount(int count) {
+        deletes.setText(getString(R.string.edit_delete) + (count > 0 ? "(" +count+")" : ""));
+    }
+
+    @Override
+    public List<Grammar> getGrammars() {
+        return grammarsAdapter.getGrammars();
+    }
+
+    @Override
+    public void showDeleteEnabled(Boolean enabled) {
+        deletes.setEnabled(enabled);
+    }
+
+    @Override
+    public void showAllSelect() {
+        allSelect.setChecked(true);
+    }
+
+    @Override
+    public void hideAllSelect() {
+        allSelect.setChecked(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.deletes:
+                mPresenter.deleteGrammars(selectPresenter.getSelects());
+                break;
+            case R.id.fab_add_grammar:
+                mPresenter.addGrammar();
+                break;
+            case R.id.allSelect:
+                selectPresenter.allSelectClick();
+                break;
+        }
+    }
+
     private class GrammarsAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
+
         private List<Grammar> grammars;
-        private boolean isEdit;
-        private SelectListener selectListener;
+
+        private GrammarsSelectContract.Presenter selectPresenter;
 
         public void replace(List<Grammar> grammars){
             this.grammars = grammars;
@@ -161,8 +274,9 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             notifyDataSetChanged();
         }
 
-        public GrammarsAdapter(List<Grammar> grammars){
-            this.grammars = grammars;;
+        public GrammarsAdapter(List<Grammar> grammars,GrammarsSelectContract.Presenter selectPresenter){
+            this.grammars = grammars;
+            this.selectPresenter = selectPresenter;
         }
 
         @Override
@@ -199,19 +313,26 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View 
             final Grammar grammar = grammars.get(position);
             viewHolder.name.setText(grammar.getName());
             viewHolder.content.setText(grammar.getContent());
+
             //是否显示复选框
-            if(isEdit){
+            if(selectPresenter.isEdit()){
+                if(selectPresenter.isSelect(grammar)){
+                    viewHolder.select.setChecked(true);
+                }else{
+                    viewHolder.select.setChecked(false);
+                }
                 viewHolder.select.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.select.setVisibility(View.GONE);
             }
+            viewHolder.select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectPresenter.onClick(grammar);
+                }
+            });
             return convertView;
         }
-    }
-
-    public interface SelectListener{
-        void select(int position);
-        void unselect(int position);
     }
 
     static class ViewHolder{

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by yanzl on 16-7-20.
  * 用于约定view 和 presenter的实现接口
  */
-public class SelectContract {
+public class SentencesSelectContract {
 
     public interface View  {
         void notifyDataSetChanged();

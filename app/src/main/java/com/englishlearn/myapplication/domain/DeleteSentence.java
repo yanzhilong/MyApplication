@@ -14,31 +14,37 @@ import rx.Subscriber;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class UpdateSentence extends UseCase<Boolean,UpdateSentence.UpdateSentenceParame> {
+public class DeleteSentence extends UseCase<Boolean,DeleteSentence.DeleteSentenceParame> {
 
     @Inject
     Repository repository;
 
-    public UpdateSentence(){
+    public DeleteSentence(){
         MyApplication.instance.getAppComponent().inject(this);
     }
 
     @Override
-    protected Observable<Boolean> execute(final UpdateSentence.UpdateSentenceParame updateSentenceParame) {
+    protected Observable<Boolean> execute(final DeleteSentence.DeleteSentenceParame deleteSentenceParame) {
 
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
-                if(updateSentenceParame == null || updateSentenceParame.getSentence() == null){
+                if(deleteSentenceParame == null || deleteSentenceParame.getSentence() == null){
                     subscriber.onError(new NullPointerException());
                 }
-                Sentence sentence = updateSentenceParame.getSentence();
+                Sentence sentence = deleteSentenceParame.getSentence();
+                String sentenceid = sentence.getSentenceid();
+                String id = sentence.getId();
                 boolean result = false;
-                try {
-                    result = repository.updateSentence(sentence);
-                } catch (BmobException e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
+                if(id != null){
+                    try {
+                        result = repository.deleteSentenceById(id);
+                    } catch (BmobException e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
+                }else if(sentenceid != null){
+                    result = repository.deleteSentence(sentenceid);
                 }
                 subscriber.onNext(result);
                 subscriber.onCompleted();
@@ -46,14 +52,14 @@ public class UpdateSentence extends UseCase<Boolean,UpdateSentence.UpdateSentenc
         });
     }
 
-    public static class UpdateSentenceParame implements UseCase.Params{
+    public static class DeleteSentenceParame implements UseCase.Params{
         private Sentence sentence;
 
-        public UpdateSentenceParame(Sentence sentence){
+        public DeleteSentenceParame(Sentence sentence){
             this.sentence = sentence;
         }
 
-        public UpdateSentenceParame() {
+        public DeleteSentenceParame() {
         }
 
         public Sentence getSentence() {

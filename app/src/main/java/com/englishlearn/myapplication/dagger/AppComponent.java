@@ -2,6 +2,8 @@ package com.englishlearn.myapplication.dagger;
 
 import com.englishlearn.myapplication.domain.AddGrammar;
 import com.englishlearn.myapplication.domain.AddSentence;
+import com.englishlearn.myapplication.domain.DeleteGrammar;
+import com.englishlearn.myapplication.domain.DeleteSentence;
 import com.englishlearn.myapplication.domain.GetGrammar;
 import com.englishlearn.myapplication.domain.GetGrammars;
 import com.englishlearn.myapplication.domain.GetSentence;
@@ -32,6 +34,10 @@ public interface AppComponent {
     void inject(UpdateSentence updateSentence);
 
     void inject(UpdateGrammar updateGrammar);
+
+    void inject(DeleteSentence deleteSentence);
+
+    void inject(DeleteGrammar deleteGrammar);
 
 
 }
