@@ -1,10 +1,14 @@
 package com.englishlearn.myapplication.sentencedetail;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +35,12 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
     private Sentence sentence;
 
     private SentenceDetailContract.Presenter mPresenter;
+    private DialogInterface.OnClickListener deleteAffirmListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            mPresenter.deleteSentence(sentence);
+        }
+    };
     public static SentenceDetailFragment newInstance() {
         return new SentenceDetailFragment();
     }
@@ -86,24 +96,45 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_base, menu);
+        inflater.inflate(R.menu.menu_delete, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "点击菜单Item");
         switch (item.getItemId()) {
-            case R.id.menu_base:
+            case R.id.delete:
                 Log.d(TAG, "点击菜单项");
+                showDeleteSentenceAffirm();
                 return true;
         }
         return false;
+    }
+
+    private Menu menu;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        this.menu = menu;
+        Log.d(TAG,"onPrepareOptionsMenu");
+        MenuItem delete = menu.findItem(R.id.delete);
+
+        if(sentence == null)
+        {
+            delete.setVisible(false);
+
+        }
+        else
+        {
+            delete.setVisible(true);
+        }
     }
 
     @Override
     public void showSentence(Sentence sentence) {
         Log.d(TAG,"showSentence");
         this.sentence = sentence;
+        onPrepareOptionsMenu(menu);
         if(sentence != null){
             content.setText(sentence.getContent());
             translation.setText(sentence.getTranslation());
@@ -126,6 +157,51 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
 
     @Override
     public void showEmptySentence() {
+        onPrepareOptionsMenu(menu);
         Snackbar.make(this.getView(),getResources().getString(R.string.sentencedetail_empty_sentence), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDeleteSentenceAffirm() {
+        if(sentence == null){
+            showEmptySentence();
+            return;
+        }
+        DeleteAffirmDialogFragment deleteAffirmDialogFragment = new DeleteAffirmDialogFragment();
+        deleteAffirmDialogFragment.setOnClickListener(deleteAffirmListener);
+        deleteAffirmDialogFragment.show(getFragmentManager(),"delete");
+    }
+
+    @Override
+    public void showDeleteSuccess() {
+        this.getActivity().onBackPressed();
+    }
+
+    @Override
+    public void showDeleteFail() {
+        Snackbar.make(this.getView(),getResources().getString(R.string.detail_deletefail), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
+
+    public static class DeleteAffirmDialogFragment extends DialogFragment {
+
+        private DialogInterface.OnClickListener onClickListener;
+
+        public void setOnClickListener(DialogInterface.OnClickListener onClickListener) {
+            this.onClickListener = onClickListener;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(getString(R.string.detail_delete_confirm))
+                    .setNegativeButton(R.string.detail_cancel,
+                            null
+                    )
+                    .setPositiveButton(R.string.detail_delete,
+                            onClickListener
+                    )
+                    .create();
+        }
     }
 }

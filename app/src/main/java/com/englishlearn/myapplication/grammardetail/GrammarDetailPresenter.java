@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.grammardetail;
 
 
 import com.englishlearn.myapplication.data.Grammar;
+import com.englishlearn.myapplication.domain.DeleteGrammar;
 import com.englishlearn.myapplication.domain.GetGrammar;
 
 import rx.Subscriber;
@@ -16,11 +17,13 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
     private String id;
     private String grammarid;
     private GetGrammar getGrammar;
+    private DeleteGrammar deleteGrammar;
     public GrammarDetailPresenter(GrammarDetailContract.View vew,String id,String grammarid){
         mView = vew;
         this.id = id;
         this.grammarid = grammarid;
         getGrammar = new GetGrammar();
+        deleteGrammar = new DeleteGrammar();
         mView.setPresenter(this);
     }
 
@@ -51,5 +54,29 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
     @Override
     void editGrammar() {
         mView.showEditGrammar();
+    }
+
+    @Override
+    void deleteGrammar(Grammar grammar) {
+        deleteGrammar.excuteIo(new DeleteGrammar.DeleteGrammarParame(grammar)).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.showDeleteFail();
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if(aBoolean){
+                    mView.showDeleteSuccess();
+                }else {
+                    mView.showDeleteFail();
+                }
+            }
+        });
     }
 }

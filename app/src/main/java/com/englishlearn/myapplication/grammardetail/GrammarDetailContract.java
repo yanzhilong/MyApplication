@@ -16,12 +16,15 @@ public class GrammarDetailContract {
         void showGrammar(Grammar grammar);//显示Grammar内容
         void showEditGrammar();//显示编辑语法
         void showEmptyGrammar();//语法信息未查到
+        void showDeleteGrammarAffirm();//显示删除确认对话框
+        void showDeleteSuccess();
+        void showDeleteFail();
     }
 
     abstract static class Presenter extends BasePresenter {
 
         abstract void getGrammar();
         abstract void editGrammar();
-
+        abstract void deleteGrammar(Grammar grammar);
     }
 }

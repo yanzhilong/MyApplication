@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.sentencedetail;
 
 
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.domain.DeleteSentence;
 import com.englishlearn.myapplication.domain.GetSentence;
 
 import rx.Subscriber;
@@ -16,11 +17,13 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
     private String sentenceid;
     private String id;
     private GetSentence getSentence;
+    private DeleteSentence deleteSentence;
     public SentenceDetailPresenter(SentenceDetailContract.View vew,String id,String sentenceid){
         mView = vew;
         this.sentenceid = sentenceid;
         this.id = id;
         getSentence = new GetSentence();
+        deleteSentence = new DeleteSentence();
         mView.setPresenter(this);
     }
 
@@ -51,5 +54,29 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
     @Override
     void editSentence() {
         mView.showEditSentence();
+    }
+
+    @Override
+    void deleteSentence(Sentence sentence) {
+        deleteSentence.excuteIo(new DeleteSentence.DeleteSentenceParame(sentence)).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.showDeleteFail();
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if(aBoolean){
+                    mView.showDeleteSuccess();
+                }else {
+                    mView.showDeleteFail();
+                }
+            }
+        });
     }
 }

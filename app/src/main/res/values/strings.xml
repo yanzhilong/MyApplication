@@ -9,6 +9,9 @@
     <string name="menu_base_test">菜单</string>
     <string name="title_activity_list_view_height_change">ListViewHeightChange</string>
 
+    <!-- 删除菜单 -->
+    <string name="menu_delete">Delete</string>
+
     <!-- 按钮 -->
     <string name="sentence_btn">sentences</string>
     <string name="grammar_btn">grammars</string>
@@ -52,5 +55,13 @@
     <!-- SentenceDetailActivity -->
     <string name="sentencedetail_title">Sentence Detail</string>
     <string name="sentencedetail_empty_sentence">do not found sentence</string>
+
+    <!-- DetailDialog -->
+    <string name="detail_delete_confirm">Are you sure to Delete</string>
+    <string name="detail_delete">Delete</string>
+    <string name="detail_cancel">Cancel</string>
+    <string name="detail_deletefail">delete Fail</string>
+
+
 
 </resources>
