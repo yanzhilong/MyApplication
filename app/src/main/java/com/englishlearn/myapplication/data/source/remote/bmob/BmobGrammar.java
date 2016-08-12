@@ -1,29 +1,47 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
-import cn.bmob.v3.BmobObject;
-
 /**
  * Created by yanzl on 16-8-1.
  */
-public class BmobGrammar extends BmobObject {
-    private final String grammarid;//id
+public class BmobGrammar {
 
-    private String name;//语法标签
+    private String name;
+    private String createdAt;
+    private String objectId;
+    private String grammarid;
+    private String content;
+    private String updatedAt;
 
-    private String content;//说明
-
-    public BmobGrammar(String grammarid) {
-        this.grammarid = grammarid;
+    public String getName() {
+        return name;
     }
 
-    public BmobGrammar(String grammarid, String name, String content) {
-        this.grammarid = grammarid;
+    public void setName(String name) {
         this.name = name;
-        this.content = content;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getGrammarid() {
         return grammarid;
+    }
+
+    public void setGrammarid(String grammarid) {
+        this.grammarid = grammarid;
     }
 
     public String getContent() {
@@ -34,11 +52,23 @@ public class BmobGrammar extends BmobObject {
         this.content = content;
     }
 
-    public String getName() {
-        return name;
+    public String getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "BmobGrammar{" +
+                "name='" + name + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", objectId='" + objectId + '\'' +
+                ", grammarid='" + grammarid + '\'' +
+                ", content='" + content + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
     }
 }

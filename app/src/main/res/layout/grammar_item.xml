@@ -29,6 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sentences_item_content_size"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
         <TextView
@@ -37,6 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/sentences_item_padding_top"
             android:textSize="@dimen/sentences_item_translation_size"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     </LinearLayout>

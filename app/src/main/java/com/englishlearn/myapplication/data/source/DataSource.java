@@ -18,10 +18,10 @@ package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
-import cn.bmob.v3.exception.BmobException;
 
 
 /**
@@ -31,44 +31,41 @@ public interface
 
 DataSource {
 
-    List<Sentence> getSentences() throws BmobException;
+    List<Sentence> getSentences() ;
 
-    /**
-     * 根据指定的搜索词搜索相关的句子
-     * @param searchword
-     * @return
-     */
     List<Sentence> getSentences(String searchword);
 
-    List<Grammar> getGrammars() throws BmobException;
+    List<Grammar> getGrammars();
 
     List<Grammar> getGrammars(String searchword);
 
-    Sentence getSentenceBySentenceId(String sentenceid) throws BmobException;
+    Sentence getSentenceBySentenceId(String sentenceid);
 
-    Grammar getGrammarByGrammarId(String grammarid) throws BmobException;
+    Grammar getGrammarByGrammarId(String grammarid);
 
-    Sentence getSentenceById(String id) throws BmobException;
+    Sentence getSentenceById(String id);
 
-    Grammar getGrammarById(String id) throws BmobException;
+    Grammar getGrammarById(String id);
 
     boolean deleteAllSentences();
 
     boolean deleteAllGrammars();
 
-    boolean addSentence(Sentence sentence) throws BmobException;
+    boolean addSentence(Sentence sentence);
 
-    boolean addGrammar(Grammar grammar) throws BmobException;
+    boolean addGrammar(Grammar grammar);
 
-    boolean updateSentence(Sentence sentence) throws BmobException;
+    boolean updateSentence(Sentence sentence);
 
-    boolean updateGrammar(Grammar grammar) throws BmobException;
+    boolean updateGrammar(Grammar grammar);
 
     boolean deleteSentence(String sentenceid);
 
     boolean deleteGrammar(String grammarid);
 
-    boolean deleteSentenceById(String id) throws BmobException;
+    boolean deleteSentenceById(String id);
 
-    boolean deleteGrammarById(String id) throws BmobException;
+    boolean deleteGrammarById(String id);
+
+    void cancelRequest(RequestParam requestParam);//取消请求
 }

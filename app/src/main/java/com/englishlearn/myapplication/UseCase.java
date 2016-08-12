@@ -16,6 +16,8 @@
 
 package com.englishlearn.myapplication;
 
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -31,6 +33,8 @@ public abstract class UseCase<T , P extends UseCase.Params> {
 
 
     protected abstract Observable<T> execute(P p);
+
+    public abstract void cancelRequest(RequestParam requestParam);
 
     /**
      * 在子线程执行

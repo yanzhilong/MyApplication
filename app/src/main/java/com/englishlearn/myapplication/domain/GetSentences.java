@@ -4,12 +4,12 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -37,17 +37,17 @@ public class GetSentences extends UseCase<List<Sentence>,GetSentences.GetSentenc
                     String searchword = getSentencesParame.getSearchword();
                     sentences = repository.getSentences(searchword);
                 }else{
-                    try {
-                        sentences = repository.getSentences();
-                    } catch (BmobException e) {
-                        e.printStackTrace();
-                        subscriber.onError(e);
-                    }
+                      sentences = repository.getSentences();
                 }
                 subscriber.onNext(sentences);
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class GetSentencesParame implements UseCase.Params{

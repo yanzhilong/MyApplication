@@ -4,10 +4,10 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -34,25 +34,20 @@ public class GetGrammar extends UseCase<Grammar,GetGrammar.GetGrammarParame> {
                     String id = getGrammarParame.getId();
                     Grammar grammar = null;
                     if (id != null) {
-                        try {
                             grammar = repository.getGrammarById(id);
-                        } catch (BmobException e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
                     }else if(grammarid != null){
-                        try {
                             grammar = repository.getGrammarByGrammarId(grammarid);
-                        } catch (BmobException e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
                     }
                     subscriber.onNext(grammar);
                     subscriber.onCompleted();
                 }
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class GetGrammarParame implements UseCase.Params{

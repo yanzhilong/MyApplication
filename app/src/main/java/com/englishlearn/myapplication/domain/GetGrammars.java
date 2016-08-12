@@ -4,12 +4,12 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -37,17 +37,17 @@ public class GetGrammars extends UseCase<List<Grammar>,GetGrammars.GetGrammarsPa
                     String searchword = getGrammarsParame.getSearchword();
                     grammars = repository.getGrammars(searchword);
                 }else{
-                    try {
                         grammars = repository.getGrammars();
-                    } catch (BmobException e) {
-                        e.printStackTrace();
-                        subscriber.onError(e);
-                    }
                 }
                 subscriber.onNext(grammars);
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class GetGrammarsParame implements UseCase.Params{

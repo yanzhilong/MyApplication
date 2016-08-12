@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.sentencedetail;
 
 
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 import com.englishlearn.myapplication.domain.DeleteSentence;
 import com.englishlearn.myapplication.domain.GetSentence;
 
@@ -58,7 +59,7 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
 
     @Override
     void deleteSentence(Sentence sentence) {
-        deleteSentence.excuteIo(new DeleteSentence.DeleteSentenceParame(sentence)).subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = deleteSentence.excuteIo(new DeleteSentence.DeleteSentenceParame(sentence)).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -78,5 +79,12 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
                 }
             }
         });
+        add(subscription);
+    }
+
+    @Override
+    public void unsubscribe() {
+        super.unsubscribe();
+        getSentence.cancelRequest(RequestParam.GETSENTENCEID);
     }
 }

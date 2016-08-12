@@ -80,4 +80,15 @@ public class Sentence {
     public String getSentenceid() {
         return sentenceid;
     }
+
+    @Override
+    public String toString() {
+        return "Sentence{" +
+                "id='" + id + '\'' +
+                ", sentenceid='" + sentenceid + '\'' +
+                ", content='" + content + '\'' +
+                ", translation='" + translation + '\'' +
+                ", grammarList=" + grammarList +
+                '}';
+    }
 }

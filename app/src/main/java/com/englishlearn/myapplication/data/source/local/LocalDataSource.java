@@ -24,11 +24,10 @@ import android.support.annotation.NonNull;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.exception.BmobException;
 
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.GrammarEntry;
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
@@ -269,12 +268,12 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public Sentence getSentenceById(String id) throws BmobException {
+    public Sentence getSentenceById(String id){
         return null;
     }
 
     @Override
-    public Grammar getGrammarById(String id) throws BmobException {
+    public Grammar getGrammarById(String id){
         return null;
     }
 
@@ -410,5 +409,10 @@ public class LocalDataSource implements LocalData {
     @Override
     public boolean deleteGrammarById(String id) {
         return false;
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 }

@@ -4,10 +4,10 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -34,16 +34,16 @@ public class UpdateGrammar extends UseCase<Boolean,UpdateGrammar.UpdateGrammarPa
                 }
                 Grammar grammar = updateGrammarParame.getGrammar();
                 boolean result = false;
-                try {
                     result = repository.updateGrammar(grammar);
-                } catch (BmobException e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                }
                 subscriber.onNext(result);
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class UpdateGrammarParame implements UseCase.Params{

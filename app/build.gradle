@@ -8,7 +8,7 @@ android {
 
     //Bmob需要的2
     //兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'
-    useLibrary 'org.apache.http.legacy'
+    //useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.englishlearn.myapplication"
@@ -78,7 +78,15 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
 
     //Bmob需要的3
-    compile 'cn.bmob.android:bmob-sdk:3.5.0'
+    /*compile 'cn.bmob.android:bmob-sdk:3.5.0'
     //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
-    compile 'cn.bmob.android:http-legacy:1.0'
+    compile 'cn.bmob.android:http-legacy:1.0'*/
+
+    //Retrofit网絡请求框架
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
+
 }

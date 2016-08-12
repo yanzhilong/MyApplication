@@ -4,10 +4,10 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -37,12 +37,7 @@ public class DeleteSentence extends UseCase<Boolean,DeleteSentence.DeleteSentenc
                 String id = sentence.getId();
                 boolean result = false;
                 if(id != null){
-                    try {
                         result = repository.deleteSentenceById(id);
-                    } catch (BmobException e) {
-                        e.printStackTrace();
-                        subscriber.onError(e);
-                    }
                 }else if(sentenceid != null){
                     result = repository.deleteSentence(sentenceid);
                 }
@@ -50,6 +45,11 @@ public class DeleteSentence extends UseCase<Boolean,DeleteSentence.DeleteSentenc
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class DeleteSentenceParame implements UseCase.Params{

@@ -19,10 +19,9 @@ package com.englishlearn.myapplication.data.source;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
-
-import cn.bmob.v3.exception.BmobException;
 
 public class Repository implements DataSource {
 
@@ -53,7 +52,7 @@ public class Repository implements DataSource {
 
 
     @Override
-    public List<Sentence> getSentences() throws BmobException {
+    public List<Sentence> getSentences(){
         return mBmobDataSource.getSentences();
     }
 
@@ -63,7 +62,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public List<Grammar> getGrammars() throws BmobException {
+    public List<Grammar> getGrammars(){
         return mBmobDataSource.getGrammars();
     }
 
@@ -73,22 +72,22 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public Sentence getSentenceBySentenceId(String sentenceid) throws BmobException {
+    public Sentence getSentenceBySentenceId(String sentenceid){
         return mLocalDataSource.getSentenceBySentenceId(sentenceid);
     }
 
     @Override
-    public Grammar getGrammarByGrammarId(String grammarid) throws BmobException {
+    public Grammar getGrammarByGrammarId(String grammarid){
         return mLocalDataSource.getGrammarByGrammarId(grammarid);
     }
 
     @Override
-    public Sentence getSentenceById(String id) throws BmobException {
+    public Sentence getSentenceById(String id){
         return mBmobDataSource.getSentenceById(id);
     }
 
     @Override
-    public Grammar getGrammarById(String id) throws BmobException {
+    public Grammar getGrammarById(String id){
         return mBmobDataSource.getGrammarById(id);
     }
 
@@ -105,22 +104,22 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public boolean addSentence(final Sentence sentence) throws BmobException {
+    public boolean addSentence(final Sentence sentence){
         return mBmobDataSource.addSentence(sentence);
     }
 
     @Override
-    public boolean addGrammar(final Grammar grammar) throws BmobException {
+    public boolean addGrammar(final Grammar grammar){
         return mBmobDataSource.addGrammar(grammar);
     }
 
     @Override
-    public boolean updateSentence(Sentence sentence) throws BmobException {
+    public boolean updateSentence(Sentence sentence){
         return mBmobDataSource.updateSentence(sentence);
     }
 
     @Override
-    public boolean updateGrammar(Grammar grammar) throws BmobException {
+    public boolean updateGrammar(Grammar grammar){
         return mBmobDataSource.updateGrammar(grammar);
     }
 
@@ -135,13 +134,19 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public boolean deleteSentenceById(String id) throws BmobException {
+    public boolean deleteSentenceById(String id){
         return mBmobDataSource.deleteSentenceById(id);
     }
 
     @Override
-    public boolean deleteGrammarById(String id) throws BmobException {
+    public boolean deleteGrammarById(String id){
         return mBmobDataSource.deleteGrammarById(id);
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+        mLocalDataSource.cancelRequest(requestParam);
+        mBmobDataSource.cancelRequest(requestParam);
     }
 
 }

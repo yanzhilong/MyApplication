@@ -28,6 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/sentence_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="@dimen/sentences_item_content_size"/>
 
         <TextView
@@ -35,6 +37,8 @@
             android:layout_marginTop="@dimen/sentences_item_padding_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="@dimen/sentences_item_translation_size"/>
 
         <!-- 存放语法标签 -->

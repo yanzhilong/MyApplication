@@ -51,7 +51,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override

@@ -12,9 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -75,6 +72,17 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
             }
         });
 
+        FloatingActionButton fabdel =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_delete_sentence);
+
+        fabdel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sentence != null) {
+                    showDeleteSentenceAffirm();
+                }
+            }
+        });
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -95,47 +103,10 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_delete, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "点击菜单Item");
-        switch (item.getItemId()) {
-            case R.id.delete:
-                Log.d(TAG, "点击菜单项");
-                showDeleteSentenceAffirm();
-                return true;
-        }
-        return false;
-    }
-
-    private Menu menu;
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        this.menu = menu;
-        Log.d(TAG,"onPrepareOptionsMenu");
-        MenuItem delete = menu.findItem(R.id.delete);
-
-        if(sentence == null)
-        {
-            delete.setVisible(false);
-
-        }
-        else
-        {
-            delete.setVisible(true);
-        }
-    }
-
-    @Override
     public void showSentence(Sentence sentence) {
-        Log.d(TAG,"showSentence");
+        Log.d(TAG,"showSentence" + sentence);
         this.sentence = sentence;
-        onPrepareOptionsMenu(menu);
-        if(sentence != null){
+        if(this.sentence != null){
             content.setText(sentence.getContent());
             translation.setText(sentence.getTranslation());
         }else{
@@ -157,7 +128,6 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
 
     @Override
     public void showEmptySentence() {
-        onPrepareOptionsMenu(menu);
         Snackbar.make(this.getView(),getResources().getString(R.string.sentencedetail_empty_sentence), Snackbar.LENGTH_LONG).show();
     }
 

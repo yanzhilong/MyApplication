@@ -12,9 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -75,6 +72,18 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
             }
         });
 
+        FloatingActionButton fabdel =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_delete_grammar);
+
+        fabdel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(grammar != null) {
+                    showDeleteGrammarAffirm();
+                }
+            }
+        });
+
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -94,46 +103,9 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_delete, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "点击菜单Item");
-        switch (item.getItemId()) {
-            case R.id.delete:
-                Log.d(TAG, "点击菜单项");
-                showDeleteGrammarAffirm();
-                return true;
-        }
-        return false;
-    }
-
-    private Menu menu;
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        this.menu = menu;
-        Log.d(TAG,"onPrepareOptionsMenu");
-        MenuItem delete = menu.findItem(R.id.delete);
-
-        if(grammar == null)
-        {
-            delete.setVisible(false);
-
-        }
-        else
-        {
-            delete.setVisible(true);
-        }
-    }
-
-    @Override
     public void showGrammar(Grammar grammar) {
         Log.d(TAG,"showGrammar");
         this.grammar = grammar;
-        onPrepareOptionsMenu(menu);
         if(grammar != null){
             name.setText(grammar.getName());
             content.setText(grammar.getContent());
@@ -156,7 +128,6 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
 
     @Override
     public void showEmptyGrammar() {
-        onPrepareOptionsMenu(menu);
         Snackbar.make(this.getView(),getResources().getString(R.string.grammardetail_empty_grammar), Snackbar.LENGTH_LONG).show();
     }
 

@@ -4,10 +4,10 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -34,25 +34,20 @@ public class GetSentence extends UseCase<Sentence,GetSentence.GetSentenceParame>
                     String id = getSentenceParame.getId();
                     Sentence sentence = null;
                     if(id != null){
-                        try {
                             sentence = repository.getSentenceById(id);
-                        } catch (BmobException e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
                     }else if(sentenceid != null){
-                        try {
                             sentence = repository.getSentenceBySentenceId(sentenceid);
-                        } catch (BmobException e) {
-                            e.printStackTrace();
-                            subscriber.onError(e);
-                        }
                     }
                     subscriber.onNext(sentence);
                     subscriber.onCompleted();
                 }
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+        repository.cancelRequest(requestParam);
     }
 
     public static class GetSentenceParame implements UseCase.Params{

@@ -4,10 +4,10 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.UseCase;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.exception.BmobException;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -37,12 +37,7 @@ public class DeleteGrammar extends UseCase<Boolean,DeleteGrammar.DeleteGrammarPa
                 String id = grammar.getId();
                 boolean result = false;
                 if(id != null){
-                    try {
                         result = repository.deleteGrammarById(id);
-                    } catch (BmobException e) {
-                        e.printStackTrace();
-                        subscriber.onError(e);
-                    }
                 }else if(grammarid != null){
                     result = repository.deleteGrammar(grammarid);
                 }
@@ -50,6 +45,11 @@ public class DeleteGrammar extends UseCase<Boolean,DeleteGrammar.DeleteGrammarPa
                 subscriber.onCompleted();
             }
         });
+    }
+
+    @Override
+    public void cancelRequest(RequestParam requestParam) {
+
     }
 
     public static class DeleteGrammarParame implements UseCase.Params{
