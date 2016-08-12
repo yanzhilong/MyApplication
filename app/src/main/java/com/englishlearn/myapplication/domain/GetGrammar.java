@@ -25,8 +25,10 @@ public class GetGrammar extends UseCase<Grammar,GetGrammar.GetGrammarParame> {
 
     @Override
     protected Observable<Grammar> execute(final GetGrammar.GetGrammarParame getGrammarParame) {
-
-        return Observable.create(new Observable.OnSubscribe<Grammar>() {
+        String grammarid = getGrammarParame.getGrammarid();
+        String id = getGrammarParame.getId();
+        return repository.getGrammarRxById(id);
+       /* return Observable.create(new Observable.OnSubscribe<Grammar>() {
             @Override
             public void call(Subscriber<? super Grammar> subscriber) {
                 if(getGrammarParame != null) {
@@ -42,7 +44,7 @@ public class GetGrammar extends UseCase<Grammar,GetGrammar.GetGrammarParame> {
                     subscriber.onCompleted();
                 }
             }
-        });
+        });*/
     }
 
     @Override

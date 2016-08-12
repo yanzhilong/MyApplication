@@ -23,6 +23,8 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
+import rx.Observable;
+
 public class Repository implements DataSource {
 
     private static Repository INSTANCE = null;
@@ -89,6 +91,11 @@ public class Repository implements DataSource {
     @Override
     public Grammar getGrammarById(String id){
         return mBmobDataSource.getGrammarById(id);
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarRxById(String id) {
+        return mBmobDataSource.getGrammarRxById(id);
     }
 
     @Override

@@ -29,6 +29,8 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.GrammarEntry;
 import static com.englishlearn.myapplication.data.source.local.PersistenceContract.SentenceEntry;
 
@@ -274,6 +276,11 @@ public class LocalDataSource implements LocalData {
 
     @Override
     public Grammar getGrammarById(String id){
+        return null;
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarRxById(String id) {
         return null;
     }
 

@@ -8,6 +8,8 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * 从网络操作数据
  */
@@ -62,6 +64,11 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public Grammar getGrammarById(String id) {
+        return null;
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarRxById(String id) {
         return null;
     }
 

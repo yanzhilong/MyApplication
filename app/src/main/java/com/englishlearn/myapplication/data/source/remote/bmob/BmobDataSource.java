@@ -17,6 +17,10 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by yanzl on 16-8-1.
@@ -237,7 +241,7 @@ public class BmobDataSource implements DataSource {
     public Sentence getSentenceById(String id) {
 
         Call<BmobSentence> responseBodyCall = bmobService.getSentenceById(id);
-        callMap.put(RequestParam.GETSENTENCEID,responseBodyCall);
+        callMap.put(RequestParam.GETSENTENCEBYID,responseBodyCall);
         BmobSentence bmobSentence = null;
         try {
             bmobSentence = responseBodyCall.execute().body();
@@ -246,32 +250,6 @@ public class BmobDataSource implements DataSource {
         }
         Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
         return sentence;
-
-        /*final Sentence[] sentence = new Sentence[1];
-        bmobService.getSentenceRxById(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BmobSentence>() {
-
-
-
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(BmobSentence bmobSentence) {
-                Log.d(TAG,bmobSentence.toString());
-                sentence[0] = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
-            }
-        });
-        return sentence[0];*/
     }
 
     @Override
@@ -286,6 +264,20 @@ public class BmobDataSource implements DataSource {
         Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
 
         return grammar;
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarRxById(String id) {
+        return bmobService.getGrammarRxById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<BmobGrammar, Observable<Grammar>>() {
+                    @Override
+                    public Observable<Grammar> call(BmobGrammar bmobGrammar) {
+                        Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                        return Observable.just(grammar);
+                    }
+                });
     }
 
     @Override

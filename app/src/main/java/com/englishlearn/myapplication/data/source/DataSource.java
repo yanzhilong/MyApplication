@@ -22,6 +22,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
+import rx.Observable;
 
 
 /**
@@ -46,6 +47,8 @@ DataSource {
     Sentence getSentenceById(String id);
 
     Grammar getGrammarById(String id);
+
+    Observable<Grammar> getGrammarRxById(String id);
 
     boolean deleteAllSentences();
 

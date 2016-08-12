@@ -85,6 +85,6 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
     @Override
     public void unsubscribe() {
         super.unsubscribe();
-        getSentence.cancelRequest(RequestParam.GETSENTENCEID);
+        getSentence.cancelRequest(RequestParam.GETSENTENCEBYID);
     }
 }
