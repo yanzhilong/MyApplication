@@ -4,7 +4,6 @@ package com.englishlearn.myapplication.data.source.remote;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
@@ -33,12 +32,32 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public Observable<List<Sentence>> getSentencesRx() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public List<Sentence> getSentences(String searchword) {
         return null;
     }
 
     @Override
     public List<Grammar> getGrammars() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammarsRx() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammarsRx(int page, int pageSize) {
         return null;
     }
 
@@ -59,6 +78,11 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public Sentence getSentenceById(String id) {
+        return null;
+    }
+
+    @Override
+    public Observable<Sentence> getSentenceRxById(String id) {
         return null;
     }
 
@@ -88,8 +112,18 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> addSentenceRx(Sentence sentence) {
+        return null;
+    }
+
+    @Override
     public boolean addGrammar(Grammar grammar) {
         return false;
+    }
+
+    @Override
+    public Observable<Boolean> addGrammarRx(Grammar grammar) {
+        return null;
     }
 
     @Override
@@ -100,6 +134,16 @@ public class RemoteDataSource implements DataSource {
     @Override
     public boolean updateGrammar(Grammar grammar) {
         return false;
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceRx(Sentence sentence) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateGrammarRx(Grammar grammar) {
+        return null;
     }
 
     @Override
@@ -118,14 +162,17 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> deleteSentenceRxById(String id) {
+        return null;
+    }
+
+    @Override
     public boolean deleteGrammarById(String id) {
         return false;
     }
 
     @Override
-    public void cancelRequest(RequestParam requestParam) {
-
+    public Observable<Boolean> deleteGrammarRxById(String id) {
+        return null;
     }
-
-
 }

@@ -109,8 +109,6 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
         if(grammar != null){
             name.setText(grammar.getName());
             content.setText(grammar.getContent());
-        }else{
-            showEmptyGrammar();
         }
     }
 

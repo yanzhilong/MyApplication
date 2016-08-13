@@ -1,26 +1,34 @@
 package com.englishlearn.myapplication.sentences;
 
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.domain.DeleteSentence;
-import com.englishlearn.myapplication.domain.GetSentences;
+import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.domain.DeleteSentences;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by yanzl on 16-7-20.
  */
 public class SentencesPresenter extends SentencesContract.Presenter{
 
-    private GetSentences getSentences;
     private SentencesContract.View mainView;
-    private DeleteSentence deleteSentence;
+    private int page = 1;
+    private final int PAGESIZE = 10;
+    @Inject
+    Repository repository;
+
+    DeleteSentences deleteSentences;
     public SentencesPresenter(SentencesContract.View vew){
         mainView = vew;
-        getSentences = new GetSentences();
-        deleteSentence = new DeleteSentence();
+        MyApplication.instance.getAppComponent().inject(this);
+        deleteSentences = new DeleteSentences();
         mainView.setPresenter(this);
     }
 
@@ -30,9 +38,9 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     }
 
     @Override
-    void getSentences(String searchword) {
-        GetSentences.GetSentencesParame getSentencesParame = new GetSentences.GetSentencesParame(searchword);
-        getSentences.excuteIo(searchword != null ? getSentencesParame : null).subscribe(new Subscriber<List<Sentence>>() {
+    void getSentencesNextPage() {
+        repository.getSentencesRx(page++,PAGESIZE)
+        .subscribe(new Subscriber<List<Sentence>>() {
             @Override
             public void onCompleted() {
 
@@ -40,18 +48,42 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
             @Override
             public void onError(Throwable e) {
-                mainView.emptySentences();
+
             }
 
             @Override
             public void onNext(List<Sentence> sentences) {
-                if(sentences != null && sentences.size() > 0){
-                    mainView.showSentences(sentences);
-                }else{
-                    mainView.emptySentences();
-                }
+                mainView.addSentences(sentences);
             }
         });
+    }
+
+    @Override
+    void getSentences(String searchword) {
+        if(searchword == null){
+            Subscription subscription = repository.getSentencesRx()
+                    .subscribe(new Subscriber<List<Sentence>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            mainView.emptySentences();
+                        }
+
+                        @Override
+                        public void onNext(List<Sentence> sentences) {
+                            if(sentences != null && sentences.size() > 0){
+                                mainView.showSentences(sentences);
+                            }else{
+                                mainView.emptySentences();
+                            }
+                        }
+                    });
+            add(subscription);
+        }
     }
 
     @Override
@@ -61,37 +93,23 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
     @Override
     void deleteSentences(final List<Sentence> sentences) {
-        final int[] success = {0};
-        final int[] fail = {0};
-        for(Sentence sentence : sentences){
-            deleteSentence.excuteIo(new DeleteSentence.DeleteSentenceParame(sentence)).subscribe(new Subscriber<Boolean>() {
-                @Override
-                public void onCompleted() {
+        Subscription subscription = deleteSentences.excuteIo(new DeleteSentences.DeleteSentencesParame(sentences))
+              .subscribe(new Subscriber<DeleteSentences.DeleteSentensResult>() {
+                  @Override
+                  public void onCompleted() {
 
-                }
+                  }
 
-                @Override
-                public void onError(Throwable e) {
-                    fail[0]++;
-                    checkoutDeleteResult(sentences.size(),success[0],fail[0]);
-                }
+                  @Override
+                  public void onError(Throwable e) {
+                      mainView.showDeleteResult(0,0);
+                  }
 
-                @Override
-                public void onNext(Boolean aBoolean) {
-                    if(aBoolean){
-                        success[0]++;
-                    }else{
-                        fail[0]++;
-                    }
-                    checkoutDeleteResult(sentences.size(),success[0],fail[0]);
-                }
-            });
-        }
-    }
-
-    private void checkoutDeleteResult(int sum,int success,int fail){
-        if((success + fail) == sum){
-            mainView.showDeleteResult(success,fail);
-        }
+                  @Override
+                  public void onNext(DeleteSentences.DeleteSentensResult deleteSentensResult) {
+                      mainView.showDeleteResult(deleteSentensResult.getSuccessCount(),deleteSentensResult.getFailCount());
+                  }
+              });
+        add(subscription);
     }
 }

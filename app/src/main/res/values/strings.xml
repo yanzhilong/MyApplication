@@ -32,6 +32,9 @@
     <string name="edit_delete">Delete</string>
     <string name="delete_result" formatted="false">Delete success %d,fail %d.</string>
     <string name="menu_cancel">Cancel</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search Sentence</string>
+
 
     <!-- AddEditSentenceActivity -->
     <string name="addsentence_title">Add Sentence</string>

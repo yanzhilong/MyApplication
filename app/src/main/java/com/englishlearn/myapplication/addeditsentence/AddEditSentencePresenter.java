@@ -1,31 +1,30 @@
 package com.englishlearn.myapplication.addeditsentence;
 
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.domain.AddSentence;
-import com.englishlearn.myapplication.domain.GetSentence;
-import com.englishlearn.myapplication.domain.UpdateSentence;
+import com.englishlearn.myapplication.data.source.Repository;
+
+import javax.inject.Inject;
 
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by yanzl on 16-7-20.
  */
 public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
-    private AddSentence addSentences;
     private AddEditSentenceContract.View mainView;
-    private GetSentence getSentence;
-    private UpdateSentence updateSentence;
     private String sentenceid;
     private String id;
+    @Inject
+    Repository repository;
     public AddEditSentencePresenter(AddEditSentenceContract.View vew,String id,String sentenceid){
         mainView = vew;
         this.id = id;
         this.sentenceid = sentenceid;
-        addSentences = new AddSentence();
-        getSentence = new GetSentence();
-        updateSentence = new UpdateSentence();
+        MyApplication.instance.getAppComponent().inject(this);
         mainView.setPresenter(this);
     }
 
@@ -42,23 +41,28 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
     private void createSentence(String content, String translate){
         Sentence sentence = new Sentence(content,translate,null);
-        AddSentence.AddSentencesParame addSentencesParame = new AddSentence.AddSentencesParame(sentence);
-        addSentences.excuteIo(addSentencesParame).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
+        Subscription subscription = repository.addSentenceRx(sentence)
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        mainView.addSentenceFail();
+                    }
 
-            @Override
-            public void onNext(Boolean aBoolean) {
-                mainView.addSentenceSuccess();
-            }
-        });
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if(aBoolean){
+                            mainView.addSentenceSuccess();
+                        }else {
+                            mainView.addSentenceFail();
+                        }
+                    }
+                });
+        add(subscription);
     }
 
     private void updateSentence(String content, String translate){
@@ -66,23 +70,28 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
             throw new RuntimeException("updateSentence() was called but sentence is new.");
         }
         Sentence sentence = new Sentence(id,sentenceid,content,translate,null);
-        UpdateSentence.UpdateSentenceParame updateSentenceParame = new UpdateSentence.UpdateSentenceParame(sentence);
-        updateSentence.excuteIo(updateSentenceParame).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
+        Subscription subscription = repository.updateSentenceRx(sentence)
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
+                        mainView.updateSentenceFail();
+                    }
 
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-                mainView.updateSentenceSuccess();
-            }
-        });
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if(aBoolean){
+                            mainView.updateSentenceSuccess();
+                        }else {
+                            mainView.updateSentenceFail();
+                        }
+                    }
+                });
+        add(subscription);
     }
 
 
@@ -93,23 +102,25 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
     @Override
     void start() {
-        if(sentenceid != null){
-            getSentence.excuteIo(new GetSentence.GetSentenceParame(id,sentenceid)).subscribe(new Subscriber<Sentence>() {
-                @Override
-                public void onCompleted() {
+        if(id != null){
+            Subscription subscription = repository.getSentenceRxById(id)
+                    .subscribe(new Subscriber<Sentence>() {
+                        @Override
+                        public void onCompleted() {
 
-                }
+                        }
 
-                @Override
-                public void onError(Throwable e) {
-                    mainView.showSentenceFail();
-                }
+                        @Override
+                        public void onError(Throwable e) {
+                            mainView.showSentenceFail();
+                        }
 
-                @Override
-                public void onNext(Sentence sentence) {
-                    mainView.showSentence(sentence);
-                }
-            });
+                        @Override
+                        public void onNext(Sentence sentence) {
+                            mainView.showSentence(sentence);
+                        }
+                    });
+            add(subscription);
         }
     }
 }

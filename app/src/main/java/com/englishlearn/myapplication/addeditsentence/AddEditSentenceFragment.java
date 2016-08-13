@@ -107,8 +107,19 @@ public class AddEditSentenceFragment extends Fragment implements AddEditSentence
     }
 
     @Override
+    public void addSentenceFail() {
+        Log.d(TAG, "addSentenceFail");
+    }
+
+    @Override
     public void updateSentenceSuccess() {
+        Log.d(TAG, "updateSentenceSuccess");
         getActivity().finish();
+    }
+
+    @Override
+    public void updateSentenceFail() {
+        Log.d(TAG, "updateGrammarFail");
     }
 
     @Override

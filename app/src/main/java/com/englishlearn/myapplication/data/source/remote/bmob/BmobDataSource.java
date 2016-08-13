@@ -6,13 +6,11 @@ import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.DataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.BmobService;
-import com.englishlearn.myapplication.data.source.remote.bmob.service.BmobServiceFactory;
+import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -32,7 +30,6 @@ public class BmobDataSource implements DataSource {
 
 
     private static BmobDataSource INSTANCE;
-    private Map<RequestParam,Call> callMap;//存放请求列表
     private BmobService bmobService;//请求接口
 
     public static BmobDataSource getInstance() {
@@ -43,139 +40,8 @@ public class BmobDataSource implements DataSource {
     }
 
     public BmobDataSource(){
-        bmobService = BmobServiceFactory.createBmobService();
-        callMap = new HashMap<>();
+        bmobService = ServiceFactory.getInstance().createBmobService();
     }
-
-    public void cancelRequest(RequestParam requestParam){
-        Call call = getInstance().callMap.get(requestParam);
-        if(call != null){
-            call.cancel();
-        }
-    }
-
-
-    /*@Override
-    public List<Sentence> getSentences() throws BmobException {
-        BmobQuery<BmobSentence> bmobQuery = new BmobQuery<>();
-        FindListenerBmobSentence findBmob = new FindListenerBmobSentence();
-        bmobQuery.findObjects(findBmob);
-        List<BmobSentence> list = null;
-        try {
-            list = findBmob.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        List<Sentence> sentences = new ArrayList<>();
-        if(list == null){
-            if(findBmob .getBmobException() != null){
-                throw findBmob.getBmobException();
-            }
-        }else{
-            for(BmobSentence bmobSentence : list){
-                Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
-                sentences.add(sentence);
-            }
-        }
-        return sentences;
-    }
-
-    @Override
-    public List<Sentence> getSentences(String searchword) {
-        return null;
-    }
-
-    @Override
-    public List<Grammar> getGrammars() throws BmobException {
-        BmobQuery<BmobGrammar> bmobQuery = new BmobQuery<>();
-        FindListenerBmobGrammar findBmob = new FindListenerBmobGrammar();
-        bmobQuery.findObjects(findBmob);
-        List<BmobGrammar> list = null;
-        try {
-            list = findBmob.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        List<Grammar> grammars = new ArrayList<>();
-        if(list == null){
-            if(findBmob .getBmobException() != null){
-                throw findBmob.getBmobException();
-            }
-        }else{
-            for(BmobGrammar bmobGrammar : list){
-                Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
-                grammars.add(grammar);
-            }
-        }
-        return grammars;
-    }
-
-    @Override
-    public List<Grammar> getGrammars(String searchword) {
-        return null;
-    }
-
-    @Override
-    public Sentence getSentenceBySentenceId(String sentenceid) throws BmobException {
-        return null;
-    }
-
-    @Override
-    public Grammar getGrammarByGrammarId(String grammarid) throws BmobException {
-        return null;
-    }
-
-    @Override
-    public Sentence getSentenceById(String id) throws BmobException {
-
-        BmobQuery<BmobSentence> bmobQuery = new BmobQuery<>();
-        QueryListenerBmobSentence queryListenerBmobSentence = new QueryListenerBmobSentence();
-        bmobQuery.getObject(id, queryListenerBmobSentence);
-        BmobSentence bmobSentence = null;
-        try {
-            bmobSentence = queryListenerBmobSentence.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Sentence sentence = null;
-        if(queryListenerBmobSentence .getBmobException() != null){
-            throw queryListenerBmobSentence.getBmobException();
-        }
-        if(bmobSentence != null){
-            sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
-        }
-        return sentence;
-    }
-
-    @Override
-    public Grammar getGrammarById(String id) throws BmobException {
-
-        BmobQuery<BmobGrammar> bmobQuery = new BmobQuery<>();
-        QueryListenerBmobGrammar queryListenerBmobGrammar = new QueryListenerBmobGrammar();
-        bmobQuery.getObject(id, queryListenerBmobGrammar);
-        BmobGrammar bmobGrammar = null;
-        try {
-            bmobGrammar = queryListenerBmobGrammar.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Grammar grammar = null;
-        if(queryListenerBmobGrammar .getBmobException() != null){
-            throw queryListenerBmobGrammar.getBmobException();
-        }
-        if(bmobGrammar != null){
-            grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
-        }
-        return grammar;
-    }*/
 
     @Override
     public List<Sentence> getSentences() {
@@ -195,6 +61,51 @@ public class BmobDataSource implements DataSource {
             e.printStackTrace();
         }
         return sentences;
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRx() {
+        return bmobService.getSentencesRx()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<BmobSentenceResult, Observable<List<Sentence>>>() {
+                    @Override
+                    public Observable<List<Sentence>> call(BmobSentenceResult bmobSentenceResult) {
+                        List<BmobSentence> list = bmobSentenceResult.getResults();
+                        List<Sentence> sentences = new ArrayList<>();
+                        for(BmobSentence bmobSentence : list){
+                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            sentences.add(sentence);
+                        }
+                        return Observable.just(sentences)
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
+        if(page < 1){
+            throw new RuntimeException("The page shoule be above 0");
+        }
+        int limit = pageSize;
+        int skip = (page - 1) * pageSize;
+        return bmobService.getSentencesRx(limit,skip)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<BmobSentenceResult, Observable<List<Sentence>>>() {
+                    @Override
+                    public Observable<List<Sentence>> call(BmobSentenceResult bmobSentenceResult) {
+                        List<BmobSentence> list = bmobSentenceResult.getResults();
+                        List<Sentence> sentences = new ArrayList<>();
+                        for(BmobSentence bmobSentence : list){
+                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            sentences.add(sentence);
+                        }
+                        return Observable.just(sentences)
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                });
     }
 
     @Override
@@ -223,6 +134,51 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
+    public Observable<List<Grammar>> getGrammarsRx() {
+        return bmobService.getGrammarsRx()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<BmobGrammarResult, Observable<List<Grammar>>>() {
+                    @Override
+                    public Observable<List<Grammar>> call(BmobGrammarResult bmobGrammarResult) {
+                        List<BmobGrammar> list = bmobGrammarResult.getResults();
+                        List<Grammar> grammars = new ArrayList<>();
+                        for(BmobGrammar bmobGrammar : list){
+                            Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                            grammars.add(grammar);
+                        }
+                        return Observable.just(grammars)
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammarsRx(int page, int pageSize) {
+        if(page < 1){
+            throw new RuntimeException("The page shoule be above 0");
+        }
+        int limit = pageSize;
+        int skip = (page - 1) * pageSize;
+        return bmobService.getGrammarsRx(limit,skip)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<BmobGrammarResult, Observable<List<Grammar>>>() {
+                    @Override
+                    public Observable<List<Grammar>> call(BmobGrammarResult bmobGrammarResult) {
+                        List<BmobGrammar> list = bmobGrammarResult.getResults();
+                        List<Grammar> grammars = new ArrayList<>();
+                        for(BmobGrammar bmobGrammar : list){
+                            Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                            grammars.add(grammar);
+                        }
+                        return Observable.just(grammars)
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                });
+    }
+
+    @Override
     public List<Grammar> getGrammars(String searchword) {
         return null;
     }
@@ -241,7 +197,6 @@ public class BmobDataSource implements DataSource {
     public Sentence getSentenceById(String id) {
 
         Call<BmobSentence> responseBodyCall = bmobService.getSentenceById(id);
-        callMap.put(RequestParam.GETSENTENCEBYID,responseBodyCall);
         BmobSentence bmobSentence = null;
         try {
             bmobSentence = responseBodyCall.execute().body();
@@ -250,6 +205,20 @@ public class BmobDataSource implements DataSource {
         }
         Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
         return sentence;
+    }
+
+    @Override
+    public Observable<Sentence> getSentenceRxById(String id) {
+        return bmobService.getSentenceRxById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<BmobSentence, Observable<Sentence>>() {
+                    @Override
+                    public Observable<Sentence> call(BmobSentence bmobSentence) {
+                        Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                        return Observable.just(sentence);
+                    }
+                });
     }
 
     @Override
@@ -308,6 +277,23 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> addSentenceRx(Sentence sentence) {
+        return bmobService.addSentenceRx(sentence)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            return Observable.just(false);
+                        }
+                    }
+                });
+    }
+
+    @Override
     public boolean addGrammar(Grammar grammar) {
         Call<ResponseBody> responseBodyCall = bmobService.addGrammar(grammar);
         boolean result = false;
@@ -324,6 +310,23 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> addGrammarRx(Grammar grammar) {
+        return bmobService.addGrammarRx(grammar)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            return Observable.just(false);
+                        }
+                    }
+                });
+    }
+
+    @Override
     public boolean updateSentence(Sentence sentence) {
         return false;
     }
@@ -331,6 +334,40 @@ public class BmobDataSource implements DataSource {
     @Override
     public boolean updateGrammar(Grammar grammar) {
         return false;
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceRx(Sentence sentence) {
+        return bmobService.updateSentencRxById(sentence.getId(),sentence)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            return Observable.just(false);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public Observable<Boolean> updateGrammarRx(Grammar grammar) {
+        return bmobService.updateGrammarRxById(grammar.getId(),grammar)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            return Observable.just(false);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -349,122 +386,41 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
-    public boolean deleteGrammarById(String id) {
-        return false;
-    }
-
-
-   /* @Override
-    public boolean addGrammar(Grammar grammar) {
-
-        BmobGrammar bmobGrammar = new BmobGrammar(grammar.getGrammarid(),grammar.getName(),grammar.getContent());
-        SaveFuture saveFuture = new SaveFuture();
-        bmobGrammar.save(saveFuture);
-        String result = null;
-        try {
-            result = saveFuture.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        if(saveFuture.getBmobException() != null){
-            throw saveFuture.getBmobException();
-        }
-        return(result != null && saveFuture.getBmobException() == null);
-    }
-
-    @Override
-    public boolean updateSentence(Sentence sentence) {
-
-        BmobSentence bmobSentence = new BmobSentence(sentence.getSentenceid(),sentence.getContent(),sentence.getTranslation());
-        bmobSentence.setObjectId(sentence.getId());
-        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
-        bmobSentence.update(updateListenerFuture);
-        boolean result = false;
-        try {
-            result = updateListenerFuture.save();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (BmobException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return result;
-    }
-
-    @Override
-    public boolean updateGrammar(Grammar grammar) {
-
-        BmobGrammar bmobGrammar = new BmobGrammar(grammar.getGrammarid(),grammar.getName(),grammar.getContent());
-        bmobGrammar.setObjectId(grammar.getId());
-        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
-        bmobGrammar.update(updateListenerFuture);
-        boolean result = false;
-        try {
-            result = updateListenerFuture.save();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (BmobException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteSentence(String sentenceid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteGrammar(String grammarid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteSentenceById(String id) {
-        BmobSentence bmobSentence = new BmobSentence(null);
-        bmobSentence.setObjectId(id);
-        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
-        bmobSentence.delete(updateListenerFuture);
-        boolean result = false;
-        try {
-            result = updateListenerFuture.save();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (BmobException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return result;
+    public Observable<Boolean> deleteSentenceRxById(String id) {
+        return bmobService.deleteSentencRxById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    return Observable.just(false);
+                }
+            }
+        });
     }
 
     @Override
     public boolean deleteGrammarById(String id) {
-        BmobGrammar bmobGrammar = new BmobGrammar(null);
-        bmobGrammar.setObjectId(id);
-        UpdateListenerFuture updateListenerFuture = new UpdateListenerFuture();
-        bmobGrammar.delete(updateListenerFuture);
-        boolean result = false;
-        try {
-            result = updateListenerFuture.save();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (BmobException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return result;
-    }*/
+        return false;
+    }
 
-
+    @Override
+    public Observable<Boolean> deleteGrammarRxById(String id) {
+        return bmobService.deleteGrammarRxById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    return Observable.just(false);
+                }
+            }
+        });
+    }
 }

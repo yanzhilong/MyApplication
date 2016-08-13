@@ -108,8 +108,19 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
     }
 
     @Override
+    public void addGrammarFail() {
+        Log.d(TAG, "addGrammarFail");
+    }
+
+    @Override
     public void updateGrammarSuccess() {
+        Log.d(TAG, "updateGrammarSuccess");
         getActivity().finish();
+    }
+
+    @Override
+    public void updateGrammarFail() {
+        Log.d(TAG, "updateGrammarFail");
     }
 
     @Override
@@ -123,7 +134,7 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
 
     @Override
     public void showGrammarFail() {
-
+        Log.d(TAG, "showGrammarFail");
     }
 
 

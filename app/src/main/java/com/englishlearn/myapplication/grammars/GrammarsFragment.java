@@ -163,6 +163,12 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
     }
 
     @Override
+    public void addGrammars(List<Grammar> grammars) {
+        Log.d(TAG,"addGrammars" + grammars.size());
+        grammarsAdapter.addGrammars(grammars);
+    }
+
+    @Override
     public void emptyGrammars() {
         Log.d(TAG,"emptyGrammars");
         grammarsAdapter.notifyDataSetChanged();
@@ -269,7 +275,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
             return grammars;
         }
 
-        public void addSentences(List<Grammar> grammars){
+        public void addGrammars(List<Grammar> grammars){
             this.grammars.addAll(grammars);
             notifyDataSetChanged();
         }

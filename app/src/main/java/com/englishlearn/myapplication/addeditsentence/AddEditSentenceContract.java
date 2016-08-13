@@ -13,7 +13,9 @@ public class AddEditSentenceContract {
     public interface View extends BaseView<Presenter> {
 
         void addSentenceSuccess();
+        void addSentenceFail();
         void updateSentenceSuccess();
+        void updateSentenceFail();
         void showSentence(Sentence sentence);
         void showSentenceFail();
     }

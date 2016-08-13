@@ -14,6 +14,7 @@ public class SentencesContract {
 
     public interface View extends BaseView<Presenter> {
         void showSentences(List<Sentence> sentences);
+        void addSentences(List<Sentence> sentences);
         void emptySentences();
         void showaddSentence();
         void showDeleteResult(int success,int fail);
@@ -21,6 +22,7 @@ public class SentencesContract {
 
     abstract static class Presenter extends BasePresenter {
         abstract void getSentences();
+        abstract void getSentencesNextPage();
         abstract void getSentences(String searchword);
         abstract void addSentence();
         abstract void deleteSentences(List<Sentence> sentences);

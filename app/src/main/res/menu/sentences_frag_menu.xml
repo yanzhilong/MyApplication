@@ -28,4 +28,10 @@
         android:id="@+id/sentences_setting"
         android:title="@string/sentences_menu_setting"
         app:showAsAction="never" />
+
+    <item android:id="@+id/search"
+        android:title="@string/search_title"
+        android:icon="@drawable/ic_search"
+        android:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.widget.SearchView" />
 </menu>

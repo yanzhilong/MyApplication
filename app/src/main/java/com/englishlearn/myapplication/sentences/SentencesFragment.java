@@ -1,11 +1,14 @@
 package com.englishlearn.myapplication.sentences;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -139,6 +142,14 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sentences_frag_menu, menu);
+
+        // 关联检索配置和SearchView
+        SearchManager searchManager =
+                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getActivity().getComponentName()));
     }
 
     @Override
@@ -165,6 +176,11 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     public void showSentences(List<Sentence> sentences) {
         Log.d(TAG,"showSentences" + sentences.size());
         sentencesAdapter.replace(sentences);
+    }
+
+    @Override
+    public void addSentences(List<Sentence> sentences) {
+        sentencesAdapter.addSentences(sentences);
     }
 
     @Override

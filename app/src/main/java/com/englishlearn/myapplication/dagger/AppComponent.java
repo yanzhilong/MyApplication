@@ -1,15 +1,13 @@
 package com.englishlearn.myapplication.dagger;
 
-import com.englishlearn.myapplication.domain.AddGrammar;
-import com.englishlearn.myapplication.domain.AddSentence;
-import com.englishlearn.myapplication.domain.DeleteGrammar;
-import com.englishlearn.myapplication.domain.DeleteSentence;
-import com.englishlearn.myapplication.domain.GetGrammar;
-import com.englishlearn.myapplication.domain.GetGrammars;
-import com.englishlearn.myapplication.domain.GetSentence;
-import com.englishlearn.myapplication.domain.GetSentences;
-import com.englishlearn.myapplication.domain.UpdateGrammar;
-import com.englishlearn.myapplication.domain.UpdateSentence;
+import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
+import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
+import com.englishlearn.myapplication.domain.DeleteGrammars;
+import com.englishlearn.myapplication.domain.DeleteSentences;
+import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
+import com.englishlearn.myapplication.grammars.GrammarsPresenter;
+import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
+import com.englishlearn.myapplication.sentences.SentencesPresenter;
 
 import dagger.Component;
 
@@ -19,25 +17,20 @@ import dagger.Component;
 @Component(modules = AppModule.class)
 public interface AppComponent {
 
-    void inject(GetSentences getSentences);
+    void inject(DeleteSentences deleteSentences);
 
-    void inject(AddSentence addSentences);
+    void inject(DeleteGrammars deleteGrammars);
 
-    void inject(GetGrammars getGrammars);
+    void inject(SentenceDetailPresenter sentenceDetailPresenter);
 
-    void inject(AddGrammar addGrammars);
+    void inject(GrammarDetailPresenter grammarDetailPresenter);
 
-    void inject(GetSentence getSentenceById);
+    void inject(AddEditSentencePresenter addEditSentencePresenter);
 
-    void inject(GetGrammar getGrammarById);
+    void inject(AddEditGrammarPresenter addEditGrammarPresenter);
 
-    void inject(UpdateSentence updateSentence);
+    void inject(SentencesPresenter sentencesPresenter);
 
-    void inject(UpdateGrammar updateGrammar);
-
-    void inject(DeleteSentence deleteSentence);
-
-    void inject(DeleteGrammar deleteGrammar);
-
+    void inject(GrammarsPresenter grammarsPresenter);
 
 }

@@ -19,7 +19,6 @@ package com.englishlearn.myapplication.data.source;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
@@ -59,6 +58,16 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Observable<List<Sentence>> getSentencesRx() {
+        return mBmobDataSource.getSentencesRx();
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
+        return mBmobDataSource.getSentencesRx(page,pageSize);
+    }
+
+    @Override
     public List<Sentence> getSentences(String searchword) {
         return mLocalDataSource.getSentences(searchword);
     }
@@ -66,6 +75,16 @@ public class Repository implements DataSource {
     @Override
     public List<Grammar> getGrammars(){
         return mBmobDataSource.getGrammars();
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammarsRx() {
+        return mBmobDataSource.getGrammarsRx();
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammarsRx(int page, int pageSize) {
+        return mBmobDataSource.getGrammarsRx(page,pageSize);
     }
 
     @Override
@@ -86,6 +105,11 @@ public class Repository implements DataSource {
     @Override
     public Sentence getSentenceById(String id){
         return mBmobDataSource.getSentenceById(id);
+    }
+
+    @Override
+    public Observable<Sentence> getSentenceRxById(String id) {
+        return mBmobDataSource.getSentenceRxById(id);
     }
 
     @Override
@@ -116,8 +140,18 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> addSentenceRx(Sentence sentence) {
+        return mBmobDataSource.addSentenceRx(sentence);
+    }
+
+    @Override
     public boolean addGrammar(final Grammar grammar){
         return mBmobDataSource.addGrammar(grammar);
+    }
+
+    @Override
+    public Observable<Boolean> addGrammarRx(Grammar grammar) {
+        return mBmobDataSource.addGrammarRx(grammar);
     }
 
     @Override
@@ -128,6 +162,16 @@ public class Repository implements DataSource {
     @Override
     public boolean updateGrammar(Grammar grammar){
         return mBmobDataSource.updateGrammar(grammar);
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceRx(Sentence sentence) {
+        return mBmobDataSource.updateSentenceRx(sentence);
+    }
+
+    @Override
+    public Observable<Boolean> updateGrammarRx(Grammar grammar) {
+        return mBmobDataSource.updateGrammarRx(grammar);
     }
 
     @Override
@@ -146,14 +190,17 @@ public class Repository implements DataSource {
     }
 
     @Override
+    public Observable<Boolean> deleteSentenceRxById(String id) {
+        return mBmobDataSource.deleteSentenceRxById(id);
+    }
+
+    @Override
     public boolean deleteGrammarById(String id){
         return mBmobDataSource.deleteGrammarById(id);
     }
 
     @Override
-    public void cancelRequest(RequestParam requestParam) {
-        mLocalDataSource.cancelRequest(requestParam);
-        mBmobDataSource.cancelRequest(requestParam);
+    public Observable<Boolean> deleteGrammarRxById(String id) {
+        return mBmobDataSource.deleteGrammarRxById(id);
     }
-
 }

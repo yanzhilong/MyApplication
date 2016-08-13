@@ -13,7 +13,9 @@ public class AddEditGrammarContract {
     public interface View extends BaseView<Presenter> {
 
         void addGrammarSuccess();
+        void addGrammarFail();
         void updateGrammarSuccess();
+        void updateGrammarFail();
         void showGrammar(Grammar grammar);
         void showGrammarFail();
     }

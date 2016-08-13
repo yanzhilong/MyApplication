@@ -18,7 +18,6 @@ package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.source.remote.bmob.RequestParam;
 
 import java.util.List;
 
@@ -34,9 +33,17 @@ DataSource {
 
     List<Sentence> getSentences() ;
 
+    Observable<List<Sentence>> getSentencesRx() ;
+
+    Observable<List<Sentence>> getSentencesRx(int page,int pageSize) ;
+
     List<Sentence> getSentences(String searchword);
 
     List<Grammar> getGrammars();
+
+    Observable<List<Grammar>> getGrammarsRx();
+
+    Observable<List<Grammar>> getGrammarsRx(int page,int pageSize);
 
     List<Grammar> getGrammars(String searchword);
 
@@ -45,6 +52,8 @@ DataSource {
     Grammar getGrammarByGrammarId(String grammarid);
 
     Sentence getSentenceById(String id);
+
+    Observable<Sentence> getSentenceRxById(String id);
 
     Grammar getGrammarById(String id);
 
@@ -56,11 +65,19 @@ DataSource {
 
     boolean addSentence(Sentence sentence);
 
+    Observable<Boolean> addSentenceRx(Sentence sentence);
+
     boolean addGrammar(Grammar grammar);
+
+    Observable<Boolean> addGrammarRx(Grammar grammar);
 
     boolean updateSentence(Sentence sentence);
 
+    Observable<Boolean> updateSentenceRx(Sentence sentence);
+
     boolean updateGrammar(Grammar grammar);
+
+    Observable<Boolean> updateGrammarRx(Grammar grammar);
 
     boolean deleteSentence(String sentenceid);
 
@@ -68,7 +85,10 @@ DataSource {
 
     boolean deleteSentenceById(String id);
 
+    Observable<Boolean> deleteSentenceRxById(String id);
+
     boolean deleteGrammarById(String id);
 
-    void cancelRequest(RequestParam requestParam);//取消请求
+    Observable<Boolean> deleteGrammarRxById(String id);
+
 }

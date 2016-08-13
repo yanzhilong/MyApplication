@@ -6,7 +6,6 @@ import android.content.Context;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.local.LocalDataSource;
 import com.englishlearn.myapplication.data.source.remote.RemoteDataSource;
-import com.englishlearn.myapplication.domain.GetSentences;
 
 import dagger.Module;
 import dagger.Provides;
@@ -31,8 +30,5 @@ public class AppModule {
     public Repository provideRepository() {
         return Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication));
     }
-
-
-
 
 }

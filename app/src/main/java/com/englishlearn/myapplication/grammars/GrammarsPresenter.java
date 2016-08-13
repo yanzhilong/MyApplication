@@ -1,26 +1,33 @@
 package com.englishlearn.myapplication.grammars;
 
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.domain.DeleteGrammar;
-import com.englishlearn.myapplication.domain.GetGrammars;
+import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.domain.DeleteGrammars;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * Created by yanzl on 16-7-28.
  */
 public class GrammarsPresenter extends GrammarsContract.Presenter{
 
-    private GetGrammars getGrammars;
     private GrammarsContract.View mainView;
-    private DeleteGrammar deleteGrammar;
+    private int page = 1;
+    private final int PAGESIZE = 10;
+    @Inject
+    Repository repository;
+    DeleteGrammars deleteGrammars;
     public GrammarsPresenter(GrammarsContract.View vew){
         mainView = vew;
-        getGrammars = new GetGrammars();
-        deleteGrammar = new DeleteGrammar();
+        MyApplication.instance.getAppComponent().inject(this);
+        deleteGrammars = new DeleteGrammars();
         mainView.setPresenter(this);
     }
 
@@ -30,29 +37,53 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
     }
 
     @Override
+    void getGrammarsNextPage() {
+        Subscription subscription = repository.getGrammarsRx(page++,PAGESIZE)
+                .subscribe(new Subscriber<List<Grammar>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Grammar> grammars) {
+                        mainView.addGrammars(grammars);
+                    }
+                });
+        add(subscription);
+    }
+
+    @Override
     void getGrammars(String searchword) {
-        GetGrammars.GetGrammarsParame getGrammarsParame = new GetGrammars.GetGrammarsParame(searchword);
-        getGrammars.excuteIo(searchword != null ? getGrammarsParame : null).subscribe(new Subscriber<List<Grammar>>() {
-            @Override
-            public void onCompleted() {
+        if(searchword == null){
+            Subscription subscription = repository.getGrammarsRx()
+                    .subscribe(new Subscriber<List<Grammar>>() {
+                        @Override
+                        public void onCompleted() {
 
-            }
+                        }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                mainView.emptyGrammars();
-            }
+                        @Override
+                        public void onError(Throwable e) {
+                            mainView.emptyGrammars();
+                        }
 
-            @Override
-            public void onNext(List<Grammar> grammars) {
-                if(grammars != null && grammars.size() > 0){
-                    mainView.showGrammars(grammars);
-                }else{
-                    mainView.emptyGrammars();
-                }
-            }
-        });
+                        @Override
+                        public void onNext(List<Grammar> grammars) {
+                            if(grammars != null && grammars.size() > 0){
+                                mainView.showGrammars(grammars);
+                            }else{
+                                mainView.emptyGrammars();
+                            }
+                        }
+                    });
+            add(subscription);
+        }
     }
 
     @Override
@@ -62,37 +93,23 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
 
     @Override
     void deleteGrammars(final List<Grammar> grammars) {
-        final int[] success = {0};
-        final int[] fail = {0};
-        for(Grammar grammar : grammars){
-            deleteGrammar.excuteIo(new DeleteGrammar.DeleteGrammarParame(grammar)).subscribe(new Subscriber<Boolean>() {
-                @Override
-                public void onCompleted() {
+        Subscription subscription = deleteGrammars.excuteIo(new DeleteGrammars.DeleteGrammarsParame(grammars))
+                .subscribe(new Subscriber<DeleteGrammars.DeleteGrammarsResult>() {
+                    @Override
+                    public void onCompleted() {
 
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    fail[0]++;
-                    checkoutDeleteResult(grammars.size(),success[0],fail[0]);
-                }
-
-                @Override
-                public void onNext(Boolean aBoolean) {
-                    if(aBoolean){
-                        success[0]++;
-                    }else{
-                        fail[0]++;
                     }
-                    checkoutDeleteResult(grammars.size(),success[0],fail[0]);
-                }
-            });
-        }
-    }
 
-    private void checkoutDeleteResult(int sum,int success,int fail){
-        if((success + fail) == sum){
-            mainView.showDeleteResult(success,fail);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(DeleteGrammars.DeleteGrammarsResult deleteGrammarsResult) {
+                        mainView.showDeleteResult(deleteGrammarsResult.getSuccessCount(),deleteGrammarsResult.getFailCount());
+                    }
+                });
+        add(subscription);
     }
 }
