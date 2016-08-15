@@ -150,6 +150,11 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setIconifiedByDefault(true);
+        searchView.setMaxWidth(1000);
+
     }
 
     @Override
