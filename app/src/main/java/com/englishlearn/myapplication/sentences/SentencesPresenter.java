@@ -1,11 +1,14 @@
 package com.englishlearn.myapplication.sentences;
 
 
+import android.widget.Filter;
+
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.domain.DeleteSentences;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,8 +22,11 @@ import rx.Subscription;
 public class SentencesPresenter extends SentencesContract.Presenter{
 
     private SentencesContract.View mainView;
-    private int page = 1;
+    private int page = 0;
     private final int PAGESIZE = 10;
+    private List<Sentence> mSentences;
+    private List<Sentence> mFilterList;
+    private SentencesFilter sentencesFilter;
     @Inject
     Repository repository;
 
@@ -29,6 +35,8 @@ public class SentencesPresenter extends SentencesContract.Presenter{
         mainView = vew;
         MyApplication.instance.getAppComponent().inject(this);
         deleteSentences = new DeleteSentences();
+        mSentences = new ArrayList<>();
+        sentencesFilter = new SentencesFilter();
         mainView.setPresenter(this);
     }
 
@@ -38,8 +46,13 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     }
 
     @Override
+    void filterSentences(CharSequence constraint) {
+        sentencesFilter.filter(constraint);
+    }
+
+    @Override
     void getSentencesNextPage() {
-        repository.getSentencesRx(page++,PAGESIZE)
+        repository.getSentencesRx(++page,PAGESIZE)
         .subscribe(new Subscriber<List<Sentence>>() {
             @Override
             public void onCompleted() {
@@ -76,7 +89,9 @@ public class SentencesPresenter extends SentencesContract.Presenter{
                         @Override
                         public void onNext(List<Sentence> sentences) {
                             if(sentences != null && sentences.size() > 0){
-                                mainView.showSentences(sentences);
+                                mSentences.clear();
+                                mSentences.addAll(sentences);
+                                mainView.showSentences(mSentences);
                             }else{
                                 mainView.emptySentences();
                             }
@@ -85,6 +100,7 @@ public class SentencesPresenter extends SentencesContract.Presenter{
             add(subscription);
         }
     }
+
 
     @Override
     void addSentence() {
@@ -112,4 +128,34 @@ public class SentencesPresenter extends SentencesContract.Presenter{
               });
         add(subscription);
     }
+
+    private class SentencesFilter extends Filter{
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            FilterResults filterResults = new FilterResults();
+            if (constraint != null || constraint.length() > 0){
+                List<Sentence> list = new ArrayList<>();
+                for(Sentence sentence:mSentences){
+                    if(sentence.getContent().contains(constraint) || sentence.getTranslation().contains(constraint)){
+                        list.add(sentence);
+                    }
+                }
+                filterResults.count = list.size();
+                filterResults.values = list;
+            }else {
+                filterResults.count = mSentences.size();
+                filterResults.values = mSentences;
+            }
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mFilterList = (List<Sentence>) results.values;
+            mainView.showSentences(mFilterList);
+        }
+    }
+
 }

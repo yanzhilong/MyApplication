@@ -89,7 +89,7 @@ public class BmobDataSource implements DataSource {
             throw new RuntimeException("The page shoule be above 0");
         }
         int limit = pageSize;
-        int skip = (page - 1) * pageSize;
+        int skip = (page) * pageSize;
         return bmobService.getSentencesRx(limit,skip)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())

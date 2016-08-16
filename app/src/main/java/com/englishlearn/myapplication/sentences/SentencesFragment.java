@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View,SentencesSelectContract.View, View.OnClickListener {
+public class SentencesFragment extends Fragment implements SentencesContract.View,SentencesSelectContract.View, View.OnClickListener, SearchView.OnQueryTextListener {
 
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private SentencesAdapter sentencesAdapter;
@@ -152,8 +152,9 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
 
         searchView.setSubmitButtonEnabled(true);
-        searchView.setIconifiedByDefault(true);
-        searchView.setMaxWidth(1000);
+        //searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(this);
+        //searchView.setMaxWidth(1000);
 
     }
 
@@ -276,6 +277,18 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 selectPresenter.allSelectClick();
                 break;
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        mPresenter.filterSentences(newText);
+        return true;
     }
 
     private class SentencesAdapter extends BaseAdapter {
