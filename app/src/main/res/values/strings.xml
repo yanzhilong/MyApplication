@@ -35,7 +35,6 @@
     <string name="search_title">Search</string>
     <string name="search_hint">Search Sentence</string>
 
-
     <!-- AddEditSentenceActivity -->
     <string name="addsentence_title">Add Sentence</string>
     <string name="editsentence_title">Edit Sentence</string>

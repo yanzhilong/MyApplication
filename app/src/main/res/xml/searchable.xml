@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
-    android:hint="@string/search_hint" />-->
-
-<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="@string/search_hint"
+    android:searchSuggestAuthority="com.englishlearn.myapplication.provide.SuggestionsProvider"
+    android:searchSuggestSelection=" ?"
+    android:searchSuggestThreshold="0"
+    android:includeInGlobalSearch="true"
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
+    <!--
+    searchSuggestThreshold　几个字符暑会弹出来提示
+    android:includeInGlobalSearch　是否将内容加入android的全局搜索。true，加入。
+    -->
+<!--<searchable xmlns:android="http://schemas.android.com/apk/res/android"
 android:hint="@string/search_hint"
-android:label="@string/app_name"
-android:searchSuggestAuthority="danbroid.searchview.SuggestionProvider"
-android:searchSuggestSelection=" ?"
-android:searchSuggestThreshold="0"
-android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
+android:label="@string/app_name" />-->
+

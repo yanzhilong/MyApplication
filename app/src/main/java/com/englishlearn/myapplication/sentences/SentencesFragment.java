@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.provide.SuggestionsProvider;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
@@ -50,6 +53,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private Button deletes;
     private CheckBox allSelect;
     private FloatingActionButton fab;
+    private SearchView mSearchView;
+    private SearchRecentSuggestions suggestions;
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -63,6 +68,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        suggestions = new SearchRecentSuggestions(this.getContext(), SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
     }
 
     @Nullable
@@ -105,6 +111,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         }else{
             hideSentencesEdit();
         }
+        mPresenter.getSentences();//获取数据
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -114,7 +121,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.getSentences();
     }
 
     private Menu menu;
@@ -146,15 +152,14 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         // 关联检索配置和SearchView
         SearchManager searchManager =
                 (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
+        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
 
-        searchView.setSubmitButtonEnabled(true);
-        //searchView.setIconifiedByDefault(true);
-        searchView.setOnQueryTextListener(this);
-        //searchView.setMaxWidth(1000);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setIconifiedByDefault(true);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setMaxWidth(1000);
 
     }
 
@@ -281,11 +286,23 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        Log.d(TAG, "onQueryTextSubmit = " + query);
+        suggestions.saveRecentQuery(query, "asdf");
+        if (mSearchView != null) {
+            // 得到输入管理对象
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+            }
+            mSearchView.clearFocus(); // 不获取焦点
+        }
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+
 
         mPresenter.filterSentences(newText);
         return true;
