@@ -1,8 +1,6 @@
 package com.englishlearn.myapplication.sentences;
 
 
-import android.widget.Filter;
-
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -25,8 +23,7 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     private int page = 0;
     private final int PAGESIZE = 10;
     private List<Sentence> mSentences;
-    private List<Sentence> mFilterList;
-    private SentencesFilter sentencesFilter;
+
     @Inject
     Repository repository;
 
@@ -36,18 +33,12 @@ public class SentencesPresenter extends SentencesContract.Presenter{
         MyApplication.instance.getAppComponent().inject(this);
         deleteSentences = new DeleteSentences();
         mSentences = new ArrayList<>();
-        sentencesFilter = new SentencesFilter();
         mainView.setPresenter(this);
     }
 
     @Override
     void getSentences() {
         getSentences(null);
-    }
-
-    @Override
-    void filterSentences(CharSequence constraint) {
-        sentencesFilter.filter(constraint);
     }
 
     @Override
@@ -127,35 +118,6 @@ public class SentencesPresenter extends SentencesContract.Presenter{
                   }
               });
         add(subscription);
-    }
-
-    private class SentencesFilter extends Filter{
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            FilterResults filterResults = new FilterResults();
-            if (constraint != null || constraint.length() > 0){
-                List<Sentence> list = new ArrayList<>();
-                for(Sentence sentence:mSentences){
-                    if(sentence.getContent().contains(constraint) || sentence.getTranslation().contains(constraint)){
-                        list.add(sentence);
-                    }
-                }
-                filterResults.count = list.size();
-                filterResults.values = list;
-            }else {
-                filterResults.count = mSentences.size();
-                filterResults.values = mSentences;
-            }
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            mFilterList = (List<Sentence>) results.values;
-            mainView.showSentences(mFilterList);
-        }
     }
 
 }

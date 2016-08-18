@@ -1,12 +1,9 @@
 package com.englishlearn.myapplication.sentences;
 
-import android.app.SearchManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.englishlearn.myapplication.R;
@@ -23,7 +20,6 @@ public class SentencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sentences_act);
 
-        handleIntent(getIntent());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,21 +35,6 @@ public class SentencesActivity extends AppCompatActivity {
         }
         presenter = new SentencesPresenter( cleanFragment);
         selectPresenter = new SentencesSelectPresenter(cleanFragment);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-
-        Log.d(TAG,"handleIntent" + intent.getAction());
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //通过某种方法，根据请求检索你的数据
-        }
     }
 
     @Override

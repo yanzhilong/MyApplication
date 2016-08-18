@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.searchresults;
+package com.englishlearn.myapplication.search;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -6,21 +6,22 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
-public class SearchResultsActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
-    public static final String SENTENCE_ID = "sentence_id";
-    public static final String ID = "id";
+    private static final String TAG = SearchActivity.class.getSimpleName();
 
-    private SearchResultsContract.Presenter presenter;
+    private SearchContract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentencedetail_act);
+
+        setContentView(R.layout.serach_act);
 
         handleIntent(getIntent());
 
@@ -31,17 +32,14 @@ public class SearchResultsActivity extends AppCompatActivity {
         //返回按钮
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setTitle(R.string.sentencedetail_title);
+        ab.setTitle(R.string.search_title);
 
-        String sentenceid = getIntent().getStringExtra(SENTENCE_ID);
-        String id = getIntent().getStringExtra(ID);
-
-        SearchResultsFragment fragment = (SearchResultsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        SearchFragment fragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {
-            fragment = SearchResultsFragment.newInstance();
+            fragment = SearchFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        presenter = new SearchResultsPresenter(fragment,id,sentenceid);
+        presenter = new SearchPresenter(fragment);
     }
 
     @Override
@@ -51,9 +49,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-
+        Log.d(TAG,"handleIntent" + intent.getAction());
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d(TAG,"query:" + query);
             //通过某种方法，根据请求检索你的数据
         }
     }

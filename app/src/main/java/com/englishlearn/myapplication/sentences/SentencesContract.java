@@ -22,7 +22,6 @@ public class SentencesContract {
 
     abstract static class Presenter extends BasePresenter {
         abstract void getSentences();
-        abstract void filterSentences(CharSequence constraint);
         abstract void getSentencesNextPage();
         abstract void getSentences(String searchword);
         abstract void addSentence();

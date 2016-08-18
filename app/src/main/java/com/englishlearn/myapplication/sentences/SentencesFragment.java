@@ -1,15 +1,11 @@
 package com.englishlearn.myapplication.sentences;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -18,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -32,7 +27,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.provide.SuggestionsProvider;
+import com.englishlearn.myapplication.search.SearchActivity;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
@@ -42,7 +37,7 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesFragment extends Fragment implements SentencesContract.View,SentencesSelectContract.View, View.OnClickListener, SearchView.OnQueryTextListener {
+public class SentencesFragment extends Fragment implements SentencesContract.View,SentencesSelectContract.View, View.OnClickListener {
 
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private SentencesAdapter sentencesAdapter;
@@ -53,8 +48,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private Button deletes;
     private CheckBox allSelect;
     private FloatingActionButton fab;
-    private SearchView mSearchView;
-    private SearchRecentSuggestions suggestions;
+
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -68,7 +62,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        suggestions = new SearchRecentSuggestions(this.getContext(), SuggestionsProvider.AUTHORITY, SuggestionsProvider.MODE);
     }
 
     @Nullable
@@ -148,24 +141,15 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sentences_frag_menu, menu);
-
-        // 关联检索配置和SearchView
-        SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        mSearchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        mSearchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setIconifiedByDefault(true);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setMaxWidth(1000);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.search:
+                Log.d(TAG, "点击搜索项");
+                startActivity(new Intent(this.getContext(), SearchActivity.class));
+                break;
             case R.id.sentences_edit:
                 Log.d(TAG, "点击编辑项");
                 selectPresenter.edit();
@@ -282,30 +266,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 selectPresenter.allSelectClick();
                 break;
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Log.d(TAG, "onQueryTextSubmit = " + query);
-        suggestions.saveRecentQuery(query, "asdf");
-        if (mSearchView != null) {
-            // 得到输入管理对象
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
-                imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-            }
-            mSearchView.clearFocus(); // 不获取焦点
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-
-
-        mPresenter.filterSentences(newText);
-        return true;
     }
 
     private class SentencesAdapter extends BaseAdapter {

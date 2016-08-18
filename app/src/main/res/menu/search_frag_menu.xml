@@ -21,22 +21,8 @@
     <item android:id="@+id/search"
         android:title="@string/search_title"
         android:icon="@drawable/ic_search"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/sentences_edit"
-        android:title="@string/sentences_menu_edit"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_cancel"
-        android:title="@string/menu_cancel"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/sentences_setting"
-        android:title="@string/sentences_menu_setting"
-        app:showAsAction="never" />
-
-
-
+        app:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
 
 </menu>
