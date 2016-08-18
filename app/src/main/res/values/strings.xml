@@ -13,9 +13,9 @@
     <string name="menu_delete">Delete</string>
 
     <!-- 按钮 -->
-    <string name="sentence_btn">sentences</string>
-    <string name="grammar_btn">grammars</string>
-
+    <string name="sentence_btn">Sentences</string>
+    <string name="grammar_btn">Grammars</string>
+    <string name="search_btn">Sezrch</string>
 
     <!-- SentencesActivity -->
     <string name="sentences_title">Sentences</string>
@@ -65,5 +65,9 @@
     <!-- SerachActivity -->
     <string name="search_title">Search</string>
     <string name="search_hint">Search Sentence Grammar....</string>
+    <string name="search_sentences">Search Sentence</string>
 
+    <!-- SerachSingleActivity -->
+    <string name="searchsingle_title">Search Single</string>
+    <string name="searchsingle_hint">Search Sentence Grammar....</string>
 </resources>

@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
+import com.englishlearn.myapplication.search.SearchActivity;
 import com.englishlearn.myapplication.sentences.SentencesActivity;
 
 /**
@@ -47,10 +48,12 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
 
         Button sentence = (Button) root.findViewById(R.id.sentences);
         Button grammar = (Button) root.findViewById(R.id.grammars);
+        Button search = (Button) root.findViewById(R.id.search);
 
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
+        search.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -84,6 +87,10 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
             case R.id.grammars:
                 Intent grammarintent = new Intent(this.getContext(),GrammarsActivity.class);
                 this.startActivity(grammarintent);
+                break;
+            case R.id.search:
+                Intent searchintent = new Intent(this.getContext(),SearchActivity.class);
+                this.startActivity(searchintent);
                 break;
             default:
                 break;

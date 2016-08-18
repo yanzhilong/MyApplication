@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.search;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.provide.SuggestionsProvider;
@@ -24,11 +26,13 @@ import com.englishlearn.myapplication.provide.SuggestionsProvider;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SearchFragment extends Fragment implements SearchContract.View, SearchView.OnQueryTextListener {
+public class SearchFragment extends Fragment implements SearchContract.View, SearchView.OnQueryTextListener, View.OnClickListener {
 
     private static final String TAG = SearchFragment.class.getSimpleName();
     private SearchView mSearchView;
-    private SearchRecentSuggestions suggestions;
+    private SearchRecentSuggestions suggestions;//保存搜索历史
+    private Button search_sentences;//搜索句子
+    private Button search_grammars;//搜索语法
 
     private SearchContract.Presenter mPresenter;
     private MenuItem searchItem;
@@ -54,6 +58,11 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.serach_frag, container, false);
 
+        search_sentences = (Button) root.findViewById(R.id.search_sentences);
+        search_grammars = (Button) root.findViewById(R.id.search_grammars);
+
+        search_sentences.setOnClickListener(this);
+        search_grammars.setOnClickListener(this);
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -128,5 +137,15 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             }
         });
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.search_sentences:
+                break;
+            case R.id.search_grammars:
+                break;
+        }
     }
 }
