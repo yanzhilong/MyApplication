@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.search;
 
 
+import android.util.Log;
 import android.widget.Filter;
 
 import com.englishlearn.myapplication.data.Sentence;

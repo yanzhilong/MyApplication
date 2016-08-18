@@ -83,9 +83,9 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
         mSearchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getActivity().getComponentName()));
 
+        mSearchView.setOnQueryTextListener(this);
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setIconifiedByDefault(true);
-        mSearchView.setOnQueryTextListener(this);
         mSearchView.setMaxWidth(1000);
 
         //展开
@@ -106,19 +106,27 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             }
             mSearchView.clearFocus(); // 不获取焦点
         }
-        return true;
+        return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
 
-
+        Log.d(TAG,"onQueryTextChange:" + newText);
         mPresenter.filterSentences(newText);
-        return true;
+        return false;
     }
 
     @Override
-    public void setQuery(String query) {
-        mSearchView.setQuery(query,true);
+    public void setQuery(final String query) {
+        mSearchView.setQuery(query,false);
+        mSearchView.clearFocus();
+        mSearchView.post(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
     }
 }

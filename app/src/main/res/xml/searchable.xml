@@ -6,7 +6,8 @@
     android:searchSuggestSelection=" ?"
     android:searchSuggestThreshold="0"
     android:includeInGlobalSearch="true"
-    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:imeOptions="actionSearch"/>
     <!--
     searchSuggestThreshold　几个字符暑会弹出来提示
     android:includeInGlobalSearch　是否将内容加入android的全局搜索。true，加入。

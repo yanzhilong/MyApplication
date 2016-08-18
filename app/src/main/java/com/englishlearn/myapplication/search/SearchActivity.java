@@ -52,6 +52,7 @@ public class SearchActivity extends AppCompatActivity {
         Log.d(TAG,"handleIntent" + intent.getAction());
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            presenter.setQuery(query);
             Log.d(TAG,"query:" + query);
             //通过某种方法，根据请求检索你的数据
         }
