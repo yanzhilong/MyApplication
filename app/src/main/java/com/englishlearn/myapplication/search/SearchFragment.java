@@ -2,7 +2,6 @@ package com.englishlearn.myapplication.search;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.Nullable;

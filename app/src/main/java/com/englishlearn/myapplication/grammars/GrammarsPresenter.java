@@ -6,6 +6,7 @@ import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.domain.DeleteGrammars;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
     private GrammarsContract.View mainView;
     private int page = 1;
     private final int PAGESIZE = 10;
+    private List<Grammar> mGrammars;
     @Inject
     Repository repository;
     DeleteGrammars deleteGrammars;
@@ -28,6 +30,7 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
         mainView = vew;
         MyApplication.instance.getAppComponent().inject(this);
         deleteGrammars = new DeleteGrammars();
+        mGrammars = new ArrayList<>();
         mainView.setPresenter(this);
     }
 
@@ -52,7 +55,10 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
 
                     @Override
                     public void onNext(List<Grammar> grammars) {
-                        mainView.addGrammars(grammars);
+                        if(grammars != null){
+                            mGrammars.addAll(grammars);
+                        }
+                        mainView.showGrammars(mGrammars);
                     }
                 });
         add(subscription);
@@ -76,7 +82,9 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
                         @Override
                         public void onNext(List<Grammar> grammars) {
                             if(grammars != null && grammars.size() > 0){
-                                mainView.showGrammars(grammars);
+                                mGrammars.clear();
+                                mGrammars.addAll(grammars);
+                                mainView.showGrammars(mGrammars);
                             }else{
                                 mainView.emptyGrammars();
                             }

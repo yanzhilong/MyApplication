@@ -93,6 +93,28 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
     }
 
     @Override
+    void dataSetChanged() {
+        Iterator<Grammar> iterator = selecteds.iterator();
+        while (iterator.hasNext()){
+            Grammar s = iterator.next();
+            //删除少掉的
+            Iterator<Grammar> ite = view.getGrammars().iterator();
+            boolean found = false;
+            while (ite.hasNext()){
+                Grammar grammar = ite.next();
+                if(s.getGrammarid().equals(grammar.getGrammarid())){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                iterator.remove();
+                selects.remove(s.getGrammarid());
+            }
+        }
+    }
+
+    @Override
     List<Grammar> getSelects() {
         return selecteds;
     }

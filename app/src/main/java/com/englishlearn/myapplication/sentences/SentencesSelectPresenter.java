@@ -92,6 +92,30 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
     }
 
     @Override
+    void dataSetChanged() {
+        Iterator<Sentence> iterator = selecteds.iterator();
+        while (iterator.hasNext()){
+            Sentence s = iterator.next();
+            //删除少掉的
+            Iterator<Sentence> ite = view.getSentences().iterator();
+            boolean found = false;
+            while (ite.hasNext()){
+                Sentence sentence = ite.next();
+                if(s.getSentenceid().equals(sentence.getSentenceid())){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found){
+                iterator.remove();
+                selects.remove(s.getSentenceid());
+            }
+        }
+        //判断是全选就要改变
+        showAllSelectStatus();
+    }
+
+    @Override
     List<Sentence> getSelects() {
         return selecteds;
     }

@@ -66,7 +66,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.grammars_frag, container, false);
 
-        grammarsAdapter = new GrammarsAdapter(new ArrayList<Grammar>(),selectPresenter);
+        grammarsAdapter = new GrammarsAdapter(selectPresenter);
         grammars_listview = (ListView) root.findViewById(R.id.grammars_listview);
         grammars_edit_rela = (RelativeLayout) root.findViewById(R.id.sentences_edit_rela);
         deletes = (Button) root.findViewById(R.id.deletes);
@@ -160,12 +160,6 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
     public void showGrammars(List<Grammar> grammars) {
         Log.d(TAG,"showGrammars" + grammars.size());
         grammarsAdapter.replace(grammars);
-    }
-
-    @Override
-    public void addGrammars(List<Grammar> grammars) {
-        Log.d(TAG,"addGrammars" + grammars.size());
-        grammarsAdapter.addGrammars(grammars);
     }
 
     @Override
@@ -267,21 +261,20 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
         private GrammarsSelectContract.Presenter selectPresenter;
 
         public void replace(List<Grammar> grammars){
-            this.grammars = grammars;
-            notifyDataSetChanged();
+            if(grammars != null){
+                this.grammars.clear();
+                this.grammars.addAll(grammars);
+                notifyDataSetChanged();
+                selectPresenter.dataSetChanged();
+            }
         }
 
         public List<Grammar> getGrammars() {
             return grammars;
         }
 
-        public void addGrammars(List<Grammar> grammars){
-            this.grammars.addAll(grammars);
-            notifyDataSetChanged();
-        }
-
-        public GrammarsAdapter(List<Grammar> grammars,GrammarsSelectContract.Presenter selectPresenter){
-            this.grammars = grammars;
+        public GrammarsAdapter(GrammarsSelectContract.Presenter selectPresenter){
+            grammars = new ArrayList<>();
             this.selectPresenter = selectPresenter;
         }
 

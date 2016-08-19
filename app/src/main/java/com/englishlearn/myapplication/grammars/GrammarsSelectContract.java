@@ -30,6 +30,7 @@ public class GrammarsSelectContract {
         abstract void onClick(Grammar grammar);
         abstract void allSelectClick();
         abstract boolean isSelect(Grammar grammar);
+        abstract void dataSetChanged();//通知数据改变
         abstract List<Grammar> getSelects();
     }
 }

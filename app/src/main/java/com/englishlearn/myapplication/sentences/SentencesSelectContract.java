@@ -30,6 +30,7 @@ public class SentencesSelectContract {
         abstract void onClick(Sentence sentence);
         abstract void allSelectClick();
         abstract boolean isSelect(Sentence sentence);
+        abstract void dataSetChanged();//通知数据改变
         abstract List<Sentence> getSelects();
     }
 }

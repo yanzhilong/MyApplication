@@ -14,7 +14,6 @@ public class GrammarsContract {
 
     public interface View extends BaseView<Presenter> {
         void showGrammars(List<Grammar> grammars);
-        void addGrammars(List<Grammar> grammars);
         void emptyGrammars();
         void showaddGrammar();
         void showDeleteResult(int success,int fail);
