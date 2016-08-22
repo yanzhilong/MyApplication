@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,6 +57,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private FloatingActionButton fab;
     private SearchView mSearchView;
     private SearchRecentSuggestions suggestions;
+    private SwipeRefreshLayout srl;
 
 
     public static SentencesFragment newInstance() {
@@ -88,6 +91,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab_add_sentence);
         fab.setImageResource(R.drawable.ic_add);
 
+        srl = (SwipeRefreshLayout)root.findViewById(R.id.refresh_layout);
+
         allSelect.setOnClickListener(this);
         deletes.setOnClickListener(this);
         fab.setOnClickListener(this);
@@ -113,6 +118,27 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             hideSentencesEdit();
         }
         mPresenter.getSentences();//获取数据
+
+
+        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+                (ScrollChildSwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
+        );
+        swipeRefreshLayout.setScrollUpChild(sentences_listview);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d(TAG, "下拉刷新");
+                mPresenter.getSentences();//加载列表
+            }
+        });
+
+
+
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -137,7 +163,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         {
             edit.setVisible(false);
             cancel.setVisible(true);
-
         }
         else
         {
@@ -207,6 +232,17 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     public void setQuery(String query) {
         mSearchView.setQuery(query,false);
         mSearchView.clearFocus();
+    }
+
+    @Override
+    public void setLoadingIndicator(final boolean active) {
+        // Make sure setRefreshing() is called after the layout is done with everything else.
+        srl.post(new Runnable() {
+            @Override
+            public void run() {
+                srl.setRefreshing(active);
+            }
+        });
     }
 
     @Override

@@ -17,6 +17,7 @@ public class SentencesContract {
         void emptySentences();
         void showaddSentence();
         void setQuery(String query);
+        void setLoadingIndicator(boolean active);//加载指示器
         void showDeleteResult(int success,int fail);
     }
 

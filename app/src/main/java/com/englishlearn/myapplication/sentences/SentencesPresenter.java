@@ -82,23 +82,26 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
     @Override
     void getSentences(String searchword) {
+        mainView.setLoadingIndicator(true);
+        mSentences.clear();
+        page = 0;
         if(searchword == null){
-            Subscription subscription = repository.getSentencesRx()
+            Subscription subscription = repository.getSentencesRx(page,PAGESIZE)
                     .subscribe(new Subscriber<List<Sentence>>() {
                         @Override
                         public void onCompleted() {
-
+                            mainView.setLoadingIndicator(false);
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            mainView.setLoadingIndicator(false);
                             mainView.emptySentences();
                         }
 
                         @Override
                         public void onNext(List<Sentence> sentences) {
                             if(sentences != null && sentences.size() > 0){
-                                mSentences.clear();
                                 mSentences.addAll(sentences);
                                 mainView.showSentences(mSentences);
                             }else{

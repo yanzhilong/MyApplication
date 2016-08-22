@@ -85,8 +85,8 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
-        if(page < 1){
-            throw new RuntimeException("The page shoule be above 0");
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
         }
         int limit = pageSize;
         int skip = (page) * pageSize;
