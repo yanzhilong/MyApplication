@@ -15,13 +15,18 @@ public class SentencesContract {
     public interface View extends BaseView<Presenter> {
         void showSentences(List<Sentence> sentences);
         void emptySentences();
+        void showGetSentencesFail();//获取失败
         void showaddSentence();
         void setQuery(String query);
-        void setLoadingIndicator(boolean active);//加载指示器
+
         void showDeleteResult(int success,int fail);
+
+        //下拉刷新功能模块
+        void setLoadingIndicator(boolean active);//加载指示器
     }
 
     abstract static class Presenter extends BasePresenter {
+
         abstract void getSentences();
         abstract void setQuery(String query);
         abstract void filterSentences(CharSequence constraint);
@@ -29,5 +34,9 @@ public class SentencesContract {
         abstract void getSentences(String searchword);
         abstract void addSentence();
         abstract void deleteSentences(List<Sentence> sentences);
+        //分页加载模块
+        abstract boolean hasMore();//判断是否还有下一页
     }
+
+
 }

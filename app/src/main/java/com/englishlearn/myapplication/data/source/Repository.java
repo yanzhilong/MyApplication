@@ -62,6 +62,7 @@ public class Repository implements DataSource {
         return mBmobDataSource.getSentencesRx();
     }
 
+    private int i = 1;
     @Override
     public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
         return mBmobDataSource.getSentencesRx(page,pageSize);

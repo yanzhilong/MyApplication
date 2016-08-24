@@ -70,4 +70,10 @@
     <!-- SerachSingleActivity -->
     <string name="searchsingle_title">Search Single</string>
     <string name="searchsingle_hint">Search Sentence Grammar....</string>
+
+    <!-- 分页加载 -->
+    <string name="loadmore">正在加载中...</string>
+    <string name="loadfail">加载出错了....</string>
+    <string name="reload">服务器开小差了，点击重新加载</string>
+    <string name="notmore">没有更多了</string>
 </resources>

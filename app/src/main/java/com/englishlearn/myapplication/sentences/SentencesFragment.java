@@ -26,7 +26,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +35,7 @@ import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.provide.SuggestionsProvider;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
+import com.englishlearn.myapplication.ui.LoadMoreListView;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private SentencesAdapter sentencesAdapter;
     private SentencesContract.Presenter mPresenter;
     private SentencesSelectContract.Presenter selectPresenter;
-    private ListView sentences_listview;
+    private LoadMoreListView sentences_listview;
     private RelativeLayout sentences_edit_rela;
     private Button deletes;
     private CheckBox allSelect;
@@ -58,7 +58,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     private SearchView mSearchView;
     private SearchRecentSuggestions suggestions;
     private SwipeRefreshLayout srl;
-
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -82,7 +81,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         View root = inflater.inflate(R.layout.sentences_frag, container, false);
 
         sentencesAdapter = new SentencesAdapter(selectPresenter);
-        sentences_listview = (ListView) root.findViewById(R.id.sentences_listview);
+        sentences_listview = (LoadMoreListView) root.findViewById(R.id.sentences_listview);
         sentences_edit_rela = (RelativeLayout) root.findViewById(R.id.sentences_edit_rela);
         deletes = (Button) root.findViewById(R.id.deletes);
         allSelect = (CheckBox) root.findViewById(R.id.allSelect);
@@ -100,7 +99,10 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         sentences_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(selectPresenter.isEdit()){
+                if(position >= sentencesAdapter.getSentences().size()){
+                    //底部加戴Item
+                    return;
+                }else if(selectPresenter.isEdit()){
                     selectPresenter.onClick(sentencesAdapter.getSentences().get(position));
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
@@ -112,6 +114,12 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             }
         });
 
+        sentences_listview.setOnLoadMoreLister(new LoadMoreListView.OnLoadMoreLister() {
+            @Override
+            public void loadingMore() {
+                mPresenter.getSentencesNextPage();
+            }
+        });
         if(selectPresenter.isEdit()){
             showaddSentence();
         }else{
@@ -211,13 +219,25 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void showSentences(List<Sentence> sentences) {
         Log.d(TAG,"showSentences" + sentences.size());
+        if(mPresenter.hasMore()){
+            sentences_listview.setIsEnd(false);
+        }else {
+            sentences_listview.setIsEnd(true);
+        }
         sentencesAdapter.replace(sentences);
+        sentences_listview.loadingComplete();
     }
 
     @Override
     public void emptySentences() {
         Log.d(TAG,"emptySentences");
         sentencesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showGetSentencesFail() {
+        Log.d(TAG,"showGetSentencesFail");
+        sentences_listview.loadingComplete();
     }
 
     @Override

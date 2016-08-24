@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.sentences;
 
 
+import android.util.Log;
 import android.widget.Filter;
 
 import com.englishlearn.myapplication.MyApplication;
@@ -27,11 +28,14 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     private List<Sentence> mSentences;
     private List<Sentence> mFilterList;
     private SentencesFilter sentencesFilter;
+    private boolean more = true;
+
+    public static final String TAG = SentencesPresenter.class.getSimpleName();
 
     @Inject
     Repository repository;
-
     DeleteSentences deleteSentences;
+
     public SentencesPresenter(SentencesContract.View vew){
         mainView = vew;
         MyApplication.instance.getAppComponent().inject(this);
@@ -43,7 +47,10 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
     @Override
     void getSentences() {
-        getSentences(null);
+        page = 0;
+        mSentences.clear();
+        mainView.setLoadingIndicator(true);
+        getSentencesNextPage();
     }
 
     @Override
@@ -58,26 +65,35 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
     @Override
     void getSentencesNextPage() {
-        repository.getSentencesRx(++page,PAGESIZE)
+
+        Subscription subscription = repository.getSentencesRx(page++,PAGESIZE)
         .subscribe(new Subscriber<List<Sentence>>() {
+
             @Override
             public void onCompleted() {
-
+                mainView.setLoadingIndicator(false);
             }
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                mainView.setLoadingIndicator(false);
+                if((page - 1) == 0){
+                    page--;
+                }
             }
 
             @Override
             public void onNext(List<Sentence> sentences) {
+                Log.d(TAG,"getSentencesNextPage" + sentences.size());
                 if(sentences != null){
                     mSentences.addAll(sentences);
+                    more = sentences.size() == 0 ? false : true;
                 }
                 mainView.showSentences(mSentences);
             }
         });
+        add(subscription);
     }
 
     @Override
@@ -95,13 +111,15 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
                         @Override
                         public void onError(Throwable e) {
+                            e.printStackTrace();
+                            mainView.showGetSentencesFail();
                             mainView.setLoadingIndicator(false);
-                            mainView.emptySentences();
                         }
 
                         @Override
                         public void onNext(List<Sentence> sentences) {
                             if(sentences != null && sentences.size() > 0){
+                                more = true;
                                 mSentences.addAll(sentences);
                                 mainView.showSentences(mSentences);
                             }else{
@@ -141,6 +159,11 @@ public class SentencesPresenter extends SentencesContract.Presenter{
         add(subscription);
     }
 
+    @Override
+    public boolean hasMore() {
+        return more;
+    }
+
     private class SentencesFilter extends Filter {
 
         @Override
@@ -165,6 +188,7 @@ public class SentencesPresenter extends SentencesContract.Presenter{
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            Log.d(TAG,"publishResults");
             mFilterList = (List<Sentence>) results.values;
             mainView.showSentences(mFilterList);
         }

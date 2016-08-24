@@ -88,8 +88,9 @@ public class BmobDataSource implements DataSource {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");
         }
-        int limit = pageSize;
-        int skip = (page) * pageSize;
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        Log.d(TAG,"getSentencesRx:limit=" + limit + "skip=" + skip);
         return bmobService.getSentencesRx(limit,skip)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
@@ -102,10 +103,9 @@ public class BmobDataSource implements DataSource {
                             Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
                             sentences.add(sentence);
                         }
-                        return Observable.just(sentences)
-                                .observeOn(AndroidSchedulers.mainThread());
+                        return Observable.just(sentences);
                     }
-                });
+                }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

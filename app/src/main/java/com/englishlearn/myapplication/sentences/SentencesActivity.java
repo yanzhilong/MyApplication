@@ -23,6 +23,7 @@ public class SentencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sentences_act);
 
+        Log.d(TAG,"onCreate");
         handleIntent(getIntent());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
