@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.searchsentences;
 
 
 import android.util.Log;
@@ -20,9 +20,9 @@ import rx.Subscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentencesPresenter extends SentencesContract.Presenter{
+public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
 
-    private SentencesContract.View mainView;
+    private SearchSentencesContract.View mainView;
     private int page = 0;
     private final int PAGESIZE = 10;
     private List<Sentence> mSentences;
@@ -30,13 +30,13 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     private SentencesFilter sentencesFilter;
     private boolean more = true;
 
-    public static final String TAG = SentencesPresenter.class.getSimpleName();
+    public static final String TAG = SearchSentencesPresenter.class.getSimpleName();
 
     @Inject
     Repository repository;
     DeleteSentences deleteSentences;
 
-    public SentencesPresenter(SentencesContract.View vew){
+    public SearchSentencesPresenter(SearchSentencesContract.View vew){
         mainView = vew;
         MyApplication.instance.getAppComponent().inject(this);
         deleteSentences = new DeleteSentences();
@@ -45,23 +45,6 @@ public class SentencesPresenter extends SentencesContract.Presenter{
         mainView.setPresenter(this);
     }
 
-    @Override
-    void getSentences() {
-        page = 0;
-        mSentences.clear();
-        mainView.setLoadingIndicator(true);
-        getSentencesNextPage();
-    }
-
-    @Override
-    void setQuery(String query) {
-        mainView.setQuery(query);
-    }
-
-    @Override
-    void filterSentences(CharSequence constraint) {
-        sentencesFilter.filter(constraint);
-    }
 
     @Override
     void getSentencesNextPage() {
@@ -81,7 +64,6 @@ public class SentencesPresenter extends SentencesContract.Presenter{
                 if((page - 1) == 0){
                     page--;
                 }
-                mainView.showGetSentencesFail();
             }
 
             @Override
@@ -98,31 +80,40 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     }
 
     @Override
-    void addSentence() {
-        mainView.showaddSentence();
+    void getSentences(String searchword) {
+        mainView.setLoadingIndicator(true);
+        mSentences.clear();
+        page = 0;
+        if(searchword == null){
+            Subscription subscription = repository.getSentencesRx(page,PAGESIZE)
+                    .subscribe(new Subscriber<List<Sentence>>() {
+                        @Override
+                        public void onCompleted() {
+                            mainView.setLoadingIndicator(false);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            mainView.showGetSentencesFail();
+                            mainView.setLoadingIndicator(false);
+                        }
+
+                        @Override
+                        public void onNext(List<Sentence> sentences) {
+                            if(sentences != null && sentences.size() > 0){
+                                more = true;
+                                mSentences.addAll(sentences);
+                                mainView.showSentences(mSentences);
+                            }else{
+                                mainView.emptySentences();
+                            }
+                        }
+                    });
+            add(subscription);
+        }
     }
 
-    @Override
-    void deleteSentences(final List<Sentence> sentences) {
-        Subscription subscription = deleteSentences.excuteIo(new DeleteSentences.DeleteSentencesParame(sentences))
-              .subscribe(new Subscriber<DeleteSentences.DeleteSentensResult>() {
-                  @Override
-                  public void onCompleted() {
-
-                  }
-
-                  @Override
-                  public void onError(Throwable e) {
-                      mainView.showDeleteResult(0,0);
-                  }
-
-                  @Override
-                  public void onNext(DeleteSentences.DeleteSentensResult deleteSentensResult) {
-                      mainView.showDeleteResult(deleteSentensResult.getSuccessCount(),deleteSentensResult.getFailCount());
-                  }
-              });
-        add(subscription);
-    }
 
     @Override
     public boolean hasMore() {

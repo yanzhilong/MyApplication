@@ -12,10 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.search.SearchActivity;
+import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
 import com.englishlearn.myapplication.sentences.SentencesActivity;
 
 /**
@@ -49,11 +51,15 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
         Button sentence = (Button) root.findViewById(R.id.sentences);
         Button grammar = (Button) root.findViewById(R.id.grammars);
         Button search = (Button) root.findViewById(R.id.search);
+        Button searchsentences = (Button) root.findViewById(R.id.searchsentences);
+        ImageView search_img = (ImageView) root.findViewById(R.id.search_img);
 
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
         search.setOnClickListener(this);
+        searchsentences.setOnClickListener(this);
+        search_img.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -91,6 +97,10 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
             case R.id.search:
                 Intent searchintent = new Intent(this.getContext(),SearchActivity.class);
                 this.startActivity(searchintent);
+                break;
+            case R.id.searchsentences:
+                Intent searchsentencesintent = new Intent(this.getContext(),SearchSentencesActivity.class);
+                this.startActivity(searchsentencesintent);
                 break;
             default:
                 break;

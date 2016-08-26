@@ -140,6 +140,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mPresenter.unsubscribe();
                 Log.d(TAG, "下拉刷新");
                 mPresenter.getSentences();//加载列表
             }
@@ -237,7 +238,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     @Override
     public void showGetSentencesFail() {
         Log.d(TAG,"showGetSentencesFail");
-        sentences_listview.loadingComplete();
+        sentences_listview.loadFail();
     }
 
     @Override

@@ -43,4 +43,20 @@
 			android:text="@string/notmore" />
 	</LinearLayout>
 
+	<LinearLayout
+		android:id="@+id/load_fail"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:orientation="horizontal" >
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginLeft="@dimen/activity_horizontal_margin"
+			android:text="@string/reload" />
+	</LinearLayout>
+
 </RelativeLayout>

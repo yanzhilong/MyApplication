@@ -88,6 +88,7 @@ public class BmobDataSource implements DataSource {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");
         }
+
         final int limit = pageSize;
         final int skip = (page) * pageSize;
         Log.d(TAG,"getSentencesRx:limit=" + limit + "skip=" + skip);

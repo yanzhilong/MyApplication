@@ -15,7 +15,8 @@
     <!-- 按钮 -->
     <string name="sentence_btn">Sentences</string>
     <string name="grammar_btn">Grammars</string>
-    <string name="search_btn">Sezrch</string>
+    <string name="search_btn">Search</string>
+    <string name="search_sentences_btn">SearchSentences</string>
 
     <!-- SentencesActivity -->
     <string name="sentences_title">Sentences</string>
