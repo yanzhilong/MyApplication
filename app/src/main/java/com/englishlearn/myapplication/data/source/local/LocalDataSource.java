@@ -143,6 +143,11 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
+    public List<Sentence> getSentencesRx(String searchword, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public List<Grammar> getGrammars() {
 
         List<Grammar> grammars = new ArrayList();

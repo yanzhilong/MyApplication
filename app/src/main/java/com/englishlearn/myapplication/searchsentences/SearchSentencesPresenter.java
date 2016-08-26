@@ -26,22 +26,17 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
     private int page = 0;
     private final int PAGESIZE = 10;
     private List<Sentence> mSentences;
-    private List<Sentence> mFilterList;
-    private SentencesFilter sentencesFilter;
     private boolean more = true;
 
     public static final String TAG = SearchSentencesPresenter.class.getSimpleName();
 
     @Inject
     Repository repository;
-    DeleteSentences deleteSentences;
 
     public SearchSentencesPresenter(SearchSentencesContract.View vew){
         mainView = vew;
         MyApplication.instance.getAppComponent().inject(this);
-        deleteSentences = new DeleteSentences();
         mSentences = new ArrayList<>();
-        sentencesFilter = new SentencesFilter();
         mainView.setPresenter(this);
     }
 
@@ -120,34 +115,5 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
         return more;
     }
 
-    private class SentencesFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            FilterResults filterResults = new FilterResults();
-            if (constraint != null || constraint.length() > 0){
-                List<Sentence> list = new ArrayList<>();
-                for(Sentence sentence:mSentences){
-                    if(sentence.getContent().contains(constraint) || sentence.getTranslation().contains(constraint)){
-                        list.add(sentence);
-                    }
-                }
-                filterResults.count = list.size();
-                filterResults.values = list;
-            }else {
-                filterResults.count = mSentences.size();
-                filterResults.values = mSentences;
-            }
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            Log.d(TAG,"publishResults");
-            mFilterList = (List<Sentence>) results.values;
-            mainView.showSentences(mFilterList);
-        }
-    }
 
 }

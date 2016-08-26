@@ -127,6 +127,109 @@ public interface BmobService{
     })
     Observable<BmobSentenceResult> getSentencesRx(@Query("limit") int limit, @Query("skip")int skip);
 
+    /**
+     * 分页搜索1个完整单词
+     * @param searchword 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"( )*{searchword}[., ]\"}}&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("limit") int limit, @Query("skip")int skip,@Path("searchword") String searchword);
+
+    /**
+     * 分页搜索2个完整单词
+     * @param searchword1 搜索的单词
+     * @param searchword2 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"( )*{searchword1} .* {searchword2}[., ]\"} }&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("limit") int limit, @Query("skip")int skip,@Path("searchword1") String searchword1,@Path("searchword2") String searchword2);
+
+    /**
+     * 分页搜索3个完整单词
+     * @param searchword1 搜索的单词
+     * @param searchword2 搜索的单词
+     * @param searchword3 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"( )*{searchword1} .* {searchword2} .* {searchword3}[., ]\"} }&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("limit") int limit, @Query("skip")int skip,@Path("searchword1") String searchword1,@Path("searchword2") String searchword2,@Path("searchword2") String searchword3);
+
+    /**
+     * 分页搜索4个完整单词
+     * @param searchword1 搜索的单词
+     * @param searchword2 搜索的单词
+     * @param searchword3 搜索的单词
+     * @param searchword4 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"( )*{searchword1} .* {searchword2} .* {searchword3} .* {searchword4}[., ]\"} }&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("limit") int limit, @Query("skip")int skip,@Path("searchword1") String searchword1,@Path("searchword2") String searchword2,@Path("searchword2") String searchword3,@Path("searchword2") String searchword4);
+
+    /**
+     * 分页搜索4个完整单词
+     * @param searchword1 搜索的单词
+     * @param searchword2 搜索的单词
+     * @param searchword3 搜索的单词
+     * @param searchword4 搜索的单词
+     * @param searchword5 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"( )*{searchword1} .* {searchword2} .* {searchword3} .* {searchword4} .* {searchword5}[., ]\"} }&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("limit") int limit, @Query("skip")int skip,@Path("searchword1") String searchword1,@Path("searchword2") String searchword2,@Path("searchword2") String searchword3,@Path("searchword2") String searchword4,@Path("searchword2") String searchword5);
+
+
+
+    /**
+     * 分页搜索一个不完整单词
+     * @param searchword 搜索的单词
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Sentence?where={\"content\":{\"$regex\":\"{searchword}\"}}&limit={limit}&skip={skip})")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobSentenceResult> getSentencesRx(@Path("searchword") String searchword,@Path("limit") int limit, @Query("skip")int skip);
+
+
     //获取所有语法
     @GET("/1/classes/Grammar")
     @Headers({

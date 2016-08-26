@@ -115,6 +115,13 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
+    public List<Sentence> getSentencesRx(String searchword, int page, int pageSize) {
+
+
+        return null;
+    }
+
+    @Override
     public List<Grammar> getGrammars() {
         Call<BmobGrammarResult> listCall = bmobService.getGrammars();
         Response<BmobGrammarResult> response;

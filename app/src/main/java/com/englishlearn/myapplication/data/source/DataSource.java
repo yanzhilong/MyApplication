@@ -35,9 +35,11 @@ DataSource {
 
     Observable<List<Sentence>> getSentencesRx() ;
 
-    Observable<List<Sentence>> getSentencesRx(int page,int pageSize) ;
+    Observable<List<Sentence>> getSentencesRx(int page,int pageSize);
 
     List<Sentence> getSentences(String searchword);
+
+    List<Sentence> getSentencesRx(String searchword,int page,int pageSize);
 
     List<Grammar> getGrammars();
 
