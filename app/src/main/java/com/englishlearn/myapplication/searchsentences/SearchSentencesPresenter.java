@@ -2,12 +2,10 @@ package com.englishlearn.myapplication.searchsentences;
 
 
 import android.util.Log;
-import android.widget.Filter;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.domain.DeleteSentences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +25,7 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
     private final int PAGESIZE = 10;
     private List<Sentence> mSentences;
     private boolean more = true;
+    private String searchWord = "";
 
     public static final String TAG = SearchSentencesPresenter.class.getSimpleName();
 
@@ -44,7 +43,7 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
     @Override
     void getSentencesNextPage() {
 
-        Subscription subscription = repository.getSentencesRx(page++,PAGESIZE)
+        Subscription subscription = repository.getSentencesRx(searchWord,page++,PAGESIZE)
         .subscribe(new Subscriber<List<Sentence>>() {
 
             @Override
@@ -76,11 +75,13 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
 
     @Override
     void getSentences(String searchword) {
-        mainView.setLoadingIndicator(true);
-        mSentences.clear();
         page = 0;
-        if(searchword == null){
-            Subscription subscription = repository.getSentencesRx(page,PAGESIZE)
+        mSentences.clear();
+        mainView.setLoadingIndicator(true);
+        searchWord = searchword;
+        getSentencesNextPage();
+        /*if(searchword == null){
+            Subscription subscription = repository.getSentencesRx(searchword,page,PAGESIZE)
                     .subscribe(new Subscriber<List<Sentence>>() {
                         @Override
                         public void onCompleted() {
@@ -106,7 +107,12 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
                         }
                     });
             add(subscription);
-        }
+        }*/
+    }
+
+    @Override
+    void refreshSentences() {
+        getSentences(searchWord);
     }
 
 

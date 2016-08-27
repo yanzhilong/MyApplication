@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -37,7 +39,7 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SearchSentencesFragment extends Fragment implements SearchSentencesContract.View, View.OnClickListener, TextView.OnEditorActionListener {
+public class SearchSentencesFragment extends Fragment implements SearchSentencesContract.View, View.OnClickListener, TextView.OnEditorActionListener, TextWatcher {
 
     private static final String TAG = SearchSentencesFragment.class.getSimpleName();
     private SentencesAdapter sentencesAdapter;
@@ -76,6 +78,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
         ImageButton search = (ImageButton) toolbar.findViewById(R.id.search);
         searchEditText = (EditText) toolbar.findViewById(R.id.search_edit);
         searchEditText.setOnEditorActionListener(this);
+        searchEditText.addTextChangedListener(this);
         searchEditText.requestFocus();
         search.setOnClickListener(this);
 
@@ -115,6 +118,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
             @Override
             public void onRefresh() {
                 Log.d(TAG, "下拉刷新");
+                mPresenter.refreshSentences();
             }
         });
 
@@ -142,11 +146,6 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
         sentences_listview.loadingComplete();
     }
 
-    @Override
-    public void emptySentences() {
-        Log.d(TAG,"emptySentences");
-        sentencesAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void showGetSentencesFail() {
@@ -177,7 +176,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.search:
-                submit();
+                submit(true);
                 break;
             default:
                 break;
@@ -187,20 +186,43 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            submit();
+            submit(true);
         }
         return false;
     }
 
-    private void submit(){
-        Log.d(TAG,"submit");
-        // 得到输入管理对象
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
-            imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+    private void submit(boolean complete){
+
+        if(complete){
+            // 得到输入管理对象
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+            }
+            searchEditText.clearFocus();
         }
-        searchEditText.clearFocus();
+        mPresenter.unsubscribe();//取消请求
+
+        String serachWord = searchEditText.getText().toString();
+        Log.d(TAG,"submit:" + serachWord);
+
+        mPresenter.getSentences(serachWord);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        submit(false);
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 
     private class SentencesAdapter extends BaseAdapter {

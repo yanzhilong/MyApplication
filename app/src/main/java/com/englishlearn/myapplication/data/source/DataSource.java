@@ -39,7 +39,7 @@ DataSource {
 
     List<Sentence> getSentences(String searchword);
 
-    List<Sentence> getSentencesRx(String searchword,int page,int pageSize);
+    Observable<List<Sentence>> getSentencesRx(String searchword,int page,int pageSize);
 
     List<Grammar> getGrammars();
 

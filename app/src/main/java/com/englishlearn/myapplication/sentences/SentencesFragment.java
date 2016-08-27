@@ -230,12 +230,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
     }
 
     @Override
-    public void emptySentences() {
-        Log.d(TAG,"emptySentences");
-        sentencesAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void showGetSentencesFail() {
         Log.d(TAG,"showGetSentencesFail");
         sentences_listview.loadFail();

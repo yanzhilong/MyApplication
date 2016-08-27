@@ -115,10 +115,29 @@ public class BmobDataSource implements DataSource {
     }
 
     @Override
-    public List<Sentence> getSentencesRx(String searchword, int page, int pageSize) {
+    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
 
-
-        return null;
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        Log.d(TAG,"getSentencesRx:limit=" + limit + "skip=" + skip + "regex:" + searchword);
+        return bmobService.getSentencesRx(searchword,limit,skip)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<BmobSentenceResult, Observable<List<Sentence>>>() {
+                    @Override
+                    public Observable<List<Sentence>> call(BmobSentenceResult bmobSentenceResult) {
+                        List<BmobSentence> list = bmobSentenceResult.getResults();
+                        List<Sentence> sentences = new ArrayList<>();
+                        for(BmobSentence bmobSentence : list){
+                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            sentences.add(sentence);
+                        }
+                        return Observable.just(sentences);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

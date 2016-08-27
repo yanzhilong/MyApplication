@@ -55,6 +55,11 @@ public class LoadMoreListView extends ListView implements AbsListView.OnScrollLi
         load_fail.setOnClickListener(this);
     }
 
+    /**
+     * 滑动ListView的时候,如果到底了就自动加载
+     * @param view
+     * @param scrollState
+     */
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (totalItemCount==lastItemCount&&scrollState==SCROLL_STATE_IDLE){
@@ -67,10 +72,25 @@ public class LoadMoreListView extends ListView implements AbsListView.OnScrollLi
         }
     }
 
+    /**
+     * 刷新ListView的时候，如果到底了就自动加载
+     * @param view
+     * @param firstVisibleItem
+     * @param visibleItemCount
+     * @param totalItemCount
+     */
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         this.totalItemCount = totalItemCount;
         this.lastItemCount = firstVisibleItem+visibleItemCount;
+        if(totalItemCount == lastItemCount){
+            if (!isLoading && !isLoadFail && !isEnd){
+                isLoading = true;
+                if(onLoadMoreLister != null){
+                    onLoadMoreLister.loadingMore();
+                }
+            }
+        }
     }
 
     public void loadingComplete(){

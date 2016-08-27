@@ -143,7 +143,7 @@ public class LocalDataSource implements LocalData {
     }
 
     @Override
-    public List<Sentence> getSentencesRx(String searchword, int page, int pageSize) {
+    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
         return null;
     }
 

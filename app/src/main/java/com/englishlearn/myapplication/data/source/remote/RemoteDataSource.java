@@ -47,7 +47,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public List<Sentence> getSentencesRx(String searchword, int page, int pageSize) {
+    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
         return null;
     }
 

@@ -14,7 +14,6 @@ public class SearchSentencesContract {
 
     public interface View extends BaseView<Presenter> {
         void showSentences(List<Sentence> sentences);
-        void emptySentences();
         void showGetSentencesFail();//获取失败
 
         //下拉刷新功能模块
@@ -25,6 +24,8 @@ public class SearchSentencesContract {
 
         abstract void getSentencesNextPage();
         abstract void getSentences(String searchword);
+        abstract void refreshSentences();
+
         //分页加载模块
         abstract boolean hasMore();//判断是否还有下一页
     }

@@ -19,6 +19,7 @@ package com.englishlearn.myapplication.data.source;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.util.SearchUtil;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class Repository implements DataSource {
 
     private final BmobDataSource mBmobDataSource;
 
+    private SearchUtil searchUtil;
+
     boolean mCacheIsDirty = false;
 
     private Repository(DataSource remoteDataSource,
@@ -41,6 +44,7 @@ public class Repository implements DataSource {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
         mBmobDataSource = BmobDataSource.getInstance();
+        searchUtil = SearchUtil.getInstance();
     }
 
     public static Repository getInstance(DataSource tasksRemoteDataSource,
@@ -71,6 +75,15 @@ public class Repository implements DataSource {
     @Override
     public List<Sentence> getSentences(String searchword) {
         return mLocalDataSource.getSentences(searchword);
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
+        if(searchword == null || searchword.equals("")){
+            return getSentencesRx(page,pageSize);
+        }
+        String regex = searchUtil.getSearchRegex(searchword);
+        return mBmobDataSource.getSentencesRx(regex,page,pageSize);
     }
 
     @Override

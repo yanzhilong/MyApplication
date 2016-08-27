@@ -14,7 +14,6 @@ public class SentencesContract {
 
     public interface View extends BaseView<Presenter> {
         void showSentences(List<Sentence> sentences);
-        void emptySentences();
         void showGetSentencesFail();//获取失败
         void showaddSentence();
         void setQuery(String query);
