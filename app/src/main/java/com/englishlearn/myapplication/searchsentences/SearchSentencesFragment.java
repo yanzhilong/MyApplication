@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Spannable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -32,6 +33,7 @@ import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.sentences.ScrollChildSwipeRefreshLayout;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
 import com.englishlearn.myapplication.util.AndroidUtils;
+import com.englishlearn.myapplication.util.SearchUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
     private LoadMoreListView sentences_listview;
     private SwipeRefreshLayout srl;
     private EditText searchEditText;
+    private String mSerachWord = "";
 
     public static SearchSentencesFragment newInstance() {
         return new SearchSentencesFragment();
@@ -204,10 +207,10 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
         }
         mPresenter.unsubscribe();//取消请求
 
-        String serachWord = searchEditText.getText().toString();
-        Log.d(TAG,"submit:" + serachWord);
+        mSerachWord = searchEditText.getText().toString();
+        Log.d(TAG,"submit:" + mSerachWord);
 
-        mPresenter.getSentences(serachWord);
+        mPresenter.getSentences(mSerachWord);
     }
 
     @Override
@@ -279,7 +282,21 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             final Sentence sentence = sentences.get(position);
-            viewHolder.content.setText(sentence.getContent());
+
+            if(mSerachWord != null && !mSerachWord.equals("")){
+
+                String result;
+                if(SearchUtil.getInstance().isContainsChinese(mSerachWord)){
+                    result = sentence.getTranslation();
+                }else{
+                    result = sentence.getContent();
+                }
+                Spannable spannable = SearchUtil.getInstance().getSpannable(mSerachWord,result,inflater.getContext());
+                viewHolder.content.setText(spannable);
+            }else{
+                viewHolder.content.setText(sentence.getContent());
+            }
+
             viewHolder.translation.setText(sentence.getTranslation());
             //显示语法
             List<Grammar> grammars = sentence.getGrammarList();

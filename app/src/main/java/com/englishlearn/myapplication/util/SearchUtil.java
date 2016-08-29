@@ -1,7 +1,16 @@
 package com.englishlearn.myapplication.util;
 
+import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+
+import com.englishlearn.myapplication.R;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by yanzl on 16-8-27.
@@ -9,6 +18,13 @@ import java.util.List;
 public class SearchUtil {
 
     private static SearchUtil INSTANCE;
+
+    private String regEx = "[\u4e00-\u9fa5]";
+    private Pattern pat = null;
+
+    {
+        pat = Pattern.compile(regEx);
+    }
 
     // Prevent direct instantiation.
     private SearchUtil(){
@@ -21,9 +37,19 @@ public class SearchUtil {
         return INSTANCE;
     }
 
+    /**
+     * 根据搜索的关键詞返回用于请求的正則表达式
+     * @param searchWord
+     * @return
+     */
     public String getSearchRegex(String searchWord){
         List<Word> list = getWords(searchWord);
-        String where = "{\"content\":{\"$regex\":\"%s\"}}";
+        String where = "";
+        if(isContainsChinese(searchWord)){
+            where = "{\"translation\":{\"$regex\":\"%s\"}}";
+        }else{
+            where = "{\"content\":{\"$regex\":\"%s\"}}";
+        }
         StringBuffer regex = new StringBuffer();
         for(int i = 0; i < list.size(); i++){
             Word word = list.get(i);
@@ -36,7 +62,50 @@ public class SearchUtil {
         }
         where = String.format(where,regex);
         return where;
-    };
+    }
+
+
+    /**
+     * 根据搜索的关键詞及返回的数据返回Spannable
+     * @param searchWord
+     * @param result
+     * @return
+     */
+    public Spannable getSpannable(String searchWord,String result,Context context){
+        List<Word> list = getWords(searchWord);
+        Spannable spannable = new SpannableString(result);
+        result = result.toLowerCase();
+        for(Word word:list){
+            int startIndex = -1;
+            int newStartIndex = startIndex;
+            do{
+                startIndex = newStartIndex;
+                if(startIndex + word.getName().length() < result.length()){
+                    newStartIndex = result.indexOf(word.getName().toLowerCase(),startIndex + 1);
+                    if(newStartIndex != -1){
+                        spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.search_matching)), newStartIndex,newStartIndex + word.getName().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }else{
+                        break;
+                    }
+                }else {
+                    break;
+                }
+            }while (newStartIndex != startIndex);
+        }
+        return spannable;
+        //spannable.setSpan(new ForegroundColorSpan(Color.GREEN), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+
+    public boolean isContainsChinese(String str)
+    {
+        Matcher matcher = pat.matcher(str);
+        boolean flg = false;
+        if (matcher.find()){
+        flg = true;
+    }
+        return flg;
+    }
 
     private List<Word> getWords(String searchWord){
         String result = "";
@@ -52,6 +121,8 @@ public class SearchUtil {
         }
         return list;
     }
+
+
 
     private boolean isWord(String word){
 
