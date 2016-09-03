@@ -3,22 +3,23 @@ package com.englishlearn.myapplication.data;
 import java.util.UUID;
 
 /**
- * Created by yanzl on 16-7-17.
- * 语法
+ * Created by yanzl on 16-9-3.
+ * 文章
  */
-public class Grammar {
-
+public class Tractate {
     private String id;
-    private String grammarId; //语法唯一id
+    private String tractateId;
+    private String userId; //用户Id
+    private String source; //来源 (拉取来源id选择再提交来源的名称)
     private String title; //标题
     private String content; //内容
-    private String userId; //用户Id
+    private String translation; //译文
     private String createDate; //创建时间
     private String categoryId; //分类Id
     private String remark; //备注
 
-    public Grammar() {
-        this.id = UUID.randomUUID().toString();
+    public Tractate() {
+        tractateId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -29,12 +30,28 @@ public class Grammar {
         this.id = id;
     }
 
-    public String getGrammarId() {
-        return grammarId;
+    public String getTractateId() {
+        return tractateId;
     }
 
-    public void setGrammarId(String grammarId) {
-        this.grammarId = grammarId;
+    public void setTractateId(String tractateId) {
+        this.tractateId = tractateId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getTitle() {
@@ -53,12 +70,12 @@ public class Grammar {
         this.content = content;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getTranslation() {
+        return translation;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
     public String getCreateDate() {

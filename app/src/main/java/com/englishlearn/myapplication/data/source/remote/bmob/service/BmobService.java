@@ -2,10 +2,14 @@ package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobUserResult;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -26,6 +30,39 @@ import rx.Observable;
 public interface BmobService{
 
     String BMOBAPI = "https://api.bmob.cn";
+
+    //注册用户
+    @POST("/1/users")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobCreateUserResult> createUserRx(@Body BmobCreateUserRequest bmobRequestUser);
+
+    @GET("/1/login")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobCreateUserResult> loginRx(@Query("username") String username,@Query("password") String password);
+
+    //根据Id获取用户
+    @GET("/1/users/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<BmobUser> getUserByIdRx(@Path("id") String id);
+
+    //根据用户名获取用户
+    @GET("/1/users")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<BmobUserResult> getUserByNameRx(@Query("where")String usernameJson);
 
     //根据Id获取句子
     @GET("/1/classes/Sentence/{id}/")

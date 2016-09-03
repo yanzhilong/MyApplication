@@ -1,6 +1,5 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -9,40 +8,19 @@ import java.util.UUID;
  */
 public class Sentence {
 
-    private String id;//数据庫唯一id
+    private String id;
+    private String sentenceId; //句子唯一id
+    private String content; //内容
+    private String translation; //译文
+    private String userId; //用户Id
+    private String source; //来源 (拉取来源id选择再提交来源的名称)
+    private String tractateId; //来自的文章Id
+    private String createDate; //创建时间
+    private String categoryId; //分类Id
+    private String remark; //备注
 
-    private final String sentenceid;//句子唯一id
-
-    private String content;//内容
-
-    private String translation;//翻译
-
-    private List<Grammar> grammarList;//相关语法
-
-    public Sentence(){
-        sentenceid = UUID.randomUUID().toString();
-    }
-
-    public Sentence(String mId, String content, String translation, List<Grammar> grammarList) {
-        this.sentenceid = mId;
-        this.content = content;
-        this.translation = translation;
-        this.grammarList = grammarList;
-    }
-
-    public Sentence(String content, String translation, List<Grammar> grammarList){
-        sentenceid = UUID.randomUUID().toString();
-        this.content = content;
-        this.translation = translation;
-        this.grammarList = grammarList;
-    }
-
-    public Sentence(String id, String sentenceid, String content, String translation, List<Grammar> grammarList) {
-        this.id = id;
-        this.sentenceid = sentenceid;
-        this.content = content;
-        this.translation = translation;
-        this.grammarList = grammarList;
+    public Sentence() {
+        sentenceId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -53,8 +31,12 @@ public class Sentence {
         this.id = id;
     }
 
-    public void setTranslation(String translation) {
-        this.translation = translation;
+    public String getSentenceId() {
+        return sentenceId;
+    }
+
+    public void setSentenceId(String sentenceId) {
+        this.sentenceId = sentenceId;
     }
 
     public String getContent() {
@@ -69,26 +51,55 @@ public class Sentence {
         return translation;
     }
 
-    public List<Grammar> getGrammarList() {
-        return grammarList;
+    public void setTranslation(String translation) {
+        this.translation = translation;
     }
 
-    public void setGrammarList(List<Grammar> grammarList) {
-        this.grammarList = grammarList;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getSentenceid() {
-        return sentenceid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "Sentence{" +
-                "id='" + id + '\'' +
-                ", sentenceid='" + sentenceid + '\'' +
-                ", content='" + content + '\'' +
-                ", translation='" + translation + '\'' +
-                ", grammarList=" + grammarList +
-                '}';
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTractateId() {
+        return tractateId;
+    }
+
+    public void setTractateId(String tractateId) {
+        this.tractateId = tractateId;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-        android:id="@+id/sentences"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sentence_btn" />
-    <Button
-        android:id="@+id/grammars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/grammar_btn"/>
 
-    <Button
-        android:id="@+id/search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_btn"/>
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/sentences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sentence_btn" />
+        <Button
+            android:id="@+id/grammars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/grammar_btn"/>
 
-    <Button
-        android:id="@+id/searchsentences"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_sentences_btn"/>
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_btn"/>
 
-    <ImageButton
-        android:id="@+id/search_img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/ic_keyboard_arrow_right_grey_24dp"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/searchsentences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_sentences_btn"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="普通注册用户"/>
+
+    </LinearLayout>
+
+</ScrollView>

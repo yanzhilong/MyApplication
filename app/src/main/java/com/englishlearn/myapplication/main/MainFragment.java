@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
@@ -52,14 +51,12 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
         Button grammar = (Button) root.findViewById(R.id.grammars);
         Button search = (Button) root.findViewById(R.id.search);
         Button searchsentences = (Button) root.findViewById(R.id.searchsentences);
-        ImageView search_img = (ImageView) root.findViewById(R.id.search_img);
 
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
         search.setOnClickListener(this);
         searchsentences.setOnClickListener(this);
-        search_img.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
