@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.data;
+package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import java.util.UUID;
 
@@ -6,9 +6,8 @@ import java.util.UUID;
  * Created by yanzl on 16-9-3.
  * 单詞
  */
-public class Word {
+public class BmobCreateWordRequest {
 
-    private String id;
     private String wordId;
     private String name;
     private String british_phonogram; //英式发音音标(多个用&分割)
@@ -43,16 +42,8 @@ public class Word {
     private String correlation; //其它相关的（第三人称单数，复数....）
     private String remark; //备注
 
-    public Word() {
+    public BmobCreateWordRequest() {
         wordId = UUID.randomUUID().toString();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getWordId() {

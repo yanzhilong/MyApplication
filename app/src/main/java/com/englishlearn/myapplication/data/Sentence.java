@@ -16,7 +16,6 @@ public class Sentence {
     private String source; //来源 (拉取来源id选择再提交来源的名称)
     private String tractateId; //来自的文章Id
     private String createDate; //创建时间
-    private String categoryId; //分类Id
     private String remark; //备注
 
     public Sentence() {
@@ -85,14 +84,6 @@ public class Sentence {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
     }
 
     public String getRemark() {

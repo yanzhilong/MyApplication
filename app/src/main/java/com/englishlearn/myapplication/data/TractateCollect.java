@@ -5,16 +5,15 @@ import java.util.UUID;
 /**
  * Created by yanzl on 16-9-3.
  */
-public class Collection {
+public class TractateCollect {
 
     private String id;
     private String userId; //用户Id
     private String createDate; //创建时间
-    private String groupId; //分组Id
-    private String categoryId; //这个收藏的类型
-    private String sourceId; //(句子，单词，文章)
+    private String tractategroupId; //分组Id
+    private String tractateId; //(句子，单词，文章)
 
-    public Collection() {
+    public TractateCollect() {
         this.userId = UUID.randomUUID().toString();
     }
 
@@ -42,27 +41,19 @@ public class Collection {
         this.createDate = createDate;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getTractategroupId() {
+        return tractategroupId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setTractategroupId(String tractategroupId) {
+        this.tractategroupId = tractategroupId;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getTractateId() {
+        return tractateId;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setTractateId(String tractateId) {
+        this.tractateId = tractateId;
     }
 }

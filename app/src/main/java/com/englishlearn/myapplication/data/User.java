@@ -19,6 +19,7 @@ public class User {
     private String mobile;
     private String mail;
     private String nickname;
+    private String sex;
     private String iconurl;
     private String birthday;
     private String createDate;
@@ -26,6 +27,14 @@ public class User {
     public User() {
         userId = UUID.randomUUID().toString();
         this.createDate = TimeUtil.formatTime(new Date());
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getUserId() {

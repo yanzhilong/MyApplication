@@ -1,11 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
 
-import com.englishlearn.myapplication.util.TimeUtil;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  * 请求网络用，用户表，删除id字段
@@ -21,13 +16,17 @@ public class BmobUser {
     private String mobile;
     private String mail;
     private String nickname;
+    private String sex;
     private String iconurl;
     private String birthday;
     private String createDate;
 
-    public BmobUser() {
-        userId = UUID.randomUUID().toString();
-        this.createDate = TimeUtil.formatTime(new Date());
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getSessionToken() {

@@ -3,16 +3,16 @@ package com.englishlearn.myapplication.data;
 import java.util.UUID;
 
 /**
- * Created by yanzl on 16-9-3.
- * 信息来源表
+ * Created by yanzl on 16-9-5.
  */
-public class Source {
+public class MsSource {
+
     private String id;
-    private String sourceId;
+    private String msSourceId;
     private String name;
 
-    public Source() {
-        sourceId = UUID.randomUUID().toString();
+    public MsSource() {
+        this.msSourceId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -23,12 +23,12 @@ public class Source {
         this.id = id;
     }
 
-    public String getSourceId() {
-        return sourceId;
+    public String getMsSourceId() {
+        return msSourceId;
     }
 
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setMsSourceId(String msSourceId) {
+        this.msSourceId = msSourceId;
     }
 
     public String getName() {

@@ -1,14 +1,14 @@
-package com.englishlearn.myapplication.data;
-
-import java.util.UUID;
+package com.englishlearn.myapplication.data.source.remote.bmob;
 
 /**
  * Created by yanzl on 16-9-3.
  * 单詞
  */
-public class Word {
+public class BmobWord {
 
-    private String id;
+    private String objectId;
+    private String createdAt;
+    private String updatedAt;
     private String wordId;
     private String name;
     private String british_phonogram; //英式发音音标(多个用&分割)
@@ -43,16 +43,29 @@ public class Word {
     private String correlation; //其它相关的（第三人称单数，复数....）
     private String remark; //备注
 
-    public Word() {
-        wordId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public String getWordId() {

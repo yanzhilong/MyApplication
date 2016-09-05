@@ -1,13 +1,13 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
-/**
- * Created by yanzl on 16-8-1.
- */
-public class BmobSentence {
+import java.util.UUID;
 
-    private String objectId;
-    private String createdAt;
-    private String updatedAt;
+/**
+ * Created by yanzl on 16-7-17.
+ * 句子
+ */
+public class BmobCreateSentenceRequest {
+
     private String sentenceId; //句子唯一id
     private String content; //内容
     private String translation; //译文
@@ -17,28 +17,8 @@ public class BmobSentence {
     private String createDate; //创建时间
     private String remark; //备注
 
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public BmobCreateSentenceRequest() {
+        sentenceId = UUID.randomUUID().toString();
     }
 
     public String getSentenceId() {

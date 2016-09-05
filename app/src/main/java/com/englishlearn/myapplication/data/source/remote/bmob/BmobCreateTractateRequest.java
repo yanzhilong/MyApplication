@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.data;
+package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import java.util.UUID;
 
@@ -6,8 +6,8 @@ import java.util.UUID;
  * Created by yanzl on 16-9-3.
  * 文章
  */
-public class Tractate {
-    private String id;
+public class BmobCreateTractateRequest {
+
     private String tractateId;
     private String userId; //用户Id
     private String source; //来源 (拉取来源id选择再提交来源的名称)
@@ -18,16 +18,8 @@ public class Tractate {
     private String tractatetypeId; //分类Id
     private String remark; //备注
 
-    public Tractate() {
+    public BmobCreateTractateRequest() {
         tractateId = UUID.randomUUID().toString();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getTractateId() {

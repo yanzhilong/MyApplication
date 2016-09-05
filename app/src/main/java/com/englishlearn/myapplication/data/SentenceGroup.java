@@ -5,16 +5,15 @@ import java.util.UUID;
 /**
  * Created by yanzl on 16-9-3.
  */
-public class Group {
+public class SentenceGroup {
 
     private String id;
-    private String groupId;
+    private String sentencegroupId;
     private String name; //分组名称
     private String userId; //用户Id
-    private String categoryId; //这个分组属于哪个信息类型的(单词，文章，句子)
 
-    public Group() {
-        groupId = UUID.randomUUID().toString();
+    public SentenceGroup() {
+        sentencegroupId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -25,12 +24,12 @@ public class Group {
         this.id = id;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getSentencegroupId() {
+        return sentencegroupId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setSentencegroupId(String sentencegroupId) {
+        this.sentencegroupId = sentencegroupId;
     }
 
     public String getName() {
@@ -49,11 +48,4 @@ public class Group {
         this.userId = userId;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
 }

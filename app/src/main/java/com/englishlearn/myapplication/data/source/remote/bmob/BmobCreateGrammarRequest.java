@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.data;
+package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import java.util.UUID;
 
@@ -6,7 +6,7 @@ import java.util.UUID;
  * Created by yanzl on 16-7-17.
  * 语法
  */
-public class Grammar {
+public class BmobCreateGrammarRequest {
 
     private String id;
     private String grammarId; //语法唯一id
@@ -16,7 +16,7 @@ public class Grammar {
     private String createDate; //创建时间
     private String remark; //备注
 
-    public Grammar() {
+    public BmobCreateGrammarRequest() {
         this.id = UUID.randomUUID().toString();
     }
 

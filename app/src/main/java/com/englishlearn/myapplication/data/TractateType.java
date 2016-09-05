@@ -6,14 +6,14 @@ import java.util.UUID;
  * Created by yanzl on 16-9-3.
  * 信息分类表
  */
-public class Category {
+public class TractateType {
 
     private String id;
-    private String categoryId;
+    private String tractatetypeId;
     private String name;
 
-    public Category() {
-        categoryId = UUID.randomUUID().toString();
+    public TractateType() {
+        tractatetypeId = UUID.randomUUID().toString();
     }
 
     public String getName() {
@@ -32,11 +32,11 @@ public class Category {
         this.id = id;
     }
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getTractatetypeId() {
+        return tractatetypeId;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setTractatetypeId(String tractatetypeId) {
+        this.tractatetypeId = tractatetypeId;
     }
 }
