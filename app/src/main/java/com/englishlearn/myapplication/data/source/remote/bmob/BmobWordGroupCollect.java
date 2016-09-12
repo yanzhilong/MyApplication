@@ -1,18 +1,20 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
 /**
- * Created by yanzl on 16-9-3.
+ * Created by yanzl on 16-9-12.
+ * 单词分级收藏表
  */
-public class BmobSentenceGroup {
+public class BmobWordGroupCollect {
 
     private String objectId;
     private String createdAt;
     private String updatedAt;
-    private String sentencegroupId;
-    private String open; //是否公开
-    private String name; //分组名称
+    private String wordgroupcollectId;
     private String userId; //用户Id
+    private String wordgroupId; //单词分组Id
 
+    public BmobWordGroupCollect() {
+    }
 
     public String getObjectId() {
         return objectId;
@@ -38,28 +40,12 @@ public class BmobSentenceGroup {
         this.updatedAt = updatedAt;
     }
 
-    public String getSentencegroupId() {
-        return sentencegroupId;
+    public String getWordgroupcollectId() {
+        return wordgroupcollectId;
     }
 
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
-    }
-
-    public String getOpen() {
-        return open;
-    }
-
-    public void setOpen(String open) {
-        this.open = open;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setWordgroupcollectId(String wordgroupcollectId) {
+        this.wordgroupcollectId = wordgroupcollectId;
     }
 
     public String getUserId() {
@@ -70,4 +56,11 @@ public class BmobSentenceGroup {
         this.userId = userId;
     }
 
+    public String getWordgroupId() {
+        return wordgroupId;
+    }
+
+    public void setWordgroupId(String wordgroupId) {
+        this.wordgroupId = wordgroupId;
+    }
 }

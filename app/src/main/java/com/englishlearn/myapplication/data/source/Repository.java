@@ -82,7 +82,7 @@ public class Repository implements DataSource {
         if(searchword == null || searchword.equals("")){
             return getSentencesRx(page,pageSize);
         }
-        String regex = searchUtil.getSearchRegex(searchword);
+        String regex = searchUtil.getSearchSentenceRegex(searchword);
         return mBmobDataSource.getSentencesRx(regex,page,pageSize);
     }
 

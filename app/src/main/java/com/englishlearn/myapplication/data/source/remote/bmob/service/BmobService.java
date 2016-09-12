@@ -1,15 +1,17 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
-import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordResult;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,6 +66,24 @@ public interface BmobService{
     })
     Observable<BmobUserResult> getUserByNameRx(@Query("where")String usernameJson);
 
+    //添加单词
+    @POST("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> addWord(@Body BmobCreateWordRequest bmobCreateWordRequest);
+
+    //根据名称获取单词
+    @GET("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<BmobWordResult> getWordByNameRx(@Query("where")String wordjson);
+
+
     //根据Id获取句子
     @GET("/1/classes/Sentence/{id}/")
     @Headers({
@@ -103,7 +123,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Call<ResponseBody> addSentence(@Body Sentence sentence);
+    Call<ResponseBody> addSentence(@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
 
     //添加句子
     @POST("/1/classes/Sentence")
@@ -112,7 +132,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addSentenceRx(@Body Sentence sentence);
+    Observable<Response<ResponseBody>> addSentenceRx(@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
 
     //添加语法
     @POST("/1/classes/Grammar")
@@ -121,7 +141,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Call<ResponseBody> addGrammar(@Body Grammar grammar);
+    Call<ResponseBody> addGrammar(@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
 
     //添加语法
     @POST("/1/classes/Grammar")
@@ -130,7 +150,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addGrammarRx(@Body Grammar grammar);
+    Observable<Response<ResponseBody>> addGrammarRx(@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
 
     //获取所有句子
     @GET("/1/classes/Sentence")
@@ -336,7 +356,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateSentencRxById(@Path("id") String id,@Body Sentence sentence);
+    Observable<Response<ResponseBody>> updateSentencRxById(@Path("id") String id,@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
 
     //修改讲法
     @PUT("/1/classes/Grammar/{id}/")
@@ -345,6 +365,6 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateGrammarRxById(@Path("id") String id,@Body Grammar grammar);
+    Observable<Response<ResponseBody>> updateGrammarRxById(@Path("id") String id,@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
 
 }

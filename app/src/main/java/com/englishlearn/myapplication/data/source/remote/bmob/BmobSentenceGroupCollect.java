@@ -1,17 +1,19 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
 /**
- * Created by yanzl on 16-9-3.
+ * Created by yanzl on 16-9-12.
  */
-public class BmobSentenceGroup {
+public class BmobSentenceGroupCollect {
 
     private String objectId;
     private String createdAt;
     private String updatedAt;
-    private String sentencegroupId;
-    private String open; //是否公开
-    private String name; //分组名称
+    private String sentencegroupcollectId;
     private String userId; //用户Id
+    private String sentencegroupId; //句子分组Id
+
+    public BmobSentenceGroupCollect() {
+    }
 
 
     public String getObjectId() {
@@ -38,28 +40,12 @@ public class BmobSentenceGroup {
         this.updatedAt = updatedAt;
     }
 
-    public String getSentencegroupId() {
-        return sentencegroupId;
+    public String getSentencegroupcollectId() {
+        return sentencegroupcollectId;
     }
 
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
-    }
-
-    public String getOpen() {
-        return open;
-    }
-
-    public void setOpen(String open) {
-        this.open = open;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setSentencegroupcollectId(String sentencegroupcollectId) {
+        this.sentencegroupcollectId = sentencegroupcollectId;
     }
 
     public String getUserId() {
@@ -70,4 +56,11 @@ public class BmobSentenceGroup {
         this.userId = userId;
     }
 
+    public String getSentencegroupId() {
+        return sentencegroupId;
+    }
+
+    public void setSentencegroupId(String sentencegroupId) {
+        this.sentencegroupId = sentencegroupId;
+    }
 }

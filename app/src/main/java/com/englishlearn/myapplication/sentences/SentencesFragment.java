@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,18 +24,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
-import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.provide.SuggestionsProvider;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
-import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +103,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
                     Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceid());
+                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceId());
                     detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
                     startActivity(detail);
                 }
@@ -413,7 +409,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 viewHolder.select = (CheckBox) convertView.findViewById(R.id.select);
                 viewHolder.content = (TextView) convertView.findViewById(R.id.content);
                 viewHolder.translation = (TextView) convertView.findViewById(R.id.translation);
-                viewHolder.grammars = (LinearLayout) convertView.findViewById(R.id.grammars);
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -421,12 +416,6 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
             final Sentence sentence = sentences.get(position);
             viewHolder.content.setText(sentence.getContent());
             viewHolder.translation.setText(sentence.getTranslation());
-            //显示语法
-            List<Grammar> grammars = sentence.getGrammarList();
-            if(grammars != null){
-                viewHolder.grammars.removeAllViews();
-                initGrammars(viewHolder.grammars,grammars);
-            }
             //是否显示复选框
             if(selectPresenter.isEdit()){
                 if(selectPresenter.isSelect(sentence)){
@@ -449,30 +438,10 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
 
     }
 
-    /**
-     * 添加TextView到LinearLayout中
-     * @param linearLayout
-     * @param grammars
-     */
-    private void initGrammars(LinearLayout linearLayout,List<Grammar> grammars){
-        for(Grammar grammar:grammars){
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin = (int) AndroidUtils.dipToPixels(this.getContext(),10f);
-            TextView textView = new TextView(this.getContext());
-            textView.setText(grammar.getName());
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-            textView.setTextColor(getResources().getColor(R.color.text_color_grey));
-            textView.setBackgroundResource(R.drawable.grammar_tip);
-            textView.setPadding(10,3,10,3);
-            textView.setLayoutParams(layoutParams);
-            linearLayout.addView(textView);
-        }
-    }
 
     static class ViewHolder{
         CheckBox select;//选中
         TextView content;//内容
         TextView translation;//译文
-        LinearLayout grammars;//语法
     }
 }

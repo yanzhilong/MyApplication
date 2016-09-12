@@ -107,7 +107,7 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
         Log.d(TAG,"showGrammar");
         this.grammar = grammar;
         if(grammar != null){
-            name.setText(grammar.getName());
+            name.setText(grammar.getTitle());
             content.setText(grammar.getContent());
         }
     }
@@ -119,7 +119,7 @@ public class GrammarDetailFragment extends Fragment implements GrammarDetailCont
             return;
         }
         Intent edit = new Intent(GrammarDetailFragment.this.getContext(), AddEditGrammarActivity.class);
-        edit.putExtra(AddEditGrammarActivity.GRAMMAR_ID,grammar.getGrammarid());
+        edit.putExtra(AddEditGrammarActivity.GRAMMAR_ID,grammar.getGrammarId());
         edit.putExtra(AddEditGrammarActivity.ID,grammar.getId());
         startActivity(edit);
     }

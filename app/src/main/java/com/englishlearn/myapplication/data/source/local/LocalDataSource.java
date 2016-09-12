@@ -77,14 +77,10 @@ public class LocalDataSource implements LocalData {
                 String translate =
                         c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
-                List<Grammar> list = new ArrayList<>();
-                /*for(int i = 0; i < 7; i++){
-                    Grammar grammar = new Grammar();
-                    grammar.setName("进行时" + i);
-                    list.add(grammar);
-                }*/
-
-                Sentence sentence = new Sentence(mId,content,translate,list);
+                Sentence sentence = new Sentence();
+                sentence.setId(mId);
+                sentence.setContent(content);
+                sentence.setTranslation(translate);
                 sentences.add(sentence);
             }
         }
@@ -130,7 +126,11 @@ public class LocalDataSource implements LocalData {
                 String translate =
                         c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
 
-                Sentence sentence = new Sentence(mId,content,translate,null);
+                Sentence sentence = new Sentence();
+                sentence.setId(id);
+                sentence.setSentenceId(mId);
+                sentence.setContent(content);
+                sentence.setTranslation(translate);
                 sentences.add(sentence);
             }
         }
@@ -170,7 +170,10 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                Grammar grammar = new Grammar(mid,name,content);
+                Grammar grammar = new Grammar();
+                grammar.setGrammarId(mid);
+                grammar.setTitle(name);
+                grammar.setContent(content);
                 grammars.add(grammar);
             }
         }
@@ -214,7 +217,10 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                Grammar grammar = new Grammar(mid,name,content);
+                Grammar grammar = new Grammar();
+                grammar.setGrammarId(mid);
+                grammar.setTitle(name);
+                grammar.setContent(content);
                 grammars.add(grammar);
             }
         }
@@ -248,8 +254,10 @@ public class LocalDataSource implements LocalData {
                 String content = c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_CONTENT));
                 String translate =
                         c.getString(c.getColumnIndexOrThrow(SentenceEntry.COLUMN_NAME_TRANSLATION));
-
-                sentence = new Sentence(mId,content,translate,null);
+                sentence = new Sentence();
+                sentence.setSentenceId(mId);
+                sentence.setContent(content);
+                sentence.setTranslation(translate);
             }
         }
         if (c != null) {
@@ -282,7 +290,10 @@ public class LocalDataSource implements LocalData {
                 String content =
                         c.getString(c.getColumnIndexOrThrow(GrammarEntry.COLUMN_NAME_CONTENT));
 
-                grammar = new Grammar(mid,name,content);
+                grammar = new Grammar();
+                grammar.setGrammarId(mid);
+                grammar.setTitle(name);
+                grammar.setContent(content);
             }
         }
         if (c != null) {
@@ -341,7 +352,7 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceid());
+        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceId());
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
         values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
@@ -363,8 +374,8 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarid());
-        values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
+        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarId());
+        values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getTitle());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
         long result = db.insert(GrammarEntry.TABLE_NAME,null,values);
@@ -385,12 +396,12 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceid());
+        values.put(SentenceEntry.COLUMN_NAME_ENTRY_ID, sentence.getSentenceId());
         values.put(SentenceEntry.COLUMN_NAME_CONTENT, sentence.getContent());
         values.put(SentenceEntry.COLUMN_NAME_TRANSLATION, sentence.getTranslation());
 
         String selection = SentenceEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {sentence.getSentenceid()};
+        String[] selectionArgs = {sentence.getSentenceId()};
 
         int result = db.update(SentenceEntry.TABLE_NAME,values,selection,selectionArgs);
 
@@ -404,12 +415,12 @@ public class LocalDataSource implements LocalData {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarid());
-        values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getName());
+        values.put(GrammarEntry.COLUMN_NAME_ENTRY_ID, grammar.getGrammarId());
+        values.put(GrammarEntry.COLUMN_NAME_NAME, grammar.getTitle());
         values.put(GrammarEntry.COLUMN_NAME_CONTENT, grammar.getContent());
 
         String selection = GrammarEntry.COLUMN_NAME_ENTRY_ID +" = ?";
-        String[] selectionArgs = {grammar.getGrammarid()};
+        String[] selectionArgs = {grammar.getGrammarId()};
 
         int result = db.update(GrammarEntry.TABLE_NAME,values,selection,selectionArgs);
 

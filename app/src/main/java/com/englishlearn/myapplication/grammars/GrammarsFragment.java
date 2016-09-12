@@ -90,7 +90,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
                 }else{
                     Grammar grammar = grammarsAdapter.getGrammars().get(position);
                     Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
-                    detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getGrammarid());
+                    detail.putExtra(GrammarDetailActivity.GRAMMAR_ID,grammar.getGrammarId());
                     detail.putExtra(GrammarDetailActivity.ID,grammar.getId());
                     startActivity(detail);
                 }
@@ -310,7 +310,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             final Grammar grammar = grammars.get(position);
-            viewHolder.name.setText(grammar.getName());
+            viewHolder.name.setText(grammar.getTitle());
             viewHolder.content.setText(grammar.getContent());
 
             //是否显示复选框

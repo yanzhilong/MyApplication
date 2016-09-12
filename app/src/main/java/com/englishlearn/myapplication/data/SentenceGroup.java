@@ -9,6 +9,7 @@ public class SentenceGroup {
 
     private String id;
     private String sentencegroupId;
+    private String open; //是否公开
     private String name; //分组名称
     private String userId; //用户Id
 
@@ -30,6 +31,14 @@ public class SentenceGroup {
 
     public void setSentencegroupId(String sentencegroupId) {
         this.sentencegroupId = sentencegroupId;
+    }
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
     }
 
     public String getName() {

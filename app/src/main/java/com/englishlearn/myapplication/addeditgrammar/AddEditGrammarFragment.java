@@ -127,7 +127,7 @@ public class AddEditGrammarFragment extends Fragment implements AddEditGrammarCo
     public void showGrammar(Grammar grammar) {
         Log.d(TAG,"showGrammar");
         if(grammar != null){
-            name.setText(grammar.getName());
+            name.setText(grammar.getTitle());
             content.setText(grammar.getContent());
         }
     }

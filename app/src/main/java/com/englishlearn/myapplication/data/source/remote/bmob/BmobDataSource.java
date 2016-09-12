@@ -27,8 +27,6 @@ public class BmobDataSource implements DataSource {
 
     private static final String TAG = BmobDataSource.class.getSimpleName();
 
-
-
     private static BmobDataSource INSTANCE;
     private BmobService bmobService;//请求接口
 
@@ -53,7 +51,16 @@ public class BmobDataSource implements DataSource {
             List<BmobSentence> tmp = response.body().getResults();
             if(tmp != null){
                 for(BmobSentence bmobSentence : tmp){
-                    Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                    Sentence sentence = new Sentence();
+                    sentence.setId(bmobSentence.getObjectId());
+                    sentence.setSentenceId(bmobSentence.getSentenceId());
+                    sentence.setContent(bmobSentence.getContent());
+                    sentence.setTranslation(bmobSentence.getTranslation());
+                    sentence.setCreateDate(bmobSentence.getCreateDate());
+                    sentence.setRemark(bmobSentence.getRemark());
+                    sentence.setSource(bmobSentence.getSource());
+                    sentence.setTractateId(bmobSentence.getTractateId());
+                    sentence.setUserId(bmobSentence.getUserId());
                     sentences.add(sentence);
                 }
             }
@@ -74,7 +81,16 @@ public class BmobDataSource implements DataSource {
                         List<BmobSentence> list = bmobSentenceResult.getResults();
                         List<Sentence> sentences = new ArrayList<>();
                         for(BmobSentence bmobSentence : list){
-                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            Sentence sentence = new Sentence();
+                            sentence.setId(bmobSentence.getObjectId());
+                            sentence.setSentenceId(bmobSentence.getSentenceId());
+                            sentence.setContent(bmobSentence.getContent());
+                            sentence.setTranslation(bmobSentence.getTranslation());
+                            sentence.setCreateDate(bmobSentence.getCreateDate());
+                            sentence.setRemark(bmobSentence.getRemark());
+                            sentence.setSource(bmobSentence.getSource());
+                            sentence.setTractateId(bmobSentence.getTractateId());
+                            sentence.setUserId(bmobSentence.getUserId());
                             sentences.add(sentence);
                         }
                         return Observable.just(sentences)
@@ -101,7 +117,16 @@ public class BmobDataSource implements DataSource {
                         List<BmobSentence> list = bmobSentenceResult.getResults();
                         List<Sentence> sentences = new ArrayList<>();
                         for(BmobSentence bmobSentence : list){
-                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            Sentence sentence = new Sentence();
+                            sentence.setId(bmobSentence.getObjectId());
+                            sentence.setSentenceId(bmobSentence.getSentenceId());
+                            sentence.setContent(bmobSentence.getContent());
+                            sentence.setTranslation(bmobSentence.getTranslation());
+                            sentence.setCreateDate(bmobSentence.getCreateDate());
+                            sentence.setRemark(bmobSentence.getRemark());
+                            sentence.setSource(bmobSentence.getSource());
+                            sentence.setTractateId(bmobSentence.getTractateId());
+                            sentence.setUserId(bmobSentence.getUserId());
                             sentences.add(sentence);
                         }
                         return Observable.just(sentences);
@@ -132,7 +157,16 @@ public class BmobDataSource implements DataSource {
                         List<BmobSentence> list = bmobSentenceResult.getResults();
                         List<Sentence> sentences = new ArrayList<>();
                         for(BmobSentence bmobSentence : list){
-                            Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                            Sentence sentence = new Sentence();
+                            sentence.setId(bmobSentence.getObjectId());
+                            sentence.setSentenceId(bmobSentence.getSentenceId());
+                            sentence.setContent(bmobSentence.getContent());
+                            sentence.setTranslation(bmobSentence.getTranslation());
+                            sentence.setCreateDate(bmobSentence.getCreateDate());
+                            sentence.setRemark(bmobSentence.getRemark());
+                            sentence.setSource(bmobSentence.getSource());
+                            sentence.setTractateId(bmobSentence.getTractateId());
+                            sentence.setUserId(bmobSentence.getUserId());
                             sentences.add(sentence);
                         }
                         return Observable.just(sentences);
@@ -150,7 +184,14 @@ public class BmobDataSource implements DataSource {
             List<BmobGrammar> tmp = response.body().getResults();
             if(tmp != null){
                 for(BmobGrammar bmobGrammar : tmp){
-                    Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                    Grammar grammar = new Grammar();
+                    grammar.setId(bmobGrammar.getObjectId());
+                    grammar.setGrammarId(bmobGrammar.getGrammarId());
+                    grammar.setContent(bmobGrammar.getContent());
+                    grammar.setCreateDate(bmobGrammar.getCreateDate());
+                    grammar.setTitle(bmobGrammar.getTitle());
+                    grammar.setUserId(bmobGrammar.getUserId());
+                    grammar.setRemark(bmobGrammar.getRemark());
                     grammars.add(grammar);
                 }
             }
@@ -171,7 +212,14 @@ public class BmobDataSource implements DataSource {
                         List<BmobGrammar> list = bmobGrammarResult.getResults();
                         List<Grammar> grammars = new ArrayList<>();
                         for(BmobGrammar bmobGrammar : list){
-                            Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                            Grammar grammar = new Grammar();
+                            grammar.setId(bmobGrammar.getObjectId());
+                            grammar.setGrammarId(bmobGrammar.getGrammarId());
+                            grammar.setContent(bmobGrammar.getContent());
+                            grammar.setCreateDate(bmobGrammar.getCreateDate());
+                            grammar.setTitle(bmobGrammar.getTitle());
+                            grammar.setUserId(bmobGrammar.getUserId());
+                            grammar.setRemark(bmobGrammar.getRemark());
                             grammars.add(grammar);
                         }
                         return Observable.just(grammars)
@@ -196,7 +244,14 @@ public class BmobDataSource implements DataSource {
                         List<BmobGrammar> list = bmobGrammarResult.getResults();
                         List<Grammar> grammars = new ArrayList<>();
                         for(BmobGrammar bmobGrammar : list){
-                            Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                            Grammar grammar = new Grammar();
+                            grammar.setId(bmobGrammar.getObjectId());
+                            grammar.setGrammarId(bmobGrammar.getGrammarId());
+                            grammar.setContent(bmobGrammar.getContent());
+                            grammar.setCreateDate(bmobGrammar.getCreateDate());
+                            grammar.setTitle(bmobGrammar.getTitle());
+                            grammar.setUserId(bmobGrammar.getUserId());
+                            grammar.setRemark(bmobGrammar.getRemark());
                             grammars.add(grammar);
                         }
                         return Observable.just(grammars)
@@ -230,7 +285,16 @@ public class BmobDataSource implements DataSource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+        Sentence sentence = new Sentence();
+        sentence.setId(bmobSentence.getObjectId());
+        sentence.setSentenceId(bmobSentence.getSentenceId());
+        sentence.setContent(bmobSentence.getContent());
+        sentence.setTranslation(bmobSentence.getTranslation());
+        sentence.setCreateDate(bmobSentence.getCreateDate());
+        sentence.setRemark(bmobSentence.getRemark());
+        sentence.setSource(bmobSentence.getSource());
+        sentence.setTractateId(bmobSentence.getTractateId());
+        sentence.setUserId(bmobSentence.getUserId());
         return sentence;
     }
 
@@ -242,7 +306,16 @@ public class BmobDataSource implements DataSource {
                 .flatMap(new Func1<BmobSentence, Observable<Sentence>>() {
                     @Override
                     public Observable<Sentence> call(BmobSentence bmobSentence) {
-                        Sentence sentence = new Sentence(bmobSentence.getObjectId(),bmobSentence.getSentenceid(),bmobSentence.getContent(),bmobSentence.getTranslation(),null);
+                        Sentence sentence = new Sentence();
+                        sentence.setId(bmobSentence.getObjectId());
+                        sentence.setSentenceId(bmobSentence.getSentenceId());
+                        sentence.setContent(bmobSentence.getContent());
+                        sentence.setTranslation(bmobSentence.getTranslation());
+                        sentence.setCreateDate(bmobSentence.getCreateDate());
+                        sentence.setRemark(bmobSentence.getRemark());
+                        sentence.setSource(bmobSentence.getSource());
+                        sentence.setTractateId(bmobSentence.getTractateId());
+                        sentence.setUserId(bmobSentence.getUserId());
                         return Observable.just(sentence);
                     }
                 });
@@ -257,8 +330,14 @@ public class BmobDataSource implements DataSource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
-
+        Grammar grammar = new Grammar();
+        grammar.setId(bmobGrammar.getObjectId());
+        grammar.setGrammarId(bmobGrammar.getGrammarId());
+        grammar.setContent(bmobGrammar.getContent());
+        grammar.setCreateDate(bmobGrammar.getCreateDate());
+        grammar.setTitle(bmobGrammar.getTitle());
+        grammar.setUserId(bmobGrammar.getUserId());
+        grammar.setRemark(bmobGrammar.getRemark());
         return grammar;
     }
 
@@ -270,7 +349,14 @@ public class BmobDataSource implements DataSource {
                 .flatMap(new Func1<BmobGrammar, Observable<Grammar>>() {
                     @Override
                     public Observable<Grammar> call(BmobGrammar bmobGrammar) {
-                        Grammar grammar = new Grammar(bmobGrammar.getObjectId(),bmobGrammar.getGrammarid(),bmobGrammar.getName(),bmobGrammar.getContent());
+                        Grammar grammar = new Grammar();
+                        grammar.setId(bmobGrammar.getObjectId());
+                        grammar.setGrammarId(bmobGrammar.getGrammarId());
+                        grammar.setContent(bmobGrammar.getContent());
+                        grammar.setCreateDate(bmobGrammar.getCreateDate());
+                        grammar.setTitle(bmobGrammar.getTitle());
+                        grammar.setUserId(bmobGrammar.getUserId());
+                        grammar.setRemark(bmobGrammar.getRemark());
                         return Observable.just(grammar);
                     }
                 });
@@ -289,7 +375,17 @@ public class BmobDataSource implements DataSource {
     @Override
     public boolean addSentence(Sentence sentence) {
 
-        Call<ResponseBody> responseBodyCall = bmobService.addSentence(sentence);
+        BmobCreateSentenceRequest bmobCreateSentenceRequest = new BmobCreateSentenceRequest();
+
+        bmobCreateSentenceRequest.setSentenceId(sentence.getSentenceId());
+        bmobCreateSentenceRequest.setContent(sentence.getContent());
+        bmobCreateSentenceRequest.setTranslation(sentence.getTranslation());
+        bmobCreateSentenceRequest.setCreateDate(sentence.getCreateDate());
+        bmobCreateSentenceRequest.setRemark(sentence.getRemark());
+        bmobCreateSentenceRequest.setSource(sentence.getSource());
+        bmobCreateSentenceRequest.setTractateId(sentence.getTractateId());
+        bmobCreateSentenceRequest.setUserId(sentence.getUserId());
+        Call<ResponseBody> responseBodyCall = bmobService.addSentence(bmobCreateSentenceRequest);
         boolean result = false;
         try {
             Response<ResponseBody> responseBodyResponse = responseBodyCall.execute();
@@ -305,7 +401,19 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public Observable<Boolean> addSentenceRx(Sentence sentence) {
-        return bmobService.addSentenceRx(sentence)
+
+        BmobCreateSentenceRequest bmobCreateSentenceRequest = new BmobCreateSentenceRequest();
+
+        bmobCreateSentenceRequest.setSentenceId(sentence.getSentenceId());
+        bmobCreateSentenceRequest.setContent(sentence.getContent());
+        bmobCreateSentenceRequest.setTranslation(sentence.getTranslation());
+        bmobCreateSentenceRequest.setCreateDate(sentence.getCreateDate());
+        bmobCreateSentenceRequest.setRemark(sentence.getRemark());
+        bmobCreateSentenceRequest.setSource(sentence.getSource());
+        bmobCreateSentenceRequest.setTractateId(sentence.getTractateId());
+        bmobCreateSentenceRequest.setUserId(sentence.getUserId());
+
+        return bmobService.addSentenceRx(bmobCreateSentenceRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
@@ -322,7 +430,16 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public boolean addGrammar(Grammar grammar) {
-        Call<ResponseBody> responseBodyCall = bmobService.addGrammar(grammar);
+
+        BmobCreateGrammarRequest bmobCreateGrammarRequest = new BmobCreateGrammarRequest();
+        bmobCreateGrammarRequest.setGrammarId(grammar.getGrammarId());
+        bmobCreateGrammarRequest.setContent(grammar.getContent());
+        bmobCreateGrammarRequest.setCreateDate(grammar.getCreateDate());
+        bmobCreateGrammarRequest.setTitle(grammar.getTitle());
+        bmobCreateGrammarRequest.setUserId(grammar.getUserId());
+        bmobCreateGrammarRequest.setRemark(grammar.getRemark());
+
+        Call<ResponseBody> responseBodyCall = bmobService.addGrammar(bmobCreateGrammarRequest);
         boolean result = false;
         try {
             Response<ResponseBody> responseBodyResponse = responseBodyCall.execute();
@@ -338,7 +455,16 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public Observable<Boolean> addGrammarRx(Grammar grammar) {
-        return bmobService.addGrammarRx(grammar)
+
+        BmobCreateGrammarRequest bmobCreateGrammarRequest = new BmobCreateGrammarRequest();
+        bmobCreateGrammarRequest.setGrammarId(grammar.getGrammarId());
+        bmobCreateGrammarRequest.setContent(grammar.getContent());
+        bmobCreateGrammarRequest.setCreateDate(grammar.getCreateDate());
+        bmobCreateGrammarRequest.setTitle(grammar.getTitle());
+        bmobCreateGrammarRequest.setUserId(grammar.getUserId());
+        bmobCreateGrammarRequest.setRemark(grammar.getRemark());
+
+        return bmobService.addGrammarRx(bmobCreateGrammarRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
@@ -365,7 +491,19 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public Observable<Boolean> updateSentenceRx(Sentence sentence) {
-        return bmobService.updateSentencRxById(sentence.getId(),sentence)
+
+        BmobCreateSentenceRequest bmobCreateSentenceRequest = new BmobCreateSentenceRequest();
+
+        bmobCreateSentenceRequest.setSentenceId(sentence.getSentenceId());
+        bmobCreateSentenceRequest.setContent(sentence.getContent());
+        bmobCreateSentenceRequest.setTranslation(sentence.getTranslation());
+        bmobCreateSentenceRequest.setCreateDate(sentence.getCreateDate());
+        bmobCreateSentenceRequest.setRemark(sentence.getRemark());
+        bmobCreateSentenceRequest.setSource(sentence.getSource());
+        bmobCreateSentenceRequest.setTractateId(sentence.getTractateId());
+        bmobCreateSentenceRequest.setUserId(sentence.getUserId());
+
+        return bmobService.updateSentencRxById(sentence.getId(),bmobCreateSentenceRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
@@ -382,7 +520,16 @@ public class BmobDataSource implements DataSource {
 
     @Override
     public Observable<Boolean> updateGrammarRx(Grammar grammar) {
-        return bmobService.updateGrammarRxById(grammar.getId(),grammar)
+
+        BmobCreateGrammarRequest bmobCreateGrammarRequest = new BmobCreateGrammarRequest();
+        bmobCreateGrammarRequest.setGrammarId(grammar.getGrammarId());
+        bmobCreateGrammarRequest.setContent(grammar.getContent());
+        bmobCreateGrammarRequest.setCreateDate(grammar.getCreateDate());
+        bmobCreateGrammarRequest.setTitle(grammar.getTitle());
+        bmobCreateGrammarRequest.setUserId(grammar.getUserId());
+        bmobCreateGrammarRequest.setRemark(grammar.getRemark());
+
+        return bmobService.updateGrammarRxById(grammar.getId(),bmobCreateGrammarRequest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {

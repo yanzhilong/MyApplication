@@ -38,7 +38,9 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     }
 
     private void createGrammar(String name, String content){
-        Grammar grammar = new Grammar(name,content);
+        Grammar grammar = new Grammar();
+        grammar.setTitle(name);
+        grammar.setContent(content);
         Subscription subscription = repository.addGrammarRx(grammar)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
@@ -67,7 +69,11 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
         if(grammarid == null || id == null){
             throw new RuntimeException("updateGrammar() was called but grammar is new.");
         }
-        Grammar grammar = new Grammar(id,grammarid,name,content);
+        Grammar grammar = new Grammar();
+        grammar.setId(id);
+        grammar.setGrammarId(grammarid);
+        grammar.setTitle(name);
+        grammar.setContent(content);
         Subscription subscription = repository.updateGrammarRx(grammar)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override

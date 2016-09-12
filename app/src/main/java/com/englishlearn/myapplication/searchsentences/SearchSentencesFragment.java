@@ -12,7 +12,6 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,16 +22,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
 import com.englishlearn.myapplication.sentences.ScrollChildSwipeRefreshLayout;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
-import com.englishlearn.myapplication.util.AndroidUtils;
 import com.englishlearn.myapplication.util.SearchUtil;
 
 import java.util.ArrayList;
@@ -94,7 +90,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
                     Intent detail = new Intent(SearchSentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceid());
+                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceId());
                     detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
                     startActivity(detail);
                 }
@@ -276,7 +272,6 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                 viewHolder = new ViewHolder();
                 viewHolder.content = (TextView) convertView.findViewById(R.id.content);
                 viewHolder.translation = (TextView) convertView.findViewById(R.id.translation);
-                viewHolder.grammars = (LinearLayout) convertView.findViewById(R.id.grammars);
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -297,41 +292,13 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                 viewHolder.content.setText(sentence.getContent());
             }
 
-            viewHolder.translation.setText(sentence.getTranslation());
-            //显示语法
-            List<Grammar> grammars = sentence.getGrammarList();
-            if(grammars != null){
-                viewHolder.grammars.removeAllViews();
-                initGrammars(viewHolder.grammars,grammars);
-            }
             return convertView;
         }
 
     }
 
-    /**
-     * 添加TextView到LinearLayout中
-     * @param linearLayout
-     * @param grammars
-     */
-    private void initGrammars(LinearLayout linearLayout,List<Grammar> grammars){
-        for(Grammar grammar:grammars){
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.leftMargin = (int) AndroidUtils.dipToPixels(this.getContext(),10f);
-            TextView textView = new TextView(this.getContext());
-            textView.setText(grammar.getName());
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-            textView.setTextColor(getResources().getColor(R.color.text_color_grey));
-            textView.setBackgroundResource(R.drawable.grammar_tip);
-            textView.setPadding(10,3,10,3);
-            textView.setLayoutParams(layoutParams);
-            linearLayout.addView(textView);
-        }
-    }
-
     static class ViewHolder{
         TextView content;//内容
         TextView translation;//译文
-        LinearLayout grammars;//语法
     }
 }

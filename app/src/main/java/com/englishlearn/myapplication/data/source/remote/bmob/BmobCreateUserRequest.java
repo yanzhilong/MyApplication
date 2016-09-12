@@ -1,18 +1,13 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
 
-import com.englishlearn.myapplication.util.TimeUtil;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  * 请求网络用，用户表，删除id字段
  */
 public class BmobCreateUserRequest {
 
-    private final String userId;//唯一Id
+    private String userId;//唯一Id
     private String username;
     private String password;
     private String mobile;
@@ -21,11 +16,6 @@ public class BmobCreateUserRequest {
     private String iconurl;
     private String birthday;
     private String createDate;
-
-    public BmobCreateUserRequest() {
-        userId = UUID.randomUUID().toString();
-        this.createDate = TimeUtil.formatTime(new Date());
-    }
 
     public String getNickname() {
         return nickname;

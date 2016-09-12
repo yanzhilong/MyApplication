@@ -58,13 +58,13 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
 
     @Override
     void onClick(Grammar grammar) {
-        boolean select = selects.get(grammar.getGrammarid()) != null ? selects.get(grammar.getGrammarid()) : false;
+        boolean select = selects.get(grammar.getGrammarId()) != null ? selects.get(grammar.getGrammarId()) : false;
         if(select){
             unselect(grammar);
-            selects.put(grammar.getGrammarid(),false);
+            selects.put(grammar.getGrammarId(),false);
         }else{
             select(grammar);
-            selects.put(grammar.getGrammarid(),true);
+            selects.put(grammar.getGrammarId(),true);
         }
         view.notifyDataSetChanged();
     }
@@ -81,7 +81,7 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
         Iterator<Grammar> iterator = view.getGrammars().iterator();
         while (iterator.hasNext()){
             Grammar g = iterator.next();
-            selects.put(g.getGrammarid(),isAllSelect);
+            selects.put(g.getGrammarId(),isAllSelect);
         }
         showEditCount();
         view.notifyDataSetChanged();
@@ -89,7 +89,7 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
 
     @Override
     boolean isSelect(Grammar grammar) {
-        return selects.get(grammar.getGrammarid()) != null ? selects.get(grammar.getGrammarid()) : false;
+        return selects.get(grammar.getGrammarId()) != null ? selects.get(grammar.getGrammarId()) : false;
     }
 
     @Override
@@ -102,14 +102,14 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
             boolean found = false;
             while (ite.hasNext()){
                 Grammar grammar = ite.next();
-                if(s.getGrammarid().equals(grammar.getGrammarid())){
+                if(s.getGrammarId().equals(grammar.getGrammarId())){
                     found = true;
                     break;
                 }
             }
             if(!found){
                 iterator.remove();
-                selects.remove(s.getGrammarid());
+                selects.remove(s.getGrammarId());
             }
         }
     }
@@ -130,7 +130,7 @@ public class GrammarsSelectPresenter extends GrammarsSelectContract.Presenter{
         Iterator<Grammar> iterator = selecteds.iterator();
         while (iterator.hasNext()){
             Grammar g = iterator.next();
-            if(g.getGrammarid().equals(grammar.getGrammarid())){
+            if(g.getGrammarId().equals(grammar.getGrammarId())){
                 iterator.remove();
                 break;
             }

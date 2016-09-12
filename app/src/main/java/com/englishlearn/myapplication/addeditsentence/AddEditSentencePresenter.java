@@ -40,7 +40,9 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     }
 
     private void createSentence(String content, String translate){
-        Sentence sentence = new Sentence(content,translate,null);
+        Sentence sentence = new Sentence();
+        sentence.setContent(content);
+        sentence.setTranslation(translate);
         Subscription subscription = repository.addSentenceRx(sentence)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
@@ -69,7 +71,11 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
         if(sentenceid == null || id == null){
             throw new RuntimeException("updateSentence() was called but sentence is new.");
         }
-        Sentence sentence = new Sentence(id,sentenceid,content,translate,null);
+        Sentence sentence = new Sentence();
+        sentence.setId(id);
+        sentence.setSentenceId(sentenceid);
+        sentence.setContent(content);
+        sentence.setTranslation(translate);
         Subscription subscription = repository.updateSentenceRx(sentence)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override

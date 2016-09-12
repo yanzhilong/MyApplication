@@ -42,7 +42,7 @@ public class SearchUtil {
      * @param searchWord
      * @return
      */
-    public String getSearchRegex(String searchWord){
+    public String getSearchSentenceRegex(String searchWord){
         List<Word> list = getWords(searchWord);
         String where = "";
         if(isContainsChinese(searchWord)){
