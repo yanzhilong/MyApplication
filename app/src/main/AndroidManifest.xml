@@ -65,6 +65,16 @@
         <activity android:name=".sentencedetail.SentenceDetailActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".registeruser.RegisterUserActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".loginuser.LoginUserActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".updateuser.UpdateUserActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".search.SearchActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">

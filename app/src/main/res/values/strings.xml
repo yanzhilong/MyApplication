@@ -17,6 +17,9 @@
     <string name="grammar_btn">Grammars</string>
     <string name="search_btn">Search</string>
     <string name="search_sentences_btn">SearchSentences</string>
+    <string name="registeruser_btn">Register User</string>
+    <string name="loginuser_btn">Login User</string>
+    <string name="updateuser_btn">Update User</string>
 
     <!-- SentencesActivity -->
     <string name="sentences_title">Sentences</string>
@@ -77,4 +80,13 @@
     <string name="loadfail">加载出错了....</string>
     <string name="reload">服务器开小差了，点击重新加载</string>
     <string name="notmore">没有更多了</string>
+
+    <!-- RegisterUserActivity -->
+    <string name="register_title">RegisterUser</string>
+
+    <!-- LoginUserActivity -->
+    <string name="login_title">LoginUser</string>
+
+    <!-- UpdateUserActivity -->
+    <string name="updateuser_title">UpdateUser</string>
 </resources>

@@ -42,13 +42,14 @@ public interface BmobService{
     })
     Observable<BmobCreateUserResult> createUserRx(@Body BmobCreateUserRequest bmobRequestUser);
 
+    //登陆用户
     @GET("/1/login")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<BmobCreateUserResult> loginRx(@Query("username") String username,@Query("password") String password);
+    Observable<BmobUser> loginRx(@Query("username") String username,@Query("password") String password);
 
     //根据Id获取用户
     @GET("/1/users/{id}/")
@@ -57,7 +58,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<BmobUser> getUserByIdRx(@Path("id") String id);
-
+    
     //根据用户名获取用户
     @GET("/1/users")
     @Headers({

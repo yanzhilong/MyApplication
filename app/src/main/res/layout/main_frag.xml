@@ -29,10 +29,23 @@
             android:layout_height="wrap_content"
             android:text="@string/search_sentences_btn"/>
 
-        <TextView
+        <Button
+            android:id="@+id/registeruser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="普通注册用户"/>
+            android:text="@string/registeruser_btn"/>
+
+        <Button
+            android:id="@+id/loginuser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loginuser_btn"/>
+
+        <Button
+            android:id="@+id/updateuser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/updateuser_btn"/>
 
     </LinearLayout>
 
