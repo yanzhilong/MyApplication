@@ -14,7 +14,7 @@ public class BmobUser {
     private String userId;//唯一Id
     private String username;
     private String mobile;
-    private String mail;
+    private String email;
     private String nickname;
     private String sex;
     private String iconurl;
@@ -109,12 +109,12 @@ public class BmobUser {
         this.mobile = mobile;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCreateDate() {

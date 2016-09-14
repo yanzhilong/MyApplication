@@ -141,6 +141,14 @@ public class LoadMoreListView extends ListView implements AbsListView.OnScrollLi
         }
     }
 
+    @Override
+    public boolean performItemClick(View view, int position, long id) {
+        if(position >= getCount()){
+            return false;
+        }
+        return super.performItemClick(view, position, id);
+    }
+
     public interface OnLoadMoreLister{
         void loadingMore();
     }
