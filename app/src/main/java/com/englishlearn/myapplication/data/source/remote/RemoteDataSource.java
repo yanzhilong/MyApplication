@@ -3,7 +3,9 @@ package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.source.DataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobUpdateUserRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
+import com.englishlearn.myapplication.data.source.remote.bmob.RemoteData;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import rx.Observable;
 /**
  * 从网络操作数据
  */
-public class RemoteDataSource implements DataSource {
+public class RemoteDataSource implements RemoteData {
 
     private static RemoteDataSource INSTANCE;
 
@@ -178,6 +180,21 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public Observable<Boolean> deleteGrammarRxById(String id) {
+        return null;
+    }
+
+    @Override
+    public BmobUser register(BmobUser bmobUser) {
+        return null;
+    }
+
+    @Override
+    public BmobUser login(BmobUser bmobUser) {
+        return null;
+    }
+
+    @Override
+    public BmobUser update(BmobUpdateUserRequest bmobUpdateUserRequest) {
         return null;
     }
 }

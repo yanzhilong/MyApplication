@@ -18,7 +18,9 @@ package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.RemoteData;
 import com.englishlearn.myapplication.util.SearchUtil;
 
 import java.util.List;
@@ -29,9 +31,9 @@ public class Repository implements DataSource {
 
     private static Repository INSTANCE = null;
 
-    private final DataSource mRemoteDataSource;
+    private final RemoteData mRemoteDataSource;
 
-    private final DataSource mLocalDataSource;
+    private final LocalData mLocalDataSource;
 
     private final BmobDataSource mBmobDataSource;
 
@@ -39,16 +41,16 @@ public class Repository implements DataSource {
 
     boolean mCacheIsDirty = false;
 
-    private Repository(DataSource remoteDataSource,
-                       DataSource localDataSource) {
+    private Repository(RemoteData remoteDataSource,
+                       LocalData localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
         mBmobDataSource = BmobDataSource.getInstance();
         searchUtil = SearchUtil.getInstance();
     }
 
-    public static Repository getInstance(DataSource tasksRemoteDataSource,
-                                         DataSource tasksLocalDataSource) {
+    public static Repository getInstance(RemoteData tasksRemoteDataSource,
+                                         LocalData tasksLocalDataSource) {
         if (INSTANCE == null) {
             INSTANCE = new Repository(tasksRemoteDataSource, tasksLocalDataSource);
         }

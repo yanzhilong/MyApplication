@@ -30,6 +30,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupR
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateType;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobUpdateUserRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollectResult;
@@ -61,6 +62,16 @@ public interface BmobService{
 
     //用户模块****************************************************************************
     //注册用户
+    @POST("/1/users/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobCreateUserResult> updateUserRx(@Body BmobUpdateUserRequest bmobUpdateUserRequest);
+
+
+    //修改用户
     @POST("/1/users")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
@@ -77,6 +88,8 @@ public interface BmobService{
             "Content-Type: application/json"
     })
     Observable<BmobUser> loginRx(@Query("username") String username,@Query("password") String password);
+
+
 
     //根据Id获取用户
     @GET("/1/users/{id}/")
