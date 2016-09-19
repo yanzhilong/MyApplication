@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.local.LocalDataSource;
+import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.RemoteDataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
 import dagger.Module;
 import dagger.Provides;
@@ -29,6 +31,11 @@ public class AppModule {
     @Provides
     public Repository provideRepository() {
         return Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication));
+    }
+
+    @Provides
+    public RemoteData provideRemoteData() {
+        return BmobDataSource.getInstance();
     }
 
 }

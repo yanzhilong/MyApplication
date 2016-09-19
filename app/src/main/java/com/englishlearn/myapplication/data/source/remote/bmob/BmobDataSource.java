@@ -4,9 +4,14 @@ import android.util.Log;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.source.DataSource;
+import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.BmobService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +28,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by yanzl on 16-8-1.
  */
-public class BmobDataSource implements DataSource {
+public class BmobDataSource implements RemoteData {
 
     private static final String TAG = BmobDataSource.class.getSimpleName();
 
@@ -40,6 +45,18 @@ public class BmobDataSource implements DataSource {
     public BmobDataSource(){
         bmobService = ServiceFactory.getInstance().createBmobService();
     }
+
+    private Observable execute(final Observable observable){
+        return Observable.just(true)
+                .observeOn(Schedulers.io())
+                .flatMap(new Func1<Boolean, Observable<?>>() {
+            @Override
+            public Observable<?> call(Boolean aBoolean) {
+                return observable;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
 
     @Override
     public List<Sentence> getSentences() {
@@ -596,5 +613,96 @@ public class BmobDataSource implements DataSource {
                 }
             }
         });
+    }
+
+    @Override
+    public Observable<BmobCreateUserResult> register(final User user) {
+        BmobCreateUserRequest bmobCreateUserRequest = new BmobCreateUserRequest();
+        bmobCreateUserRequest.setUserId(user.getUserId());
+        bmobCreateUserRequest.setUsername(user.getUsername());
+        bmobCreateUserRequest.setPassword(user.getPassword());
+        bmobCreateUserRequest.setSex(user.getSex());
+        bmobCreateUserRequest.setMobilePhoneNumber(user.getMobilePhoneNumber());
+        bmobCreateUserRequest.setEmail(user.getEmail());
+        bmobCreateUserRequest.setNickname(user.getNickname());
+        bmobCreateUserRequest.setIconurl(user.getIconurl());
+        bmobCreateUserRequest.setBirthday(user.getBirthday());
+        bmobCreateUserRequest.setCreateDate(user.getCreateDate());
+
+        return this.execute(bmobService.createUserRx(bmobCreateUserRequest).flatMap(new Func1<Response<BmobCreateUserResult>, Observable<BmobCreateUserResult>>() {
+            @Override
+            public Observable<BmobCreateUserResult> call(Response<BmobCreateUserResult> bmobCreateUserResultResponse) {
+                if(bmobCreateUserResultResponse.isSuccessful()){
+                    BmobCreateUserResult bmobCreateUserResult = bmobCreateUserResultResponse.body();
+                    return Observable.just(bmobCreateUserResult);
+                }else{
+                    String errjson =  bmobCreateUserResultResponse.errorBody().toString();
+                    Gson gson = new Gson();
+                    JsonObject json = new JsonObject();
+
+                }
+
+            }
+        }));
+    }
+
+    @Override
+    public Observable<BmobUser> createOrLoginUserByPhoneRx(String phone, String smscode) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> checkUserName(String name) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> checkEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> checkMobile(String mobile) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> getUserByIdRx(String id) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> login(String name, String password) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> update(String sessionToken, BmobUpdateUserRequest bmobUpdateUserRequest) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByMobile(String smsCode, String newpwd) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByOldPwd(String sessionToken, String objectId, String oldPwd, String newPwd) {
+        return null;
+    }
+
+    @Override
+    public Observable<String> requestSmsCode(String phone) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> emailVerify(String email) {
+        return null;
     }
 }

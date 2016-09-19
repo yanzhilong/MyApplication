@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupRequest;
@@ -38,6 +39,12 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroup;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
+import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
+import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetMobile;
+import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetOldPwd;
+import com.englishlearn.myapplication.data.source.remote.bmob.QuerySmsResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,6 +52,7 @@ import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -62,23 +70,31 @@ public interface BmobService{
 
     //用户模块****************************************************************************
     //注册用户
-    @POST("/1/users/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Observable<BmobCreateUserResult> updateUserRx(@Body BmobUpdateUserRequest bmobUpdateUserRequest);
-
-
-    //修改用户
     @POST("/1/users")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<BmobCreateUserResult> createUserRx(@Body BmobCreateUserRequest bmobRequestUser);
+    Observable<Response<BmobCreateUserResult>> createUserRx(@Body BmobCreateUserRequest bmobRequestUser);
+
+    //注册或登陆用户（手机号+验证码）
+    @POST("/1/users")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> createOrLoginUserByPhoneRx(@Body BmobCreateOrLoginUserByPhoneRequest bmobCreateOrLoginUserByPhoneRequest);
+
+    //修改用户
+    @POST("/1/users/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<BmobUser> updateUserRx(@Header("X-Bmob-Session-Token") String sessionToken, @Body BmobUpdateUserRequest bmobUpdateUserRequest);
 
     //登陆用户(用户名密码)
     @GET("/1/login")
@@ -90,7 +106,6 @@ public interface BmobService{
     Observable<BmobUser> loginRx(@Query("username") String username,@Query("password") String password);
 
 
-
     //根据Id获取用户
     @GET("/1/users/{id}/")
     @Headers({
@@ -99,13 +114,97 @@ public interface BmobService{
     })
     Observable<BmobUser> getUserByIdRx(@Path("id") String id);
     
-    //根据用户名获取用户
+    //根据用户名获取用户,或者邮箱，手机
     @GET("/1/users")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<BmobUserResult> getUserByNameRx(@Query("where")String usernameJson);
+
+
+    /**
+     * 通过邮件重置密码
+     * @param passwordResetEmail
+     * @return
+     */
+    @POST("/1/requestPasswordReset")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> passwordResetByEmail(@Body PasswordResetEmail passwordResetEmail);
+
+    /**
+     * 通过手机验证码重置密码
+     * @param smsCode
+     * @param passwordResetMobile
+     * @return
+     */
+    @PUT("/1/resetPasswordBySmsCode/{smsCode}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> passwordResetByMobile(@Query("smsCode")String smsCode, @Body PasswordResetMobile passwordResetMobile);
+
+    /**
+     * 修改密码，使用旧密码
+     * @param sessionToken
+     * @param objectId
+     * @param passwordResetOldPwd
+     * @return
+     */
+    @POST("/1/updateUserPassword/{objectId}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> passwordResetByOldPassword(@Header("X-Bmob-Session-Token") String sessionToken, @Query("objectId")String objectId, @Body PasswordResetOldPwd passwordResetOldPwd);
+
+    /**
+     * 请求短信验证码
+     * @param phone
+     * @return
+     */
+    @POST("/1/requestSmsCode")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<RequestSmsCodeResult> requestSmsCode(String phone);
+
+
+    /**
+     * 查询短信发送状态
+     * @param smsId
+     * @return
+     */
+    @GET("/1/querySms/{smsId}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<QuerySmsResult> querySms(@Query("smsId")String smsId);
+
+    /**
+     * 验证邮箱
+     * @param emailVerify
+     * @return
+     */
+    @POST("/1/requestEmailVerify")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> emailVerify(@Body EmailVerify emailVerify);
+
 
     //信息来源模块****************************************************************************
 

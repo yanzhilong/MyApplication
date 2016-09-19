@@ -83,6 +83,10 @@
 
     <!-- RegisterUserActivity -->
     <string name="register_title">RegisterUser</string>
+    <string name="registersuccess">注册成功</string>
+    <string name="username">用户名:</string>
+    <string name="password">密码:</string>
+    <string name="register">注册</string>
 
     <!-- LoginUserActivity -->
     <string name="login_title">LoginUser</string>

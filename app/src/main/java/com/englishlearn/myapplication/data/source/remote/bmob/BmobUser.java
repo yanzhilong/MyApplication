@@ -13,13 +13,48 @@ public class BmobUser {
     private String sessionToken;//登陆才有
     private String userId;//唯一Id
     private String username;
-    private String mobile;
+    private String password;
+    private String mobilePhoneNumber;
+    private String mobilePhoneVerified;//手机是否验证
     private String email;
+    private String emailVerified;//邮箱是否验证
     private String nickname;
     private String sex;
     private String iconurl;
     private String birthday;
     private String createDate;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMobilePhoneNumber() {
+        return mobilePhoneNumber;
+    }
+
+    public void setMobilePhoneNumber(String mobilePhoneNumber) {
+        this.mobilePhoneNumber = mobilePhoneNumber;
+    }
+
+    public String getMobilePhoneVerified() {
+        return mobilePhoneVerified;
+    }
+
+    public void setMobilePhoneVerified(String mobilePhoneVerified) {
+        this.mobilePhoneVerified = mobilePhoneVerified;
+    }
+
+    public String getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(String emailVerified) {
+        this.emailVerified = emailVerified;
+    }
 
     public String getSex() {
         return sex;
@@ -101,14 +136,6 @@ public class BmobUser {
         this.username = username;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -124,4 +151,6 @@ public class BmobUser {
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
     }
+
+
 }

@@ -20,7 +20,7 @@ import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.RemoteData;
+import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.util.SearchUtil;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class Repository implements DataSource {
 
     private final LocalData mLocalDataSource;
 
-    private final BmobDataSource mBmobDataSource;
+    private final RemoteData mBmobDataSource;
 
     private SearchUtil searchUtil;
 

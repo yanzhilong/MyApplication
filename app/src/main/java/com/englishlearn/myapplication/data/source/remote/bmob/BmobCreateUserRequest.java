@@ -1,6 +1,8 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
 
+import java.util.UUID;
+
 /**
  * Created by yanzl on 16-9-3.
  * 请求网络用，用户表，删除id字段
@@ -10,12 +12,34 @@ public class BmobCreateUserRequest {
     private String userId;//唯一Id
     private String username;
     private String password;
-    private String mobile;
+    private String sex;
+    private String mobilePhoneNumber;
     private String email;
     private String nickname;
     private String iconurl;
     private String birthday;
     private String createDate;
+
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public BmobCreateUserRequest() {
+        userId = UUID.randomUUID().toString();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getNickname() {
         return nickname;
@@ -57,12 +81,12 @@ public class BmobCreateUserRequest {
         this.password = password;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getMobilePhoneNumber() {
+        return mobilePhoneNumber;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setMobilePhoneNumber(String mobilePhoneNumber) {
+        this.mobilePhoneNumber = mobilePhoneNumber;
     }
 
     public String getEmail() {

@@ -3,9 +3,10 @@ package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUpdateUserRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
-import com.englishlearn.myapplication.data.source.remote.bmob.RemoteData;
 
 import java.util.List;
 
@@ -183,18 +184,70 @@ public class RemoteDataSource implements RemoteData {
         return null;
     }
 
+
     @Override
-    public BmobUser register(BmobUser bmobUser) {
+    public Observable<BmobCreateUserResult> register(User user) {
         return null;
     }
 
     @Override
-    public BmobUser login(BmobUser bmobUser) {
+    public Observable<BmobUser> createOrLoginUserByPhoneRx(String phone, String smscode) {
         return null;
     }
 
     @Override
-    public BmobUser update(BmobUpdateUserRequest bmobUpdateUserRequest) {
+    public Observable<Boolean> checkUserName(String name) {
         return null;
     }
+
+    @Override
+    public Observable<Boolean> checkEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> checkMobile(String mobile) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> getUserByIdRx(String id) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> login(String name, String password) {
+        return null;
+    }
+
+    @Override
+    public Observable<BmobUser> update(String sessionToken, BmobUpdateUserRequest bmobUpdateUserRequest) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByMobile(String smsCode, String newpwd) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByOldPwd(String sessionToken, String objectId, String oldPwd, String newPwd) {
+        return null;
+    }
+
+    @Override
+    public Observable<String> requestSmsCode(String phone) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> emailVerify(String email) {
+        return null;
+    }
+
 }

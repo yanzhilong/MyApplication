@@ -6,6 +6,7 @@ import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
+import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
 import com.englishlearn.myapplication.sentences.SentencesPresenter;
@@ -35,5 +36,8 @@ public interface AppComponent {
     void inject(GrammarsPresenter grammarsPresenter);
 
     void inject(SearchSentencesPresenter searchSentencesPresenter);
+
+    void inject(RegisterUserPresenter registerUserPresenter);
+
 
 }

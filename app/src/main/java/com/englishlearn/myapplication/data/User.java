@@ -16,7 +16,9 @@ public class User {
     private String userId;//唯一Id
     private String username;
     private String password;
-    private String mobile;
+    private String mobilePhoneNumber;
+    private String mobilePhoneVerified;//手机是否验证
+    private String emailVerified;//邮箱是否验证
     private String email;
     private String nickname;
     private String sex;
@@ -27,6 +29,30 @@ public class User {
     public User() {
         userId = UUID.randomUUID().toString();
         this.createDate = TimeUtil.formatTime(new Date());
+    }
+
+    public String getMobilePhoneNumber() {
+        return mobilePhoneNumber;
+    }
+
+    public void setMobilePhoneNumber(String mobilePhoneNumber) {
+        this.mobilePhoneNumber = mobilePhoneNumber;
+    }
+
+    public String getMobilePhoneVerified() {
+        return mobilePhoneVerified;
+    }
+
+    public void setMobilePhoneVerified(String mobilePhoneVerified) {
+        this.mobilePhoneVerified = mobilePhoneVerified;
+    }
+
+    public String getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(String emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public String getSex() {
@@ -91,14 +117,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public String getEmail() {
