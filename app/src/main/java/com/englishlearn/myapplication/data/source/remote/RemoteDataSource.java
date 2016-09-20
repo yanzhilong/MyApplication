@@ -5,8 +5,6 @@ import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUpdateUserRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
 
 import java.util.List;
 
@@ -191,7 +189,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<BmobUser> createOrLoginUserByPhoneRx(String phone, String smscode) {
+    public Observable<User> createOrLoginUserByPhoneRx(String phone, String smscode) {
         return null;
     }
 
@@ -211,17 +209,32 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<BmobUser> getUserByIdRx(String id) {
+    public Observable<User> getUserByIdRx(String id) {
         return null;
     }
 
     @Override
-    public Observable<BmobUser> login(String name, String password) {
+    public Observable<User> getUserByName(String name) {
         return null;
     }
 
     @Override
-    public Observable<BmobUser> update(String sessionToken, BmobUpdateUserRequest bmobUpdateUserRequest) {
+    public Observable<User> getUserByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> getUserByMobile(String mobile) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> login(String name, String password) {
+        return null;
+    }
+
+    @Override
+    public Observable<User> updateUser(User user) {
         return null;
     }
 

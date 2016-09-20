@@ -5,13 +5,13 @@ import android.util.Log;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.source.remote.RemoteCode;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.BmobService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
+import com.englishlearn.myapplication.util.SearchUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ public class BmobDataSource implements RemoteData {
     private static BmobDataSource INSTANCE;
     private BmobService bmobService;//请求接口
 
+    private SearchUtil searchUtil;
+
     public static BmobDataSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new BmobDataSource();
@@ -44,6 +46,7 @@ public class BmobDataSource implements RemoteData {
 
     public BmobDataSource(){
         bmobService = ServiceFactory.getInstance().createBmobService();
+        searchUtil = SearchUtil.getInstance();
     }
 
     private Observable execute(final Observable observable){
@@ -164,8 +167,9 @@ public class BmobDataSource implements RemoteData {
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
+        String regex = searchUtil.getSearchSentenceRegex(searchword);
         Log.d(TAG,"getSentencesRx:limit=" + limit + "skip=" + skip + "regex:" + searchword);
-        return bmobService.getSentencesRx(searchword,limit,skip)
+        return bmobService.getSentencesRx(regex,limit,skip)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .flatMap(new Func1<BmobSentenceResult, Observable<List<Sentence>>>() {
@@ -632,23 +636,69 @@ public class BmobDataSource implements RemoteData {
         return this.execute(bmobService.createUserRx(bmobCreateUserRequest).flatMap(new Func1<Response<BmobCreateUserResult>, Observable<BmobCreateUserResult>>() {
             @Override
             public Observable<BmobCreateUserResult> call(Response<BmobCreateUserResult> bmobCreateUserResultResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.CREATEUSER.getDefauleError().getMessage());
                 if(bmobCreateUserResultResponse.isSuccessful()){
                     BmobCreateUserResult bmobCreateUserResult = bmobCreateUserResultResponse.body();
                     return Observable.just(bmobCreateUserResult);
                 }else{
-                    String errjson =  bmobCreateUserResultResponse.errorBody().toString();
-                    Gson gson = new Gson();
-                    JsonObject json = new JsonObject();
-
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  bmobCreateUserResultResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.CREATEUSER createuser = RemoteCode.CREATEUSER.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(createuser.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
-
+                return Observable.error(bmobRequestException);
             }
         }));
     }
 
     @Override
-    public Observable<BmobUser> createOrLoginUserByPhoneRx(String phone, String smscode) {
-        return null;
+    public Observable<User> createOrLoginUserByPhoneRx(String phone, String smscode) {
+        User user = new User();
+        BmobCreateOrLoginUserByPhoneRequest bmobCreateOrLoginUserByPhoneRequest = new BmobCreateOrLoginUserByPhoneRequest();
+        bmobCreateOrLoginUserByPhoneRequest.setMobilePhoneNumber(phone);
+        bmobCreateOrLoginUserByPhoneRequest.setUserId(user.getUserId());
+        bmobCreateOrLoginUserByPhoneRequest.setSmsCode(smscode);
+
+        return this.execute(bmobService.createOrLoginUserByPhoneRx(bmobCreateOrLoginUserByPhoneRequest).flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+            @Override
+            public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.CREATEUSER.getDefauleError().getMessage());
+                if(bmobUserResponse.isSuccessful()){
+                    BmobUser bmobUser = bmobUserResponse.body();
+                    User user = new User();
+                    user.setId(bmobUser.getObjectId());
+                    user.setUserId(bmobUser.getUserId());
+                    user.setUsername(bmobUser.getUsername());
+                    user.setSessionToken(bmobUser.getSessionToken());
+                    user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
+                    user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
+                    user.setEmail(bmobUser.getEmail());
+                    user.setEmailVerified(bmobUser.getEmailVerified());
+                    user.setNickname(bmobUser.getNickname());
+                    user.setSex(bmobUser.getSex());
+                    user.setIconurl(bmobUser.getIconurl());
+                    user.setBirthday(bmobUser.getBirthday());
+                    user.setCreateDate(bmobUser.getCreateDate());
+                    return Observable.just(user);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  bmobUserResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.CREATEUSER createuser = RemoteCode.CREATEUSER.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(createuser.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }));
     }
 
     @Override
@@ -667,38 +717,263 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<BmobUser> getUserByIdRx(String id) {
+    public Observable<User> getUserByIdRx(String id) {
+        return this.execute(bmobService.getUserByIdRx(id)
+                .flatMap(new Func1<BmobUser, Observable<User>>() {
+            @Override
+            public Observable<User> call(BmobUser bmobUser) {
+                User user = new User();
+                user.setId(bmobUser.getObjectId());
+                user.setUserId(bmobUser.getUserId());
+                user.setUsername(bmobUser.getUsername());
+                user.setSessionToken(bmobUser.getSessionToken());
+                user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
+                user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
+                user.setEmail(bmobUser.getEmail());
+                user.setEmailVerified(bmobUser.getEmailVerified());
+                user.setNickname(bmobUser.getNickname());
+                user.setSex(bmobUser.getSex());
+                user.setIconurl(bmobUser.getIconurl());
+                user.setBirthday(bmobUser.getBirthday());
+                user.setCreateDate(bmobUser.getCreateDate());
+                return Observable.just(user);
+            }
+        }));
+    }
+
+    @Override
+    public Observable<User> getUserByName(String name) {
+        String namejson = searchUtil.getUserByNameRegex(name);
+        return this.execute(bmobService.getUserByNameRx(namejson).flatMap(new Func1<BmobUserResult, Observable<?>>() {
+            @Override
+            public Observable<?> call(BmobUserResult bmobUserResult) {
+
+                if(bmobUserResult == null){
+                    return Observable.just(null);
+                }
+                List<BmobUser> list = bmobUserResult.getResults();
+                if(list.size() == 0){
+                    return Observable.just(null);
+                }
+                BmobUser bmobUser = list.get(0);
+                User user = new User();
+                user.setId(bmobUser.getObjectId());
+                user.setUserId(bmobUser.getUserId());
+                user.setUsername(bmobUser.getUsername());
+                user.setSessionToken(bmobUser.getSessionToken());
+                user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
+                user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
+                user.setEmail(bmobUser.getEmail());
+                user.setEmailVerified(bmobUser.getEmailVerified());
+                user.setNickname(bmobUser.getNickname());
+                user.setSex(bmobUser.getSex());
+                user.setIconurl(bmobUser.getIconurl());
+                user.setBirthday(bmobUser.getBirthday());
+                user.setCreateDate(bmobUser.getCreateDate());
+                return Observable.just(user);
+            }
+        }));
+    }
+
+    @Override
+    public Observable<User> getUserByEmail(String email) {
         return null;
     }
 
     @Override
-    public Observable<BmobUser> login(String name, String password) {
+    public Observable<User> getUserByMobile(String mobile) {
         return null;
     }
 
     @Override
-    public Observable<BmobUser> update(String sessionToken, BmobUpdateUserRequest bmobUpdateUserRequest) {
-        return null;
+    public Observable<User> login(String name, String password) {
+        return this.execute(bmobService.loginRx(name,password)
+                .flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+                    @Override
+                    public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
+                        if(bmobUserResponse.isSuccessful()){
+                            BmobUser bmobUser = bmobUserResponse.body();
+                            User user = new User();
+                            user.setId(bmobUser.getObjectId());
+                            user.setUserId(bmobUser.getUserId());
+                            user.setUsername(bmobUser.getUsername());
+                            user.setSessionToken(bmobUser.getSessionToken());
+                            user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
+                            user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
+                            user.setEmail(bmobUser.getEmail());
+                            user.setEmailVerified(bmobUser.getEmailVerified());
+                            user.setNickname(bmobUser.getNickname());
+                            user.setSex(bmobUser.getSex());
+                            user.setIconurl(bmobUser.getIconurl());
+                            user.setBirthday(bmobUser.getBirthday());
+                            user.setCreateDate(bmobUser.getCreateDate());
+                            return Observable.just(user);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobUserResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.LOGINUSER loginuser = RemoteCode.LOGINUSER.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(loginuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }));
+    }
+
+    @Override
+    public Observable<User> updateUser(User user) {
+
+        BmobCreateUserRequest bmobCreateUserRequest = new BmobCreateUserRequest();
+        bmobCreateUserRequest.setUserId(user.getUserId());
+        bmobCreateUserRequest.setUsername(user.getUsername());
+        bmobCreateUserRequest.setPassword(user.getPassword());
+        bmobCreateUserRequest.setSex(user.getSex());
+        bmobCreateUserRequest.setMobilePhoneNumber(user.getMobilePhoneNumber());
+        bmobCreateUserRequest.setEmail(user.getEmail());
+        bmobCreateUserRequest.setNickname(user.getNickname());
+        bmobCreateUserRequest.setIconurl(user.getIconurl());
+        bmobCreateUserRequest.setBirthday(user.getBirthday());
+        bmobCreateUserRequest.setCreateDate(user.getCreateDate());
+
+        return this.execute(bmobService.updateUserRx(user.getSessionToken(),user.getId(),bmobCreateUserRequest)
+        .flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+            @Override
+            public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
+                if(bmobUserResponse.isSuccessful()){
+                    BmobUser bmobUser = bmobUserResponse.body();
+                    User user = new User();
+                    user.setId(bmobUser.getObjectId());
+                    user.setUserId(bmobUser.getUserId());
+                    user.setUsername(bmobUser.getUsername());
+                    user.setSessionToken(bmobUser.getSessionToken());
+                    user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
+                    user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
+                    user.setEmail(bmobUser.getEmail());
+                    user.setEmailVerified(bmobUser.getEmailVerified());
+                    user.setNickname(bmobUser.getNickname());
+                    user.setSex(bmobUser.getSex());
+                    user.setIconurl(bmobUser.getIconurl());
+                    user.setBirthday(bmobUser.getBirthday());
+                    user.setCreateDate(bmobUser.getCreateDate());
+                    return Observable.just(user);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  bmobUserResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.UPDATEUSER updateuser = RemoteCode.UPDATEUSER.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(updateuser.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }));
     }
 
     @Override
     public Observable<Boolean> pwdResetByEmail(String email) {
-        return null;
+        PasswordResetEmail passwordResetEmail = new PasswordResetEmail();
+        passwordResetEmail.setEmail(email);
+        return this.execute(bmobService.passwordResetByEmail(passwordResetEmail).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.PASSWORDRESET passwordreset= RemoteCode.PASSWORDRESET.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(passwordreset.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }));
     }
 
     @Override
     public Observable<Boolean> pwdResetByMobile(String smsCode, String newpwd) {
-        return null;
+
+        PasswordResetMobile passwordResetMobile = new PasswordResetMobile();
+        passwordResetMobile.setPassword(newpwd);
+        return this.execute(bmobService.passwordResetByMobile(smsCode,passwordResetMobile).flatMap(new Func1<Response<ResponseBody>, Observable<?>>() {
+            @Override
+            public Observable<?> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.PASSWORDRESET passwordreset = RemoteCode.PASSWORDRESET.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(passwordreset.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }));
     }
 
     @Override
     public Observable<Boolean> pwdResetByOldPwd(String sessionToken, String objectId, String oldPwd, String newPwd) {
-        return null;
+        PasswordResetOldPwd passwordResetOldPwd = new PasswordResetOldPwd();
+        passwordResetOldPwd.setOldPassword(oldPwd);
+        passwordResetOldPwd.setNewPassword(newPwd);
+
+        return this.execute(bmobService.passwordResetByOldPassword(sessionToken,objectId,passwordResetOldPwd)
+        .flatMap(new Func1<Response<ResponseBody>, Observable<?>>() {
+            @Override
+            public Observable<?> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.PASSWORDRESET passwordreset = RemoteCode.PASSWORDRESET.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(passwordreset.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }));
     }
 
     @Override
     public Observable<String> requestSmsCode(String phone) {
-        return null;
+        RequestSmsCode requestSmsCode = new RequestSmsCode();
+        requestSmsCode.setMobilePhoneNumber(phone);
+        return this.execute(bmobService.requestSmsCode(requestSmsCode)
+        .flatMap(new Func1<RequestSmsCodeResult, Observable<String>>() {
+            @Override
+            public Observable<String> call(RequestSmsCodeResult requestSmsCodeResult) {
+                if(requestSmsCodeResult != null){
+                    return Observable.just(requestSmsCodeResult.getSmsId());
+                }
+                return Observable.error(new NullPointerException());
+            }
+        }));
     }
 
     @Override

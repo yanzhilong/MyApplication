@@ -11,10 +11,12 @@ public class RemoteCode {
     public static enum CREATEUSER{
 
         DEFAULT(0,"未知错误"),
+        CREATEUSER_NAME_MISSING(201,"用户名不能为空"),
         CREATEUSER_NAME_REPEAT(202,"用户名已经存在"),
         CREATEUSER_EMAIL_REPEAT(203,"邮箱已经存在"),
         CREATEUSER_SMSCODE_ERROR(207,"验证码不正确"),
-        CREATEUSER_MOBILE_REPEAT(209,"手机号已经被占用");
+        CREATEUSER_MOBILE_REPEAT(209,"手机号已经被占用"),
+        MOBILE_ERROR(301,"手机号码不合法");
 
         private int code;
         private String message;
@@ -32,6 +34,10 @@ public class RemoteCode {
             return DEFAULT;
         }
 
+        public static CREATEUSER getDefauleError(){
+            return DEFAULT;
+        }
+
         public String getMessage() {
             return message;
         }
@@ -43,7 +49,8 @@ public class RemoteCode {
     public enum LOGINUSER{
 
         DEFAULT(0,"未知错误"),
-        CREATEUSER_NAME_REPEAT(101,"用户名或密码不正确");
+        LOGIN_NAMEORPWDERROR(101,"用户名或密码不正确"),
+        LOGIN_NAMEORPWDEEMPTY(109,"请提交正确的参数");
 
         private int code;
         private String message;
@@ -66,13 +73,50 @@ public class RemoteCode {
         }
     }
 
+
+    /**
+     * 修改用户信息
+     */
+    public enum UPDATEUSER{
+
+        DEFAULT(0,"未知错误"),
+        UPDATEUSER_DONTUPDATE(105,"预留字段不允许更改"),
+        UPDATEUSER_NAME_REPEAT(202,"用户名已经存在"),
+        UPDATEUSER_EMAIL_REPEAT(203,"邮箱已经存在"),
+        UPDATEUSER_MOBILE_REPEAT(209,"手机号已经被占用"),
+        MOBILE_ERROR(301,"手机号码不合法");
+        private int code;
+        private String message;
+
+        UPDATEUSER(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public static UPDATEUSER getErrorMessage(int code){
+            for (UPDATEUSER updateuser : UPDATEUSER.values()) {
+                if (code == updateuser.code)
+                    return updateuser;
+            }
+            return DEFAULT;
+        }
+    }
+
     /**
      * 修改密码
      */
     public enum PASSWORDRESET{
 
         DEFAULT(0,"未知错误"),
-        NOT_FIND_EMAIL(205,"没有找到当前邮箱地址");
+        NOT_FIND_EMAIL(205,"没有找到当前邮箱地址"),
+        SESSIONTOKEN_ERROR(206,"使用旧密码修改需要先登陆"),
+        SMSCODE_ERROR(207,"验证码不正确"),
+        OLDPWD_ERROR(210,"旧密码不正确");
+
 
         private int code;
         private String message;
@@ -84,6 +128,10 @@ public class RemoteCode {
 
         public String getMessage() {
             return message;
+        }
+
+        public static PASSWORDRESET getDefauleError(){
+            return DEFAULT;
         }
 
         public static PASSWORDRESET getErrorMessage(int code){

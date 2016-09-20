@@ -10,12 +10,13 @@ import java.util.UUID;
  * Created by yanzl on 16-9-3.
  * 用户表
  */
-public class User {
+public class User{
 
     private String id;//数据庫唯一id
     private String userId;//唯一Id
     private String username;
     private String password;
+    private String sessionToken;//登陆才有
     private String mobilePhoneNumber;
     private String mobilePhoneVerified;//手机是否验证
     private String emailVerified;//邮箱是否验证
@@ -29,6 +30,14 @@ public class User {
     public User() {
         userId = UUID.randomUUID().toString();
         this.createDate = TimeUtil.formatTime(new Date());
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     public String getMobilePhoneNumber() {
@@ -133,5 +142,25 @@ public class User {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", sessionToken='" + sessionToken + '\'' +
+                ", mobilePhoneNumber='" + mobilePhoneNumber + '\'' +
+                ", mobilePhoneVerified='" + mobilePhoneVerified + '\'' +
+                ", emailVerified='" + emailVerified + '\'' +
+                ", email='" + email + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", sex='" + sex + '\'' +
+                ", iconurl='" + iconurl + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", createDate='" + createDate + '\'' +
+                '}';
     }
 }

@@ -3,8 +3,6 @@ package com.englishlearn.myapplication.data.source.remote;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.DataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUpdateUserRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
 
 import rx.Observable;
 
@@ -26,7 +24,7 @@ public interface RemoteData extends DataSource{
      * @param smscode
      * @return
      */
-    Observable<BmobUser> createOrLoginUserByPhoneRx(String phone,String smscode);
+    Observable<User> createOrLoginUserByPhoneRx(String phone,String smscode);
 
     /**
      * 判断用户名是否存在
@@ -54,7 +52,28 @@ public interface RemoteData extends DataSource{
      * @param id
      * @return
      */
-    Observable<BmobUser> getUserByIdRx(String id);
+    Observable<User> getUserByIdRx(String id);
+
+    /**
+     * 搜索用户
+     * @param name
+     * @return
+     */
+    Observable<User>getUserByName(String name);
+
+    /**
+     * 搜索用户
+     * @param email
+     * @return
+     */
+    Observable<User>getUserByEmail(String email);
+
+    /**
+     * 搜索用户
+     * @param mobile
+     * @return
+     */
+    Observable<User>getUserByMobile(String mobile);
 
     /**
      * 登陆用户
@@ -62,15 +81,14 @@ public interface RemoteData extends DataSource{
      * @param password 密码
      * @return
      */
-    Observable<BmobUser> login(String name,String password);
+    Observable<User> login(String name,String password);
 
     /**
      * 更新用户信息
-     * @param sessionToken
-     * @param bmobUpdateUserRequest
+     * @param user
      * @return
      */
-    Observable<BmobUser> update(String sessionToken,BmobUpdateUserRequest bmobUpdateUserRequest);
+    Observable<User> updateUser(User user);
 
 
     /**

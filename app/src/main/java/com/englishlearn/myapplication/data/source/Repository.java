@@ -19,9 +19,8 @@ package com.englishlearn.myapplication.data.source;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.source.local.LocalData;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
-import com.englishlearn.myapplication.util.SearchUtil;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class Repository implements DataSource {
 
     private final RemoteData mBmobDataSource;
 
-    private SearchUtil searchUtil;
+
 
     boolean mCacheIsDirty = false;
 
@@ -46,7 +45,6 @@ public class Repository implements DataSource {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
         mBmobDataSource = BmobDataSource.getInstance();
-        searchUtil = SearchUtil.getInstance();
     }
 
     public static Repository getInstance(RemoteData tasksRemoteDataSource,
@@ -68,7 +66,6 @@ public class Repository implements DataSource {
         return mBmobDataSource.getSentencesRx();
     }
 
-    private int i = 1;
     @Override
     public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
         return mBmobDataSource.getSentencesRx(page,pageSize);
@@ -84,8 +81,7 @@ public class Repository implements DataSource {
         if(searchword == null || searchword.equals("")){
             return getSentencesRx(page,pageSize);
         }
-        String regex = searchUtil.getSearchSentenceRegex(searchword);
-        return mBmobDataSource.getSentencesRx(regex,page,pageSize);
+        return mBmobDataSource.getSentencesRx(searchword,page,pageSize);
     }
 
     @Override

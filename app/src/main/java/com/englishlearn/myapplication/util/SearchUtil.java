@@ -64,6 +64,35 @@ public class SearchUtil {
         return where;
     }
 
+    /**
+     * 根据用户名搜索用户信息
+     * @param username
+     * @return
+     */
+    public String getUserByNameRegex(String username){
+        String where = "{\"username\":\""+username+"\"}";
+        return where;
+    }
+
+    /**
+     * 根据邮箱搜索用户信息
+     * @param email
+     * @return
+     */
+    public String getUserByMailRegex(String email){
+        String where = "{\"email\":\""+email+"\"}";
+        return where;
+    }
+
+    /**
+     * 根据邮箱手机号搜索用户信息
+     * @param mobilePhoneNumber
+     * @return
+     */
+    public String getUserByPhoneRegex(String mobilePhoneNumber){
+        String where = "{\"mobilePhoneNumber\":\""+mobilePhoneNumber+"\"}";
+        return where;
+    }
 
     /**
      * 根据搜索的关键詞及返回的数据返回Spannable
