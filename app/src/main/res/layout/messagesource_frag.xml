@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/messagesource_name"/>
+
+                <EditText
+                    android:id="@+id/messagesource_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/messagesource_id"/>
+
+                <EditText
+                    android:id="@+id/messagesource_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/messagesource_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/messagesource_add"/>
+
+            <Button
+                android:id="@+id/messagesource_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/messagesource_delete"/>
+
+            <Button
+                android:id="@+id/messagesource_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/messagesource_update"/>
+
+            <Button
+                android:id="@+id/messagesource_get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/messagesource_get"/>
+
+            <Button
+                android:id="@+id/messagesource_getbyid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/messagesource_getbyid"/>
+
+            <TextView
+                android:id="@+id/messagesources"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

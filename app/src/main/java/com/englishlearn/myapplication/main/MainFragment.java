@@ -16,11 +16,22 @@ import android.widget.Button;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
+import com.englishlearn.myapplication.messagesource.MessageSourceActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
 import com.englishlearn.myapplication.search.SearchActivity;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
+import com.englishlearn.myapplication.sentencecollect.SentenceCollectActivity;
+import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
+import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
 import com.englishlearn.myapplication.sentences.SentencesActivity;
+import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
+import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
+import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
+import com.englishlearn.myapplication.word.WordActivity;
+import com.englishlearn.myapplication.wordcollect.WordCollectActivity;
+import com.englishlearn.myapplication.wordgroup.WordGroupActivity;
+import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -57,7 +68,17 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
         Button registeruser = (Button) root.findViewById(R.id.registeruser);
         Button loginuser = (Button) root.findViewById(R.id.loginuser);
         Button updateuser = (Button) root.findViewById(R.id.updateuser);
-
+        Button messagesource = (Button) root.findViewById(R.id.messagesource);
+        Button tractatetype = (Button) root.findViewById(R.id.tractatetype);
+        Button word = (Button) root.findViewById(R.id.word);
+        Button wordgroup = (Button) root.findViewById(R.id.wordgroup);
+        Button wordgroupcollect = (Button) root.findViewById(R.id.wordgroupcollect);
+        Button sentencegroup = (Button) root.findViewById(R.id.sentencegroup);
+        Button sentencegroupcollect = (Button) root.findViewById(R.id.sentencegroupcollect);
+        Button tractategroup = (Button) root.findViewById(R.id.tractategroup);
+        Button wordcollect = (Button) root.findViewById(R.id.wordcollect);
+        Button sentencecollect = (Button) root.findViewById(R.id.sentencecollect);
+        Button tractatecollect = (Button) root.findViewById(R.id.tractatecollect);
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
@@ -66,6 +87,17 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
         registeruser.setOnClickListener(this);
         loginuser.setOnClickListener(this);
         updateuser.setOnClickListener(this);
+        messagesource.setOnClickListener(this);
+        tractatetype.setOnClickListener(this);
+        word.setOnClickListener(this);
+        wordgroup.setOnClickListener(this);
+        wordgroupcollect.setOnClickListener(this);
+        sentencegroup.setOnClickListener(this);
+        sentencegroupcollect.setOnClickListener(this);
+        tractategroup.setOnClickListener(this);
+        wordcollect.setOnClickListener(this);
+        sentencecollect.setOnClickListener(this);
+        tractatecollect.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -119,6 +151,50 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
             case R.id.updateuser:
                 Intent updateuserintent = new Intent(this.getContext(),UpdateUserActivity.class);
                 this.startActivity(updateuserintent);
+                break;
+            case R.id.messagesource:
+                Intent messagesourceintent = new Intent(this.getContext(),MessageSourceActivity.class);
+                this.startActivity(messagesourceintent);
+                break;
+            case R.id.tractatetype:
+                Intent tractatetypeintent = new Intent(this.getContext(),TractateTypeActivity.class);
+                this.startActivity(tractatetypeintent);
+                break;
+            case R.id.word:
+                Intent wordintent = new Intent(this.getContext(),WordActivity.class);
+                this.startActivity(wordintent);
+                break;
+            case R.id.wordgroup:
+                Intent wordgroupintent = new Intent(this.getContext(),WordGroupActivity.class);
+                this.startActivity(wordgroupintent);
+                break;
+            case R.id.wordgroupcollect:
+                Intent wordgroupcollectintent = new Intent(this.getContext(),WordGroupCollectActivity.class);
+                this.startActivity(wordgroupcollectintent);
+                break;
+            case R.id.sentencegroup:
+                Intent sentencegroupintent = new Intent(this.getContext(),SentenceGroupActivity.class);
+                this.startActivity(sentencegroupintent);
+                break;
+            case R.id.sentencegroupcollect:
+                Intent sentencegroupcollectintent = new Intent(this.getContext(),SentenceGroupCollectActivity.class);
+                this.startActivity(sentencegroupcollectintent);
+                break;
+            case R.id.tractategroup:
+                Intent tractategroupintent = new Intent(this.getContext(),TractateGroupActivity.class);
+                this.startActivity(tractategroupintent);
+                break;
+            case R.id.wordcollect:
+                Intent wordcollectintent = new Intent(this.getContext(),WordCollectActivity.class);
+                this.startActivity(wordcollectintent);
+                break;
+            case R.id.sentencecollect:
+                Intent sentencecollectintent = new Intent(this.getContext(),SentenceCollectActivity.class);
+                this.startActivity(sentencecollectintent);
+                break;
+            case R.id.tractatecollect:
+                Intent tractatecollectintent = new Intent(this.getContext(),TractateCollectActivity.class);
+                this.startActivity(tractatecollectintent);
                 break;
             default:
                 break;

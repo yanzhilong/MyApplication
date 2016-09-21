@@ -14,7 +14,7 @@ public class LoginUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.updateuser_act);
+        setContentView(R.layout.loginuser_act);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

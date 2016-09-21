@@ -75,6 +75,39 @@
         <activity android:name=".updateuser.UpdateUserActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".messagesource.MessageSourceActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".tractatetype.TractateTypeActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".word.WordActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".wordgroup.WordGroupActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".wordgroupcollect.WordGroupCollectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".sentencegroup.SentenceGroupActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".sentencegroupcollect.SentenceGroupCollectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".tractategroup.TractateGroupActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".wordcollect.WordCollectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".sentencecollect.SentenceCollectActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".tractatecollect.TractateCollectActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".search.SearchActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">

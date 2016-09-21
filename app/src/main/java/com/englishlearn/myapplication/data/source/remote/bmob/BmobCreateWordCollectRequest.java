@@ -10,7 +10,7 @@ public class BmobCreateWordCollectRequest {
     private String userId; //用户Id
     private String createDate; //创建时间
     private String wordgroupId; //分组Id
-    private String wordId; //(句子，单词，文章)
+    private String wordId; //(单词Id)
 
     public BmobCreateWordCollectRequest() {
         this.userId = UUID.randomUUID().toString();

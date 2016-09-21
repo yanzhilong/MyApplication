@@ -21,6 +21,18 @@
     <string name="loginuser_btn">Login User</string>
     <string name="updateuser_btn">Update User</string>
 
+    <string name="messagesource_btn">messagesource</string>
+    <string name="tractatetype_btn">tractatetype</string>
+    <string name="word_btn">word</string>
+    <string name="wordgroup_btn">wordgroup</string>
+    <string name="wordgroupcollect_btn">wordgroupcollect</string>
+    <string name="sentencegroup_btn">sentencegroup</string>
+    <string name="sentencegroupcollect_btn">sentencegroupcollect</string>
+    <string name="tractategroup_btn">tractategroup</string>
+    <string name="wordcollect_btn">wordcollect</string>
+    <string name="sentencecollect_btn">sentencecollect</string>
+    <string name="tractatecollect_btn">tractatecollect</string>
+
     <!-- SentencesActivity -->
     <string name="sentences_title">Sentences</string>
     <string name="sentences_menu_edit">Edit</string>
@@ -122,6 +134,49 @@
 
     <!-- UpdateUserActivity -->
     <string name="updateuser_title">UpdateUser</string>
+
+    <!-- MessageSourceActivity -->
+    <string name="messagesource_title">MessageSource</string>
+    <string name="messagesource_name">名称:</string>
+    <string name="messagesource_id">Id:</string>
+    <string name="messagesource_add">增加信息来源</string>
+    <string name="messagesource_delete">删除信息来源</string>
+    <string name="messagesource_update">修改信息来源</string>
+    <string name="messagesource_get">获取所有信息来源</string>
+    <string name="messagesource_getbyid">获取单条信息来源</string>
+
+    <!-- TractateTypeActivity -->
+    <string name="tractatetype_title">TractateType</string>
+
+    <!-- WordActivity -->
+    <string name="word_title">Word</string>
+
+    <!-- WordGroupActivity -->
+    <string name="wordgroup_title">WordGroup</string>
+
+    <!-- TractateActivity -->
+    <string name="tractate_title">Tractate</string>
+
+    <!-- WordGroupCollectActivity -->
+    <string name="wordgroupcollect_title">WordGroupCollect</string>
+
+    <!-- SentenceGroupActivity -->
+    <string name="sentencegroup_title">SentenceGroup</string>
+
+    <!-- SentenceGroupCollectActivity -->
+    <string name="sentencegroupcollect_title">SentenceGroupCollect</string>
+
+    <!-- TractateGroupActivity -->
+    <string name="tractategroup_title">TractateGroup</string>
+
+    <!-- WordCollectActivity -->
+    <string name="wordcollect_title">WordCollect</string>
+
+    <!-- SentenceCollectActivity -->
+    <string name="sentencecollect_title">SentenceCollect</string>
+
+    <!-- TractateCollectActivity -->
+    <string name="tractatecollect_title">TractateCollect</string>
 
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>

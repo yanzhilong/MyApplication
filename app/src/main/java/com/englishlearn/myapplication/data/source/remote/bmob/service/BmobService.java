@@ -231,6 +231,16 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> addMssource(@Body BmobCreateMsSourceRequest bmobCreateMsSourceRequest);
 
+    //删除信息来源
+    @DELETE("/1/classes/Mssource/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> deleteMssourceById(@Path("id") String id);
+
+
     //修改信息来源
     @PUT("/1/classes/Mssource/{id}/")
     @Headers({

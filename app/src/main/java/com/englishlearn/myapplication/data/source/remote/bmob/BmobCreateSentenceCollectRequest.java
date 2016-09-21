@@ -10,7 +10,7 @@ public class BmobCreateSentenceCollectRequest {
     private String userId; //用户Id
     private String createDate; //创建时间
     private String sentencegroupId; //分组Id
-    private String sentenceId; //(句子，单词，文章)
+    private String sentenceId; //(句子Id)
 
     public BmobCreateSentenceCollectRequest() {
         this.userId = UUID.randomUUID().toString();

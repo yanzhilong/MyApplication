@@ -10,7 +10,7 @@ public class BmobCreateTractateCollectRequest {
     private String userId; //用户Id
     private String createDate; //创建时间
     private String tractategroupId; //分组Id
-    private String tractateId; //(句子，单词，文章)
+    private String tractateId; //(文章Id)
 
     public BmobCreateTractateCollectRequest() {
         this.userId = UUID.randomUUID().toString();

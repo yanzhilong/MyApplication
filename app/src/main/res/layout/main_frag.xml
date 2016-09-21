@@ -47,6 +47,73 @@
             android:layout_height="wrap_content"
             android:text="@string/updateuser_btn"/>
 
+
+        <Button
+            android:id="@+id/messagesource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/messagesource_btn"/>
+
+        <Button
+            android:id="@+id/tractatetype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tractatetype_btn"/>
+
+        <Button
+            android:id="@+id/word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/word_btn"/>
+
+        <Button
+            android:id="@+id/wordgroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wordgroup_btn"/>
+
+        <Button
+            android:id="@+id/wordgroupcollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wordgroupcollect_btn"/>
+
+        <Button
+            android:id="@+id/sentencegroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sentencegroup_btn"/>
+
+        <Button
+            android:id="@+id/sentencegroupcollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sentencegroupcollect_btn"/>
+
+        <Button
+            android:id="@+id/tractategroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tractategroup_btn"/>
+
+        <Button
+            android:id="@+id/wordcollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wordcollect_btn"/>
+
+        <Button
+            android:id="@+id/sentencecollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sentencecollect_btn"/>
+
+        <Button
+            android:id="@+id/tractatecollect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tractatecollect_btn"/>
+
     </LinearLayout>
 
 </ScrollView>

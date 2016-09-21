@@ -14,7 +14,7 @@ public class UpdateUserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.loginuser_act);
+        setContentView(R.layout.updateuser_act);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
