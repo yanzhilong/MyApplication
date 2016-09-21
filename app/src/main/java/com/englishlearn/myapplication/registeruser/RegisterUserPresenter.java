@@ -76,12 +76,18 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
 
             @Override
             public void onError(Throwable e) {
-
+                if(e instanceof BmobRequestException){
+                    mView.requestSmsCodeFail(e.getMessage());
+                }else{
+                    e.printStackTrace();
+                    mView.requestSmsCodeFail();
+                }
             }
 
             @Override
             public void onNext(String s) {
                 RegisterUserPresenter.this.smsId = s;
+                mView.requestSmsCodeSuccess();
             }
         });
         add(subscription);
@@ -112,6 +118,58 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
                 mView.registerAndLoginSuccess();
                 mView.showUser(user);
                 Log.d(TAG,user.toString());
+            }
+        });
+        add(subscription);
+    }
+
+    @Override
+    void emailVerify(String email) {
+        Subscription subscription = remoteData.emailVerify(email).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    mView.emailVerifyFail(e.getMessage());
+                }else{
+                    e.printStackTrace();
+                    mView.emailVerifyFail();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                mView.emailVerifySuccess();
+            }
+        });
+        add(subscription);
+    }
+
+    @Override
+    void smsCodeVerify(String code, String mobile) {
+        Subscription subscription = remoteData.smsCodeVerify(code,mobile).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    mView.smsCodeVerifyFail(e.getMessage());
+                }else{
+                    e.printStackTrace();
+                    mView.smsCodeVerifyFail();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                mView.smsCodeVerifySuccess();
             }
         });
         add(subscription);

@@ -95,6 +95,8 @@
     <string name="registerbyname">用户名+密码注册</string>
     <string name="registerbyemail">邮箱+密码注册</string>
     <string name="registerbymobile">手机+验证码注册并登陆</string>
+    <string name="emailverify">认证邮箱</string>
+    <string name="smscodeverify">认证短信验证码</string>
     <string name="requestsmscode">获取验证码</string>
     <string name="resetpwdbyemail">邮箱重置</string>
     <string name="resetpwdbysmscode">短信重置</string>
@@ -110,6 +112,8 @@
     <string name="updateuser">更新用户信息</string>
 
     <string name="alreadysendmail">已经发送重置密码邮件，请点击链接修改密码</string>
+    <string name="alreadysendverifymail">已经发送邮箱验证邮件，请点击链接验证</string>
+    <string name="smscodeverifysuccess">手机验证成功</string>
     <string name="sendmailfail">发送邮件失败，请检查网絡或邮件地址是否正确</string>
     <string name="resetpasswordsuccess">密码修改成功</string>
 

@@ -112,6 +112,7 @@ public class RemoteCode {
     public enum PASSWORDRESET{
 
         DEFAULT(0,"未知错误"),
+        EMAIL_EMPTY(204,"邮箱地址不能为空"),
         NOT_FIND_EMAIL(205,"没有找到当前邮箱地址"),
         SESSIONTOKEN_ERROR(206,"使用旧密码修改需要先登陆"),
         SMSCODE_ERROR(207,"验证码不正确"),
@@ -138,6 +139,109 @@ public class RemoteCode {
             for (PASSWORDRESET passwordreset : PASSWORDRESET.values()) {
                 if (code == passwordreset.code)
                     return passwordreset;
+            }
+            return DEFAULT;
+        }
+    }
+
+    /**
+     * 验证邮箱
+     */
+    public enum EMAILVERIFY{
+
+        DEFAULT(0,"未知错误"),
+        EMAILVERIFY(205,"没有找到当前邮箱地址");
+
+
+        private int code;
+        private String message;
+
+        EMAILVERIFY(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public static EMAILVERIFY getDefauleError(){
+            return DEFAULT;
+        }
+
+        public static EMAILVERIFY getErrorMessage(int code){
+            for (EMAILVERIFY emailverify : EMAILVERIFY.values()) {
+                if (code == emailverify.code)
+                    return emailverify;
+            }
+            return DEFAULT;
+        }
+    }
+
+    /**
+     * 验证短信验证码
+     */
+    public enum SMSCODEVERIFY{
+
+        DEFAULT(0,"未知错误"),
+        SMSCODE_ERROR(207,"验证码不正确"),
+        MOBILE_ERROR(301,"手机号码不合法");
+
+
+        private int code;
+        private String message;
+
+        SMSCODEVERIFY(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public static SMSCODEVERIFY getDefauleError(){
+            return DEFAULT;
+        }
+
+        public static SMSCODEVERIFY getErrorMessage(int code){
+            for (SMSCODEVERIFY smscodeverify : SMSCODEVERIFY.values()) {
+                if (code == smscodeverify.code)
+                    return smscodeverify;
+            }
+            return DEFAULT;
+        }
+    }
+
+    /**
+     * 请求短信验证码requestSmsCode
+     */
+    public enum REQUESTSMSCODE{
+
+        DEFAULT(0,"未知错误"),
+        MOBILE_ERROR(301,"手机号码不合法"),
+        MOBILE_LIMITED(10010,"当前手机号码验证被限制");
+
+        private int code;
+        private String message;
+
+        REQUESTSMSCODE(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public static REQUESTSMSCODE getDefauleError(){
+            return DEFAULT;
+        }
+
+        public static REQUESTSMSCODE getErrorMessage(int code){
+            for (REQUESTSMSCODE requestsmscode : REQUESTSMSCODE.values()) {
+                if (code == requestsmscode.code)
+                    return requestsmscode;
             }
             return DEFAULT;
         }

@@ -133,4 +133,12 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<Boolean> emailVerify(String email);
+
+    /**
+     * 验证短信验证码
+     * @param smsCode
+     * @param mobile
+     * @return
+     */
+    Observable<Boolean> smsCodeVerify(String smsCode,String mobile);
 }

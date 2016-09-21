@@ -263,4 +263,9 @@ public class RemoteDataSource implements RemoteData {
         return null;
     }
 
+    @Override
+    public Observable<Boolean> smsCodeVerify(String smsCode, String mobile) {
+        return null;
+    }
+
 }

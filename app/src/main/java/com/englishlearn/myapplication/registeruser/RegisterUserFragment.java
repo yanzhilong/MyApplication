@@ -37,6 +37,9 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
     private Button registerbymail;
     private Button requestsmscode;
     private Button registerbymobile;
+    private Button emailverify;
+    private Button smscodeverify;
+
 
     private Button resetpwdbyemail;
     private Button resetpwdbysmscode;
@@ -89,6 +92,8 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
         registerbymail = (Button) root.findViewById(R.id.registerbymail);
         requestsmscode = (Button) root.findViewById(R.id.requestsmscode);
         registerbymobile = (Button) root.findViewById(R.id.registerbymobile);
+        emailverify = (Button) root.findViewById(R.id.emailverify);
+        smscodeverify = (Button) root.findViewById(R.id.smscodeverify);
 
         resetpwdbyemail = (Button) root.findViewById(R.id.resetpwdbyemail);
         resetpwdbysmscode = (Button) root.findViewById(R.id.resetpwdbysmscode);
@@ -104,6 +109,8 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
         registerbymail.setOnClickListener(this);
         requestsmscode.setOnClickListener(this);
         registerbymobile.setOnClickListener(this);
+        emailverify.setOnClickListener(this);
+        smscodeverify.setOnClickListener(this);
 
         resetpwdbyemail.setOnClickListener(this);
         resetpwdbysmscode.setOnClickListener(this);
@@ -151,6 +158,51 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
     @Override
     public void resetPasswordByMailFail() {
         Toast.makeText(this.getContext(),R.string.sendmailfail,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void requestSmsCodeSuccess() {
+        Toast.makeText(this.getContext(),R.string.smscodeverifysuccess,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void requestSmsCodeFail(String message) {
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void requestSmsCodeFail() {
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void emailVerifySuccess() {
+        Toast.makeText(this.getContext(),R.string.alreadysendverifymail,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void emailVerifyFail(String message) {
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void emailVerifyFail() {
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void smsCodeVerifySuccess() {
+        Toast.makeText(this.getContext(),R.string.smscodeverifysuccess,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void smsCodeVerifyFail(String message) {
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void smsCodeVerifyFail() {
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -267,12 +319,17 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
                 mPresenter.register(usermail);
                 break;
             case R.id.requestsmscode:
-
                 mPresenter.requestSmsCode(phone);
                 break;
             case R.id.registerbymobile:
 
                 mPresenter.register(phone,code);
+                break;
+            case R.id.emailverify:
+                mPresenter.emailVerify(mail);
+                break;
+            case R.id.smscodeverify:
+                mPresenter.smsCodeVerify(code,phone);
                 break;
             case R.id.resetpwdbyemail:
 

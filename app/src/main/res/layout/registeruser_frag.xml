@@ -198,6 +198,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/registerbymobile" />
+
+                    <Button
+                        android:id="@+id/emailverify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/emailverify" />
+
+                    <Button
+                        android:id="@+id/smscodeverify"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smscodeverify" />
                 </LinearLayout>
 
                 <LinearLayout

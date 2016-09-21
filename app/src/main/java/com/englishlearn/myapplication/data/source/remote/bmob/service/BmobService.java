@@ -45,6 +45,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetOldPw
 import com.englishlearn.myapplication.data.source.remote.bmob.QuerySmsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -176,7 +177,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<RequestSmsCodeResult> requestSmsCode(@Body RequestSmsCode requestSmsCode);
+    Observable<Response<RequestSmsCodeResult>> requestSmsCode(@Body RequestSmsCode requestSmsCode);
 
 
     /**
@@ -204,6 +205,19 @@ public interface BmobService{
             "Content-Type: application/json"
     })
     Observable<Response<ResponseBody>> emailVerify(@Body EmailVerify emailVerify);
+
+    /**
+     * 验证短信验证码
+     * @param smsCodeVerify
+     * @return
+     */
+    @POST("/1/verifySmsCode/{smsCode}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> smsCodeVerify(@Path("smsCode") String smsCode,@Body SmsCodeVerify smsCodeVerify);
 
 
     //信息来源模块****************************************************************************
