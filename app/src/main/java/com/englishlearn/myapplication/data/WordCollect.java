@@ -8,13 +8,22 @@ import java.util.UUID;
 public class WordCollect {
 
     private String id;
+    private String wordcollectId;//收藏id
     private String userId; //用户Id
     private String createDate; //创建时间
     private String wordgroupId; //分组Id
     private String wordId; //(句子，单词，文章)
 
     public WordCollect() {
-        this.userId = UUID.randomUUID().toString();
+        this.wordcollectId = UUID.randomUUID().toString();
+    }
+
+    public String getWordcollectId() {
+        return wordcollectId;
+    }
+
+    public void setWordcollectId(String wordcollectId) {
+        this.wordcollectId = wordcollectId;
     }
 
     public String getId() {

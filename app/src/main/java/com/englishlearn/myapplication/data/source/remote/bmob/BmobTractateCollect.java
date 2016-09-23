@@ -8,10 +8,19 @@ public class BmobTractateCollect {
     private String objectId;
     private String createdAt;
     private String updatedAt;
+    private String tractatecollectId;//
     private String userId; //用户Id
     private String createDate; //创建时间
     private String tractategroupId; //分组Id
     private String tractateId; //(句子，单词，文章)
+
+    public String getTractatecollectId() {
+        return tractatecollectId;
+    }
+
+    public void setTractatecollectId(String tractatecollectId) {
+        this.tractatecollectId = tractatecollectId;
+    }
 
     public String getObjectId() {
         return objectId;

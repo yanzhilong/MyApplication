@@ -145,8 +145,25 @@
     <string name="messagesource_get">获取所有信息来源</string>
     <string name="messagesource_getbyid">获取单条信息来源</string>
 
+    <string name="addmessagesource_success">增加信息来源成功</string>
+    <string name="deletemessagesource_success">删除信息来源成功</string>
+    <string name="updatemessagesource_success">更新信息来源成功</string>
+    <string name="getmessagesource_success">获取信息来源成功</string>
+
     <!-- TractateTypeActivity -->
     <string name="tractatetype_title">TractateType</string>
+    <string name="tractatetype_name">名称:</string>
+    <string name="tractatetype_id">Id:</string>
+    <string name="tractatetype_add">增加文章分类</string>
+    <string name="tractatetype_delete">删除文章分类</string>
+    <string name="tractatetype_update">修改文章分类</string>
+    <string name="tractatetype_get">获取所有文章分类</string>
+    <string name="tractatetype_getbyid">获取单条文章分类</string>
+
+    <string name="addtractatetype_success">增加信息来源成功</string>
+    <string name="deletetractatetype_success">删除信息来源成功</string>
+    <string name="updatetractatetype_success">更新信息来源成功</string>
+    <string name="gettractatetype_success">获取信息来源成功</string>
 
     <!-- WordActivity -->
     <string name="word_title">Word</string>
@@ -180,4 +197,5 @@
 
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>
+    <string name="bmoberror">请求服务器出錯:%s</string>
 </resources>

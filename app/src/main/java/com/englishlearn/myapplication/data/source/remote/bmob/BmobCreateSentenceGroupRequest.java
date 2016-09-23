@@ -10,6 +10,15 @@ public class BmobCreateSentenceGroupRequest {
     private String sentencegroupId;
     private String name; //分组名称
     private String userId; //用户Id
+    private String open; //是否公开
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
 
     public BmobCreateSentenceGroupRequest() {
         sentencegroupId = UUID.randomUUID().toString();

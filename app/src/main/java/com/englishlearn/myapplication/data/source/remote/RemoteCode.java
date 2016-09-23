@@ -8,6 +8,39 @@ public class RemoteCode {
     /**
      * 创建用户
      */
+    public enum COMMON{
+
+        DEFAULT(0,"未知错误"),
+        Common_NOTFOUND(101,"未查询到相关信息");
+
+        private int code;
+        private String message;
+
+        COMMON(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public static COMMON getErrorMessage(int code){
+            for (COMMON common : COMMON.values()) {
+                if (code == common.code)
+                    return common;
+            }
+            return DEFAULT;
+        }
+
+        public static COMMON getDefauleError(){
+            return DEFAULT;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    /**
+     * 创建用户
+     */
     public static enum CREATEUSER{
 
         DEFAULT(0,"未知错误"),

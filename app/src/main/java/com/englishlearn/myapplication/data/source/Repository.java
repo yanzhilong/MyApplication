@@ -55,25 +55,9 @@ public class Repository implements DataSource {
         return INSTANCE;
     }
 
-
-    @Override
-    public List<Sentence> getSentences(){
-        return mBmobDataSource.getSentences();
-    }
-
-    @Override
-    public Observable<List<Sentence>> getSentencesRx() {
-        return mBmobDataSource.getSentencesRx();
-    }
-
     @Override
     public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
         return mBmobDataSource.getSentencesRx(page,pageSize);
-    }
-
-    @Override
-    public List<Sentence> getSentences(String searchword) {
-        return mLocalDataSource.getSentences(searchword);
     }
 
     @Override
@@ -82,11 +66,6 @@ public class Repository implements DataSource {
             return getSentencesRx(page,pageSize);
         }
         return mBmobDataSource.getSentencesRx(searchword,page,pageSize);
-    }
-
-    @Override
-    public List<Grammar> getGrammars(){
-        return mBmobDataSource.getGrammars();
     }
 
     @Override
@@ -100,33 +79,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public List<Grammar> getGrammars(String searchword) {
-        return mLocalDataSource.getGrammars(searchword);
-    }
-
-    @Override
-    public Sentence getSentenceBySentenceId(String sentenceid){
-        return mLocalDataSource.getSentenceBySentenceId(sentenceid);
-    }
-
-    @Override
-    public Grammar getGrammarByGrammarId(String grammarid){
-        return mLocalDataSource.getGrammarByGrammarId(grammarid);
-    }
-
-    @Override
-    public Sentence getSentenceById(String id){
-        return mBmobDataSource.getSentenceById(id);
-    }
-
-    @Override
     public Observable<Sentence> getSentenceRxById(String id) {
         return mBmobDataSource.getSentenceRxById(id);
-    }
-
-    @Override
-    public Grammar getGrammarById(String id){
-        return mBmobDataSource.getGrammarById(id);
     }
 
     @Override
@@ -135,45 +89,13 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public boolean deleteAllSentences() {
-        mLocalDataSource.deleteAllSentences();
-        return false;
-    }
-
-    @Override
-    public boolean deleteAllGrammars() {
-        mLocalDataSource.deleteAllGrammars();
-        return false;
-    }
-
-    @Override
-    public boolean addSentence(final Sentence sentence){
-        return mBmobDataSource.addSentence(sentence);
-    }
-
-    @Override
     public Observable<Boolean> addSentenceRx(Sentence sentence) {
         return mBmobDataSource.addSentenceRx(sentence);
     }
 
     @Override
-    public boolean addGrammar(final Grammar grammar){
-        return mBmobDataSource.addGrammar(grammar);
-    }
-
-    @Override
     public Observable<Boolean> addGrammarRx(Grammar grammar) {
         return mBmobDataSource.addGrammarRx(grammar);
-    }
-
-    @Override
-    public boolean updateSentence(Sentence sentence){
-        return mBmobDataSource.updateSentence(sentence);
-    }
-
-    @Override
-    public boolean updateGrammar(Grammar grammar){
-        return mBmobDataSource.updateGrammar(grammar);
     }
 
     @Override
@@ -187,28 +109,8 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public boolean deleteSentence(String sentenceid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteGrammar(String grammarid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteSentenceById(String id){
-        return mBmobDataSource.deleteSentenceById(id);
-    }
-
-    @Override
     public Observable<Boolean> deleteSentenceRxById(String id) {
         return mBmobDataSource.deleteSentenceRxById(id);
-    }
-
-    @Override
-    public boolean deleteGrammarById(String id){
-        return mBmobDataSource.deleteGrammarById(id);
     }
 
     @Override

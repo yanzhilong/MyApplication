@@ -7,13 +7,13 @@ import java.util.List;
  */
 public class BmobTractateGroupResult {
 
-    private List<BmobSentenceGroup> results;
+    private List<BmobTractateGroup> results;
 
-    public List<BmobSentenceGroup> getResults() {
+    public List<BmobTractateGroup> getResults() {
         return results;
     }
 
-    public void setResults(List<BmobSentenceGroup> results) {
+    public void setResults(List<BmobTractateGroup> results) {
         this.results = results;
     }
 }

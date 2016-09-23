@@ -31,65 +31,27 @@ public interface
 
 DataSource {
 
-    List<Sentence> getSentences() ;
-
-    Observable<List<Sentence>> getSentencesRx() ;
-
     Observable<List<Sentence>> getSentencesRx(int page,int pageSize);
 
-    List<Sentence> getSentences(String searchword);
-
     Observable<List<Sentence>> getSentencesRx(String searchword,int page,int pageSize);
-
-    List<Grammar> getGrammars();
 
     Observable<List<Grammar>> getGrammarsRx();
 
     Observable<List<Grammar>> getGrammarsRx(int page,int pageSize);
 
-    List<Grammar> getGrammars(String searchword);
-
-    Sentence getSentenceBySentenceId(String sentenceid);
-
-    Grammar getGrammarByGrammarId(String grammarid);
-
-    Sentence getSentenceById(String id);
-
     Observable<Sentence> getSentenceRxById(String id);
-
-    Grammar getGrammarById(String id);
 
     Observable<Grammar> getGrammarRxById(String id);
 
-    boolean deleteAllSentences();
-
-    boolean deleteAllGrammars();
-
-    boolean addSentence(Sentence sentence);
-
     Observable<Boolean> addSentenceRx(Sentence sentence);
-
-    boolean addGrammar(Grammar grammar);
 
     Observable<Boolean> addGrammarRx(Grammar grammar);
 
-    boolean updateSentence(Sentence sentence);
-
     Observable<Boolean> updateSentenceRx(Sentence sentence);
-
-    boolean updateGrammar(Grammar grammar);
 
     Observable<Boolean> updateGrammarRx(Grammar grammar);
 
-    boolean deleteSentence(String sentenceid);
-
-    boolean deleteGrammar(String grammarid);
-
-    boolean deleteSentenceById(String id);
-
     Observable<Boolean> deleteSentenceRxById(String id);
-
-    boolean deleteGrammarById(String id);
 
     Observable<Boolean> deleteGrammarRxById(String id);
 

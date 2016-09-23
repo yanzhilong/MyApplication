@@ -2,8 +2,20 @@
 package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
+import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceGroup;
+import com.englishlearn.myapplication.data.SentenceGroupCollect;
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.WordCollect;
+import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 
 import java.util.List;
@@ -28,32 +40,12 @@ public class RemoteDataSource implements RemoteData {
     private RemoteDataSource() {}
 
     @Override
-    public List<Sentence> getSentences() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Sentence>> getSentencesRx() {
-        return null;
-    }
-
-    @Override
     public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
         return null;
     }
 
     @Override
-    public List<Sentence> getSentences(String searchword) {
-        return null;
-    }
-
-    @Override
     public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
-        return null;
-    }
-
-    @Override
-    public List<Grammar> getGrammars() {
         return null;
     }
 
@@ -68,32 +60,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public List<Grammar> getGrammars(String searchword) {
-        return null;
-    }
-
-    @Override
-    public Sentence getSentenceBySentenceId(String sentenceid) {
-        return null;
-    }
-
-    @Override
-    public Grammar getGrammarByGrammarId(String grammarid) {
-        return null;
-    }
-
-    @Override
-    public Sentence getSentenceById(String id) {
-        return null;
-    }
-
-    @Override
     public Observable<Sentence> getSentenceRxById(String id) {
-        return null;
-    }
-
-    @Override
-    public Grammar getGrammarById(String id) {
         return null;
     }
 
@@ -103,43 +70,13 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public boolean deleteAllSentences() {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAllGrammars() {
-        return false;
-    }
-
-    @Override
-    public boolean addSentence(Sentence sentence) {
-        return false;
-    }
-
-    @Override
     public Observable<Boolean> addSentenceRx(Sentence sentence) {
         return null;
     }
 
     @Override
-    public boolean addGrammar(Grammar grammar) {
-        return false;
-    }
-
-    @Override
     public Observable<Boolean> addGrammarRx(Grammar grammar) {
         return null;
-    }
-
-    @Override
-    public boolean updateSentence(Sentence sentence) {
-        return false;
-    }
-
-    @Override
-    public boolean updateGrammar(Grammar grammar) {
-        return false;
     }
 
     @Override
@@ -153,28 +90,8 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public boolean deleteSentence(String sentenceid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteGrammar(String grammarid) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteSentenceById(String id) {
-        return false;
-    }
-
-    @Override
     public Observable<Boolean> deleteSentenceRxById(String id) {
         return null;
-    }
-
-    @Override
-    public boolean deleteGrammarById(String id) {
-        return false;
     }
 
     @Override
@@ -265,6 +182,271 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> smsCodeVerify(String smsCode, String mobile) {
+        return null;
+    }
+
+    @Override
+    public Observable<MsSource> addMssource(MsSource msSource) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteMssourceById(String msSourceId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateMssourceRxById(MsSource msSource) {
+        return null;
+    }
+
+    @Override
+    public Observable<MsSource> getMssourceRxById(String msSourceId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<MsSource>> getMssourcesRx() {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateType> addTractateType(TractateType tractateType) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateTypeById(String tractateTypeId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateTypeRxById(TractateType tractateType) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateType> getTractateTypeRxById(String tractateTypeId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateType>> getTractateTypesRx() {
+        return null;
+    }
+
+    @Override
+    public Observable<Word> addWord(Word word) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordById(String wordId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateWordRxById(Word word) {
+        return null;
+    }
+
+    @Override
+    public Observable<Word> getWordRxById(String wordId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Word>> getWordRxByName(String name) {
+        return null;
+    }
+
+    @Override
+    public Observable<Tractate> addTractate(Tractate tractate) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateRxById(String tractateId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateRxById(Tractate tractate) {
+        return null;
+    }
+
+    @Override
+    public Observable<Tractate> getTractateRxById(String tractateId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Tractate>> getTractatesRx(String searchword, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<WordGroup> addWordGroup(WordGroup wordGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordGroupRxById(String wordGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateWordGroupRxById(WordGroup wordGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<WordGroup> getWordGroupRxById(String wordGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupsByOpenRx(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordGroupCollectRxById(String wordGroupCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceGroup> addSentenceGroup(SentenceGroup sentenceGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceGroupRxById(SentenceGroup sentenceGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceGroup> getSentenceGroupRxById(String sentenceGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupsByOpenRx(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupCollectRxById(String sentenceGroupCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateGroup> addTractateGroup(TractateGroup tractateGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupRxById(String tractateGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateGroupRxById(TractateGroup tractateGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateGroup> getTractateGroupRxById(String tractateGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<WordCollect> addWordCollect(WordCollect wordCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordCollectRxById(String wordCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId, String wordGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceCollectRxById(String wordCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId, String sentenceGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId, String tractateGroupId, int page, int pageSize) {
         return null;
     }
 

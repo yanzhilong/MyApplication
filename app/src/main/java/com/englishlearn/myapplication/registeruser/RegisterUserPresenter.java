@@ -58,6 +58,7 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
 
             @Override
             public void onNext(BmobCreateUserResult bmobCreateUserResult) {
+                Log.d(TAG,"register" + Thread.currentThread().getName());
                 //注册成功
                 mView.registerSuccess();
                 Log.d(TAG,bmobCreateUserResult.toString());

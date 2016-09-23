@@ -1,8 +1,22 @@
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.MsSource;
+import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceGroup;
+import com.englishlearn.myapplication.data.SentenceGroupCollect;
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.WordCollect;
+import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
+
+import java.util.List;
 
 import rx.Observable;
 
@@ -11,6 +25,8 @@ import rx.Observable;
  */
 public interface RemoteData extends DataSource{
 
+    //用户模块
+    //*****************************************************************************
     /**
      * 注册用户
      * @param user
@@ -141,4 +157,457 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<Boolean> smsCodeVerify(String smsCode,String mobile);
+
+
+    //信息来源模块
+    //*****************************************************************************
+    /**
+     * 增加信息来源
+     * @param msSource
+     * @return
+     */
+    Observable<MsSource> addMssource(MsSource msSource);
+
+    /**
+     * 删除信息来源
+     * @param msSourceId
+     * @return
+     */
+    Observable<Boolean> deleteMssourceById(String msSourceId);
+
+    /**
+     * 修改信息来源
+     * @param msSource
+     * @return
+     */
+    Observable<Boolean> updateMssourceRxById(MsSource msSource);
+
+    /**
+     * 根据id获取信息来源
+     * @param msSourceId
+     * @return
+     */
+    Observable<MsSource> getMssourceRxById(String msSourceId);
+
+
+    /**
+     * 获取所有信息来源
+     * @return
+     */
+    Observable<List<MsSource>> getMssourcesRx();
+
+
+    //文章分类模块
+    //*****************************************************************************
+
+    /**
+     * 增加文章分类
+     * @param tractateType
+     * @return
+     */
+    Observable<TractateType> addTractateType(TractateType tractateType);
+
+    /**
+     * 删除文章分类
+     * @param tractateTypeId
+     * @return
+     */
+    Observable<Boolean> deleteTractateTypeById(String tractateTypeId);
+
+    /**
+     * 修改文章分类
+     * @param tractateType
+     * @return
+     */
+    Observable<Boolean> updateTractateTypeRxById(TractateType tractateType);
+
+    /**
+     * 根据id获取文章分类
+     * @param tractateTypeId
+     * @return
+     */
+    Observable<TractateType> getTractateTypeRxById(String tractateTypeId);
+
+
+    /**
+     * 获取所有文章分类
+     * @return
+     */
+    Observable<List<TractateType>> getTractateTypesRx();
+
+
+    //单词模块
+    //*****************************************************************************
+
+    /**
+     * 增加单词
+     * @param word
+     * @return
+     */
+    Observable<Word> addWord(Word word);
+
+    /**
+     * 删除单词
+     * @param wordId
+     * @return
+     */
+    Observable<Boolean> deleteWordById(String wordId);
+
+    /**
+     * 修改单词
+     * @param word
+     * @return
+     */
+    Observable<Boolean> updateWordRxById(Word word);
+
+    /**
+     * 根据id获取单词
+     * @param wordId
+     * @return
+     */
+    Observable<Word> getWordRxById(String wordId);
+
+
+    /**
+     * 根据名称获取单词
+     * @param name
+     * @return
+     */
+    Observable<List<Word>> getWordRxByName(String name);
+
+
+    //文章模块
+    //*****************************************************************************
+
+    /**
+     * 增加文章
+     * @param tractate
+     * @return
+     */
+    Observable<Tractate> addTractate(Tractate tractate);
+
+    /**
+     * 删除文章
+     * @param tractateId
+     * @return
+     */
+    Observable<Boolean> deleteTractateRxById(String tractateId);
+
+    /**
+     * 修改文章
+     * @param tractate
+     * @return
+     */
+    Observable<Boolean> updateTractateRxById(Tractate tractate);
+
+    /**
+     * 根据id获取文章
+     * @param tractateId
+     * @return
+     */
+    Observable<Tractate> getTractateRxById(String tractateId);
+
+
+    /**
+     * 根据分类id获取文章列表分页展示
+     * @param tractateTypeId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId,int page,int pageSize);
+
+    /**
+     * 根据分类id,关键词的正则,获取文章列表分页展示
+     * @param searchword
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<Tractate>> getTractatesRx(String searchword,int page,int pageSize);
+
+
+    //单词收藏分组模块
+    //*****************************************************************************
+
+    /**
+     * 增加单词收藏分组
+     * @param wordGroup
+     * @return
+     */
+    Observable<WordGroup> addWordGroup(WordGroup wordGroup);
+
+    /**
+     * 删除单词收藏分组
+     * @param wordGroupId
+     * @return
+     */
+    Observable<Boolean> deleteWordGroupRxById(String wordGroupId);
+
+    /**
+     * 修改单词收藏分组
+     * @param wordGroup
+     * @return
+     */
+    Observable<Boolean> updateWordGroupRxById(WordGroup wordGroup);
+
+    /**
+     * 根据id获取单词收藏分组
+     * @param wordGroupId
+     * @return
+     */
+    Observable<WordGroup> getWordGroupRxById(String wordGroupId);
+
+    /**
+     * 根据userId获取单词收藏分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordGroup>> getWordGroupRxByUserId(String userId,int page,int pageSize);
+
+    /**
+     * 获取所有公开的单词收藏分组分页展示,按时间降序
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordGroup>> getWordGroupsByOpenRx(int page,int pageSize);
+
+
+    //单词分組收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加单词分組收藏
+     * @param wordGroupCollect
+     * @return
+     */
+    Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect);
+
+    /**
+     * 删除单词分組收藏
+     * @param wordGroupCollectId
+     * @return
+     */
+    Observable<Boolean> deleteWordGroupCollectRxById(String wordGroupCollectId);
+
+
+    /**
+     * 根据userId获取单词分组收藏分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserId(String userId,int page,int pageSize);
+
+
+
+    //句子收藏分组模块
+    //*****************************************************************************
+
+    /**
+     * 增加句子收藏分组
+     * @param sentenceGroup
+     * @return
+     */
+    Observable<SentenceGroup> addSentenceGroup(SentenceGroup sentenceGroup);
+
+    /**
+     * 删除句子收藏分组
+     * @param sentenceGroupId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId);
+
+    /**
+     * 修改句子收藏分组
+     * @param sentenceGroup
+     * @return
+     */
+    Observable<Boolean> updateSentenceGroupRxById(SentenceGroup sentenceGroup);
+
+    /**
+     * 根据id获取句子收藏分组
+     * @param sentenceGroupId
+     * @return
+     */
+    Observable<SentenceGroup> getSentenceGroupRxById(String sentenceGroupId);
+
+    /**
+     * 根据userId获取句子收藏分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize);
+
+    /**
+     * 获取所有公开的句子收藏分组分页展示,按时间降序
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceGroup>> getSentenceGroupsByOpenRx(int page,int pageSize);
+
+
+    //句子分組收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加单词分組收藏
+     * @param sentenceGroupCollect
+     * @return
+     */
+    Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect);
+
+    /**
+     * 删除单词分組收藏
+     * @param sentenceGroupCollectId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceGroupCollectRxById(String sentenceGroupCollectId);
+
+
+    /**
+     * 根据userId获取单词分组收藏分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId,int page,int pageSize);
+
+
+    //文章收藏分组模块
+    //*****************************************************************************
+
+    /**
+     * 增加文章收藏分组
+     * @param tractateGroup
+     * @return
+     */
+    Observable<TractateGroup> addTractateGroup(TractateGroup tractateGroup);
+
+    /**
+     * 删除文章收藏分组
+     * @param tractateGroupId
+     * @return
+     */
+    Observable<Boolean> deleteTractateGroupRxById(String tractateGroupId);
+
+    /**
+     * 修改文章收藏分组
+     * @param tractateGroup
+     * @return
+     */
+    Observable<Boolean> updateTractateGroupRxById(TractateGroup tractateGroup);
+
+    /**
+     * 根据id获取文章收藏分组
+     * @param tractateGroupId
+     * @return
+     */
+    Observable<TractateGroup> getTractateGroupRxById(String tractateGroupId);
+
+    /**
+     * 根据userId获取文章收藏分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize);
+
+
+    //单词收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加单词分組收藏
+     * @param wordCollect
+     * @return
+     */
+    Observable<WordCollect> addWordCollect(WordCollect wordCollect);
+
+    /**
+     * 删除单词分組收藏
+     * @param wordCollectId
+     * @return
+     */
+    Observable<Boolean> deleteWordCollectRxById(String wordCollectId);
+
+
+    /**
+     * 根据userId获取单词分组收藏分页展示
+     * @param userId
+     * @param wordGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId,String wordGroupId,int page,int pageSize);
+
+
+    //句子收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加句子收藏
+     * @param sentenceCollect
+     * @return
+     */
+    Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect);
+
+    /**
+     * 删除句子收藏
+     * @param sentenceCollectId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceCollectRxById(String sentenceCollectId);
+
+
+    /**
+     * 根据userId和句子分組Id获取句子收藏，分页
+     * @param userId
+     * @param sentenceGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId,String sentenceGroupId, int page, int pageSize);
+
+
+
+    //文章收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加句子收藏
+     * @param tractateCollect
+     * @return
+     */
+    Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect);
+
+    /**
+     * 删除句子收藏
+     * @param tractateCollectId
+     * @return
+     */
+    Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId);
+
+
+    /**
+     * 根据userId和文章分組Id获取句子，分页
+     * @param userId
+     * @param tractateGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId,String tractateGroupId, int page, int pageSize);
+
 }

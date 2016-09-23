@@ -3,4 +3,82 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tractatetype_name"/>
+
+                <EditText
+                    android:id="@+id/tractatetype_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tractatetype_id"/>
+
+                <EditText
+                    android:id="@+id/tractatetype_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/tractatetype_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tractatetype_add"/>
+
+            <Button
+                android:id="@+id/tractatetype_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tractatetype_delete"/>
+
+            <Button
+                android:id="@+id/tractatetype_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tractatetype_update"/>
+
+            <Button
+                android:id="@+id/tractatetype_get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tractatetype_get"/>
+
+            <Button
+                android:id="@+id/tractatetype_getbyid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tractatetype_getbyid"/>
+
+            <TextView
+                android:id="@+id/tractatetypes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

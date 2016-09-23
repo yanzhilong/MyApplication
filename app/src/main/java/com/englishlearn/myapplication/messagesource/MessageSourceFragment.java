@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 
@@ -103,76 +104,76 @@ public class MessageSourceFragment extends Fragment implements MessageSourceCont
 
     @Override
     public void addMsSourceSuccess() {
-
+        Toast.makeText(this.getContext(),R.string.addmessagesource_success,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void addMsSourceFail() {
-
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void addMsSourceFail(String message) {
-
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void deleteMsSourceSuccess() {
-
+        Toast.makeText(this.getContext(),R.string.deletemessagesource_success,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void deleteMsSourceFail() {
-
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void deleteMsSourceFail(String message) {
-
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void updaMsSourceSuccess() {
-
+        Toast.makeText(this.getContext(),R.string.updatemessagesource_success,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void updaMsSourceFail() {
-
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void updaMsSourceFail(String message) {
-
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourcesSuccess() {
-
+        Toast.makeText(this.getContext(),R.string.deletemessagesource_success,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourcesFail() {
-
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourcesFail(String message) {
-
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourceByIdSuccess() {
-
+        Toast.makeText(this.getContext(),R.string.getmessagesource_success,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourceByIdFail() {
-
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void getMsSourceByIdFail(String message) {
-
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_LONG).show();
     }
 }

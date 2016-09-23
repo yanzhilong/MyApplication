@@ -38,4 +38,13 @@ public class MsSource {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "MsSource{" +
+                "id='" + id + '\'' +
+                ", msSourceId='" + msSourceId + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -38,6 +38,7 @@ public class SearchUtil {
     }
 
     /**
+     * 句子
      * 根据搜索的关键詞返回用于请求的正則表达式
      * @param searchWord
      * @return
@@ -63,6 +64,69 @@ public class SearchUtil {
         where = String.format(where,regex);
         return where;
     }
+
+
+    /**
+     * 文章
+     * 根据搜索的关键詞返回用于请求的正則表达式
+     * @param searchWord
+     * @return
+     */
+    public String getSearchTractateRegex(String searchWord){
+        List<Word> list = getWords(searchWord);
+        String where = "";
+        if(isContainsChinese(searchWord)){
+            where = "{\"translation\":{\"$regex\":\"%s\"}}";
+        }else{
+            where = "{\"content\":{\"$regex\":\"%s\"}}";
+        }
+        StringBuffer regex = new StringBuffer();
+        for(int i = 0; i < list.size(); i++){
+            Word word = list.get(i);
+            regex.append(word.getName());
+            if(word.isWord()){
+                regex.append("\\s+");//一个或多个空格
+            }else{
+                regex.append(".*");//零个或多个字符
+            }
+        }
+        where = String.format(where,regex);
+        return where;
+    }
+
+    /**
+     * 根据名称和值返回搜索的匹配字条串
+     * @param regexName
+     * @param regexValue
+     * @return
+     */
+    public String getBmobEquals(String regexName, String regexValue){
+        String where = "{\""+regexName+"\":\""+ regexValue +"\"}";
+        return where;
+    }
+
+    /**
+     * 根据名称和值返回搜索的匹配字条串
+     * @param regexName
+     * @param regexValue
+     * @return
+     */
+    public String getBmobEqualsByAnd(String[] regexName, String[] regexValue){
+        if(regexName == null || regexValue == null || regexName.length < 2 || regexName.length != regexValue.length){
+            throw new RuntimeException("array error");
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("{\"$and\":[");
+        for(int i = 0; i < regexName.length; i++){
+            stringBuffer.append("{\""+regexName[i]+"\""+":\""+regexValue[i]+"\"}");
+            if(i < regexName.length - 1){
+                stringBuffer.append(",");
+            }
+        }
+        stringBuffer.append("]}");
+        return stringBuffer.toString();
+    }
+
 
     /**
      * 根据用户名搜索用户信息

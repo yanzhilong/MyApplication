@@ -1,19 +1,22 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  */
 public class BmobCreateTractateCollectRequest {
 
+    private String tractatecollectId;//
     private String userId; //用户Id
     private String createDate; //创建时间
     private String tractategroupId; //分组Id
     private String tractateId; //(文章Id)
 
-    public BmobCreateTractateCollectRequest() {
-        this.userId = UUID.randomUUID().toString();
+    public String getTractatecollectId() {
+        return tractatecollectId;
+    }
+
+    public void setTractatecollectId(String tractatecollectId) {
+        this.tractatecollectId = tractatecollectId;
     }
 
     public String getUserId() {

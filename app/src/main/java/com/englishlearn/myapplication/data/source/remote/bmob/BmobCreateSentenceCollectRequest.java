@@ -1,19 +1,22 @@
 package com.englishlearn.myapplication.data.source.remote.bmob;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  */
 public class BmobCreateSentenceCollectRequest {
 
+    private String sentenceCollectId;
     private String userId; //用户Id
     private String createDate; //创建时间
     private String sentencegroupId; //分组Id
     private String sentenceId; //(句子Id)
 
-    public BmobCreateSentenceCollectRequest() {
-        this.userId = UUID.randomUUID().toString();
+    public String getSentenceCollectId() {
+        return sentenceCollectId;
+    }
+
+    public void setSentenceCollectId(String sentenceCollectId) {
+        this.sentenceCollectId = sentenceCollectId;
     }
 
     public String getUserId() {

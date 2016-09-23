@@ -11,8 +11,17 @@ public class BmobWordGroup {
     private String createdAt;
     private String updatedAt;
     private String wordgroupId;
+    private String open; //是否公开
     private String name; //分组名称
     private String userId; //用户Id
+
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
 
     public String getObjectId() {
         return objectId;

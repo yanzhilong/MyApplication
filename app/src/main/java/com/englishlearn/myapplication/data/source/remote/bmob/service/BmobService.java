@@ -22,9 +22,15 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollectResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroup;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollectResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractate;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroup;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupResult;
@@ -33,8 +39,11 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateType;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobWord;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroup;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordResult;
@@ -48,7 +57,6 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResu
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
 
 import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -106,14 +114,13 @@ public interface BmobService{
     })
     Observable<Response<BmobUser>> loginRx(@Query("username") String username,@Query("password") String password);
 
-
     //根据Id获取用户
     @GET("/1/users/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobUser> getUserByIdRx(@Path("id") String id);
+    Observable<Response<BmobUser>> getUserByIdRx(@Path("id") String id);
     
     //根据用户名获取用户,或者邮箱，手机
     @GET("/1/users")
@@ -121,7 +128,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobUserResult> getUserByNameRx(@Query("where")String usernameJson);
+    Observable<Response<BmobUserResult>> getUserByNameRx(@Query("where")String usernameJson);
 
 
     /**
@@ -229,7 +236,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addMssource(@Body BmobCreateMsSourceRequest bmobCreateMsSourceRequest);
+    Observable<Response<BmobMsSource>> addMssource(@Body BmobCreateMsSourceRequest bmobCreateMsSourceRequest);
 
     //删除信息来源
     @DELETE("/1/classes/Mssource/{id}/")
@@ -256,7 +263,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobMsSource> getMssourceRxById(@Path("id") String id);
+    Observable<Response<BmobMsSource>> getMssourceRxById(@Path("id") String id);
 
     //获取所有信息来源
     @GET("/1/classes/Mssource")
@@ -265,7 +272,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<BmobMsSourceResult> getMssourceRx();
+    Observable<Response<BmobMsSourceResult>> getMssourceRx();
 
     //文章分类模块****************************************************************************
 
@@ -276,7 +283,16 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addTractateType(@Body BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest);
+    Observable<Response<BmobTractateType>> addTractateType(@Body BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest);
+
+    //删除文章分类
+    @DELETE("/1/classes/TractateType/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> deleteTractateTypeById(@Path("id") String id);
 
     //修改文章分类
     @PUT("/1/classes/TractateType/{id}/")
@@ -293,7 +309,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobTractateType> getTractateTypeRxById(@Path("id") String id);
+    Observable<Response<BmobTractateType>> getTractateTypeRxById(@Path("id") String id);
 
     //获取所有文章分类
     @GET("/1/classes/TractateType")
@@ -302,7 +318,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<BmobTractateTypeResult> getTractateTypeRx();
+    Observable<Response<BmobTractateTypeResult>> getTractateTypeRx();
 
     //单词模块****************************************************************************
 
@@ -313,7 +329,16 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addWord(@Body BmobCreateWordRequest bmobCreateWordRequest);
+    Observable<Response<BmobWord>> addWord(@Body BmobCreateWordRequest bmobCreateWordRequest);
+
+    //删除单词
+    @DELETE("/1/classes/Word/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> deleteWordById(@Path("id") String id);
 
     //修改单词
     @PUT("/1/classes/Word/{id}/")
@@ -324,24 +349,24 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> updateWordRxById(@Path("id") String id,@Body BmobCreateWordRequest bmobCreateWordRequest);
 
+    //根据id获取单词
+    @GET("/1/classes/Word/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<BmobWord>> getWordRxById(@Path("id") String id);
+
     //根据名称获取单词
     @GET("/1/classes/Word")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordResult> getWordRxByName(@Query("where")String wordjson);
+    Observable<Response<BmobWordResult>> getWordRxByName(@Query("where")String wordjson);
+
 
     //句子模块****************************************************************************
-
-    //添加句子
-    @POST("/1/classes/Sentence")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Call<ResponseBody> addSentence(@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
 
     //添加句子
     @POST("/1/classes/Sentence")
@@ -369,15 +394,6 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> deleteSentencRxById(@Path("id") String id);
 
-
-    //根据Id获取句子
-    @GET("/1/classes/Sentence/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
-    })
-    Call<BmobSentence> getSentenceById(@Path("id") String id);
-
     //根据Id获取句子(Observable)
     @GET("/1/classes/Sentence/{id}/")
     @Headers({
@@ -385,24 +401,6 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<BmobSentence> getSentenceRxById(@Path("id") String id);
-
-    //获取所有句子
-    @GET("/1/classes/Sentence")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Call<BmobSentenceResult> getSentences();
-
-    //获取所有句子
-    @GET("/1/classes/Sentence")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Observable<BmobSentenceResult> getSentencesRx();
 
     /**
      * 获取所有句子(分页)
@@ -442,15 +440,6 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Call<ResponseBody> addGrammar(@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
-
-    //添加语法
-    @POST("/1/classes/Grammar")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
     Observable<Response<ResponseBody>> addGrammarRx(@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
 
     //修改讲法
@@ -470,14 +459,6 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> deleteGrammarRxById(@Path("id") String id);
 
-    //根据Id获取语法
-    @GET("/1/classes/Grammar/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
-    })
-    Call<BmobGrammar> getGrammarById(@Path("id") String id);
-
     //根据Id获取语法(Observable)
     @GET("/1/classes/Grammar/{id}/")
     @Headers({
@@ -485,15 +466,6 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<BmobGrammar> getGrammarRxById(@Path("id") String id);
-
-    //获取所有语法
-    @GET("/1/classes/Grammar")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Call<BmobGrammarResult> getGrammars();
 
     //获取所有语法
     @GET("/1/classes/Grammar")
@@ -525,7 +497,15 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addTractate(@Body BmobCreateTractateRequest bmobCreateTractateRequest);
+    Observable<Response<BmobTractate>> addTractate(@Body BmobCreateTractateRequest bmobCreateTractateRequest);
+
+    //删除文章
+    @DELETE("/1/classes/Tractate/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<ResponseBody>> deleteTractateRxById(@Path("id") String id);
 
     //修改文章
     @PUT("/1/classes/Tractate/{id}/")
@@ -536,13 +516,22 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> updateTractateRxById(@Path("id") String id,@Body BmobCreateTractateRequest bmobCreateTractateRequest);
 
-    //根据分类id获取文章列表
+    //根据文章id获取文章
+    @GET("/1/classes/Tractate/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<BmobTractate>> getTractateRxById(@Path("id") String id);
+
+
+    //根据分类id获取文章列表分页展示
     @GET("/1/classes/Tractate")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobTractateResult> getTractateRxByTractateTypeId(@Query("where")String tractatetypeidjson);
+    Observable<Response<BmobTractateResult>> getTractateRxByTractateTypeId(@Query("where")String tractatetypeidjson,@Query("limit")int limit, @Query("skip")int skip);
 
     /**
      * 根据分类id,关键词的正则,获取文章列表分页展示
@@ -556,7 +545,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobTractateResult> getTractatesRx(@Query("where") String serachjson,@Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobTractateResult>> getTractatesRx(@Query("where") String serachjson,@Query("limit")int limit, @Query("skip")int skip);
 
     //单词收藏分组模块****************************************************************************
 
@@ -567,7 +556,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addWordGroup(@Body BmobCreateWordGroupRequest bmobCreateWordGroupRequest);
+    Observable<Response<BmobWordGroup>> addWordGroup(@Body BmobCreateWordGroupRequest bmobCreateWordGroupRequest);
 
     //修改单词收藏分组
     @PUT("/1/classes/WordGroup/{id}/")
@@ -586,21 +575,21 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> deleteWordGroupRxById(@Path("id") String id);
 
-    //根据userId获取单词收藏分组
+    //根据userId获取单词收藏分组分页展示
     @GET("/1/classes/WordGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordGroup> getWordGroupRxByUserId(@Query("where")String userIdjson);
+    Observable<Response<BmobWordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
-    //获取所有公开的单词收藏分组
-    @GET("/1/classes/WordGroup")
+    //获取所有公开的单词收藏分组分页展示,按时间降序(从近到远)
+    @GET("/1/classes/WordGroup?order=-createdAt")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordGroupResult> getWordGroupsRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobWordGroupResult>> getWordGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //根据id获取单词收藏分组
     @GET("/1/classes/WordGroup/{id}/")
@@ -608,7 +597,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobWordGroup> getWordGroupRxById(@Path("id") String id);
+    Observable<Response<BmobWordGroup>> getWordGroupRxById(@Path("id") String id);
 
     //单词分組收藏模块****************************************************************************
 
@@ -619,7 +608,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addWordGroupCollect(@Body BmobCreateWordGroupCollectRequest bmobCreateWordGroupCollectRequest);
+    Observable<Response<BmobWordGroupCollect>> addWordGroupCollect(@Body BmobCreateWordGroupCollectRequest bmobCreateWordGroupCollectRequest);
 
     //删除单词分組收藏
     @DELETE("/1/classes/WordGroupCollect/{id}/")
@@ -629,13 +618,13 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> deleteWordGroupCollectRxById(@Path("id") String id);
 
-    //根据userId获取单词分組收藏
+    //根据userId获取单词分組收藏,分页展示
     @GET("/1/classes/WordGroupCollect")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordGroupCollectResult> getWordGroupCollectRxByUserId(@Query("where")String userIdjson);
+    Observable<Response<BmobWordGroupCollectResult>> getWordGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //句子收藏分组模块****************************************************************************
 
@@ -646,7 +635,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addSentenceGroup(@Body BmobCreateSentenceGroupRequest bmobCreateSentenceGroupRequest);
+    Observable<Response<BmobSentenceGroup>> addSentenceGroup(@Body BmobCreateSentenceGroupRequest bmobCreateSentenceGroupRequest);
 
     //修改句子收藏分组
     @PUT("/1/classes/SentenceGroup/{id}/")
@@ -665,13 +654,13 @@ public interface BmobService{
     })
     Observable<Response<ResponseBody>> deleteSentenceGroupRxById(@Path("id") String id);
 
-    //根据userId获取句子收藏分组
+    //根据userId获取句子收藏分组，分页展示
     @GET("/1/classes/SentenceGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordGroup> getSentenceGroupRxByUserId(@Query("where")String userIdjson);
+    Observable<Response<BmobSentenceGroupResult>> getSentenceGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     /**
@@ -681,12 +670,12 @@ public interface BmobService{
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/SentenceGroup")
+    @GET("/1/classes/SentenceGroup?order=-createdAt")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordGroupResult> getSentenceGroupsRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobSentenceGroupResult>> getSentenceGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //根据id获取句子收藏分组
     @GET("/1/classes/SentenceGroup/{id}/")
@@ -694,7 +683,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobWordGroup> getSentenceGroupRxById(@Path("id") String id);
+    Observable<Response<BmobSentenceGroup>> getSentenceGroupRxById(@Path("id") String id);
 
     //句子分組收藏模块****************************************************************************
 
@@ -705,7 +694,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addSentenceGroupCollect(@Body BmobCreateSentenceGroupCollectRequest bmobCreateSentenceGroupCollectRequest);
+    Observable<Response<BmobSentenceGroupCollect>> addSentenceGroupCollect(@Body BmobCreateSentenceGroupCollectRequest bmobCreateSentenceGroupCollectRequest);
 
     //删除句子分組收藏
     @DELETE("/1/classes/WordGroupCollect/{id}/")
@@ -721,7 +710,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobSentenceGroupCollectResult> getSentenceGroupCollectRxByUserId(@Query("where")String userIdjson);
+    Observable<Response<BmobSentenceGroupCollectResult>> getSentenceGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //文章收藏分组模块****************************************************************************
@@ -733,7 +722,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addTractateGroup(@Body BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest);
+    Observable<Response<BmobTractateGroup>> addTractateGroup(@Body BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest);
 
     //修改文章收藏分组
     @PUT("/1/classes/TractateGroup/{id}/")
@@ -742,7 +731,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateTractateGroupRxById(@Path("id") String id,@Body BmobCreateSentenceGroupRequest bmobCreateSentenceGroupRequest);
+    Observable<Response<ResponseBody>> updateTractateGroupRxById(@Path("id") String id,@Body BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest);
 
     //删除文章收藏分组
     @DELETE("/1/classes/TractateGroup/{id}/")
@@ -758,7 +747,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobTractateGroupResult> getTractateGroupsRxByUserId(@Query("where")String userIdjson);
+    Observable<Response<BmobTractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //根据id获取文章收藏分组
@@ -767,7 +756,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<BmobTractateGroup> getTractateGroupRxById(@Path("id") String id);
+    Observable<Response<BmobTractateGroup>> getTractateGroupRxById(@Path("id") String id);
 
 
     //单词收藏模块****************************************************************************
@@ -779,7 +768,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addWordCollect(@Body BmobCreateWordCollectRequest bmobCreateWordCollectRequest);
+    Observable<Response<BmobWordCollect>> addWordCollect(@Body BmobCreateWordCollectRequest bmobCreateWordCollectRequest);
 
     //删除单词收藏
     @DELETE("/1/classes/WordCollect/{id}/")
@@ -802,7 +791,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobWordCollectResult> getWordCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobWordCollectResult>> getWordCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //句子收藏模块****************************************************************************
@@ -814,7 +803,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addSentenceCollect(@Body BmobCreateSentenceCollectRequest bmobCreateSentenceCollectRequest);
+    Observable<Response<BmobSentenceCollect>> addSentenceCollect(@Body BmobCreateSentenceCollectRequest bmobCreateSentenceCollectRequest);
 
     //删除句子收藏
     @DELETE("/1/classes/SentenceCollect/{id}/")
@@ -827,7 +816,7 @@ public interface BmobService{
 
     /**
      * 根据userId和句子分組Id获取句子收藏，分页
-     * @param userIdwordgroupIdjson userId和单词分組Id
+     * @param userIdsentencegroupIdjson userId和句子分組Id
      * @param limit 取几条
      * @param skip 从第几条取
      * @return
@@ -837,7 +826,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobSentenceCollectResult> getSentenceCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobSentenceCollectResult>> getSentenceCollectRxByUserIdAndSentenceGroupId(@Query("where")String userIdsentencegroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //文章收藏模块****************************************************************************
@@ -849,10 +838,10 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<ResponseBody>> addTractateCollect(@Body BmobCreateTractateCollectRequest bmobCreateTractateCollectRequest);
+    Observable<Response<BmobTractateCollect>> addTractateCollect(@Body BmobCreateTractateCollectRequest bmobCreateTractateCollectRequest);
 
     //删除文章收藏
-    @DELETE("/1/classes/SentenceCollect/{id}/")
+    @DELETE("/1/classes/TractateCollect/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
@@ -861,17 +850,17 @@ public interface BmobService{
 
 
     /**
-     * 根据userId和文章分組Id获取文章收藏，分页
+     * 根据userId和文章分組Id获取文章，分页
      * @param userIdwordgroupIdjson userId和单词分組Id
      * @param limit 取几条
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/SentenceCollect")
+    @GET("/1/classes/TractateCollect")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<BmobTractateCollectResult> getTractateCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<BmobTractateCollectResult>> getTractateCollectRxByUserIdAndTractateGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 }
