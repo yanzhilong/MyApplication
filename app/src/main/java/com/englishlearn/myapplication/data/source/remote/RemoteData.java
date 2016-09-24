@@ -1,6 +1,8 @@
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.MsSource;
+import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
@@ -14,10 +16,26 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -273,7 +291,102 @@ public interface RemoteData extends DataSource{
      * @param name
      * @return
      */
-    Observable<List<Word>> getWordRxByName(String name);
+    Observable<Word> getWordRxByName(String name);
+
+
+    //句子模块
+    //*****************************************************************************
+
+    /**
+     * 添加句子
+     * @param sentence
+     * @return
+     */
+    Observable<Sentence> addSentence(Sentence sentence);
+
+
+    /**
+     * 删除句子
+     * @param sentenceId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceById(String sentenceId);
+
+    /**
+     * 修改句子
+     * @param sentence
+     * @return
+     */
+    Observable<Boolean> updateSentenceById(Sentence sentence);
+
+    /**
+     * 根据id获取句子
+     * @param sentenceId
+     * @return
+     */
+    Observable<Sentence> getSentenceById(String sentenceId);
+
+    /**
+     * 获取所有句子(分页)
+     * @return
+     */
+    Observable<List<Sentence>> getSentences(int page,int pageSize);
+
+    /**
+     * 获取所有匹配关键词的句子(分页)
+     * @return
+     */
+    Observable<List<Sentence>> getSentences(String serachWord,int page,int pageSize);
+
+
+    //语法模块
+    //*****************************************************************************
+
+    /**
+     * 增加语法
+     * @param grammar
+     * @return
+     */
+    Observable<Grammar> addGrammar(Grammar grammar);
+
+    /**
+     * 删除语法
+     * @param grammarId
+     * @return
+     */
+    Observable<Boolean> deleteGrammarById(String grammarId);
+
+    /**
+     * 修改语法
+     * @param grammar
+     * @return
+     */
+    Observable<Boolean> updateGrammarRxById(Grammar grammar);
+
+    /**
+     * 根据id获取单语法
+     * @param grammarId
+     * @return
+     */
+    Observable<Grammar> getGrammarById(String grammarId);
+
+    /**
+     * 获取所有语法
+     * @return
+     */
+    Observable<List<Grammar>> getGrammars();
+
+    /**
+     * 获取所有语法(分页)
+     * @return
+     */
+    Observable<List<Grammar>> getGrammars(int page,int pageSize);
+
+    /**
+     * 获取所有匹配关键词的语法(分页)
+     * @return
+     */
+    Observable<List<Grammar>> getGrammars(String serachWord,int page,int pageSize);
 
 
     //文章模块

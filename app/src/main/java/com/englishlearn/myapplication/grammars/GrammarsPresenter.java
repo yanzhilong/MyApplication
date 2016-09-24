@@ -41,7 +41,7 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
 
     @Override
     void getGrammarsNextPage() {
-        Subscription subscription = repository.getGrammarsRx(page++,PAGESIZE)
+        Subscription subscription = repository.getGrammars(page++,PAGESIZE)
                 .subscribe(new Subscriber<List<Grammar>>() {
                     @Override
                     public void onCompleted() {
@@ -67,7 +67,7 @@ public class GrammarsPresenter extends GrammarsContract.Presenter{
     @Override
     void getGrammars(String searchword) {
         if(searchword == null){
-            Subscription subscription = repository.getGrammarsRx()
+            Subscription subscription = repository.getGrammars()
                     .subscribe(new Subscriber<List<Grammar>>() {
                         @Override
                         public void onCompleted() {

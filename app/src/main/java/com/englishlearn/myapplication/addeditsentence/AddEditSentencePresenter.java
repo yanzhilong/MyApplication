@@ -43,8 +43,8 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
         Sentence sentence = new Sentence();
         sentence.setContent(content);
         sentence.setTranslation(translate);
-        Subscription subscription = repository.addSentenceRx(sentence)
-                .subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = repository.addSentence(sentence)
+                .subscribe(new Subscriber<Sentence>() {
                     @Override
                     public void onCompleted() {
 
@@ -56,8 +56,8 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
                     }
 
                     @Override
-                    public void onNext(Boolean aBoolean) {
-                        if(aBoolean){
+                    public void onNext(Sentence sentence1) {
+                        if(sentence1 != null){
                             mainView.addSentenceSuccess();
                         }else {
                             mainView.addSentenceFail();
@@ -76,7 +76,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
         sentence.setSentenceId(sentenceid);
         sentence.setContent(content);
         sentence.setTranslation(translate);
-        Subscription subscription = repository.updateSentenceRx(sentence)
+        Subscription subscription = repository.updateSentenceById(sentence)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
@@ -109,7 +109,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     @Override
     void start() {
         if(id != null){
-            Subscription subscription = repository.getSentenceRxById(id)
+            Subscription subscription = repository.getSentenceById(id)
                     .subscribe(new Subscriber<Sentence>() {
                         @Override
                         public void onCompleted() {

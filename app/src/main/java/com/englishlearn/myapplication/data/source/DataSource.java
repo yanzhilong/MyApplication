@@ -31,7 +31,7 @@ public interface
 
 DataSource {
 
-    Observable<List<Sentence>> getSentencesRx(int page,int pageSize);
+    /*Observable<List<Sentence>> getSentencesRx(int page,int pageSize);
 
     Observable<List<Sentence>> getSentencesRx(String searchword,int page,int pageSize);
 
@@ -53,6 +53,6 @@ DataSource {
 
     Observable<Boolean> deleteSentenceRxById(String id);
 
-    Observable<Boolean> deleteGrammarRxById(String id);
+    Observable<Boolean> deleteGrammarRxById(String id);*/
 
 }

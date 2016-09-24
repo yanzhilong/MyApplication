@@ -17,16 +17,30 @@
 package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
+import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceGroup;
+import com.englishlearn.myapplication.data.SentenceGroupCollect;
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateType;
+import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.WordCollect;
+import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
 import java.util.List;
 
 import rx.Observable;
 
-public class Repository implements DataSource {
+public class Repository implements DataSource,RemoteData,LocalData {
 
     private static Repository INSTANCE = null;
 
@@ -47,74 +61,427 @@ public class Repository implements DataSource {
         mBmobDataSource = BmobDataSource.getInstance();
     }
 
-    public static Repository getInstance(RemoteData tasksRemoteDataSource,
-                                         LocalData tasksLocalDataSource) {
+    public static Repository getInstance(RemoteData remoteData,
+                                         LocalData localData) {
         if (INSTANCE == null) {
-            INSTANCE = new Repository(tasksRemoteDataSource, tasksLocalDataSource);
+            INSTANCE = new Repository(remoteData, localData);
         }
         return INSTANCE;
     }
 
+
     @Override
-    public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
-        return mBmobDataSource.getSentencesRx(page,pageSize);
+    public Observable<BmobCreateUserResult> register(User user) {
+        return mBmobDataSource.register(user);
     }
 
     @Override
-    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
-        if(searchword == null || searchword.equals("")){
-            return getSentencesRx(page,pageSize);
-        }
-        return mBmobDataSource.getSentencesRx(searchword,page,pageSize);
+    public Observable<User> createOrLoginUserByPhoneRx(String phone, String smscode) {
+        return mBmobDataSource.createOrLoginUserByPhoneRx(phone,smscode);
     }
 
     @Override
-    public Observable<List<Grammar>> getGrammarsRx() {
-        return mBmobDataSource.getGrammarsRx();
+    public Observable<Boolean> checkUserName(String name) {
+        return mBmobDataSource.checkUserName(name);
     }
 
     @Override
-    public Observable<List<Grammar>> getGrammarsRx(int page, int pageSize) {
-        return mBmobDataSource.getGrammarsRx(page,pageSize);
+    public Observable<Boolean> checkEmail(String email) {
+        return mBmobDataSource.checkEmail(email);
     }
 
     @Override
-    public Observable<Sentence> getSentenceRxById(String id) {
-        return mBmobDataSource.getSentenceRxById(id);
+    public Observable<Boolean> checkMobile(String mobile) {
+        return mBmobDataSource.checkMobile(mobile);
     }
 
     @Override
-    public Observable<Grammar> getGrammarRxById(String id) {
-        return mBmobDataSource.getGrammarRxById(id);
+    public Observable<User> getUserByIdRx(String id) {
+        return mBmobDataSource.getUserByIdRx(id);
     }
 
     @Override
-    public Observable<Boolean> addSentenceRx(Sentence sentence) {
-        return mBmobDataSource.addSentenceRx(sentence);
+    public Observable<User> getUserByName(String name) {
+        return mBmobDataSource.getUserByName(name);
     }
 
     @Override
-    public Observable<Boolean> addGrammarRx(Grammar grammar) {
-        return mBmobDataSource.addGrammarRx(grammar);
+    public Observable<User> getUserByEmail(String email) {
+        return mBmobDataSource.getUserByEmail(email);
     }
 
     @Override
-    public Observable<Boolean> updateSentenceRx(Sentence sentence) {
-        return mBmobDataSource.updateSentenceRx(sentence);
+    public Observable<User> getUserByMobile(String mobile) {
+        return mBmobDataSource.getUserByMobile(mobile);
     }
 
     @Override
-    public Observable<Boolean> updateGrammarRx(Grammar grammar) {
-        return mBmobDataSource.updateGrammarRx(grammar);
+    public Observable<User> login(String name, String password) {
+        return mBmobDataSource.login(name,password);
     }
 
     @Override
-    public Observable<Boolean> deleteSentenceRxById(String id) {
-        return mBmobDataSource.deleteSentenceRxById(id);
+    public Observable<User> updateUser(User user) {
+        return mBmobDataSource.updateUser(user);
     }
 
     @Override
-    public Observable<Boolean> deleteGrammarRxById(String id) {
-        return mBmobDataSource.deleteGrammarRxById(id);
+    public Observable<Boolean> pwdResetByEmail(String email) {
+        return mBmobDataSource.pwdResetByEmail(email);
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByMobile(String smsCode, String newpwd) {
+        return mBmobDataSource.pwdResetByMobile(smsCode,newpwd);
+    }
+
+    @Override
+    public Observable<Boolean> pwdResetByOldPwd(String sessionToken, String objectId, String oldPwd, String newPwd) {
+        return mBmobDataSource.pwdResetByOldPwd(sessionToken,objectId,oldPwd,newPwd);
+    }
+
+    @Override
+    public Observable<String> requestSmsCode(String phone) {
+        return mBmobDataSource.requestSmsCode(phone);
+    }
+
+    @Override
+    public Observable<Boolean> emailVerify(String email) {
+        return mBmobDataSource.emailVerify(email);
+    }
+
+    @Override
+    public Observable<Boolean> smsCodeVerify(String smsCode, String mobile) {
+        return mBmobDataSource.smsCodeVerify(smsCode,mobile);
+    }
+
+    @Override
+    public Observable<MsSource> addMssource(MsSource msSource) {
+        return mBmobDataSource.addMssource(msSource);
+    }
+
+    @Override
+    public Observable<Boolean> deleteMssourceById(String msSourceId) {
+        return mBmobDataSource.deleteMssourceById(msSourceId);
+    }
+
+    @Override
+    public Observable<Boolean> updateMssourceRxById(MsSource msSource) {
+        return mBmobDataSource.updateMssourceRxById(msSource);
+    }
+
+    @Override
+    public Observable<MsSource> getMssourceRxById(String msSourceId) {
+        return mBmobDataSource.getMssourceRxById(msSourceId);
+    }
+
+    @Override
+    public Observable<List<MsSource>> getMssourcesRx() {
+        return mBmobDataSource.getMssourcesRx();
+    }
+
+    @Override
+    public Observable<TractateType> addTractateType(TractateType tractateType) {
+        return mBmobDataSource.addTractateType(tractateType);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateTypeById(String tractateTypeId) {
+        return mBmobDataSource.deleteTractateTypeById(tractateTypeId);
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateTypeRxById(TractateType tractateType) {
+        return mBmobDataSource.updateTractateTypeRxById(tractateType);
+    }
+
+    @Override
+    public Observable<TractateType> getTractateTypeRxById(String tractateTypeId) {
+        return mBmobDataSource.getTractateTypeRxById(tractateTypeId);
+    }
+
+    @Override
+    public Observable<List<TractateType>> getTractateTypesRx() {
+        return mBmobDataSource.getTractateTypesRx();
+    }
+
+    @Override
+    public Observable<Word> addWord(Word word) {
+        return mBmobDataSource.addWord(word);
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordById(String wordId) {
+        return mBmobDataSource.deleteWordById(wordId);
+    }
+
+    @Override
+    public Observable<Boolean> updateWordRxById(Word word) {
+        return mBmobDataSource.updateWordRxById(word);
+    }
+
+    @Override
+    public Observable<Word> getWordRxById(String wordId) {
+        return mBmobDataSource.getWordRxById(wordId);
+    }
+
+    @Override
+    public Observable<Word> getWordRxByName(String name) {
+        return mBmobDataSource.getWordRxByName(name);
+    }
+
+    @Override
+    public Observable<Sentence> addSentence(Sentence sentence) {
+        return mBmobDataSource.addSentence(sentence);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceById(String sentenceId) {
+        return mBmobDataSource.deleteSentenceById(sentenceId);
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceById(Sentence sentence) {
+        return mBmobDataSource.updateSentenceById(sentence);
+    }
+
+    @Override
+    public Observable<Sentence> getSentenceById(String sentenceId) {
+        return mBmobDataSource.getSentenceById(sentenceId);
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentences(int page, int pageSize) {
+        return mBmobDataSource.getSentences(page,pageSize);
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentences(String serachWord, int page, int pageSize) {
+        return mBmobDataSource.getSentences(serachWord,page,pageSize);
+    }
+
+    @Override
+    public Observable<Grammar> addGrammar(Grammar grammar) {
+        return mBmobDataSource.addGrammar(grammar);
+    }
+
+    @Override
+    public Observable<Boolean> deleteGrammarById(String grammarId) {
+        return mBmobDataSource.deleteGrammarById(grammarId);
+    }
+
+    @Override
+    public Observable<Boolean> updateGrammarRxById(Grammar grammar) {
+        return mBmobDataSource.updateGrammarRxById(grammar);
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarById(String grammarId) {
+        return mBmobDataSource.getGrammarById(grammarId);
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars() {
+        return mBmobDataSource.getGrammars();
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars(int page, int pageSize) {
+        return mBmobDataSource.getGrammars(page,pageSize);
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars(String serachWord, int page, int pageSize) {
+        return mBmobDataSource.getGrammars(serachWord,page,pageSize);
+    }
+
+    @Override
+    public Observable<Tractate> addTractate(Tractate tractate) {
+        return mBmobDataSource.addTractate(tractate);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateRxById(String tractateId) {
+        return mBmobDataSource.deleteTractateTypeById(tractateId);
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateRxById(Tractate tractate) {
+        return mBmobDataSource.updateTractateRxById(tractate);
+    }
+
+    @Override
+    public Observable<Tractate> getTractateRxById(String tractateId) {
+        return mBmobDataSource.getTractateRxById(tractateId);
+    }
+
+    @Override
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page, int pageSize) {
+        return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<Tractate>> getTractatesRx(String searchword, int page, int pageSize) {
+        return mBmobDataSource.getTractatesRx(searchword,page,pageSize);
+    }
+
+    @Override
+    public Observable<WordGroup> addWordGroup(WordGroup wordGroup) {
+        return mBmobDataSource.addWordGroup(wordGroup);
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordGroupRxById(String wordGroupId) {
+        return mBmobDataSource.deleteWordById(wordGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> updateWordGroupRxById(WordGroup wordGroup) {
+        return mBmobDataSource.updateWordGroupRxById(wordGroup);
+    }
+
+    @Override
+    public Observable<WordGroup> getWordGroupRxById(String wordGroupId) {
+        return mBmobDataSource.getWordGroupRxById(wordGroupId);
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getWordGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupsByOpenRx(int page, int pageSize) {
+        return mBmobDataSource.getWordGroupsByOpenRx(page,pageSize);
+    }
+
+    @Override
+    public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
+        return mBmobDataSource.addWordGroupCollect(wordGroupCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordGroupCollectRxById(String wordGroupCollectId) {
+        return mBmobDataSource.deleteWordGroupCollectRxById(wordGroupCollectId);
+    }
+
+    @Override
+    public Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getWordGroupCollectRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<SentenceGroup> addSentenceGroup(SentenceGroup sentenceGroup) {
+        return mBmobDataSource.addSentenceGroup(sentenceGroup);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId) {
+        return mBmobDataSource.deleteSentenceGroupRxById(sentenceGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceGroupRxById(SentenceGroup sentenceGroup) {
+        return mBmobDataSource.updateSentenceGroupRxById(sentenceGroup);
+    }
+
+    @Override
+    public Observable<SentenceGroup> getSentenceGroupRxById(String sentenceGroupId) {
+        return mBmobDataSource.getSentenceGroupRxById(sentenceGroupId);
+    }
+
+    @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupsByOpenRx(int page, int pageSize) {
+        return mBmobDataSource.getSentenceGroupsByOpenRx(page,pageSize);
+    }
+
+    @Override
+    public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
+        return mBmobDataSource.addSentenceGroupCollect(sentenceGroupCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupCollectRxById(String sentenceGroupCollectId) {
+        return mBmobDataSource.deleteSentenceGroupCollectRxById(sentenceGroupCollectId);
+    }
+
+    @Override
+    public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceGroupCollectRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<TractateGroup> addTractateGroup(TractateGroup tractateGroup) {
+        return mBmobDataSource.addTractateGroup(tractateGroup);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupRxById(String tractateGroupId) {
+        return mBmobDataSource.deleteTractateGroupRxById(tractateGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateGroupRxById(TractateGroup tractateGroup) {
+        return mBmobDataSource.updateTractateGroupRxById(tractateGroup);
+    }
+
+    @Override
+    public Observable<TractateGroup> getTractateGroupRxById(String tractateGroupId) {
+        return mBmobDataSource.getTractateGroupRxById(tractateGroupId);
+    }
+
+    @Override
+    public Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getTractateGroupsRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<WordCollect> addWordCollect(WordCollect wordCollect) {
+        return mBmobDataSource.addWordCollect(wordCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteWordCollectRxById(String wordCollectId) {
+        return mBmobDataSource.deleteWordCollectRxById(wordCollectId);
+    }
+
+    @Override
+    public Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId, String wordGroupId, int page, int pageSize) {
+        return mBmobDataSource.getWordCollectRxByUserIdAndWordGroupId(userId,wordGroupId,page,pageSize);
+    }
+
+    @Override
+    public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
+        return mBmobDataSource.addSentenceCollect(sentenceCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceCollectRxById(String sentenceCollectId) {
+        return mBmobDataSource.deleteSentenceCollectRxById(sentenceCollectId);
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId, String sentenceGroupId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceCollectRxByUserIdAndSentenceGroupId(userId,sentenceGroupId,page,pageSize);
+    }
+
+    @Override
+    public Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect) {
+        return mBmobDataSource.addTractateCollect(tractateCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId) {
+        return mBmobDataSource.deleteTractateCollectRxById(tractateCollectId);
+    }
+
+    @Override
+    public Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId, String tractateGroupId, int page, int pageSize) {
+        return mBmobDataSource.getTractateCollectRxByUserIdAndTractateGroupId(userId,tractateGroupId,page,pageSize);
     }
 }

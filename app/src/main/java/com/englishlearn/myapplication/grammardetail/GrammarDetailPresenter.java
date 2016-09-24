@@ -32,7 +32,7 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
     @Override
     void getGrammar() {
         if(id != null && !id.isEmpty()){
-            Subscription subscription = repository.getGrammarRxById(id)
+            Subscription subscription = repository.getGrammarById(id)
                     .subscribe(new Subscriber<Grammar>() {
                         @Override
                         public void onCompleted() {
@@ -60,7 +60,7 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
 
     @Override
     void deleteGrammar(Grammar grammar) {
-        Subscription subscription = repository.deleteGrammarRxById(id)
+        Subscription subscription = repository.deleteGrammarById(id)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {

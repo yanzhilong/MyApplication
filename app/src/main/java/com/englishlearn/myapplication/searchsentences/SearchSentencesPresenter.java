@@ -43,7 +43,7 @@ public class SearchSentencesPresenter extends SearchSentencesContract.Presenter{
     @Override
     void getSentencesNextPage() {
 
-        Subscription subscription = repository.getSentencesRx(searchWord,page++,PAGESIZE)
+        Subscription subscription = repository.getSentences(searchWord,page++,PAGESIZE)
         .subscribe(new Subscriber<List<Sentence>>() {
 
             @Override

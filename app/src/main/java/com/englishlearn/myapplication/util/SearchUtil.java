@@ -65,6 +65,29 @@ public class SearchUtil {
         return where;
     }
 
+    /**
+     * 语法
+     * 根据搜索的关键詞返回用于请求的正則表达式
+     * @param searchWord
+     * @return
+     */
+    public String getSearchGrammarRegex(String searchWord){
+        List<Word> list = getWords(searchWord);
+        String where = "{\"content\":{\"$regex\":\"%s\"}}";
+        StringBuffer regex = new StringBuffer();
+        for(int i = 0; i < list.size(); i++){
+            Word word = list.get(i);
+            regex.append(word.getName());
+            if(word.isWord()){
+                regex.append("\\s+");//一个或多个空格
+            }else{
+                regex.append(".*");//零个或多个字符
+            }
+        }
+        where = String.format(where,regex);
+        return where;
+    }
+
 
     /**
      * 文章

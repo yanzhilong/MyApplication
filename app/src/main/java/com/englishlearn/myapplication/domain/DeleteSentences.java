@@ -31,7 +31,7 @@ public class DeleteSentences extends UseCase<DeleteSentences.DeleteSentensResult
             @Override
             public Observable<Boolean> call(Object o) {
                 Sentence sentence = (Sentence) o;
-                return repository.deleteSentenceRxById(sentence.getId());
+                return repository.deleteSentenceById(sentence.getId());
             }
         })
                 .onErrorReturn(new Func1<Throwable, Boolean>() {

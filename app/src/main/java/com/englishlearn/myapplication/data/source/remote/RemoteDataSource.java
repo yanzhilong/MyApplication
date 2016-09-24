@@ -20,6 +20,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResu
 
 import java.util.List;
 
+import retrofit2.Response;
 import rx.Observable;
 
 /**
@@ -38,66 +39,6 @@ public class RemoteDataSource implements RemoteData {
 
     // Prevent direct instantiation.
     private RemoteDataSource() {}
-
-    @Override
-    public Observable<List<Sentence>> getSentencesRx(int page, int pageSize) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Sentence>> getSentencesRx(String searchword, int page, int pageSize) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Grammar>> getGrammarsRx() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<Grammar>> getGrammarsRx(int page, int pageSize) {
-        return null;
-    }
-
-    @Override
-    public Observable<Sentence> getSentenceRxById(String id) {
-        return null;
-    }
-
-    @Override
-    public Observable<Grammar> getGrammarRxById(String id) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> addSentenceRx(Sentence sentence) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> addGrammarRx(Grammar grammar) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> updateSentenceRx(Sentence sentence) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> updateGrammarRx(Grammar grammar) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> deleteSentenceRxById(String id) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> deleteGrammarRxById(String id) {
-        return null;
-    }
 
 
     @Override
@@ -256,7 +197,72 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<Word>> getWordRxByName(String name) {
+    public Observable<Word> getWordRxByName(String name) {
+        return null;
+    }
+
+    @Override
+    public Observable<Sentence> addSentence(Sentence sentence) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceById(String sentenceId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceById(Sentence sentence) {
+        return null;
+    }
+
+    @Override
+    public Observable<Sentence> getSentenceById(String sentenceId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentences(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentences(String serachWord, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<Grammar> addGrammar(Grammar grammar) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteGrammarById(String wordId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateGrammarRxById(Grammar grammar) {
+        return null;
+    }
+
+    @Override
+    public Observable<Grammar> getGrammarById(String grammarId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Grammar>> getGrammars(String serachWord, int page, int pageSize) {
         return null;
     }
 
@@ -426,7 +432,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Boolean> deleteSentenceCollectRxById(String wordCollectId) {
+    public Observable<Boolean> deleteSentenceCollectRxById(String sentenceCollectId) {
         return null;
     }
 
@@ -449,5 +455,4 @@ public class RemoteDataSource implements RemoteData {
     public Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId, String tractateGroupId, int page, int pageSize) {
         return null;
     }
-
 }

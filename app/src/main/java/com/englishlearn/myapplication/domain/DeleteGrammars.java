@@ -31,7 +31,7 @@ public class DeleteGrammars extends UseCase<DeleteGrammars.DeleteGrammarsResult,
             @Override
             public Observable<Boolean> call(Object o) {
                 Grammar grammar = (Grammar) o;
-                return repository.deleteGrammarRxById(grammar.getId());
+                return repository.deleteGrammarById(grammar.getId());
             }
         })
                 .onErrorReturn(new Func1<Throwable, Boolean>() {

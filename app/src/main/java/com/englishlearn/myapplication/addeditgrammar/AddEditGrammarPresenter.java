@@ -41,8 +41,8 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
         Grammar grammar = new Grammar();
         grammar.setTitle(name);
         grammar.setContent(content);
-        Subscription subscription = repository.addGrammarRx(grammar)
-                .subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = repository.addGrammar(grammar)
+                .subscribe(new Subscriber<Grammar>() {
                     @Override
                     public void onCompleted() {
 
@@ -54,8 +54,8 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
                     }
 
                     @Override
-                    public void onNext(Boolean aBoolean) {
-                        if(aBoolean){
+                    public void onNext(Grammar grammar) {
+                        if(grammar != null){
                             mainView.addGrammarSuccess();
                         }else {
                             mainView.addGrammarFail();
@@ -74,7 +74,7 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
         grammar.setGrammarId(grammarid);
         grammar.setTitle(name);
         grammar.setContent(content);
-        Subscription subscription = repository.updateGrammarRx(grammar)
+        Subscription subscription = repository.updateGrammarRxById(grammar)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {
@@ -107,7 +107,7 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     @Override
     void start() {
         if(id != null){
-            Subscription subscription = repository.getGrammarRxById(id)
+            Subscription subscription = repository.getGrammarById(id)
                     .subscribe(new Subscriber<Grammar>() {
                         @Override
                         public void onCompleted() {

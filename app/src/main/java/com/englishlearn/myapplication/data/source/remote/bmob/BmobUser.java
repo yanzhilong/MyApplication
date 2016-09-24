@@ -24,6 +24,7 @@ public class BmobUser {
     private String birthday;
     private String createDate;
 
+
     public String getPassword() {
         return password;
     }

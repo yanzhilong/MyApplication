@@ -102,4 +102,20 @@ public class Word {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "id='" + id + '\'' +
+                ", wordId='" + wordId + '\'' +
+                ", name='" + name + '\'' +
+                ", british_phonogram='" + british_phonogram + '\'' +
+                ", british_soundurl='" + british_soundurl + '\'' +
+                ", american_phonogram='" + american_phonogram + '\'' +
+                ", american_soundurl='" + american_soundurl + '\'' +
+                ", translate='" + translate + '\'' +
+                ", correlation='" + correlation + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }

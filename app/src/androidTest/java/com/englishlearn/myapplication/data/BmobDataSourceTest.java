@@ -169,4 +169,70 @@ public class BmobDataSourceTest {
             Log.d(TAG,"testTractateType_deleteById"+"success");
         }
     }
+
+    @Test
+    public void testWord() {
+        //添加　
+        Log.d(TAG,"ttestWord_add");
+        Word addword = new Word();
+        addword.setName("hello");
+        addword.setAmerican_soundurl("http:");
+        addword.setRemark("remark");
+        addword.setTranslate("你好");
+        addword.setAmerican_phonogram("American_phonogram");
+
+        TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addWord(addword).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<Word> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list == null || list.size() == 0){
+            return;
+        }
+        Word word = list.get(0);
+        Log.d(TAG,"testWord_add_result:" + word.toString());
+        //修改
+        word.setName("hello_new");
+        Log.d(TAG,"testWord_update");
+        TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
+        mBmobRemoteData.updateWordRxById(word).toBlocking().subscribe(testSubscriber_update);
+        testSubscriber_update.assertNoErrors();
+        List<Boolean> listupdate = testSubscriber_update.getOnNextEvents();
+        if(listupdate != null && listupdate.size() > 0){
+            Log.d(TAG,"testWord_update"+"success");
+        }
+        //根据Id获取信息来源　
+        Log.d(TAG,"testWord_byId");
+        TestSubscriber<Word> testSubscriber_getById = new TestSubscriber<>();
+        mBmobRemoteData.getWordRxById(word.getId()).toBlocking().subscribe(testSubscriber_getById);
+        testSubscriber_getById.assertNoErrors();
+        List<Word> listbyid = testSubscriber_getById.getOnNextEvents();
+        Word word1ById = null;
+        if(listbyid != null && listbyid.size() > 0){
+            word1ById = listbyid.get(0);
+        }
+        Log.d(TAG,"testWord_byId_result:" + word1ById);
+
+        //获取所有信息来源　
+        Log.d(TAG,"testWord_byName");
+        TestSubscriber<Word> testSubscriber_getall = new TestSubscriber<>();
+        mBmobRemoteData.getWordRxByName(word.getName()).toBlocking().subscribe(testSubscriber_getall);
+        testSubscriber_getall.assertNoErrors();
+        List<Word> listall = testSubscriber_getall.getOnNextEvents();
+        Word wordByName = null;
+        if(listall != null && listall.size() > 0){
+            wordByName = listall.get(0);
+        }
+        Log.d(TAG,"testWord_byName_result:" + wordByName.toString());
+
+        //删除指定的信息来源　
+        Log.d(TAG,"testWord_deleteById");
+        TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.deleteWordById(word.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        testSubscriber_deleteById.assertNoErrors();
+        List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
+        if(listdeleteById != null && listdeleteById.size() > 0){
+            Log.d(TAG,"testTractateType_deleteById"+"success");
+        }
+    }
 }

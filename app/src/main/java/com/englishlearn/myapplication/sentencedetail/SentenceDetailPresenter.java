@@ -32,7 +32,7 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
     @Override
     void getSentence() {
         if(id != null && !id.isEmpty()){
-            Subscription subscription = repository.getSentenceRxById(id)
+            Subscription subscription = repository.getSentenceById(id)
                     .subscribe(new Subscriber<Sentence>() {
                         @Override
                         public void onCompleted() {
@@ -60,7 +60,7 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
 
     @Override
     void deleteSentence(Sentence sentence) {
-        Subscription subscription = repository.deleteSentenceRxById(sentence.getId())
+        Subscription subscription = repository.deleteSentenceById(sentence.getId())
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {

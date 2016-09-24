@@ -66,7 +66,7 @@ public class SentencesPresenter extends SentencesContract.Presenter{
     @Override
     void getSentencesNextPage() {
 
-        Subscription subscription = repository.getSentencesRx(page++,PAGESIZE)
+        Subscription subscription = repository.getSentences(page++,PAGESIZE)
         .subscribe(new Subscriber<List<Sentence>>() {
 
             @Override
