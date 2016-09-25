@@ -9,12 +9,12 @@ import java.util.UUID;
 public class WordGroupCollect {
 
     private String id;
-    private String wordgroupcollectId;
+    private String wordGroupcollectId;
     private String userId; //用户Id
     private String wordgroupId; //单词分组Id
 
     public WordGroupCollect() {
-        this.wordgroupcollectId = UUID.randomUUID().toString();
+        this.wordGroupcollectId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -25,12 +25,12 @@ public class WordGroupCollect {
         this.id = id;
     }
 
-    public String getWordgroupcollectId() {
-        return wordgroupcollectId;
+    public String getWordGroupcollectId() {
+        return wordGroupcollectId;
     }
 
-    public void setWordgroupcollectId(String wordgroupcollectId) {
-        this.wordgroupcollectId = wordgroupcollectId;
+    public void setWordGroupcollectId(String wordGroupcollectId) {
+        this.wordGroupcollectId = wordGroupcollectId;
     }
 
     public String getUserId() {
@@ -47,5 +47,15 @@ public class WordGroupCollect {
 
     public void setWordgroupId(String wordgroupId) {
         this.wordgroupId = wordgroupId;
+    }
+
+    @Override
+    public String toString() {
+        return "WordGroupCollect{" +
+                "id='" + id + '\'' +
+                ", wordGroupcollectId='" + wordGroupcollectId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", wordgroupId='" + wordgroupId + '\'' +
+                '}';
     }
 }

@@ -65,4 +65,16 @@ public class SentenceCollect {
     public void setSentenceId(String sentenceId) {
         this.sentenceId = sentenceId;
     }
+
+    @Override
+    public String toString() {
+        return "SentenceCollect{" +
+                "id='" + id + '\'' +
+                ", sentenceCollectId='" + sentenceCollectId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", sentencegroupId='" + sentencegroupId + '\'' +
+                ", sentenceId='" + sentenceId + '\'' +
+                '}';
+    }
 }

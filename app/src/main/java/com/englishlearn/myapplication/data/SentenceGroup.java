@@ -57,4 +57,14 @@ public class SentenceGroup {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "SentenceGroup{" +
+                "id='" + id + '\'' +
+                ", sentencegroupId='" + sentencegroupId + '\'' +
+                ", open='" + open + '\'' +
+                ", name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

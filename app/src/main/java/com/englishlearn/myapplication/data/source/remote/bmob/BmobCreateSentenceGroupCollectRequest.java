@@ -5,16 +5,16 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
  */
 public class BmobCreateSentenceGroupCollectRequest {
 
-    private String sentencegroupcollectId;
+    private String sentenceGroupcollId;
     private String userId; //用户Id
     private String sentencegroupId; //句子分组Id
 
-    public String getSentencegroupcollectId() {
-        return sentencegroupcollectId;
+    public String getSentenceGroupcollId() {
+        return sentenceGroupcollId;
     }
 
-    public void setSentencegroupcollectId(String sentencegroupcollectId) {
-        this.sentencegroupcollectId = sentencegroupcollectId;
+    public void setSentenceGroupcollId(String sentenceGroupcollId) {
+        this.sentenceGroupcollId = sentenceGroupcollId;
     }
 
     public String getUserId() {

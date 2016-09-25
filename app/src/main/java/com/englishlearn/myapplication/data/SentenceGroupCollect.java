@@ -8,12 +8,12 @@ import java.util.UUID;
 public class SentenceGroupCollect {
 
     private String id;
-    private String sentencegroupcollectId;
+    private String sentenceGroupCollectId;
     private String userId; //用户Id
     private String sentencegroupId; //句子分组Id
 
     public SentenceGroupCollect() {
-        sentencegroupcollectId = UUID.randomUUID().toString();
+        sentenceGroupCollectId = UUID.randomUUID().toString();
     }
 
     public String getId() {
@@ -24,12 +24,12 @@ public class SentenceGroupCollect {
         this.id = id;
     }
 
-    public String getSentencegroupcollectId() {
-        return sentencegroupcollectId;
+    public String getSentenceGroupCollectId() {
+        return sentenceGroupCollectId;
     }
 
-    public void setSentencegroupcollectId(String sentencegroupcollectId) {
-        this.sentencegroupcollectId = sentencegroupcollectId;
+    public void setSentenceGroupCollectId(String sentenceGroupCollectId) {
+        this.sentenceGroupCollectId = sentenceGroupCollectId;
     }
 
     public String getUserId() {
@@ -46,5 +46,15 @@ public class SentenceGroupCollect {
 
     public void setSentencegroupId(String sentencegroupId) {
         this.sentencegroupId = sentencegroupId;
+    }
+
+    @Override
+    public String toString() {
+        return "SentenceGroupCollect{" +
+                "id='" + id + '\'' +
+                ", sentenceGroupCollectId='" + sentenceGroupCollectId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", sentencegroupId='" + sentencegroupId + '\'' +
+                '}';
     }
 }

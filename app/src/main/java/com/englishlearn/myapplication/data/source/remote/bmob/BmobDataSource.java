@@ -33,9 +33,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by yanzl on 16-8-1.
@@ -2373,7 +2371,7 @@ public class BmobDataSource implements RemoteData {
 
         final BmobCreateWordGroupCollectRequest wordGroupCollectRequest = new BmobCreateWordGroupCollectRequest();
 
-        wordGroupCollectRequest.setWordgroupcollectId(wordGroupCollect.getWordgroupcollectId());
+        wordGroupCollectRequest.setWordGroupcollectId(wordGroupCollect.getWordGroupcollectId());
         wordGroupCollectRequest.setWordgroupId(wordGroupCollect.getWordgroupId());
         wordGroupCollectRequest.setUserId(wordGroupCollect.getUserId());
 
@@ -2388,7 +2386,7 @@ public class BmobDataSource implements RemoteData {
                             WordGroupCollect wordGroupCollect =  new WordGroupCollect();
                             wordGroupCollect.setId(bmobWordGroupCollect.getObjectId());
                             wordGroupCollect.setUserId(bmobWordGroupCollect.getUserId());
-                            wordGroupCollect.setWordgroupcollectId(bmobWordGroupCollect.getWordgroupcollectId());
+                            wordGroupCollect.setWordGroupcollectId(bmobWordGroupCollect.getWordGroupcollectId());
                             wordGroupCollect.setWordgroupId(bmobWordGroupCollect.getWordgroupId());
                             return Observable.just(wordGroupCollect);
                         }else{
@@ -2458,7 +2456,7 @@ public class BmobDataSource implements RemoteData {
                                 WordGroupCollect wordGroupCollect =  new WordGroupCollect();
                                 wordGroupCollect.setId(bmobWordGroupCollect.getObjectId());
                                 wordGroupCollect.setUserId(bmobWordGroupCollect.getUserId());
-                                wordGroupCollect.setWordgroupcollectId(bmobWordGroupCollect.getWordgroupcollectId());
+                                wordGroupCollect.setWordGroupcollectId(bmobWordGroupCollect.getWordGroupcollectId());
                                 wordGroupCollect.setWordgroupId(bmobWordGroupCollect.getWordgroupId());
                                 wordGroupCollects.add(wordGroupCollect);
                             }
@@ -2710,7 +2708,7 @@ public class BmobDataSource implements RemoteData {
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
         final BmobCreateSentenceGroupCollectRequest bmobCreateSentenceGroupCollectRequest = new  BmobCreateSentenceGroupCollectRequest();
 
-        bmobCreateSentenceGroupCollectRequest.setSentencegroupcollectId(sentenceGroupCollect.getSentencegroupcollectId());
+        bmobCreateSentenceGroupCollectRequest.setSentenceGroupcollId(sentenceGroupCollect.getSentenceGroupCollectId());
         bmobCreateSentenceGroupCollectRequest.setSentencegroupId(sentenceGroupCollect.getSentencegroupId());
         bmobCreateSentenceGroupCollectRequest.setUserId(sentenceGroupCollect.getUserId());
 
@@ -2726,7 +2724,7 @@ public class BmobDataSource implements RemoteData {
 
                             sentenceGroupCollect.setId(bmobSentenceGroupCollect.getObjectId());
                             sentenceGroupCollect.setUserId(bmobSentenceGroupCollect.getUserId());
-                            sentenceGroupCollect.setSentencegroupcollectId(bmobSentenceGroupCollect.getSentencegroupcollectId());
+                            sentenceGroupCollect.setSentenceGroupCollectId(bmobSentenceGroupCollect.getSentenceGroupcollId());
                             sentenceGroupCollect.setSentencegroupId(bmobSentenceGroupCollect.getSentencegroupId());
 
                             return Observable.just(sentenceGroupCollect);
@@ -2734,6 +2732,7 @@ public class BmobDataSource implements RemoteData {
                             Gson gson = new GsonBuilder().create();
                             try {
                                 String errjson =  bmobSentenceGroupCollectResponse.errorBody().string();
+                                Log.d(TAG,"addSentenceGroupCollect:" + errjson);
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -2798,7 +2797,7 @@ public class BmobDataSource implements RemoteData {
 
                                 sentenceGroupCollect.setId(bmobSentenceGroupCollect.getObjectId());
                                 sentenceGroupCollect.setUserId(bmobSentenceGroupCollect.getUserId());
-                                sentenceGroupCollect.setSentencegroupcollectId(bmobSentenceGroupCollect.getSentencegroupcollectId());
+                                sentenceGroupCollect.setSentenceGroupCollectId(bmobSentenceGroupCollect.getSentenceGroupcollId());
                                 sentenceGroupCollect.setSentencegroupId(bmobSentenceGroupCollect.getSentencegroupId());
                                 sentenceGroupCollects.add(sentenceGroupCollect);
                             }
@@ -3004,7 +3003,7 @@ public class BmobDataSource implements RemoteData {
         bmobCreateWordCollectRequest.setWordcollectId(wordCollect.getWordcollectId());
         bmobCreateWordCollectRequest.setCreateDate(wordCollect.getCreateDate());
         bmobCreateWordCollectRequest.setUserId(wordCollect.getUserId());
-        bmobCreateWordCollectRequest.setWordgroupId(wordCollect.getWordgroupId());
+        bmobCreateWordCollectRequest.setWordGroupId(wordCollect.getWordgroupId());
         bmobCreateWordCollectRequest.setWordId(wordCollect.getWordId());
 
         return bmobService.addWordCollect(bmobCreateWordCollectRequest)
@@ -3192,7 +3191,7 @@ public class BmobDataSource implements RemoteData {
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getBmobEqualsByAnd(new String[]{"userId","sentenceGroupId"},new String[]{userId,sentenceGroupId});
+        String regex = searchUtil.getBmobEqualsByAnd(new String[]{"userId","sentencegroupId"},new String[]{userId,sentenceGroupId});
         return bmobService.getSentenceCollectRxByUserIdAndSentenceGroupId(regex,limit,skip)
                 .flatMap(new Func1<Response<BmobSentenceCollectResult>, Observable<List<SentenceCollect>>>() {
                     @Override

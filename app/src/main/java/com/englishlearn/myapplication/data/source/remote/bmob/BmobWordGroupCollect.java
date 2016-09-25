@@ -9,7 +9,7 @@ public class BmobWordGroupCollect {
     private String objectId;
     private String createdAt;
     private String updatedAt;
-    private String wordgroupcollectId;
+    private String wordGroupcollectId;
     private String userId; //用户Id
     private String wordgroupId; //单词分组Id
 
@@ -40,12 +40,12 @@ public class BmobWordGroupCollect {
         this.updatedAt = updatedAt;
     }
 
-    public String getWordgroupcollectId() {
-        return wordgroupcollectId;
+    public String getWordGroupcollectId() {
+        return wordGroupcollectId;
     }
 
-    public void setWordgroupcollectId(String wordgroupcollectId) {
-        this.wordgroupcollectId = wordgroupcollectId;
+    public void setWordGroupcollectId(String wordGroupcollectId) {
+        this.wordGroupcollectId = wordGroupcollectId;
     }
 
     public String getUserId() {

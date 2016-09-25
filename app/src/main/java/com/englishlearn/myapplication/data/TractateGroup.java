@@ -48,4 +48,13 @@ public class TractateGroup {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "TractateGroup{" +
+                "id='" + id + '\'' +
+                ", tractategroupId='" + tractategroupId + '\'' +
+                ", name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

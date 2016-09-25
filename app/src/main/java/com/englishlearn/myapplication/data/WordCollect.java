@@ -65,4 +65,16 @@ public class WordCollect {
     public void setWordId(String wordId) {
         this.wordId = wordId;
     }
+
+    @Override
+    public String toString() {
+        return "WordCollect{" +
+                "id='" + id + '\'' +
+                ", wordcollectId='" + wordcollectId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", wordgroupId='" + wordgroupId + '\'' +
+                ", wordId='" + wordId + '\'' +
+                '}';
+    }
 }

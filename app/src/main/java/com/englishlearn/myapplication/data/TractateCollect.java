@@ -65,4 +65,16 @@ public class TractateCollect {
     public void setTractateId(String tractateId) {
         this.tractateId = tractateId;
     }
+
+    @Override
+    public String toString() {
+        return "TractateCollect{" +
+                "id='" + id + '\'' +
+                ", tractatecollectId='" + tractatecollectId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", tractategroupId='" + tractategroupId + '\'' +
+                ", tractateId='" + tractateId + '\'' +
+                '}';
+    }
 }

@@ -93,4 +93,19 @@ public class Sentence {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "Sentence{" +
+                "id='" + id + '\'' +
+                ", sentenceId='" + sentenceId + '\'' +
+                ", content='" + content + '\'' +
+                ", translation='" + translation + '\'' +
+                ", userId='" + userId + '\'' +
+                ", source='" + source + '\'' +
+                ", tractateId='" + tractateId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }

@@ -57,4 +57,14 @@ public class WordGroup {
         this.userId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "WordGroup{" +
+                "id='" + id + '\'' +
+                ", wordgroupId='" + wordgroupId + '\'' +
+                ", open='" + open + '\'' +
+                ", name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

@@ -75,4 +75,17 @@ public class Grammar {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "Grammar{" +
+                "id='" + id + '\'' +
+                ", grammarId='" + grammarId + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", userId='" + userId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }

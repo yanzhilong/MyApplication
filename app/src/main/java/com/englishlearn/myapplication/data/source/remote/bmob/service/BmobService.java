@@ -495,7 +495,7 @@ public interface BmobService{
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/Sentence")
+    @GET("/1/classes/Grammar")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
@@ -713,7 +713,7 @@ public interface BmobService{
     Observable<Response<BmobSentenceGroupCollect>> addSentenceGroupCollect(@Body BmobCreateSentenceGroupCollectRequest bmobCreateSentenceGroupCollectRequest);
 
     //删除句子分組收藏
-    @DELETE("/1/classes/WordGroupCollect/{id}/")
+    @DELETE("/1/classes/SentenceGroupCollect/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
@@ -721,7 +721,7 @@ public interface BmobService{
     Observable<Response<ResponseBody>> deleteSentenceGroupCollectRxById(@Path("id") String id);
 
     //根据userId获取句子分組收藏
-    @GET("/1/classes/WordGroupCollect")
+    @GET("/1/classes/SentenceGroupCollect")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"

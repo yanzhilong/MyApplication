@@ -101,4 +101,20 @@ public class Tractate {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString() {
+        return "Tractate{" +
+                "id='" + id + '\'' +
+                ", tractateId='" + tractateId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", source='" + source + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", translation='" + translation + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", tractatetypeId='" + tractatetypeId + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
+    }
 }
