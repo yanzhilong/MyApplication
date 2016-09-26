@@ -3,14 +3,14 @@ package com.englishlearn.myapplication.main;
 
 import android.app.Fragment;
 
-import com.englishlearn.myapplication.home.HomeMainFragment;
+import com.englishlearn.myapplication.home.HomeFragment;
 
 /**
  * Created by yanzl on 16-9-26.
  */
 public enum NavigationActivitysEnum {
 
-    LEARN(HomeMainFragment.newInstance());
+    LEARN(HomeFragment.newInstance());
 
     private Fragment mFragment;
 
