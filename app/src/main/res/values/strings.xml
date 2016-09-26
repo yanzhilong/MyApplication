@@ -2,8 +2,8 @@
     <string name="app_name">MyApplication</string>
 
 
-    <!-- MainActivity -->
-    <string name="main_title">English learn</string>
+    <!-- TestMainActivity -->
+    <string name="testmain_title">English learn</string>
     <!-- 菜单 -->
     <string name="menu_test">菜单测试</string>
     <string name="menu_base_test">菜单</string>
@@ -13,6 +13,9 @@
     <string name="menu_delete">Delete</string>
 
     <!-- 按钮 -->
+
+    <string name="login">登陆</string>
+
     <string name="sentence_btn">Sentences</string>
     <string name="grammar_btn">Grammars</string>
     <string name="search_btn">Search</string>
@@ -198,4 +201,16 @@
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>
     <string name="bmoberror">请求服务器出錯:%s</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- Navgation -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_guest_title">登陆后收藏自己感兴趣的内容</string>
+    <string name="navigation_drawer_loginandregister">登陆/注册</string>
+    <string name="navigation_drawer_home">学习中心</string>
+
+
+
+    <string name="action_settings">Settings</string>
 </resources>

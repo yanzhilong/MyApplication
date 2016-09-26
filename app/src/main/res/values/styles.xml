@@ -1,8 +1,8 @@
 <resources>
 
 
-
-
+    <!-- Navagation -->
+    <style name="NavTheme" parent="AppTheme"/>
 
     <!-- 基础主题 -->
     <style name="AppTheme" parent="Base.AppTheme" />

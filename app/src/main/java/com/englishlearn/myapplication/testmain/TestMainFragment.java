@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.main;
+package com.englishlearn.myapplication.testmain;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,17 +36,17 @@ import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MainFragment extends Fragment implements MainContract.View, View.OnClickListener {
+public class TestMainFragment extends Fragment implements TestMainContract.View, View.OnClickListener {
 
-    private static final String TAG = MainFragment.class.getSimpleName();
-    private MainContract.Presenter mPresenter;
+    private static final String TAG = TestMainFragment.class.getSimpleName();
+    private TestMainContract.Presenter mPresenter;
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static TestMainFragment newInstance() {
+        return new TestMainFragment();
     }
 
     @Override
-    public void setPresenter(MainContract.Presenter presenter) {
+    public void setPresenter(TestMainContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -59,7 +59,7 @@ public class MainFragment extends Fragment implements MainContract.View, View.On
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.main_frag, container, false);
+        View root = inflater.inflate(R.layout.testmain_frag, container, false);
 
         Button sentence = (Button) root.findViewById(R.id.sentences);
         Button grammar = (Button) root.findViewById(R.id.grammars);

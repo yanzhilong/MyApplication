@@ -1,4 +1,5 @@
-package com.englishlearn.myapplication.main;
+package com.englishlearn.myapplication.home;
+
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;
@@ -7,7 +8,7 @@ import com.englishlearn.myapplication.BaseView;
  * Created by yanzl on 16-7-20.
  * 用于约定view 和 presenter的实现接口
  */
-public class MainContract {
+public class HomeContract {
 
     public interface View extends BaseView<Presenter> {
 
@@ -16,7 +17,7 @@ public class MainContract {
 
     abstract static class Presenter extends BasePresenter {
 
-
+        abstract void register();
 
     }
 }

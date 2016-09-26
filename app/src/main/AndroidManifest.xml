@@ -2,21 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.englishlearn.myapplication">
 
-
     <!-- Bmob需要的4 -->
-    <!--允许联网 -->
+    <!-- 允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--获取GSM（2g）、WCDMA（联通3g）等网络状态的信息  -->
+    <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--获取wifi网络状态的信息 -->
+    <!-- 获取wifi网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
+    <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--获取sd卡写的权限，用于文件上传和下载-->
+    <!-- 获取sd卡写的权限，用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--允许读取手机状态 用于创建BmobInstallation-->
+    <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
 
     <application
         android:name=".MyApplication"
@@ -25,100 +23,96 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity">
-
+        <activity android:name=".testmain.TestMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".sentences.SentencesActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
-
+        <activity
+            android:name=".sentences.SentencesActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
-
-        <activity android:name=".searchsentences.SearchSentencesActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".grammars.GrammarsActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".addeditsentence.AddEditSentenceActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".addeditgrammar.AddEditGrammarActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".grammardetail.GrammarDetailActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".sentencedetail.SentenceDetailActivity"
-            android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".searchsentences.SearchSentencesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".grammars.GrammarsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".addeditsentence.AddEditSentenceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".addeditgrammar.AddEditGrammarActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".grammardetail.GrammarDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentencedetail.SentenceDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".registeruser.RegisterUserActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".loginuser.LoginUserActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".updateuser.UpdateUserActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".messagesource.MessageSourceActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".tractatetype.TractateTypeActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".word.WordActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".wordgroup.WordGroupActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".wordgroupcollect.WordGroupCollectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".sentencegroup.SentenceGroupActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".sentencegroupcollect.SentenceGroupCollectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".tractategroup.TractateGroupActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".wordcollect.WordCollectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".sentencecollect.SentenceCollectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".tractatecollect.TractateCollectActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".search.SearchActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop">
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".loginuser.LoginUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".updateuser.UpdateUserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".messagesource.MessageSourceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractatetype.TractateTypeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".word.WordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wordgroup.WordGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wordgroupcollect.WordGroupCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentencegroup.SentenceGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentencegroupcollect.SentenceGroupCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.TractateGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wordcollect.WordCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentencecollect.SentenceCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractatecollect.TractateCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".search.SearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
 
         <provider
@@ -126,6 +120,15 @@
             android:authorities="com.englishlearn.myapplication.provide.SuggestionsProvider"
             android:exported="false" />
 
+        <activity
+            android:theme="@style/NavTheme"
+            android:name=".main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
