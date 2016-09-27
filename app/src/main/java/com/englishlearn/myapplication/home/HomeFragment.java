@@ -52,6 +52,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        //mPresenter.unsubscribe();
     }
 }

@@ -5,6 +5,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>-->
 
+  <color name="google_green">#008744</color>
+  <color name="google_blue">#0057e7</color>
+  <color name="google_red">#d62d20</color>
+  <color name="google_orange">#FF4081</color>
+
+  <color name="facebook_blue1">#3b5998</color>
+  <color name="facebook_blue2">#8b9dc3</color>
+  <color name="facebook_blue3">#dfe3ee</color>
+  <color name="facebook_blue4">#f7f7f7</color>
+
 
   <color name="colorPrimary">#673AB7</color>
   <color name="colorPrimaryDark">#512DA8</color>

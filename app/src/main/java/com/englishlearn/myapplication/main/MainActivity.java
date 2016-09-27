@@ -11,9 +11,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextPaint;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
@@ -32,6 +34,18 @@ public class MainActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("");
 
+        Button basis = (Button) findViewById(R.id.basis);
+        Button advance = (Button) findViewById(R.id.advance);
+        Button advanced = (Button) findViewById(R.id.advanced);
+
+        advanced.setTextSize(15);
+        TextPaint tp = advanced.getPaint();
+        tp.setFakeBoldText(true);
+
+        basis.setOnClickListener(this);
+        advance.setOnClickListener(this);
+        advanced.setOnClickListener(this);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -47,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 
         selectItem(NavigationActivitysEnum.LEARN);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -128,6 +143,10 @@ public class MainActivity extends AppCompatActivity
         setTitle(navigationActivitysEnum);
     }
 
+    private void changerLearnTitle(){
+        
+    }
+
     public void setTitle(NavigationActivitysEnum navigationActivitysEnum){
 
     }
@@ -138,6 +157,15 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()){
             case R.id.login_layout:
                 //登陆或详情
+                Toast.makeText(this,"login/register",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.basis:
+
+                break;
+            case R.id.advance:
+
+                break;
+            case R.id.advanced:
 
                 break;
             default:
