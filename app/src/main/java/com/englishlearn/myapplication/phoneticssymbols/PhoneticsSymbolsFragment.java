@@ -20,6 +20,8 @@ import com.englishlearn.myapplication.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.data;
+
 
 /**
  * 音标
@@ -93,18 +95,24 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
         recyclerView.setLayoutManager(mgrgridview);
 
-        final PhoneticssAdapter phoneticssAdapter = new PhoneticssAdapter();
+        final PhoneticssAdapter phoneticssAdapter = new PhoneticssAdapter(new OnItemClickListener(){
+
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(mContext, phonetics.get(position), Toast.LENGTH_LONG).show();
+            }
+        });
         //设置适配器
         recyclerView.setAdapter(phoneticssAdapter);
 
-        recyclerView.setOnClickListener(new View.OnClickListener() {
+        /*recyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int itemPosition = recyclerView.getChildLayoutPosition(v);
                 String item = phonetics.get(itemPosition);
                 Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -130,6 +138,13 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
     private class PhoneticssAdapter extends RecyclerView.Adapter<PhoneticssAdapter.ViewHolder>{
 
+
+        private OnItemClickListener onItemClickListener = null;
+
+        public PhoneticssAdapter(OnItemClickListener mOnItemClickListener) {
+            this.onItemClickListener = mOnItemClickListener;
+        }
+
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -140,8 +155,15 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
         //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             holder.textView.setText(phonetics.get(position));
+            holder.onCLick(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, phonetics.get(position), Toast.LENGTH_LONG).show();
+                    //onItemClickListener.onItemClick(view,PhoneticssAdapter.this.getP);
+                }
+            });
         }
 
         @Override
@@ -149,14 +171,33 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
             return phonetics.size();
         }
 
-        //自定义的ViewHolder,减少findViewById调用次数
-        class ViewHolder extends RecyclerView.ViewHolder{
 
+        //自定义的ViewHolder,减少findViewById调用次数
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            View view;
             TextView textView;
             public ViewHolder(View itemView) {
                 super(itemView);
+                itemView.setOnClickListener(this);
+                view = itemView;
                 textView = (TextView) itemView.findViewById(R.id.phonetics);
+            }
+
+            public void onCLick(View.OnClickListener onClickListener){
+                view.setOnClickListener(onClickListener);
+            }
+
+            @Override
+            public void onClick(View view) {
+                if(onItemClickListener != null){
+                    onItemClickListener.onItemClick(view,getPosition());
+                }
             }
         }
     }
+
+    public interface OnItemClickListener {
+        public void onItemClick(View view , int position);
+    }
+
 }
