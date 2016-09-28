@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.home;
+package com.englishlearn.myapplication.grammar;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,17 +17,17 @@ import com.englishlearn.myapplication.R;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class HomeFragment extends Fragment implements HomeContract.View {
+public class GrammarFragment extends Fragment implements GrammarContract.View {
 
-    private static final String TAG = HomeFragment.class.getSimpleName();
+    private static final String TAG = GrammarFragment.class.getSimpleName();
 
-    private HomeContract.Presenter mPresenter;
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    private GrammarContract.Presenter mPresenter;
+    public static GrammarFragment newInstance() {
+        return new GrammarFragment();
     }
 
     @Override
-    public void setPresenter(HomeContract.Presenter presenter) {
+    public void setPresenter(GrammarContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.home_frag, container, false);
+        View root = inflater.inflate(R.layout.grammar_frag, container, false);
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 

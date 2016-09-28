@@ -201,7 +201,23 @@
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>
     <string name="bmoberror">请求服务器出錯:%s</string>
-    <string name="title_activity_main">MainActivity</string>
+
+
+    <!-- MainActivity -->
+    <string name="elementary">基础</string>
+    <string name="intermediate">中級</string>
+    <string name="advanced">高级</string>
+
+    <string-array name="main_tablayout">
+        <item>基础</item>
+        <item>中級</item>
+        <item>高级</item>
+    </string-array>
+
+    <string-array name="elementary_tablayout">
+        <item>音标</item>
+        <item>语法</item>
+    </string-array>
 
     <!-- Navgation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -209,7 +225,6 @@
     <string name="navigation_drawer_guest_title">登陆后收藏自己感兴趣的内容</string>
     <string name="navigation_drawer_loginandregister">登陆/注册</string>
     <string name="navigation_drawer_home">学习中心</string>
-
 
 
     <string name="action_settings">Settings</string>

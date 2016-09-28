@@ -1,65 +1,81 @@
 package com.englishlearn.myapplication.main;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextPaint;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.home.HomeFragment;
+import com.englishlearn.myapplication.advanced.AdvancedFragment;
+import com.englishlearn.myapplication.elementary.ElementaryFragment;
+import com.englishlearn.myapplication.intermediate.IntermediateFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    //String[] titles = new String[]{getResources().getString(R.string.elementary),getResources().getString(R.string.intermediate),getResources().getString(R.string.advanced)};
+
+    String[] titles;
+    private List<Fragment> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        titles = getResources().getStringArray(R.array.main_tablayout);
+        //初始Fragment
+        list = new ArrayList<>();
+        list.add(ElementaryFragment.newInstance());
+        list.add(IntermediateFragment.newInstance());
+        list.add(AdvancedFragment.newInstance());
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("");
 
-        Button basis = (Button) findViewById(R.id.basis);
-        Button advance = (Button) findViewById(R.id.advance);
-        Button advanced = (Button) findViewById(R.id.advanced);
-
-        advanced.setTextSize(15);
-        TextPaint tp = advanced.getPaint();
-        tp.setFakeBoldText(true);
-
-        basis.setOnClickListener(this);
-        advance.setOnClickListener(this);
-        advanced.setOnClickListener(this);
-
+        //初始Navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //设置Navigation 的 Item监听　
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //设置登陆的按钮监听
         View headerView = navigationView.getHeaderView(0);
         View login_layout = headerView.findViewById(R.id.login_layout);
         login_layout.setOnClickListener(this);
 
-        selectItem(NavigationActivitysEnum.LEARN);
+
+        //selectItem(NavigationActivitysEnum.LEARN);
+
+        //ViewPager
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) findViewById(R.id.tabLayout);
+        viewPager.setAdapter(new MainFragmentPagerAdapter(this.getSupportFragmentManager()));
+        tableLayout.setupWithViewPager(viewPager);
+        tableLayout.getTabTextColors();
+
     }
 
 
@@ -102,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            selectItem(NavigationActivitysEnum.LEARN);
+            //selectItem(NavigationActivitysEnum.LEARN);
             Toast.makeText(this,"nav_camera",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_gallery) {
             Toast.makeText(this,"nav_gallery",Toast.LENGTH_SHORT).show();
@@ -124,7 +140,7 @@ public class MainActivity extends AppCompatActivity
 
     public void selectItem(NavigationActivitysEnum navigationActivitysEnum){
 
-        Fragment fragment = null;
+        /*Fragment fragment = null;
         switch (navigationActivitysEnum){
             case LEARN:
                 fragment = NavigationActivitysEnum.LEARN.getmFragment();
@@ -140,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
 
         // update selected item title, then close the drawer
-        setTitle(navigationActivitysEnum);
+        setTitle(navigationActivitysEnum);*/
     }
 
     private void changerLearnTitle(){
@@ -159,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 //登陆或详情
                 Toast.makeText(this,"login/register",Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.basis:
+            /*case R.id.basis:
 
                 break;
             case R.id.advance:
@@ -167,9 +183,32 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.advanced:
 
-                break;
+                break;*/
             default:
                 break;
+        }
+    }
+
+    //
+    private class MainFragmentPagerAdapter extends FragmentPagerAdapter{
+
+        public MainFragmentPagerAdapter(android.support.v4.app.FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles[position];
         }
     }
 }

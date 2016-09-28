@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.home;
+package com.englishlearn.myapplication.advanced;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,17 +17,17 @@ import com.englishlearn.myapplication.R;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class HomeFragment extends Fragment implements HomeContract.View {
+public class AdvancedFragment extends Fragment implements AdvancedContract.View {
 
-    private static final String TAG = HomeFragment.class.getSimpleName();
+    private static final String TAG = AdvancedFragment.class.getSimpleName();
 
-    private HomeContract.Presenter mPresenter;
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
+    private AdvancedContract.Presenter mPresenter;
+    public static AdvancedFragment newInstance() {
+        return new AdvancedFragment();
     }
 
     @Override
-    public void setPresenter(HomeContract.Presenter presenter) {
+    public void setPresenter(AdvancedContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.home_frag, container, false);
+        View root = inflater.inflate(R.layout.advanced_frag, container, false);
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
