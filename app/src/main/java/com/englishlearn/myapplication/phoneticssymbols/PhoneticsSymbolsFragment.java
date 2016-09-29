@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,8 +20,6 @@ import com.englishlearn.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.data;
 
 
 /**
@@ -86,16 +85,17 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
         View root = inflater.inflate(R.layout.phoneticssymbols_frag, container, false);
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
-        final LinearLayoutManager listview = new LinearLayoutManager(this.getContext());
+        final LinearLayoutManager mgrlistview = new LinearLayoutManager(this.getContext());
         //VERTICAL纵向，类似ListView，HORIZONTAL<span style="font-family: Arial, Helvetica, sans-serif;">横向，类似Gallery</span>
-        listview.setOrientation(LinearLayoutManager.VERTICAL);
+        mgrlistview.setOrientation(LinearLayoutManager.VERTICAL);
 
         //GridLayout 3列
         GridLayoutManager mgrgridview=new GridLayoutManager(this.getContext(),3);
 
-        recyclerView.setLayoutManager(mgrgridview);
+        recyclerView.setLayoutManager(mgrlistview);
 
-        final PhoneticssAdapter phoneticssAdapter = new PhoneticssAdapter(new OnItemClickListener(){
+        final PhoneticssAdapter phoneticssAdapter = new PhoneticssAdapter();
+        phoneticssAdapter.setOnItemClickListener(new OnItemClickListener(){
 
             @Override
             public void onItemClick(View view, int position) {
@@ -141,27 +141,31 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
         private OnItemClickListener onItemClickListener = null;
 
-        public PhoneticssAdapter(OnItemClickListener mOnItemClickListener) {
-            this.onItemClickListener = mOnItemClickListener;
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
         }
 
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             //View v = getLayoutInflater().inflate(R.layout.recycler_item, null);
-            View v =  ((LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.phoneticssymbolsitem, null);
+
+            View v =  LayoutInflater.from(parent.getContext()).inflate(R.layout.phoneticssymbolsitem, parent, false);
             return new ViewHolder(v);
         }
 
         //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+            Log.d(TAG,"onBindViewHolder" + position);
             holder.textView.setText(phonetics.get(position));
-            holder.onCLick(new View.OnClickListener() {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, phonetics.get(position), Toast.LENGTH_LONG).show();
-                    //onItemClickListener.onItemClick(view,PhoneticssAdapter.this.getP);
+                public void onClick(View v) {
+                    if(onItemClickListener != null){
+                        onItemClickListener.onItemClick(holder.itemView,position);
+                    }
                 }
             });
         }
@@ -173,31 +177,18 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-            View view;
+        class ViewHolder extends RecyclerView.ViewHolder {
             TextView textView;
+
             public ViewHolder(View itemView) {
                 super(itemView);
-                itemView.setOnClickListener(this);
-                view = itemView;
-                textView = (TextView) itemView.findViewById(R.id.phonetics);
-            }
-
-            public void onCLick(View.OnClickListener onClickListener){
-                view.setOnClickListener(onClickListener);
-            }
-
-            @Override
-            public void onClick(View view) {
-                if(onItemClickListener != null){
-                    onItemClickListener.onItemClick(view,getPosition());
-                }
+                textView = (TextView) itemView.findViewById(R.id.phonetics_name);
             }
         }
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view , int position);
+        void onItemClick(View view , int position);
     }
 
 }

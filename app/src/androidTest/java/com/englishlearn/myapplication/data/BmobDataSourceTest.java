@@ -1,44 +1,14 @@
 package com.englishlearn.myapplication.data;
 
-import android.support.test.espresso.core.deps.guava.util.concurrent.ListeningExecutorService;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
+import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateGroupRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroup;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractate;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroup;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroup;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupResult;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -46,19 +16,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-import rx.Observable;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
@@ -72,10 +36,12 @@ public class BmobDataSourceTest {
 
     private static final String TAG = BmobDataSourceTest.class.getSimpleName();
     private RemoteData mBmobRemoteData;
+    private Context context;
 
     @Before
     public void setup() {
         mBmobRemoteData = BmobDataSource.getInstance();
+        context = InstrumentationRegistry.getTargetContext();
     }
 
     @After
@@ -86,6 +52,135 @@ public class BmobDataSourceTest {
     @Test
     public void testPreConditions() {
         assertNotNull(mBmobRemoteData);
+    }
+
+    /**
+     * 音标数据库初始化,增加音标
+     */
+    @Test
+    public void testAddPhoneticsSymbols() throws IOException {
+
+        List<PhoneticsSymbols> phoneticsSymbolses = new ArrayList<>();
+
+        InputStream inputStream = context.getResources().openRawResource(R.raw.phoneticssymbols);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        boolean isvowel = false;
+
+        String line;
+
+        while ((line = bufferedReader.readLine()) != null){
+
+            if(!line.startsWith("#") && !line.equals("")){
+                if(line.contains("p")){
+                    isvowel = true;
+                }
+                PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
+                //判断是否有美英
+                String[] names = line.split("\\s+");
+                String ipaname;
+                String kkname;
+                if(names.length > 1){
+                    ipaname = names[0];
+                    kkname = names[1];
+                }else {
+                    ipaname = line;
+                    kkname = line;
+                }
+                phoneticsSymbols.setIpaname(ipaname);
+                phoneticsSymbols.setKkname(kkname);
+                phoneticsSymbols.setIsvowel(isvowel ? 1 : 0);
+                phoneticsSymbolses.add(phoneticsSymbols);
+
+            }
+        }
+        Log.d(TAG,phoneticsSymbolses.size()+"");
+        Log.d(TAG,phoneticsSymbolses.toString());
+        //48个音标
+
+        Log.d(TAG,"aaaa");
+
+        //添加　
+       /* Log.d(TAG,"testPhoneticsSymbols_add");
+        phoneticssymbols addphoneticsSymbols = new phoneticssymbols();
+        addphoneticsSymbols.setIpaname("88890");
+        TestSubscriber<phoneticssymbols> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addPhoneticsSymbols(addphoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        Thread thread = testSubscriber_add.getLastSeenThread();
+        Log.d(TAG,"testPhoneticsSymbols_add_thread:" + thread.getIpaname());
+        List<phoneticssymbols> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list == null || list.size() == 0){
+            return;
+        }
+        phoneticssymbols phoneticsSymbols = list.get(0);
+        Log.d(TAG,"testPhoneticsSymbols_add_result:" + phoneticsSymbols.toString());*/
+    }
+
+
+    @Test
+    public void testPhoneticsSymbols() {
+        //添加　
+        Log.d(TAG,"testPhoneticsSymbols_add");
+        PhoneticsSymbols addphoneticsSymbols = new PhoneticsSymbols();
+        addphoneticsSymbols.setIpaname("88890");
+        TestSubscriber<PhoneticsSymbols> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addPhoneticsSymbols(addphoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        Thread thread = testSubscriber_add.getLastSeenThread();
+        Log.d(TAG,"testPhoneticsSymbols_add_thread:" + thread.getName());
+        List<PhoneticsSymbols> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list == null || list.size() == 0){
+            return;
+        }
+        PhoneticsSymbols phoneticsSymbols = list.get(0);
+        Log.d(TAG,"testPhoneticsSymbols_add_result:" + phoneticsSymbols.toString());
+        //修改
+        phoneticsSymbols.setIpaname("8890new");
+        Log.d(TAG,"testPhoneticsSymbols_update");
+        TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
+        mBmobRemoteData.updatePhoneticsSymbolsRxById(phoneticsSymbols).toBlocking().subscribe(testSubscriber_update);
+        testSubscriber_update.assertNoErrors();
+        List<Boolean> listupdate = testSubscriber_update.getOnNextEvents();
+        if(listupdate != null && listupdate.size() > 0){
+            Log.d(TAG,"testPhoneticsSymbols_update"+"success");
+        }
+        //根据Id获取信息来源　
+        Log.d(TAG,"testPhoneticsSymbols_byId");
+        TestSubscriber<PhoneticsSymbols> testSubscriber_getById = new TestSubscriber<>();
+        mBmobRemoteData.getPhoneticsSymbolsRxById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_getById);
+        testSubscriber_getById.assertNoErrors();
+        List<PhoneticsSymbols> listbyid = testSubscriber_getById.getOnNextEvents();
+        PhoneticsSymbols mPhoneticsSymbolsById = null;
+        if(listbyid != null && listbyid.size() > 0){
+            mPhoneticsSymbolsById = listbyid.get(0);
+        }
+        Log.d(TAG,"testPhoneticsSymbols_byId_result:" + mPhoneticsSymbolsById.toString());
+
+        //获取所有信息来源　
+        Log.d(TAG,"testPhoneticsSymbols_all");
+        TestSubscriber<List<PhoneticsSymbols>> testSubscriber_getall = new TestSubscriber<>();
+        mBmobRemoteData.getPhoneticsSymbolsRx().toBlocking().subscribe(testSubscriber_getall);
+        testSubscriber_getById.assertNoErrors();
+        List<List<PhoneticsSymbols>> listall = testSubscriber_getall.getOnNextEvents();
+        List<PhoneticsSymbols> msSourceall = null;
+        if(listall != null && listall.size() > 0){
+            msSourceall = listall.get(0);
+        }
+        Log.d(TAG,"testPhoneticsSymbols_all_resultSize:" + msSourceall.size());
+        Log.d(TAG,"testPhoneticsSymbols_all_result:" + msSourceall.toString());
+
+        //删除指定的信息来源　
+        Log.d(TAG,"testPhoneticsSymbols_deleteById");
+        TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.deletePhoneticsSymbolsById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        testSubscriber_deleteById.assertNoErrors();
+        List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
+        if(listdeleteById != null && listdeleteById.size() > 0){
+            Log.d(TAG,"testPhoneticsSymbols_deleteById"+"success");
+        }
     }
 
     @Test

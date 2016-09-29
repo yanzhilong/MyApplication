@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.MsSource;
+import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
@@ -840,6 +841,192 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<PhoneticsSymbols> addPhoneticsSymbols(PhoneticsSymbols phoneticsSymbols) {
+        final BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest = new BmobCreatePhoneticsSymbolsRequest();
+
+        bmobCreatePhoneticsSymbolsRequest.setPhoneticsSymbolsId(phoneticsSymbols.getPhoneticsSymbolsId());
+        bmobCreatePhoneticsSymbolsRequest.setIpaname(phoneticsSymbols.getIpaname());
+        bmobCreatePhoneticsSymbolsRequest.setKkname(phoneticsSymbols.getKkname());
+        bmobCreatePhoneticsSymbolsRequest.setSoundurl(phoneticsSymbols.getSoundurl());
+        bmobCreatePhoneticsSymbolsRequest.setVideourl(phoneticsSymbols.getVideourl());
+        bmobCreatePhoneticsSymbolsRequest.setContent(phoneticsSymbols.getContent());
+        bmobCreatePhoneticsSymbolsRequest.setIsvowel(phoneticsSymbols.getIsvowel());
+
+        return bmobService.addPhoneticsSymbols(bmobCreatePhoneticsSymbolsRequest)
+                .flatMap(new Func1<Response<BmobPhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
+                    @Override
+                    public Observable<PhoneticsSymbols> call(Response<BmobPhoneticsSymbols> bmobPhoneticsSymbolsResponse) {
+                        Log.d(TAG,"addPhoneticsSymbols->call" + Thread.currentThread().getName());
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobPhoneticsSymbolsResponse.isSuccessful()){
+
+                            BmobPhoneticsSymbols bmobPhoneticsSymbols = bmobPhoneticsSymbolsResponse.body();
+                            PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
+
+                            phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
+                            phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
+                            phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
+                            phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
+                            phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
+                            phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
+                            phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
+
+                            return Observable.just(phoneticsSymbols);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobPhoneticsSymbolsResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<PhoneticsSymbols>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> deletePhoneticsSymbolsById(String phoneticsSymbolsId) {
+        return bmobService.deletePhoneticsSymbolsById(phoneticsSymbolsId)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> updatePhoneticsSymbolsRxById(PhoneticsSymbols phoneticsSymbols) {
+
+        final BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest = new BmobCreatePhoneticsSymbolsRequest();
+        bmobCreatePhoneticsSymbolsRequest.setPhoneticsSymbolsId(phoneticsSymbols.getPhoneticsSymbolsId());
+        bmobCreatePhoneticsSymbolsRequest.setIpaname(phoneticsSymbols.getIpaname());
+        bmobCreatePhoneticsSymbolsRequest.setKkname(phoneticsSymbols.getKkname());
+        bmobCreatePhoneticsSymbolsRequest.setSoundurl(phoneticsSymbols.getSoundurl());
+        bmobCreatePhoneticsSymbolsRequest.setVideourl(phoneticsSymbols.getVideourl());
+        bmobCreatePhoneticsSymbolsRequest.setContent(phoneticsSymbols.getContent());
+        bmobCreatePhoneticsSymbolsRequest.setIsvowel(phoneticsSymbols.getIsvowel());
+
+        return bmobService.updatePhoneticsSymbolsRxById(phoneticsSymbols.getId(),bmobCreatePhoneticsSymbolsRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(createuser.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<PhoneticsSymbols> getPhoneticsSymbolsRxById(String phoneticsSymbolsId) {
+        return bmobService.getPhoneticsSymbolsRxById(phoneticsSymbolsId)
+                .flatMap(new Func1<Response<BmobPhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
+                    @Override
+                    public Observable<PhoneticsSymbols> call(Response<BmobPhoneticsSymbols> bmobPhoneticsSymbolsResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobPhoneticsSymbolsResponse.isSuccessful()){
+
+                            BmobPhoneticsSymbols bmobPhoneticsSymbols = bmobPhoneticsSymbolsResponse.body();
+                            PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
+
+                            phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
+                            phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
+                            phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
+                            phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
+                            phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
+                            phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
+                            phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
+
+                            return Observable.just(phoneticsSymbols);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobPhoneticsSymbolsResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<PhoneticsSymbols>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<PhoneticsSymbols>> getPhoneticsSymbolsRx() {
+        return bmobService.getPhoneticsSymbolsRx()
+                .flatMap(new Func1<Response<BmobPhoneticsSymbolsResult>, Observable<List<PhoneticsSymbols>>>() {
+                    @Override
+                    public Observable<List<PhoneticsSymbols>> call(Response<BmobPhoneticsSymbolsResult> bmobPhoneticsSymbolsResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobPhoneticsSymbolsResultResponse.isSuccessful()){
+                            BmobPhoneticsSymbolsResult bmobPhoneticsSymbolsResult = bmobPhoneticsSymbolsResultResponse.body();
+
+                            List<BmobPhoneticsSymbols> bmobPhoneticsSymbolses = bmobPhoneticsSymbolsResult.getResults();
+                            List<PhoneticsSymbols> phoneticsSymbolses = new ArrayList<>();
+
+                            for(BmobPhoneticsSymbols bmobPhoneticsSymbols:bmobPhoneticsSymbolses){
+                                PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
+
+                                phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
+                                phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
+                                phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
+                                phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
+                                phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
+                                phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
+                                phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
+                                phoneticsSymbolses.add(phoneticsSymbols);
+                            }
+                            return Observable.just(phoneticsSymbolses);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobPhoneticsSymbolsResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<PhoneticsSymbols>>applySchedulers());
+    }
+
+    @Override
     public Observable<MsSource> addMssource(MsSource msSource) {
 
         final BmobCreateMsSourceRequest bmobCreateMsSourceRequest = new BmobCreateMsSourceRequest();
@@ -874,7 +1061,7 @@ public class BmobDataSource implements RemoteData {
                         }
                         return Observable.error(bmobRequestException);
                     }
-                });
+                }).compose(RxUtil.<MsSource>applySchedulers());
 
     }
 

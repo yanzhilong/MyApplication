@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.MsSource;
+import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
@@ -16,26 +17,10 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -175,6 +160,43 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<Boolean> smsCodeVerify(String smsCode,String mobile);
+
+    //音标模块
+    //*****************************************************************************
+    /**
+     * 增加音标
+     * @param phoneticsSymbols
+     * @return
+     */
+    Observable<PhoneticsSymbols> addPhoneticsSymbols(PhoneticsSymbols phoneticsSymbols);
+
+    /**
+     * 删除音标
+     * @param phoneticsSymbolsId
+     * @return
+     */
+    Observable<Boolean> deletePhoneticsSymbolsById(String phoneticsSymbolsId);
+
+    /**
+     * 修改音标
+     * @param phoneticsSymbols
+     * @return
+     */
+    Observable<Boolean> updatePhoneticsSymbolsRxById(PhoneticsSymbols phoneticsSymbols);
+
+    /**
+     * 根据id获取音标
+     * @param phoneticsSymbolsId
+     * @return
+     */
+    Observable<PhoneticsSymbols> getPhoneticsSymbolsRxById(String phoneticsSymbolsId);
+
+
+    /**
+     * 获取所有音标
+     * @return
+     */
+    Observable<List<PhoneticsSymbols>> getPhoneticsSymbolsRx();
 
 
     //信息来源模块
