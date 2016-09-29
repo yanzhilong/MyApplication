@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.data.source.remote;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
+import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
@@ -198,6 +199,50 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<PhoneticsSymbols>> getPhoneticsSymbolsRx();
 
+    //音标关联单词模块
+    //*****************************************************************************
+    /**
+     * 增加音标关联单词
+     * @param phoneticsWords
+     * @return
+     */
+    Observable<PhoneticsWords> addPhoneticsWords(PhoneticsWords phoneticsWords);
+
+    /**
+     * 删除音标关联单词
+     * @param phoneticsWordsId
+     * @return
+     */
+    Observable<Boolean> deletePhoneticsWordsById(String phoneticsWordsId);
+
+    /**
+     * 修改音标关联单词
+     * @param phoneticsWords
+     * @return
+     */
+    Observable<Boolean> updatePhoneticsWordsRxById(PhoneticsWords phoneticsWords);
+
+    /**
+     * 根据id获取音标关联单词
+     * @param phoneticsWordsId
+     * @return
+     */
+    Observable<PhoneticsWords> getPhoneticsWordsRxById(String phoneticsWordsId);
+
+
+    /**
+     * 根据音标id获取单词收藏分组
+     * @param phoneticsWordsId
+     * @return
+     */
+    Observable<PhoneticsWords> getPhoneticsWordsRxByPhoneticsId(String phoneticsWordsId);
+
+
+    /**
+     * 获取所有音标关联单词
+     * @return
+     */
+    Observable<List<PhoneticsWords>> getPhoneticsWordsRx();
 
     //信息来源模块
     //*****************************************************************************

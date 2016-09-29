@@ -1,12 +1,13 @@
 package com.englishlearn.myapplication.data;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * 音标类
  * Created by yanzl on 16-9-29.
  */
-public class PhoneticsSymbols {
+public class PhoneticsSymbols implements Serializable{
 
     private String id;
     private String phoneticsSymbolsId;//唯一Id

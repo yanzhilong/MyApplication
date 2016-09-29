@@ -97,25 +97,99 @@ public class BmobDataSourceTest {
         Log.d(TAG,phoneticsSymbolses.size()+"");
         Log.d(TAG,phoneticsSymbolses.toString());
         //48个音标
+        for(PhoneticsSymbols phoneticsSymbols : phoneticsSymbolses){
+            TestSubscriber<PhoneticsSymbols> testSubscriber_add = new TestSubscriber<>();
+            mBmobRemoteData.addPhoneticsSymbols(phoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
+            testSubscriber_add.assertNoErrors();
+            Thread thread = testSubscriber_add.getLastSeenThread();
+            Log.d(TAG,"testPhoneticsSymbols_add_thread:" + thread.getName());
+            List<PhoneticsSymbols> list = testSubscriber_add.getOnNextEvents();
+            Assert.assertNotNull(list);
+            if(list == null || list.size() == 0){
+                return;
+            }
+            PhoneticsSymbols p = list.get(0);
+            Log.d(TAG,"testPhoneticsSymbols_add_result:" + p.toString());
+        }
+    }
 
-        Log.d(TAG,"aaaa");
-
+    @Test
+    public void testPhoneticsWords() {
         //添加　
-       /* Log.d(TAG,"testPhoneticsSymbols_add");
-        phoneticssymbols addphoneticsSymbols = new phoneticssymbols();
-        addphoneticsSymbols.setIpaname("88890");
-        TestSubscriber<phoneticssymbols> testSubscriber_add = new TestSubscriber<>();
-        mBmobRemoteData.addPhoneticsSymbols(addphoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
+        Log.d(TAG,"testPhoneticsWords_add");
+        PhoneticsWords addphoneticsSymbols = new PhoneticsWords();
+        addphoneticsSymbols.setWordgroupId("88890");
+        addphoneticsSymbols.setPhoneticsSymbolsId("123");
+        TestSubscriber<PhoneticsWords> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addPhoneticsWords(addphoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
         testSubscriber_add.assertNoErrors();
         Thread thread = testSubscriber_add.getLastSeenThread();
-        Log.d(TAG,"testPhoneticsSymbols_add_thread:" + thread.getIpaname());
-        List<phoneticssymbols> list = testSubscriber_add.getOnNextEvents();
+        Log.d(TAG,"testPhoneticsWords_add_thread:" + thread.getName());
+        List<PhoneticsWords> list = testSubscriber_add.getOnNextEvents();
         Assert.assertNotNull(list);
         if(list == null || list.size() == 0){
             return;
         }
-        phoneticssymbols phoneticsSymbols = list.get(0);
-        Log.d(TAG,"testPhoneticsSymbols_add_result:" + phoneticsSymbols.toString());*/
+        PhoneticsWords phoneticsSymbols = list.get(0);
+        Log.d(TAG,"testPhoneticsWords_add_result:" + phoneticsSymbols.toString());
+        //修改
+        phoneticsSymbols.setWordgroupId("8890new");
+        Log.d(TAG,"testPhoneticsWords_update");
+        TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
+        mBmobRemoteData.updatePhoneticsWordsRxById(phoneticsSymbols).toBlocking().subscribe(testSubscriber_update);
+        testSubscriber_update.assertNoErrors();
+        List<Boolean> listupdate = testSubscriber_update.getOnNextEvents();
+        if(listupdate != null && listupdate.size() > 0){
+            Log.d(TAG,"testPhoneticsWords_update"+"success");
+        }
+        //根据Id获取信息来源　
+        Log.d(TAG,"testPhoneticsWords_byId");
+        TestSubscriber<PhoneticsWords> testSubscriber_getById = new TestSubscriber<>();
+        mBmobRemoteData.getPhoneticsWordsRxById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_getById);
+        testSubscriber_getById.assertNoErrors();
+        List<PhoneticsWords> listbyid = testSubscriber_getById.getOnNextEvents();
+        PhoneticsWords mPhoneticsSymbolsById = null;
+        if(listbyid != null && listbyid.size() > 0){
+            mPhoneticsSymbolsById = listbyid.get(0);
+        }
+        Log.d(TAG,"testPhoneticsWords_byId_result:" + mPhoneticsSymbolsById.toString());
+
+        //根据Id获取信息来源　
+        Log.d(TAG,"testPhoneticsWords_byId");
+        TestSubscriber<PhoneticsWords> testSubscriber_getById1 = new TestSubscriber<>();
+        mBmobRemoteData.getPhoneticsWordsRxByPhoneticsId(mPhoneticsSymbolsById.getPhoneticsSymbolsId()).toBlocking().subscribe(testSubscriber_getById1);
+        testSubscriber_getById.assertNoErrors();
+        List<PhoneticsWords> listbyid1 = testSubscriber_getById.getOnNextEvents();
+        PhoneticsWords mPhoneticsSymbolsById1 = null;
+        if(listbyid != null && listbyid.size() > 0){
+            mPhoneticsSymbolsById1 = listbyid1.get(0);
+        }
+        Log.d(TAG,"testPhoneticsWords_byId_result:" + mPhoneticsSymbolsById1.toString());
+
+
+
+        //获取所有信息来源　
+        Log.d(TAG,"testPhoneticsWords_all");
+        TestSubscriber<List<PhoneticsWords>> testSubscriber_getall = new TestSubscriber<>();
+        mBmobRemoteData.getPhoneticsWordsRx().toBlocking().subscribe(testSubscriber_getall);
+        testSubscriber_getById.assertNoErrors();
+        List<List<PhoneticsWords>> listall = testSubscriber_getall.getOnNextEvents();
+        List<PhoneticsWords> msSourceall = null;
+        if(listall != null && listall.size() > 0){
+            msSourceall = listall.get(0);
+        }
+        Log.d(TAG,"testPhoneticsWords_all_resultSize:" + msSourceall.size());
+        Log.d(TAG,"testPhoneticsWords_all_result:" + msSourceall.toString());
+
+        //删除指定的信息来源　
+        Log.d(TAG,"testPhoneticsWords_deleteById");
+        TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.deletePhoneticsWordsById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        testSubscriber_deleteById.assertNoErrors();
+        List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
+        if(listdeleteById != null && listdeleteById.size() > 0){
+            Log.d(TAG,"testPhoneticsWords_deleteById"+"success");
+        }
     }
 
 

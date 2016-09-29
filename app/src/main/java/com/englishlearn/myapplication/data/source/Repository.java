@@ -19,6 +19,7 @@ package com.englishlearn.myapplication.data.source;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
+import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
@@ -178,6 +179,36 @@ public class Repository implements DataSource,RemoteData,LocalData {
 
     @Override
     public Observable<List<PhoneticsSymbols>> getPhoneticsSymbolsRx() {
+        return mBmobDataSource.getPhoneticsSymbolsRx();
+    }
+
+    @Override
+    public Observable<PhoneticsWords> addPhoneticsWords(PhoneticsWords phoneticsWords) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deletePhoneticsWordsById(String phoneticsWordsId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updatePhoneticsWordsRxById(PhoneticsWords phoneticsWords) {
+        return null;
+    }
+
+    @Override
+    public Observable<PhoneticsWords> getPhoneticsWordsRxById(String phoneticsWordsId) {
+        return null;
+    }
+
+    @Override
+    public Observable<PhoneticsWords> getPhoneticsWordsRxByPhoneticsId(String phoneticsWordsId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<PhoneticsWords>> getPhoneticsWordsRx() {
         return null;
     }
 

@@ -13,10 +13,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.PhoneticsSymbols;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +31,10 @@ import java.util.List;
 public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbolsContract.View {
 
     private static final String TAG = PhoneticsSymbolsFragment.class.getSimpleName();
-    private List<String> phonetics;
+    private List<PhoneticsSymbols> phonetics;
     private PhoneticsSymbolsContract.Presenter mPresenter;
     private Context mContext;
+    private PhoneticssAdapter phoneticssAdapter;
 
     public static PhoneticsSymbolsFragment newInstance() {
         return new PhoneticsSymbolsFragment();
@@ -45,6 +48,8 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        phonetics = new ArrayList<>();
+        mPresenter = new PhoneticsSymbolsPresenter(this);
     }
 
     @Nullable
@@ -53,54 +58,23 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
         super.onCreateView(inflater, container, savedInstanceState);
         mContext = inflater.getContext();
 
-        phonetics = new ArrayList<>();
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-        phonetics.add("123");
-        phonetics.add("1234");
-        phonetics.add("1235");
-
         View root = inflater.inflate(R.layout.phoneticssymbols_frag, container, false);
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
         final LinearLayoutManager mgrlistview = new LinearLayoutManager(this.getContext());
         //VERTICAL纵向，类似ListView，HORIZONTAL<span style="font-family: Arial, Helvetica, sans-serif;">横向，类似Gallery</span>
         mgrlistview.setOrientation(LinearLayoutManager.VERTICAL);
-
         //GridLayout 3列
         GridLayoutManager mgrgridview=new GridLayoutManager(this.getContext(),3);
-
         recyclerView.setLayoutManager(mgrlistview);
-
-        final PhoneticssAdapter phoneticssAdapter = new PhoneticssAdapter();
-        phoneticssAdapter.setOnItemClickListener(new OnItemClickListener(){
+        phoneticssAdapter = new PhoneticssAdapter(phonetics);
+        phoneticssAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(mContext, phonetics.get(position), Toast.LENGTH_LONG).show();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(mContext, phonetics.get(i).toString(), Toast.LENGTH_LONG).show();
             }
+
         });
         //设置适配器
         recyclerView.setAdapter(phoneticssAdapter);
@@ -123,6 +97,7 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.getPhoneticsSymbols();
     }
 
     @Override
@@ -136,13 +111,38 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void showPhoneticsSymbols(List<PhoneticsSymbols> list) {
+        phonetics.clear();
+        phonetics.addAll(list);
+        phoneticssAdapter.replaceData(list);
+    }
+
+    @Override
+    public void showPhoneticsSymbolsFail() {
+        Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+    }
+
     private class PhoneticssAdapter extends RecyclerView.Adapter<PhoneticssAdapter.ViewHolder>{
 
+        private List<PhoneticsSymbols> phonetics;
 
-        private OnItemClickListener onItemClickListener = null;
+        private AdapterView.OnItemClickListener onItemClickListener = null;
 
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        public PhoneticssAdapter(List<PhoneticsSymbols> phonetics) {
+            this.phonetics = phonetics;
+        }
+
+        public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
+        }
+
+        public void replaceData(List<PhoneticsSymbols> phonetics){
+            if(phonetics != null){
+                this.phonetics.clear();
+                this.phonetics.addAll(phonetics);
+                notifyDataSetChanged();
+            }
         }
 
         //该方法返回是ViewHolder，当有可复用View时，就不再调用
@@ -158,13 +158,13 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             Log.d(TAG,"onBindViewHolder" + position);
-            holder.textView.setText(phonetics.get(position));
+            holder.textView.setText(phonetics.get(position).getIpaname());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(onItemClickListener != null){
-                        onItemClickListener.onItemClick(holder.itemView,position);
+                        onItemClickListener.onItemClick(null,holder.itemView,position,0);
                     }
                 }
             });
@@ -185,10 +185,6 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
                 textView = (TextView) itemView.findViewById(R.id.phonetics_name);
             }
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view , int position);
     }
 
 }

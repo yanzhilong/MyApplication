@@ -1,9 +1,11 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
+import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreatePhoneticsSymbolsRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreatePhoneticsWordsRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupRequest;
@@ -24,6 +26,8 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsSymbols;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsSymbolsResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsWords;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsWordsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollectResult;
@@ -275,6 +279,64 @@ public interface BmobService{
             "Content-Type: application/json"
     })
     Observable<Response<BmobPhoneticsSymbolsResult>> getPhoneticsSymbolsRx();
+
+
+    //音标单词模块****************************************************************************
+
+    //增加音标单词
+    @POST("/1/classes/PhoneticsWords")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<BmobPhoneticsWords>> addPhoneticsWords(@Body BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest);
+
+    //删除音标单词
+    @DELETE("/1/classes/PhoneticsWords/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> deletePhoneticsWordsById(@Path("id") String id);
+
+
+    //修改音标单词
+    @PUT("/1/classes/PhoneticsWords/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json",
+    })
+    Observable<Response<ResponseBody>> updatePhoneticsWordsRxById(@Path("id") String id, @Body BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest);
+
+    //根据id获取音标单词
+    @GET("/1/classes/PhoneticsWords/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<BmobPhoneticsWords>> getPhoneticsWordsRxById(@Path("id") String id);
+
+    //根据音标id获取音标单词
+    @GET("/1/classes/PhoneticsWords/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<BmobPhoneticsWords>> getPhoneticsWordsRxByPhoneticsId(@Query("where")String phoneidticsjson);
+
+
+    //获取所有音标单词
+    @GET("/1/classes/PhoneticsWords")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<BmobPhoneticsWordsResult>> getPhoneticsWordsRx();
+
 
 
     //信息来源模块****************************************************************************

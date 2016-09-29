@@ -96,6 +96,9 @@
     <string name="reload">服务器开小差了，点击重新加载</string>
     <string name="notmore">没有更多了</string>
 
+    <!-- Common -->
+    <string name="common_title">Common</string>
+
     <!-- RegisterUserActivity -->
     <string name="register_title">RegisterUser</string>
     <string name="registersuccess">注册成功</string>
@@ -137,6 +140,9 @@
 
     <!-- UpdateUserActivity -->
     <string name="updateuser_title">UpdateUser</string>
+
+    <!-- PhoneticsSymbols -->
+
 
     <!-- MessageSourceActivity -->
     <string name="messagesource_title">MessageSource</string>
@@ -201,6 +207,7 @@
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>
     <string name="bmoberror">请求服务器出錯:%s</string>
+    <string name="networknotconnected">网络未连接，请检查网络设置</string>
 
 
     <!-- MainActivity -->
