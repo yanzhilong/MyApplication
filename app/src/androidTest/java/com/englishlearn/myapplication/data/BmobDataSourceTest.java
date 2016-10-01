@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -9,6 +10,7 @@ import android.util.Log;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.util.AndroidUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -17,12 +19,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
@@ -382,6 +389,37 @@ public class BmobDataSourceTest {
             Log.d(TAG,"testTractateType_deleteById"+"success");
         }
     }
+
+    //添加单词
+    @Test
+    public void addWord() {
+
+        for(int i = 0; i < 10; i++){
+            Word word = new Word();
+            word.setName("Hello" + i);
+            word.setTranslate("你好" + i);
+            word.setBritish_phonogram("[hə'ləʊ; he-]");
+            word.setBritish_soundurl("https://www.baidu.com/british_word"+ i +".mp3");
+            word.setAmerican_phonogram("[hɛˈlo, hə-]");
+            word.setBritish_soundurl("https://www.baidu.com/american_word"+ i +".mp3");
+            word.setTranslate("哈罗"+i);
+            word.setCorrelation("[ 复数 hellos或helloes 过去式 helloed 过去分词 helloed 现在分词 helloing ]");
+            word.setRemark("备注" + i);
+
+            TestSubscriber<Word> testSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.addWord(word).toBlocking().subscribe(testSubscriber);
+            testSubscriber.assertNoErrors();
+            List<Word> list = testSubscriber.getOnNextEvents();
+            Assert.assertNotNull(list);
+            if(list == null || list.size() == 0){
+                return;
+            }
+            Word wordresult = list.get(0);
+            Log.d(TAG,"testWord_add_result:" + wordresult.toString());
+        }
+
+    }
+
 
     @Test
     public void testWord() {
@@ -1202,6 +1240,24 @@ public class BmobDataSourceTest {
         if(listdeleteById != null && listdeleteById.size() > 0){
             Log.d(TAG,"testTractateCollectType_deleteById"+"success");
         }
+
+    }
+
+    @Test
+    public void testUploadFile(){
+
+        //try {
+            //AndroidUtils.newInstance(context).addFile(R.raw.install,"install.tst",true);
+            File file = new File("/data/data/com.englishlearn.myapplication/files/hello.mp3");
+            TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
+            mBmobRemoteData.uploadFile(file).toBlocking().subscribe(testSubscriber_deleteById);
+            //testSubscriber_deleteById.assertNoErrors();
+        /*} catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
+        // create RequeymRawResource(R.raw.phoneticssymbols,"phoneticssymbols.txt");
 
     }
 

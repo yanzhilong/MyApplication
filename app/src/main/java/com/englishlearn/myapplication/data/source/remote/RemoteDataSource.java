@@ -20,6 +20,7 @@ import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 
+import java.io.File;
 import java.util.List;
 
 import rx.Observable;
@@ -509,6 +510,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId, String tractateGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> uploadFile(File file) {
         return null;
     }
 }

@@ -1,0 +1,8 @@
+* 浏览器
+1. 网上下载：https://www.google.com/intl/en-US/chrome/browser/
+2. dpkg -i <package.deb>
+3. Errors were encountered while processing:
+ google-chrome-stable   
+4. sudo apt-get update
+5. sudo apt-get -f install
+6. double click ...deb

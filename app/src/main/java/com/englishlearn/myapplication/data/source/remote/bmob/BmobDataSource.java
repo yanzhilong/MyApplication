@@ -28,10 +28,14 @@ import com.englishlearn.myapplication.util.SearchUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.Observable;
@@ -3748,5 +3752,26 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<List<TractateCollect>>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> uploadFile(final File file) {
+
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("audio/mp3", file.getName(), requestFile);
+        return bmobService.uploadFile(file.getName(),body)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        if(responseBodyResponse.isSuccessful()) {
+                            return Observable.just(true);
+                        }else{
+                            return Observable.just(false);
+                        }
+                    }
+                });
     }
 }

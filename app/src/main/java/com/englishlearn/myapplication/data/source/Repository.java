@@ -38,6 +38,7 @@ import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
+import java.io.File;
 import java.util.List;
 
 import rx.Observable;
@@ -540,5 +541,10 @@ public class Repository implements DataSource,RemoteData,LocalData {
     @Override
     public Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId, String tractateGroupId, int page, int pageSize) {
         return mBmobDataSource.getTractateCollectRxByUserIdAndTractateGroupId(userId,tractateGroupId,page,pageSize);
+    }
+
+    @Override
+    public Observable<Boolean> uploadFile(File file) {
+        return null;
     }
 }

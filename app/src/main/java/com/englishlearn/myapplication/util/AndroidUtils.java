@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
@@ -73,6 +74,5 @@ public class AndroidUtils {
         InputStream lInputStream = context.openFileInput(targetName);
         return lInputStream;
     }
-
 
 }

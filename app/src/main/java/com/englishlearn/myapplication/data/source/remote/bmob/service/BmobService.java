@@ -63,6 +63,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -70,8 +71,10 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -991,4 +994,14 @@ public interface BmobService{
     })
     Observable<Response<BmobTractateCollectResult>> getTractateCollectRxByUserIdAndTractateGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+    //上传模块****************************************************************************
+
+    @Multipart
+    @POST("/2/files/{fileName}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: audio/mp3"
+    })
+    Observable<Response<ResponseBody>> uploadFile(@Path("fileName") String fileName,@Part MultipartBody.Part file);
 }

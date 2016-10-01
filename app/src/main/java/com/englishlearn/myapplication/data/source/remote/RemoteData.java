@@ -20,6 +20,7 @@ import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 
+import java.io.File;
 import java.util.List;
 
 import rx.Observable;
@@ -790,4 +791,7 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId,String tractateGroupId, int page, int pageSize);
 
+
+    //上传文件
+    Observable<Boolean> uploadFile(File file);
 }
