@@ -1,19 +1,13 @@
 package com.englishlearn.myapplication.data;
 
 
-import com.englishlearn.myapplication.util.TimeUtil;
-
-import java.util.Date;
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  * 用户表
  */
 public class User{
 
-    private String id;//数据庫唯一id
-    private String userId;//唯一Id
+    private String objectId;//数据庫唯一id
     private String username;
     private String password;
     private String sessionToken;//登陆才有
@@ -25,11 +19,14 @@ public class User{
     private String sex;
     private String iconurl;
     private String birthday;
-    private String createDate;
 
-    public User() {
-        userId = UUID.randomUUID().toString();
-        this.createDate = TimeUtil.formatTime(new Date());
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getSessionToken() {
@@ -72,14 +69,6 @@ public class User{
         this.sex = sex;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -102,14 +91,6 @@ public class User{
 
     public void setIconurl(String iconurl) {
         this.iconurl = iconurl;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -136,19 +117,9 @@ public class User{
         this.email = email;
     }
 
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", sessionToken='" + sessionToken + '\'' +
@@ -160,7 +131,6 @@ public class User{
                 ", sex='" + sex + '\'' +
                 ", iconurl='" + iconurl + '\'' +
                 ", birthday='" + birthday + '\'' +
-                ", createDate='" + createDate + '\'' +
                 '}';
     }
 }

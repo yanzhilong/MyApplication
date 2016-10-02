@@ -1,11 +1,14 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
+import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
+import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.WordCollect;
+import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreatePhoneticsSymbolsRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreatePhoneticsWordsRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupRequest;
@@ -14,20 +17,11 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractate
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateGroupRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateTypeRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsSymbols;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsSymbolsResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsWords;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobPhoneticsWordsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollectResult;
@@ -44,24 +38,25 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupR
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateType;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUser;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobUserResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWord;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroup;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetMobile;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetOldPwd;
+import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsSymbolsResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsWordsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.QuerySmsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
+import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
+import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.WordCollectResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.WordGroupResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.WordResult;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -95,7 +90,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobCreateUserResult>> createUserRx(@Body BmobCreateUserRequest bmobRequestUser);
+    Observable<Response<User>> createUserRx(@Body User user);
 
     //注册或登陆用户（手机号+验证码）
     @POST("/1/users")
@@ -104,7 +99,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobUser>> createOrLoginUserByPhoneRx(@Body BmobCreateOrLoginUserByPhoneRequest bmobCreateOrLoginUserByPhoneRequest);
+    Observable<Response<User>> createOrLoginUserByPhoneRx(@Body BmobCreateOrLoginUserByPhoneRequest bmobCreateOrLoginUserByPhoneRequest);
 
     //修改用户
     @PUT("/1/users/{objectId}/")
@@ -113,7 +108,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobUser>> updateUserRx(@Header("X-Bmob-Session-Token") String sessionToken,@Path("objectId")String objectId, @Body BmobCreateUserRequest bmobCreateUserRequest);
+    Observable<Response<User>> updateUserRx(@Header("X-Bmob-Session-Token") String sessionToken,@Path("objectId")String objectId, @Body User user);
 
     //登陆用户(用户名密码)
     @GET("/1/login")
@@ -122,7 +117,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobUser>> loginRx(@Query("username") String username,@Query("password") String password);
+    Observable<Response<User>> loginRx(@Query("username") String username,@Query("password") String password);
 
     //根据Id获取用户
     @GET("/1/users/{id}/")
@@ -130,15 +125,15 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobUser>> getUserByIdRx(@Path("id") String id);
-    
+    Observable<Response<User>> getUserByIdRx(@Path("id") String id);
+
     //根据用户名获取用户,或者邮箱，手机
     @GET("/1/users")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobUserResult>> getUserByNameRx(@Query("where")String usernameJson);
+    Observable<Response<UserResult>> getUserByNameRx(@Query("where")String usernameJson);
 
 
     /**
@@ -239,16 +234,16 @@ public interface BmobService{
     //音标模块****************************************************************************
 
     //增加音标
-    @POST("/1/classes/phoneticssymbols")
+    @POST("/1/classes/PhoneticsSymbols")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobPhoneticsSymbols>> addPhoneticsSymbols(@Body BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest);
+    Observable<Response<PhoneticsSymbols>> addPhoneticsSymbols(@Body PhoneticsSymbols phoneticsSymbols);
 
     //删除音标
-    @DELETE("/1/classes/phoneticssymbols/{id}/")
+    @DELETE("/1/classes/PhoneticsSymbols/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
@@ -258,30 +253,30 @@ public interface BmobService{
 
 
     //修改音标
-    @PUT("/1/classes/phoneticssymbols/{id}/")
+    @PUT("/1/classes/PhoneticsSymbols/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updatePhoneticsSymbolsRxById(@Path("id") String id,@Body BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest);
+    Observable<Response<ResponseBody>> updatePhoneticsSymbolsRxById(@Path("id") String id,@Body PhoneticsSymbols phoneticsSymbols);
 
     //根据id获取音标
-    @GET("/1/classes/phoneticssymbols/{id}/")
+    @GET("/1/classes/PhoneticsSymbols/{id}/")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobPhoneticsSymbols>> getPhoneticsSymbolsRxById(@Path("id") String id);
+    Observable<Response<PhoneticsSymbols>> getPhoneticsSymbolsRxById(@Path("id") String id);
 
     //获取所有音标
-    @GET("/1/classes/phoneticssymbols")
+    @GET("/1/classes/PhoneticsSymbols")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobPhoneticsSymbolsResult>> getPhoneticsSymbolsRx();
+    Observable<Response<PhoneticsSymbolsResult>> getPhoneticsSymbolsRx();
 
 
     //音标单词模块****************************************************************************
@@ -293,7 +288,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobPhoneticsWords>> addPhoneticsWords(@Body BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest);
+    Observable<Response<PhoneticsWords>> addPhoneticsWords(@Body PhoneticsWords phoneticsWords);
 
     //删除音标单词
     @DELETE("/1/classes/PhoneticsWords/{id}/")
@@ -312,7 +307,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updatePhoneticsWordsRxById(@Path("id") String id, @Body BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest);
+    Observable<Response<ResponseBody>> updatePhoneticsWordsRxById(@Path("id") String id, @Body PhoneticsWords phoneticsWords);
 
     //根据id获取音标单词
     @GET("/1/classes/PhoneticsWords/{id}/")
@@ -320,7 +315,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobPhoneticsWords>> getPhoneticsWordsRxById(@Path("id") String id);
+    Observable<Response<PhoneticsWords>> getPhoneticsWordsRxById(@Path("id") String id);
 
     //根据音标id获取音标单词
     @GET("/1/classes/PhoneticsWords/")
@@ -328,7 +323,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobPhoneticsWords>> getPhoneticsWordsRxByPhoneticsId(@Query("where")String phoneidticsjson);
+    Observable<Response<List<PhoneticsWords>>> getPhoneticsWordsRxByPhoneticsId(@Query("where")String phoneidticsjson);
 
 
     //获取所有音标单词
@@ -338,7 +333,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobPhoneticsWordsResult>> getPhoneticsWordsRx();
+    Observable<Response<PhoneticsWordsResult>> getPhoneticsWordsRx();
 
 
 
@@ -444,7 +439,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobWord>> addWord(@Body BmobCreateWordRequest bmobCreateWordRequest);
+    Observable<Response<Word>> addWord(@Body Word word);
 
     //删除单词
     @DELETE("/1/classes/Word/{id}/")
@@ -462,7 +457,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateWordRxById(@Path("id") String id,@Body BmobCreateWordRequest bmobCreateWordRequest);
+    Observable<Response<ResponseBody>> updateWordRxById(@Path("id") String id,@Body Word word);
 
     //根据id获取单词
     @GET("/1/classes/Word/{id}/")
@@ -470,7 +465,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobWord>> getWordRxById(@Path("id") String id);
+    Observable<Response<Word>> getWordRxById(@Path("id") String id);
 
     //根据名称获取单词
     @GET("/1/classes/Word")
@@ -478,8 +473,16 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobWordResult>> getWordRxByName(@Query("where")String wordjson);
+    Observable<Response<WordResult>> getWordRxByName(@Query("where")String wordjson);
 
+    //查询音标关联收藏分组的所有单词
+    //根据名称获取单词
+    @GET("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordResult>> getWordsRxByPhoneticsId(@Query("where")String wordjson);
 
     //句子模块****************************************************************************
 
@@ -687,7 +690,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobWordGroup>> addWordGroup(@Body BmobCreateWordGroupRequest bmobCreateWordGroupRequest);
+    Observable<Response<WordGroup>> addWordGroup(@Body WordGroup wordGroup);
 
     //修改单词收藏分组
     @PUT("/1/classes/WordGroup/{id}/")
@@ -696,7 +699,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateWordGroupRxById(@Path("id") String id,@Body BmobCreateWordGroupRequest bmobCreateWordGroupRequest);
+    Observable<Response<ResponseBody>> updateWordGroupRxById(@Path("id") String id,@Body WordGroup wordGroup);
 
     //删除单词收藏分组
     @DELETE("/1/classes/WordGroup/{id}/")
@@ -712,7 +715,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobWordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<WordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //获取所有公开的单词收藏分组分页展示,按时间降序(从近到远)
     @GET("/1/classes/WordGroup?order=-createdAt")
@@ -720,7 +723,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobWordGroupResult>> getWordGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<WordGroupResult>> getWordGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //根据id获取单词收藏分组
     @GET("/1/classes/WordGroup/{id}/")
@@ -728,7 +731,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobWordGroup>> getWordGroupRxById(@Path("id") String id);
+    Observable<Response<WordGroup>> getWordGroupRxById(@Path("id") String id);
 
     //单词分組收藏模块****************************************************************************
 
@@ -899,7 +902,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobWordCollect>> addWordCollect(@Body BmobCreateWordCollectRequest bmobCreateWordCollectRequest);
+    Observable<Response<WordCollect>> addWordCollect(@Body WordCollect wordCollect);
 
     //删除单词收藏
     @DELETE("/1/classes/WordCollect/{id}/")
@@ -922,7 +925,21 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobWordCollectResult>> getWordCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<WordCollectResult>> getWordCollectRxByUserIdAndWordGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+    /**
+     * 根据单词分組Id获取单词收藏，分页
+     * @param wordgroupIdjson 单词分組Id
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/WordCollect")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordCollectResult>> getWordCollectRxByWordGroupId(@Query("where")String wordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //句子收藏模块****************************************************************************
@@ -1003,5 +1020,5 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: audio/mp3"
     })
-    Observable<Response<ResponseBody>> uploadFile(@Path("fileName") String fileName,@Part MultipartBody.Part file);
+    Observable<Response<UploadFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part file);
 }

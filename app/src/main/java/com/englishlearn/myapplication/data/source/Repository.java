@@ -35,8 +35,8 @@ import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
 import java.util.List;
@@ -74,7 +74,7 @@ public class Repository implements DataSource,RemoteData,LocalData {
 
 
     @Override
-    public Observable<BmobCreateUserResult> register(User user) {
+    public Observable<User> register(User user) {
         return mBmobDataSource.register(user);
     }
 
@@ -205,7 +205,7 @@ public class Repository implements DataSource,RemoteData,LocalData {
 
     @Override
     public Observable<PhoneticsWords> getPhoneticsWordsRxByPhoneticsId(String phoneticsWordsId) {
-        return null;
+        return mBmobDataSource.getPhoneticsWordsRxByPhoneticsId(phoneticsWordsId);
     }
 
     @Override
@@ -514,6 +514,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<WordCollect>> getWordCollectRxByWordGroupId(String wordGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
         return mBmobDataSource.addSentenceCollect(sentenceCollect);
     }
@@ -544,7 +549,7 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
-    public Observable<Boolean> uploadFile(File file) {
+    public Observable<UploadFile> uploadFile(File file) {
         return null;
     }
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 
 import javax.inject.Inject;
@@ -40,7 +39,7 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
     @Override
     void register(User user) {
         this.registerUser = user;
-        Subscription subscription = remoteData.register(user).subscribe(new Subscriber<BmobCreateUserResult>() {
+        Subscription subscription = remoteData.register(user).subscribe(new Subscriber<User>() {
             @Override
             public void onCompleted() {
 
@@ -57,11 +56,11 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
             }
 
             @Override
-            public void onNext(BmobCreateUserResult bmobCreateUserResult) {
+            public void onNext(User user) {
                 Log.d(TAG,"register" + Thread.currentThread().getName());
                 //注册成功
                 mView.registerSuccess();
-                Log.d(TAG,bmobCreateUserResult.toString());
+                Log.d(TAG,user.toString());
             }
         });
         add(subscription);
@@ -235,7 +234,7 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
         if(RegisterUserPresenter.this.user == null){
             return;
         }
-        Subscription subscription = remoteData.pwdResetByOldPwd(RegisterUserPresenter.this.user.getSessionToken(),RegisterUserPresenter.this.user.getId(),oldpwd,newpwd)
+        Subscription subscription = remoteData.pwdResetByOldPwd(RegisterUserPresenter.this.user.getSessionToken(),RegisterUserPresenter.this.user.getObjectId(),oldpwd,newpwd)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {

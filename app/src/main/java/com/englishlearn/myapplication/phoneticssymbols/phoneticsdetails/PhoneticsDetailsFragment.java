@@ -10,9 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
+import com.englishlearn.myapplication.data.Word;
+
+import java.util.List;
 
 
 /**
@@ -23,7 +27,7 @@ public class PhoneticsDetailsFragment extends Fragment implements PhoneticsDetai
     private static final String TAG = PhoneticsDetailsFragment.class.getSimpleName();
 
     private PhoneticsDetailsContract.Presenter mPresenter;
-    private PhoneticsSymbols phoneticsSymbols;
+    private PhoneticsSymbols phoneticsSymbols = null;
 
     public static PhoneticsDetailsFragment newInstance() {
         return new PhoneticsDetailsFragment();
@@ -39,6 +43,7 @@ public class PhoneticsDetailsFragment extends Fragment implements PhoneticsDetai
         super.onCreate(savedInstanceState);
 
         phoneticsSymbols = (PhoneticsSymbols) getArguments().get(PhoneticsDetailsActivity.PHONETICS);
+        Log.d(TAG,phoneticsSymbols.toString());
     }
 
     @Nullable
@@ -56,6 +61,7 @@ public class PhoneticsDetailsFragment extends Fragment implements PhoneticsDetai
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.getWords();
     }
 
     @Override
@@ -80,7 +86,12 @@ public class PhoneticsDetailsFragment extends Fragment implements PhoneticsDetai
     }
 
     @Override
-    public void showWords() {
+    public void showWords(List<Word> list) {
+        Toast.makeText(this.getContext(),list.toString(), Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void showWordsFail() {
+        Toast.makeText(this.getContext(),R.string.networkerror, Toast.LENGTH_SHORT).show();
     }
 }

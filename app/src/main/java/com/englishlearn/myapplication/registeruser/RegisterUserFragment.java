@@ -360,7 +360,7 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
                 userupdate.setEmail(mail);
                 User tmp = mPresenter.getLoginUser();
                 if(tmp != null){
-                    userupdate.setId(tmp.getId());
+                    userupdate.setObjectId(tmp.getObjectId());
                     userupdate.setSessionToken(tmp.getSessionToken());
                     mPresenter.updateuser(userupdate);
                 }

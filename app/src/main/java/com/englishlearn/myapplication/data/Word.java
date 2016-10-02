@@ -1,15 +1,12 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  * 单詞
  */
-public class Word {
+public class Word implements Cloneable{
 
-    private String id;
-    private String wordId;
+    private String objectId;
     private String name;
     private String british_phonogram; //英式发音音标(多个用"|"分割)
     private String british_soundurl; //英式发音(下面同上)
@@ -19,16 +16,12 @@ public class Word {
     private String correlation; //其它相关的（第三人称单数，复数....）
     private String remark; //备注
 
-    public Word() {
-        wordId = UUID.randomUUID().toString();
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getWordId() {
-        return wordId;
-    }
-
-    public void setWordId(String wordId) {
-        this.wordId = wordId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getName() {
@@ -95,19 +88,21 @@ public class Word {
         this.remark = remark;
     }
 
-    public String getId() {
-        return id;
-    }
+    public Object clone(){
 
-    public void setId(String id) {
-        this.id = id;
-    }
+                 Object o=null;
+                 try {
+                         o=super.clone();
+                     } catch (CloneNotSupportedException e) {
+                         e.printStackTrace();
+                     }
+                 return o;
+             }
 
     @Override
     public String toString() {
         return "Word{" +
-                "id='" + id + '\'' +
-                ", wordId='" + wordId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
                 ", british_phonogram='" + british_phonogram + '\'' +
                 ", british_soundurl='" + british_soundurl + '\'' +

@@ -1,36 +1,24 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-29.
  */
 
-public class PhoneticsWords {
+public class PhoneticsWords implements Serializable,Cloneable{
 
-    private String id;
-    private String phoneticswordsId;
+    private String objectId;
     private String phoneticsSymbolsId; //音标Id
     private String wordgroupId;//单词分组Id
 
-    public PhoneticsWords() {
-        phoneticswordsId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPhoneticswordsId() {
-        return phoneticswordsId;
-    }
-
-    public void setPhoneticswordsId(String phoneticswordsId) {
-        this.phoneticswordsId = phoneticswordsId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getPhoneticsSymbolsId() {
@@ -50,10 +38,21 @@ public class PhoneticsWords {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "PhoneticsWords{" +
-                "id='" + id + '\'' +
-                ", phoneticswordsId='" + phoneticswordsId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", phoneticsSymbolsId='" + phoneticsSymbolsId + '\'' +
                 ", wordgroupId='" + wordgroupId + '\'' +
                 '}';

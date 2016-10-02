@@ -1,16 +1,14 @@
 package com.englishlearn.myapplication.data;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * 音标类
  * Created by yanzl on 16-9-29.
  */
-public class PhoneticsSymbols implements Serializable{
+public class PhoneticsSymbols implements Serializable,Cloneable{
 
-    private String id;
-    private String phoneticsSymbolsId;//唯一Id
+    private String objectId;
     private String ipaname; //国际音标（IPA）美英
     private String kkname; //国际音标（KK）英音
     private String soundurl;//读音
@@ -18,24 +16,12 @@ public class PhoneticsSymbols implements Serializable{
     private String content;//发音方法,及相关说明
     private int isvowel;// 1 0
 
-    public PhoneticsSymbols() {
-        phoneticsSymbolsId = UUID.randomUUID().toString();
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getPhoneticsSymbolsId() {
-        return phoneticsSymbolsId;
-    }
-
-    public void setPhoneticsSymbolsId(String phoneticsSymbolsId) {
-        this.phoneticsSymbolsId = phoneticsSymbolsId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getKkname() {
@@ -87,16 +73,14 @@ public class PhoneticsSymbols implements Serializable{
     }
 
     @Override
-    public String toString() {
-        return "PhoneticsSymbols{" +
-                "id='" + id + '\'' +
-                ", phoneticsSymbolsId='" + phoneticsSymbolsId + '\'' +
-                ", ipaname='" + ipaname + '\'' +
-                ", kkname='" + kkname + '\'' +
-                ", soundurl='" + soundurl + '\'' +
-                ", videourl='" + videourl + '\'' +
-                ", content='" + content + '\'' +
-                ", isvowel=" + isvowel +
-                '}';
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 }

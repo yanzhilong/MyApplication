@@ -1,28 +1,24 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-3.
  */
-public class WordGroup {
+public class WordGroup implements Serializable,Cloneable{
 
-    private String id;
-    private String wordgroupId;
+    private String objectId;
     private String open; //是否公开
     private String name; //分组名称
     private String userId; //用户Id
 
-    public WordGroup() {
-        wordgroupId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getOpen() {
@@ -31,14 +27,6 @@ public class WordGroup {
 
     public void setOpen(String open) {
         this.open = open;
-    }
-
-    public String getWordgroupId() {
-        return wordgroupId;
-    }
-
-    public void setWordgroupId(String wordgroupId) {
-        this.wordgroupId = wordgroupId;
     }
 
     public String getName() {
@@ -60,11 +48,22 @@ public class WordGroup {
     @Override
     public String toString() {
         return "WordGroup{" +
-                "id='" + id + '\'' +
-                ", wordgroupId='" + wordgroupId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", open='" + open + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';
+    }
+
+    @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 }

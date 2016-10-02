@@ -389,31 +389,21 @@ public class BmobDataSource implements RemoteData {
     }*/
 
     @Override
-    public Observable<BmobCreateUserResult> register(final User user) {
-        BmobCreateUserRequest bmobCreateUserRequest = new BmobCreateUserRequest();
-        bmobCreateUserRequest.setUserId(user.getUserId());
-        bmobCreateUserRequest.setUsername(user.getUsername());
-        bmobCreateUserRequest.setPassword(user.getPassword());
-        bmobCreateUserRequest.setSex(user.getSex());
-        bmobCreateUserRequest.setMobilePhoneNumber(user.getMobilePhoneNumber());
-        bmobCreateUserRequest.setEmail(user.getEmail());
-        bmobCreateUserRequest.setNickname(user.getNickname());
-        bmobCreateUserRequest.setIconurl(user.getIconurl());
-        bmobCreateUserRequest.setBirthday(user.getBirthday());
-        bmobCreateUserRequest.setCreateDate(user.getCreateDate());
+    public Observable<User> register(final User user) {
 
-        return bmobService.createUserRx(bmobCreateUserRequest).flatMap(new Func1<Response<BmobCreateUserResult>, Observable<BmobCreateUserResult>>() {
+        return bmobService.createUserRx(user).flatMap(new Func1<Response<User>, Observable<User>>() {
             @Override
-            public Observable<BmobCreateUserResult> call(Response<BmobCreateUserResult> bmobCreateUserResultResponse) {
+            public Observable<User> call(Response<User> userResponse) {
                 Log.d(TAG,"register->call" + Thread.currentThread().getName());
+
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.CREATEUSER.getDefauleError().getMessage());
-                if(bmobCreateUserResultResponse.isSuccessful()){
-                    BmobCreateUserResult bmobCreateUserResult = bmobCreateUserResultResponse.body();
-                    return Observable.just(bmobCreateUserResult);
+                if(userResponse.isSuccessful()){
+                    User user = userResponse.body();
+                    return Observable.just(user);
                 }else{
                     Gson gson = new GsonBuilder().create();
                     try {
-                        String errjson =  bmobCreateUserResultResponse.errorBody().string();
+                        String errjson =  userResponse.errorBody().string();
                         BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                         RemoteCode.CREATEUSER createuser = RemoteCode.CREATEUSER.getErrorMessage(bmobDefaultError.getCode());
                         bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -423,42 +413,27 @@ public class BmobDataSource implements RemoteData {
                 }
                 return Observable.error(bmobRequestException);
             }
-        }).compose(RxUtil.<BmobCreateUserResult>applySchedulers());
+        }).compose(RxUtil.<User>applySchedulers());
     }
 
     @Override
     public Observable<User> createOrLoginUserByPhoneRx(String phone, String smscode) {
-        User user = new User();
+
         BmobCreateOrLoginUserByPhoneRequest bmobCreateOrLoginUserByPhoneRequest = new BmobCreateOrLoginUserByPhoneRequest();
         bmobCreateOrLoginUserByPhoneRequest.setMobilePhoneNumber(phone);
-        bmobCreateOrLoginUserByPhoneRequest.setUserId(user.getUserId());
         bmobCreateOrLoginUserByPhoneRequest.setSmsCode(smscode);
 
-        return bmobService.createOrLoginUserByPhoneRx(bmobCreateOrLoginUserByPhoneRequest).flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+        return bmobService.createOrLoginUserByPhoneRx(bmobCreateOrLoginUserByPhoneRequest).flatMap(new Func1<Response<User>, Observable<User>>() {
             @Override
-            public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+            public Observable<User> call(Response<User> userResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.CREATEUSER.getDefauleError().getMessage());
-                if(bmobUserResponse.isSuccessful()){
-                    BmobUser bmobUser = bmobUserResponse.body();
-                    User user = new User();
-                    user.setId(bmobUser.getObjectId());
-                    user.setUserId(bmobUser.getUserId());
-                    user.setUsername(bmobUser.getUsername());
-                    user.setSessionToken(bmobUser.getSessionToken());
-                    user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
-                    user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
-                    user.setEmail(bmobUser.getEmail());
-                    user.setEmailVerified(bmobUser.getEmailVerified());
-                    user.setNickname(bmobUser.getNickname());
-                    user.setSex(bmobUser.getSex());
-                    user.setIconurl(bmobUser.getIconurl());
-                    user.setBirthday(bmobUser.getBirthday());
-                    user.setCreateDate(bmobUser.getCreateDate());
+                if(userResponse.isSuccessful()){
+                    User user = userResponse.body();
                     return Observable.just(user);
                 }else{
                     Gson gson = new GsonBuilder().create();
                     try {
-                        String errjson =  bmobUserResponse.errorBody().string();
+                        String errjson =  userResponse.errorBody().string();
                         BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                         RemoteCode.CREATEUSER createuser = RemoteCode.CREATEUSER.getErrorMessage(bmobDefaultError.getCode());
                         bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -489,31 +464,17 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<User> getUserByIdRx(String id) {
         return bmobService.getUserByIdRx(id)
-                .flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+                .flatMap(new Func1<Response<User>, Observable<User>>() {
                     @Override
-                    public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+                    public Observable<User> call(Response<User> userResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobUserResponse.isSuccessful()){
-                            BmobUser bmobUser = bmobUserResponse.body();
-                            User user = new User();
-                            user.setId(bmobUser.getObjectId());
-                            user.setUserId(bmobUser.getUserId());
-                            user.setUsername(bmobUser.getUsername());
-                            user.setSessionToken(bmobUser.getSessionToken());
-                            user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
-                            user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
-                            user.setEmail(bmobUser.getEmail());
-                            user.setEmailVerified(bmobUser.getEmailVerified());
-                            user.setNickname(bmobUser.getNickname());
-                            user.setSex(bmobUser.getSex());
-                            user.setIconurl(bmobUser.getIconurl());
-                            user.setBirthday(bmobUser.getBirthday());
-                            user.setCreateDate(bmobUser.getCreateDate());
+                        if(userResponse.isSuccessful()){
+                            User user = userResponse.body();
                             return Observable.just(user);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobUserResponse.errorBody().string();
+                                String errjson =  userResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON updateuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(updateuser.getMessage());
@@ -530,30 +491,16 @@ public class BmobDataSource implements RemoteData {
     public Observable<User> getUserByName(String name) {
         String namejson = searchUtil.getUserByNameRegex(name);
         return bmobService.getUserByNameRx(namejson)
-                .flatMap(new Func1<Response<BmobUserResult>, Observable<User>>() {
+                .flatMap(new Func1<Response<UserResult>, Observable<User>>() {
                     @Override
-                    public Observable<User> call(Response<BmobUserResult> bmobUserResultResponse) {
+                    public Observable<User> call(Response<UserResult> userResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobUserResultResponse.isSuccessful()){
-                            BmobUserResult bmobUserResult = bmobUserResultResponse.body();
-                            List<BmobUser> bmobUsers = bmobUserResult.getResults();
-                            if(bmobUsers != null && bmobUsers.size() > 0){
-                                BmobUser bmobUser = bmobUsers.get(0);
-                                
-                                User user = new User();
-                                user.setId(bmobUser.getObjectId());
-                                user.setUserId(bmobUser.getUserId());
-                                user.setUsername(bmobUser.getUsername());
-                                user.setSessionToken(bmobUser.getSessionToken());
-                                user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
-                                user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
-                                user.setEmail(bmobUser.getEmail());
-                                user.setEmailVerified(bmobUser.getEmailVerified());
-                                user.setNickname(bmobUser.getNickname());
-                                user.setSex(bmobUser.getSex());
-                                user.setIconurl(bmobUser.getIconurl());
-                                user.setBirthday(bmobUser.getBirthday());
-                                user.setCreateDate(bmobUser.getCreateDate());
+                        if(userResultResponse.isSuccessful()){
+                            UserResult userResult = userResultResponse.body();
+                            List<User> users = userResult.getResults();
+                            if(users != null && users.size() > 0){
+                                User user = users.get(0);
+
                                 return Observable.just(user);
                             }else{
                                 return Observable.error(new NullPointerException());
@@ -562,7 +509,7 @@ public class BmobDataSource implements RemoteData {
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobUserResultResponse.errorBody().string();
+                                String errjson =  userResultResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -588,31 +535,17 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<User> login(String name, String password) {
         return bmobService.loginRx(name,password)
-                .flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+                .flatMap(new Func1<Response<User>, Observable<User>>() {
                     @Override
-                    public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+                    public Observable<User> call(Response<User> userResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
-                        if(bmobUserResponse.isSuccessful()){
-                            BmobUser bmobUser = bmobUserResponse.body();
-                            User user = new User();
-                            user.setId(bmobUser.getObjectId());
-                            user.setUserId(bmobUser.getUserId());
-                            user.setUsername(bmobUser.getUsername());
-                            user.setSessionToken(bmobUser.getSessionToken());
-                            user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
-                            user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
-                            user.setEmail(bmobUser.getEmail());
-                            user.setEmailVerified(bmobUser.getEmailVerified());
-                            user.setNickname(bmobUser.getNickname());
-                            user.setSex(bmobUser.getSex());
-                            user.setIconurl(bmobUser.getIconurl());
-                            user.setBirthday(bmobUser.getBirthday());
-                            user.setCreateDate(bmobUser.getCreateDate());
+                        if(userResponse.isSuccessful()){
+                            User user = userResponse.body();
                             return Observable.just(user);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobUserResponse.errorBody().string();
+                                String errjson =  userResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.LOGINUSER loginuser = RemoteCode.LOGINUSER.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(loginuser.getMessage());
@@ -628,44 +561,18 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<User> updateUser(User user) {
 
-        BmobCreateUserRequest bmobCreateUserRequest = new BmobCreateUserRequest();
-        bmobCreateUserRequest.setUserId(user.getUserId());
-        bmobCreateUserRequest.setUsername(user.getUsername());
-        bmobCreateUserRequest.setPassword(user.getPassword());
-        bmobCreateUserRequest.setSex(user.getSex());
-        bmobCreateUserRequest.setMobilePhoneNumber(user.getMobilePhoneNumber());
-        bmobCreateUserRequest.setEmail(user.getEmail());
-        bmobCreateUserRequest.setNickname(user.getNickname());
-        bmobCreateUserRequest.setIconurl(user.getIconurl());
-        bmobCreateUserRequest.setBirthday(user.getBirthday());
-        bmobCreateUserRequest.setCreateDate(user.getCreateDate());
-
-        return bmobService.updateUserRx(user.getSessionToken(),user.getId(),bmobCreateUserRequest)
-        .flatMap(new Func1<Response<BmobUser>, Observable<User>>() {
+        return bmobService.updateUserRx(user.getSessionToken(),user.getObjectId(),user)
+        .flatMap(new Func1<Response<User>, Observable<User>>() {
             @Override
-            public Observable<User> call(Response<BmobUser> bmobUserResponse) {
+            public Observable<User> call(Response<User> userResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.PASSWORDRESET.getDefauleError().getMessage());
-                if(bmobUserResponse.isSuccessful()){
-                    BmobUser bmobUser = bmobUserResponse.body();
-                    User user = new User();
-                    user.setId(bmobUser.getObjectId());
-                    user.setUserId(bmobUser.getUserId());
-                    user.setUsername(bmobUser.getUsername());
-                    user.setSessionToken(bmobUser.getSessionToken());
-                    user.setMobilePhoneNumber(bmobUser.getMobilePhoneNumber());
-                    user.setMobilePhoneVerified(bmobUser.getMobilePhoneVerified());
-                    user.setEmail(bmobUser.getEmail());
-                    user.setEmailVerified(bmobUser.getEmailVerified());
-                    user.setNickname(bmobUser.getNickname());
-                    user.setSex(bmobUser.getSex());
-                    user.setIconurl(bmobUser.getIconurl());
-                    user.setBirthday(bmobUser.getBirthday());
-                    user.setCreateDate(bmobUser.getCreateDate());
+                if(userResponse.isSuccessful()){
+                    User user = userResponse.body();
                     return Observable.just(user);
                 }else{
                     Gson gson = new GsonBuilder().create();
                     try {
-                        String errjson =  bmobUserResponse.errorBody().string();
+                        String errjson =  userResponse.errorBody().string();
                         BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                         RemoteCode.UPDATEUSER updateuser = RemoteCode.UPDATEUSER.getErrorMessage(bmobDefaultError.getCode());
                         bmobRequestException = new BmobRequestException(updateuser.getMessage());
@@ -847,40 +754,22 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<PhoneticsSymbols> addPhoneticsSymbols(PhoneticsSymbols phoneticsSymbols) {
-        final BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest = new BmobCreatePhoneticsSymbolsRequest();
 
-        bmobCreatePhoneticsSymbolsRequest.setPhoneticsSymbolsId(phoneticsSymbols.getPhoneticsSymbolsId());
-        bmobCreatePhoneticsSymbolsRequest.setIpaname(phoneticsSymbols.getIpaname());
-        bmobCreatePhoneticsSymbolsRequest.setKkname(phoneticsSymbols.getKkname());
-        bmobCreatePhoneticsSymbolsRequest.setSoundurl(phoneticsSymbols.getSoundurl());
-        bmobCreatePhoneticsSymbolsRequest.setVideourl(phoneticsSymbols.getVideourl());
-        bmobCreatePhoneticsSymbolsRequest.setContent(phoneticsSymbols.getContent());
-        bmobCreatePhoneticsSymbolsRequest.setIsvowel(phoneticsSymbols.getIsvowel());
-
-        return bmobService.addPhoneticsSymbols(bmobCreatePhoneticsSymbolsRequest)
-                .flatMap(new Func1<Response<BmobPhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
+        return bmobService.addPhoneticsSymbols(phoneticsSymbols)
+                .flatMap(new Func1<Response<PhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
                     @Override
-                    public Observable<PhoneticsSymbols> call(Response<BmobPhoneticsSymbols> bmobPhoneticsSymbolsResponse) {
+                    public Observable<PhoneticsSymbols> call(Response<PhoneticsSymbols> phoneticsSymbolsResponse) {
                         Log.d(TAG,"addPhoneticsSymbols->call" + Thread.currentThread().getName());
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsSymbolsResponse.isSuccessful()){
+                        if(phoneticsSymbolsResponse.isSuccessful()){
 
-                            BmobPhoneticsSymbols bmobPhoneticsSymbols = bmobPhoneticsSymbolsResponse.body();
-                            PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
-
-                            phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
-                            phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
-                            phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
-                            phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
-                            phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
-                            phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
-                            phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
+                            PhoneticsSymbols phoneticsSymbols = phoneticsSymbolsResponse.body();
 
                             return Observable.just(phoneticsSymbols);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsSymbolsResponse.errorBody().string();
+                                String errjson =  phoneticsSymbolsResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -921,16 +810,11 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<Boolean> updatePhoneticsSymbolsRxById(PhoneticsSymbols phoneticsSymbols) {
 
-        final BmobCreatePhoneticsSymbolsRequest bmobCreatePhoneticsSymbolsRequest = new BmobCreatePhoneticsSymbolsRequest();
-        bmobCreatePhoneticsSymbolsRequest.setPhoneticsSymbolsId(phoneticsSymbols.getPhoneticsSymbolsId());
-        bmobCreatePhoneticsSymbolsRequest.setIpaname(phoneticsSymbols.getIpaname());
-        bmobCreatePhoneticsSymbolsRequest.setKkname(phoneticsSymbols.getKkname());
-        bmobCreatePhoneticsSymbolsRequest.setSoundurl(phoneticsSymbols.getSoundurl());
-        bmobCreatePhoneticsSymbolsRequest.setVideourl(phoneticsSymbols.getVideourl());
-        bmobCreatePhoneticsSymbolsRequest.setContent(phoneticsSymbols.getContent());
-        bmobCreatePhoneticsSymbolsRequest.setIsvowel(phoneticsSymbols.getIsvowel());
+        String objectId = phoneticsSymbols.getObjectId();
+        PhoneticsSymbols phoneticsSymbols1 = (PhoneticsSymbols) phoneticsSymbols.clone();
+        phoneticsSymbols1.setObjectId(null);
 
-        return bmobService.updatePhoneticsSymbolsRxById(phoneticsSymbols.getId(),bmobCreatePhoneticsSymbolsRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        return bmobService.updatePhoneticsSymbolsRxById(objectId,phoneticsSymbols1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -956,28 +840,19 @@ public class BmobDataSource implements RemoteData {
     public Observable<PhoneticsSymbols> getPhoneticsSymbolsRxById(String phoneticsSymbolsId) {
 
         return bmobService.getPhoneticsSymbolsRxById(phoneticsSymbolsId)
-                .flatMap(new Func1<Response<BmobPhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
+                .flatMap(new Func1<Response<PhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
                     @Override
-                    public Observable<PhoneticsSymbols> call(Response<BmobPhoneticsSymbols> bmobPhoneticsSymbolsResponse) {
+                    public Observable<PhoneticsSymbols> call(Response<PhoneticsSymbols> phoneticsWordsResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsSymbolsResponse.isSuccessful()){
+                        if(phoneticsWordsResponse.isSuccessful()){
 
-                            BmobPhoneticsSymbols bmobPhoneticsSymbols = bmobPhoneticsSymbolsResponse.body();
-                            PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
-
-                            phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
-                            phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
-                            phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
-                            phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
-                            phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
-                            phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
-                            phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
+                            PhoneticsSymbols phoneticsSymbols = phoneticsWordsResponse.body();
 
                             return Observable.just(phoneticsSymbols);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsSymbolsResponse.errorBody().string();
+                                String errjson =  phoneticsWordsResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -993,33 +868,19 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<List<PhoneticsSymbols>> getPhoneticsSymbolsRx() {
         return bmobService.getPhoneticsSymbolsRx()
-                .flatMap(new Func1<Response<BmobPhoneticsSymbolsResult>, Observable<List<PhoneticsSymbols>>>() {
+                .flatMap(new Func1<Response<PhoneticsSymbolsResult>, Observable<List<PhoneticsSymbols>>>() {
                     @Override
-                    public Observable<List<PhoneticsSymbols>> call(Response<BmobPhoneticsSymbolsResult> bmobPhoneticsSymbolsResultResponse) {
+                    public Observable<List<PhoneticsSymbols>> call(Response<PhoneticsSymbolsResult> phoneticsSymbolsResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsSymbolsResultResponse.isSuccessful()){
-                            BmobPhoneticsSymbolsResult bmobPhoneticsSymbolsResult = bmobPhoneticsSymbolsResultResponse.body();
+                        if(phoneticsSymbolsResultResponse.isSuccessful()){
+                            PhoneticsSymbolsResult bmobPhoneticsSymbolsResult = phoneticsSymbolsResultResponse.body();
 
-                            List<BmobPhoneticsSymbols> bmobPhoneticsSymbolses = bmobPhoneticsSymbolsResult.getResults();
-                            List<PhoneticsSymbols> phoneticsSymbolses = new ArrayList<>();
-
-                            for(BmobPhoneticsSymbols bmobPhoneticsSymbols:bmobPhoneticsSymbolses){
-                                PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
-
-                                phoneticsSymbols.setId(bmobPhoneticsSymbols.getObjectId());
-                                phoneticsSymbols.setIpaname(bmobPhoneticsSymbols.getIpaname());
-                                phoneticsSymbols.setKkname(bmobPhoneticsSymbols.getKkname());
-                                phoneticsSymbols.setSoundurl(bmobPhoneticsSymbols.getSoundurl());
-                                phoneticsSymbols.setVideourl(bmobPhoneticsSymbols.getVideourl());
-                                phoneticsSymbols.setContent(bmobPhoneticsSymbols.getContent());
-                                phoneticsSymbols.setIsvowel(bmobPhoneticsSymbols.getIsvowel());
-                                phoneticsSymbolses.add(phoneticsSymbols);
-                            }
+                            List<PhoneticsSymbols> phoneticsSymbolses = bmobPhoneticsSymbolsResult.getResults();
                             return Observable.just(phoneticsSymbolses);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsSymbolsResultResponse.errorBody().string();
+                                String errjson =  phoneticsSymbolsResultResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1034,33 +895,22 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<PhoneticsWords> addPhoneticsWords(PhoneticsWords phoneticsWords) {
-        final BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest = new BmobCreatePhoneticsWordsRequest();
 
-        bmobCreatePhoneticsWordsRequest.setPhoneticswordsId(phoneticsWords.getPhoneticswordsId());
-        bmobCreatePhoneticsWordsRequest.setPhoneticsSymbolsId(phoneticsWords.getPhoneticsSymbolsId());
-        bmobCreatePhoneticsWordsRequest.setWordgroupId(phoneticsWords.getWordgroupId());
-
-        return bmobService.addPhoneticsWords(bmobCreatePhoneticsWordsRequest)
-                .flatMap(new Func1<Response<BmobPhoneticsWords>, Observable<PhoneticsWords>>() {
+        return bmobService.addPhoneticsWords(phoneticsWords)
+                .flatMap(new Func1<Response<PhoneticsWords>, Observable<PhoneticsWords>>() {
                     @Override
-                    public Observable<PhoneticsWords> call(Response<BmobPhoneticsWords> bmobPhoneticsWordsResponse) {
+                    public Observable<PhoneticsWords> call(Response<PhoneticsWords> phoneticsWordsResponse) {
                         Log.d(TAG,"addPhoneticsSymbols->call" + Thread.currentThread().getName());
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsWordsResponse.isSuccessful()){
+                        if(phoneticsWordsResponse.isSuccessful()){
 
-                            BmobPhoneticsWords bmobPhoneticsWords = bmobPhoneticsWordsResponse.body();
-                            PhoneticsWords phoneticsWords = new PhoneticsWords();
-
-                            phoneticsWords.setId(bmobPhoneticsWords.getObjectId());
-                            phoneticsWords.setPhoneticswordsId(bmobPhoneticsWords.getPhoneticswordsId());
-                            phoneticsWords.setPhoneticsSymbolsId(bmobPhoneticsWords.getPhoneticsSymbolsId());
-                            phoneticsWords.setWordgroupId(bmobPhoneticsWords.getWordgroupId());
+                            PhoneticsWords phoneticsWords = phoneticsWordsResponse.body();
 
                             return Observable.just(phoneticsWords);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsWordsResponse.errorBody().string();
+                                String errjson =  phoneticsWordsResponse.errorBody().string();
                                 Log.d(TAG,errjson);
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
@@ -1102,13 +952,11 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<Boolean> updatePhoneticsWordsRxById(PhoneticsWords phoneticsWords) {
 
-        final BmobCreatePhoneticsWordsRequest bmobCreatePhoneticsWordsRequest = new BmobCreatePhoneticsWordsRequest();
+        String objectId = phoneticsWords.getObjectId();
+        PhoneticsWords phoneticsWords1 = (PhoneticsWords) phoneticsWords.clone();
+        phoneticsWords1.setObjectId(null);
 
-        bmobCreatePhoneticsWordsRequest.setPhoneticswordsId(phoneticsWords.getPhoneticswordsId());
-        bmobCreatePhoneticsWordsRequest.setPhoneticsSymbolsId(phoneticsWords.getPhoneticsSymbolsId());
-        bmobCreatePhoneticsWordsRequest.setWordgroupId(phoneticsWords.getWordgroupId());
-
-        return bmobService.updatePhoneticsWordsRxById(phoneticsWords.getId(),bmobCreatePhoneticsWordsRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        return bmobService.updatePhoneticsWordsRxById(objectId,phoneticsWords1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -1134,25 +982,19 @@ public class BmobDataSource implements RemoteData {
     public Observable<PhoneticsWords> getPhoneticsWordsRxById(String phoneticsWordsId) {
 
         return bmobService.getPhoneticsWordsRxById(phoneticsWordsId)
-                .flatMap(new Func1<Response<BmobPhoneticsWords>, Observable<PhoneticsWords>>() {
+                .flatMap(new Func1<Response<PhoneticsWords>, Observable<PhoneticsWords>>() {
                     @Override
-                    public Observable<PhoneticsWords> call(Response<BmobPhoneticsWords> bmobPhoneticsWordsResponse) {
+                    public Observable<PhoneticsWords> call(Response<PhoneticsWords> phoneticsSymbolsResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsWordsResponse.isSuccessful()){
+                        if(phoneticsSymbolsResponse.isSuccessful()){
 
-                            BmobPhoneticsWords bmobPhoneticsWords = bmobPhoneticsWordsResponse.body();
-                            PhoneticsWords phoneticsWords = new PhoneticsWords();
-
-                            phoneticsWords.setId(bmobPhoneticsWords.getObjectId());
-                            phoneticsWords.setPhoneticswordsId(bmobPhoneticsWords.getPhoneticswordsId());
-                            phoneticsWords.setPhoneticsSymbolsId(bmobPhoneticsWords.getPhoneticsSymbolsId());
-                            phoneticsWords.setWordgroupId(bmobPhoneticsWords.getWordgroupId());
+                            PhoneticsWords phoneticsWords = phoneticsSymbolsResponse.body();
 
                             return Observable.just(phoneticsWords);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsWordsResponse.errorBody().string();
+                                String errjson =  phoneticsSymbolsResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1170,25 +1012,22 @@ public class BmobDataSource implements RemoteData {
 
         String regex = searchUtil.getBmobEquals("phoneticsSymbolsId",phoneticsWordsId);
         return bmobService.getPhoneticsWordsRxByPhoneticsId(regex)
-                .flatMap(new Func1<Response<BmobPhoneticsWords>, Observable<PhoneticsWords>>() {
+                .flatMap(new Func1<Response<List<PhoneticsWords>>, Observable<PhoneticsWords>>() {
                     @Override
-                    public Observable<PhoneticsWords> call(Response<BmobPhoneticsWords> bmobPhoneticsWordsResponse) {
+                    public Observable<PhoneticsWords> call(Response<List<PhoneticsWords>> phoneticsWordsResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsWordsResponse.isSuccessful()){
+                        if(phoneticsWordsResponse.isSuccessful()){
 
-                            BmobPhoneticsWords bmobPhoneticsWords = bmobPhoneticsWordsResponse.body();
-                            PhoneticsWords phoneticsWords = new PhoneticsWords();
-
-                            phoneticsWords.setId(bmobPhoneticsWords.getObjectId());
-                            phoneticsWords.setPhoneticswordsId(bmobPhoneticsWords.getPhoneticswordsId());
-                            phoneticsWords.setPhoneticsSymbolsId(bmobPhoneticsWords.getPhoneticsSymbolsId());
-                            phoneticsWords.setWordgroupId(bmobPhoneticsWords.getWordgroupId());
-
-                            return Observable.just(phoneticsWords);
+                            List<PhoneticsWords> phoneticsWordses = phoneticsWordsResponse.body();
+                            if(phoneticsWordses != null && phoneticsWordses.size() > 0){
+                                PhoneticsWords phoneticsWords = phoneticsWordses.get(0);
+                                return Observable.just(phoneticsWords);
+                            }
+                            return Observable.error(new NullPointerException());
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsWordsResponse.errorBody().string();
+                                String errjson =  phoneticsWordsResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1204,31 +1043,20 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<List<PhoneticsWords>> getPhoneticsWordsRx() {
         return bmobService.getPhoneticsWordsRx()
-                .flatMap(new Func1<Response<BmobPhoneticsWordsResult>, Observable<List<PhoneticsWords>>>() {
+                .flatMap(new Func1<Response<PhoneticsWordsResult>, Observable<List<PhoneticsWords>>>() {
                     @Override
-                    public Observable<List<PhoneticsWords>> call(Response<BmobPhoneticsWordsResult> bmobPhoneticsSymbolsResultResponse) {
+                    public Observable<List<PhoneticsWords>> call(Response<PhoneticsWordsResult> phoneticsWordsResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobPhoneticsSymbolsResultResponse.isSuccessful()){
-                            BmobPhoneticsWordsResult bmobPhoneticsWordsResult = bmobPhoneticsSymbolsResultResponse.body();
+                        if(phoneticsWordsResultResponse.isSuccessful()){
+                            PhoneticsWordsResult bmobPhoneticsWordsResult = phoneticsWordsResultResponse.body();
 
-                            List<BmobPhoneticsWords> bmobPhoneticsWordses = bmobPhoneticsWordsResult.getResults();
-                            List<PhoneticsWords> phoneticsWordses = new ArrayList<>();
+                            List<PhoneticsWords> phoneticsWordses = bmobPhoneticsWordsResult.getResults();
 
-                            for(BmobPhoneticsWords bmobPhoneticsWords:bmobPhoneticsWordses){
-                                PhoneticsWords phoneticsWords = new PhoneticsWords();
-
-                                phoneticsWords.setId(bmobPhoneticsWords.getObjectId());
-                                phoneticsWords.setPhoneticswordsId(bmobPhoneticsWords.getPhoneticswordsId());
-                                phoneticsWords.setPhoneticsSymbolsId(bmobPhoneticsWords.getPhoneticsSymbolsId());
-                                phoneticsWords.setWordgroupId(bmobPhoneticsWords.getWordgroupId());
-
-                                phoneticsWordses.add(phoneticsWords);
-                            }
                             return Observable.just(phoneticsWordses);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobPhoneticsSymbolsResultResponse.errorBody().string();
+                                String errjson =  phoneticsWordsResultResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1562,42 +1390,19 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Word> addWord(Word word) {
-        final BmobCreateWordRequest bmobCreateWordRequest = new BmobCreateWordRequest();
 
-        bmobCreateWordRequest.setWordId(word.getWordId());
-        bmobCreateWordRequest.setName(word.getName());
-        bmobCreateWordRequest.setBritish_phonogram(word.getBritish_phonogram());
-        bmobCreateWordRequest.setBritish_soundurl(word.getBritish_soundurl());
-        bmobCreateWordRequest.setAmerican_phonogram(word.getAmerican_phonogram());
-        bmobCreateWordRequest.setAmerican_soundurl(word.getAmerican_soundurl());
-        bmobCreateWordRequest.setTranslate(word.getTranslate());
-        bmobCreateWordRequest.setCorrelation(word.getCorrelation());
-        bmobCreateWordRequest.setRemark(word.getRemark());
-
-        return bmobService.addWord(bmobCreateWordRequest)
-                .flatMap(new Func1<Response<BmobWord>, Observable<Word>>() {
+        return bmobService.addWord(word)
+                .flatMap(new Func1<Response<Word>, Observable<Word>>() {
                     @Override
-                    public Observable<Word> call(Response<BmobWord> bmobWordResponse) {
+                    public Observable<Word> call(Response<Word> wordResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordResponse.isSuccessful()){
-
-                            BmobWord bmobWord = bmobWordResponse.body();
-                            Word word = new Word();
-                            word.setId(bmobWord.getObjectId());
-                            word.setWordId(bmobWord.getWordId());
-                            word.setName(bmobWord.getName());
-                            word.setBritish_phonogram(bmobWord.getBritish_phonogram());
-                            word.setBritish_soundurl(bmobWord.getBritish_soundurl());
-                            word.setAmerican_phonogram(bmobWord.getAmerican_phonogram());
-                            word.setAmerican_soundurl(bmobWord.getAmerican_soundurl());
-                            word.setTranslate(bmobWord.getTranslate());
-                            word.setCorrelation(bmobWord.getCorrelation());
-                            word.setRemark(bmobWord.getRemark());
+                        if(wordResponse.isSuccessful()){
+                            Word word = wordResponse.body();
                             return Observable.just(word);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordResponse.errorBody().string();
+                                String errjson =  wordResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1637,19 +1442,11 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> updateWordRxById(Word word) {
-        final BmobCreateWordRequest bmobCreateWordRequest = new BmobCreateWordRequest();
 
-        bmobCreateWordRequest.setWordId(word.getWordId());
-        bmobCreateWordRequest.setName(word.getName());
-        bmobCreateWordRequest.setBritish_phonogram(word.getBritish_phonogram());
-        bmobCreateWordRequest.setBritish_soundurl(word.getBritish_soundurl());
-        bmobCreateWordRequest.setAmerican_phonogram(word.getAmerican_phonogram());
-        bmobCreateWordRequest.setAmerican_soundurl(word.getAmerican_soundurl());
-        bmobCreateWordRequest.setTranslate(word.getTranslate());
-        bmobCreateWordRequest.setCorrelation(word.getCorrelation());
-        bmobCreateWordRequest.setRemark(word.getRemark());
-
-        return bmobService.updateWordRxById(word.getId(),bmobCreateWordRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        String objectId = word.getObjectId();
+        Word word1 = (Word) word.clone();
+        word1.setObjectId(null);
+        return bmobService.updateWordRxById(objectId,word1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -1659,6 +1456,7 @@ public class BmobDataSource implements RemoteData {
                     Gson gson = new GsonBuilder().create();
                     try {
                         String errjson =  responseBodyResponse.errorBody().string();
+                        Log.d(TAG,"updateWordRxById(Word word):" + errjson);
                         BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                         RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                         bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1674,29 +1472,19 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<Word> getWordRxById(String wordId) {
         return bmobService.getWordRxById(wordId)
-                .flatMap(new Func1<Response<BmobWord>, Observable<Word>>() {
+                .flatMap(new Func1<Response<Word>, Observable<Word>>() {
                     @Override
-                    public Observable<Word> call(Response<BmobWord> bmobBmobWordResponse) {
+                    public Observable<Word> call(Response<Word> wordResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobBmobWordResponse.isSuccessful()){
+                        if(wordResponse.isSuccessful()){
 
-                            BmobWord bmobWord = bmobBmobWordResponse.body();
-                            Word word = new Word();
-                            word.setId(bmobWord.getObjectId());
-                            word.setWordId(bmobWord.getWordId());
-                            word.setName(bmobWord.getName());
-                            word.setBritish_phonogram(bmobWord.getBritish_phonogram());
-                            word.setBritish_soundurl(bmobWord.getBritish_soundurl());
-                            word.setAmerican_phonogram(bmobWord.getAmerican_phonogram());
-                            word.setAmerican_soundurl(bmobWord.getAmerican_soundurl());
-                            word.setTranslate(bmobWord.getTranslate());
-                            word.setCorrelation(bmobWord.getCorrelation());
-                            word.setRemark(bmobWord.getRemark());
+
+                            Word word = wordResponse.body();
                             return Observable.just(word);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobBmobWordResponse.errorBody().string();
+                                String errjson =  wordResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -1715,27 +1503,16 @@ public class BmobDataSource implements RemoteData {
 
         Log.d(TAG,"getWordRxByName regex:" + regex);
         return bmobService.getWordRxByName(regex)
-                .flatMap(new Func1<Response<BmobWordResult>, Observable<Word>>() {
+                .flatMap(new Func1<Response<WordResult>, Observable<Word>>() {
                     @Override
-                    public Observable<Word> call(Response<BmobWordResult> bmobWordResultResponse) {
+                    public Observable<Word> call(Response<WordResult> wordResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordResultResponse.isSuccessful()){
-                            BmobWordResult bmobWordResult = bmobWordResultResponse.body();
-                            List<BmobWord> bmobWords = bmobWordResult.getResults();
+                        if(wordResultResponse.isSuccessful()){
+                            WordResult bmobWordResult = wordResultResponse.body();
+                            List<Word> bmobWords = bmobWordResult.getResults();
                             if(bmobWords != null && bmobWords.size() > 0){
-                                BmobWord bmobWord  = bmobWords.get(0);
+                                Word word  = bmobWords.get(0);
 
-                                Word word = new Word();
-                                word.setId(bmobWord.getObjectId());
-                                word.setWordId(bmobWord.getWordId());
-                                word.setName(bmobWord.getName());
-                                word.setBritish_phonogram(bmobWord.getBritish_phonogram());
-                                word.setBritish_soundurl(bmobWord.getBritish_soundurl());
-                                word.setAmerican_phonogram(bmobWord.getAmerican_phonogram());
-                                word.setAmerican_soundurl(bmobWord.getAmerican_soundurl());
-                                word.setTranslate(bmobWord.getTranslate());
-                                word.setCorrelation(bmobWord.getCorrelation());
-                                word.setRemark(bmobWord.getRemark());
                                 return Observable.just(word);
                             }else{
                                 return Observable.error(new NullPointerException());
@@ -1744,7 +1521,7 @@ public class BmobDataSource implements RemoteData {
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordResultResponse.errorBody().string();
+                                String errjson =  wordResultResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -2543,32 +2320,21 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<WordGroup> addWordGroup(WordGroup wordGroup) {
-        final BmobCreateWordGroupRequest bmobCreateWordGroupRequest = new BmobCreateWordGroupRequest();
-        bmobCreateWordGroupRequest.setName(wordGroup.getName());
-        bmobCreateWordGroupRequest.setOpen(wordGroup.getOpen());
-        bmobCreateWordGroupRequest.setUserId(wordGroup.getUserId());
-        bmobCreateWordGroupRequest.setWordgroupId(wordGroup.getWordgroupId());
 
-        return bmobService.addWordGroup(bmobCreateWordGroupRequest)
-                .flatMap(new Func1<Response<BmobWordGroup>, Observable<WordGroup>>() {
+        return bmobService.addWordGroup(wordGroup)
+                .flatMap(new Func1<Response<WordGroup>, Observable<WordGroup>>() {
                     @Override
-                    public Observable<WordGroup> call(Response<BmobWordGroup> bmobWordGroupResponse) {
+                    public Observable<WordGroup> call(Response<WordGroup> wordGroupResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordGroupResponse.isSuccessful()){
+                        if(wordGroupResponse.isSuccessful()){
 
-                            BmobWordGroup bmobWordGroup = bmobWordGroupResponse.body();
-                            WordGroup wordGroup = new WordGroup();
+                            WordGroup wordGroup = wordGroupResponse.body();
 
-                            wordGroup.setId(bmobWordGroup.getObjectId());
-                            wordGroup.setName(bmobWordGroup.getName());
-                            wordGroup.setOpen(bmobWordGroup.getOpen());
-                            wordGroup.setUserId(bmobWordGroup.getUserId());
-                            wordGroup.setWordgroupId(bmobWordGroup.getWordgroupId());
                             return Observable.just(wordGroup);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordGroupResponse.errorBody().string();
+                                String errjson =  wordGroupResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -2608,13 +2374,12 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> updateWordGroupRxById(WordGroup wordGroup) {
-        final BmobCreateWordGroupRequest bmobCreateWordGroupRequest = new BmobCreateWordGroupRequest();
-        bmobCreateWordGroupRequest.setName(wordGroup.getName());
-        bmobCreateWordGroupRequest.setOpen(wordGroup.getOpen());
-        bmobCreateWordGroupRequest.setUserId(wordGroup.getUserId());
-        bmobCreateWordGroupRequest.setWordgroupId(wordGroup.getWordgroupId());
 
-        return bmobService.updateWordGroupRxById(wordGroup.getId(),bmobCreateWordGroupRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        String objectId = wordGroup.getObjectId();
+        WordGroup wordGroup1 = (WordGroup) wordGroup.clone();
+        wordGroup1.setObjectId(null);
+
+        return bmobService.updateWordGroupRxById(objectId,wordGroup1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -2639,25 +2404,18 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<WordGroup> getWordGroupRxById(String wordGroupId) {
         return bmobService.getWordGroupRxById(wordGroupId)
-                .flatMap(new Func1<Response<BmobWordGroup>, Observable<WordGroup>>() {
+                .flatMap(new Func1<Response<WordGroup>, Observable<WordGroup>>() {
                     @Override
-                    public Observable<WordGroup> call(Response<BmobWordGroup> bmobBmobWordGroupResponse) {
+                    public Observable<WordGroup> call(Response<WordGroup> wordGroupResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobBmobWordGroupResponse.isSuccessful()){
+                        if(wordGroupResponse.isSuccessful()){
 
-                            BmobWordGroup bmobWordGroup = bmobBmobWordGroupResponse.body();
-                            WordGroup wordGroup = new WordGroup();
-
-                            wordGroup.setId(bmobWordGroup.getObjectId());
-                            wordGroup.setName(bmobWordGroup.getName());
-                            wordGroup.setOpen(bmobWordGroup.getOpen());
-                            wordGroup.setUserId(bmobWordGroup.getUserId());
-                            wordGroup.setWordgroupId(bmobWordGroup.getWordgroupId());
+                            WordGroup wordGroup = wordGroupResponse.body();
                             return Observable.just(wordGroup);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobBmobWordGroupResponse.errorBody().string();
+                                String errjson =  wordGroupResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -2681,27 +2439,14 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getBmobEquals("userId",userId);
 
         return bmobService.getWordGroupRxByUserId(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobWordGroupResult>, Observable<List<WordGroup>>>() {
+                .flatMap(new Func1<Response<WordGroupResult>, Observable<List<WordGroup>>>() {
                     @Override
-                    public Observable<List<WordGroup>> call(Response<BmobWordGroupResult> bmobWordGroupResultResponse) {
+                    public Observable<List<WordGroup>> call(Response<WordGroupResult> bmobWordGroupResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobWordGroupResultResponse.isSuccessful()){
-                            BmobWordGroupResult bmobWordGroupResult = bmobWordGroupResultResponse.body();
+                            WordGroupResult wordGroupResult = bmobWordGroupResultResponse.body();
 
-                            List<BmobWordGroup> bmobWordGroups = bmobWordGroupResult.getResults();
-                            List<WordGroup> wordGroups = new ArrayList<>();
-
-                            for(BmobWordGroup bmobWordGroup:bmobWordGroups){
-
-                                WordGroup wordGroup = new WordGroup();
-
-                                wordGroup.setId(bmobWordGroup.getObjectId());
-                                wordGroup.setName(bmobWordGroup.getName());
-                                wordGroup.setOpen(bmobWordGroup.getOpen());
-                                wordGroup.setUserId(bmobWordGroup.getUserId());
-                                wordGroup.setWordgroupId(bmobWordGroup.getWordgroupId());
-                                wordGroups.add(wordGroup);
-                            }
+                            List<WordGroup> wordGroups = wordGroupResult.getResults();
                             return Observable.just(wordGroups);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -2730,27 +2475,15 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getBmobEquals("open","true");
 
         return bmobService.getWordGroupsByOpenRx(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobWordGroupResult>, Observable<List<WordGroup>>>() {
+                .flatMap(new Func1<Response<WordGroupResult>, Observable<List<WordGroup>>>() {
                     @Override
-                    public Observable<List<WordGroup>> call(Response<BmobWordGroupResult> bmobWordGroupResultResponse) {
+                    public Observable<List<WordGroup>> call(Response<WordGroupResult> bmobWordGroupResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobWordGroupResultResponse.isSuccessful()){
-                            BmobWordGroupResult bmobWordGroupResult = bmobWordGroupResultResponse.body();
+                            WordGroupResult wordGroupResult = bmobWordGroupResultResponse.body();
 
-                            List<BmobWordGroup> bmobWordGroups = bmobWordGroupResult.getResults();
-                            List<WordGroup> wordGroups = new ArrayList<>();
+                            List<WordGroup> wordGroups = wordGroupResult.getResults();
 
-                            for(BmobWordGroup bmobWordGroup:bmobWordGroups){
-
-                                WordGroup wordGroup = new WordGroup();
-
-                                wordGroup.setId(bmobWordGroup.getObjectId());
-                                wordGroup.setName(bmobWordGroup.getName());
-                                wordGroup.setOpen(bmobWordGroup.getOpen());
-                                wordGroup.setUserId(bmobWordGroup.getUserId());
-                                wordGroup.setWordgroupId(bmobWordGroup.getWordgroupId());
-                                wordGroups.add(wordGroup);
-                            }
                             return Observable.just(wordGroups);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -3400,36 +3133,21 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<WordCollect> addWordCollect(WordCollect wordCollect) {
-        final BmobCreateWordCollectRequest bmobCreateWordCollectRequest = new  BmobCreateWordCollectRequest();
 
-        bmobCreateWordCollectRequest.setWordcollectId(wordCollect.getWordcollectId());
-        bmobCreateWordCollectRequest.setCreateDate(wordCollect.getCreateDate());
-        bmobCreateWordCollectRequest.setUserId(wordCollect.getUserId());
-        bmobCreateWordCollectRequest.setWordGroupId(wordCollect.getWordgroupId());
-        bmobCreateWordCollectRequest.setWordId(wordCollect.getWordId());
-
-        return bmobService.addWordCollect(bmobCreateWordCollectRequest)
-                .flatMap(new Func1<Response<BmobWordCollect>, Observable<WordCollect>>() {
+        return bmobService.addWordCollect(wordCollect)
+                .flatMap(new Func1<Response<WordCollect>, Observable<WordCollect>>() {
                     @Override
-                    public Observable<WordCollect> call(Response<BmobWordCollect> bmobWordCollectResponse) {
+                    public Observable<WordCollect> call(Response<WordCollect> wordCollectResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordCollectResponse.isSuccessful()){
+                        if(wordCollectResponse.isSuccessful()){
 
-                            BmobWordCollect bmobWordCollect = bmobWordCollectResponse.body();
-                            WordCollect wordCollect = new WordCollect();
-
-                            wordCollect.setId(bmobWordCollect.getObjectId());
-                            wordCollect.setWordcollectId(bmobWordCollect.getWordcollectId());
-                            wordCollect.setCreateDate(bmobWordCollect.getCreateDate());
-                            wordCollect.setUserId(bmobWordCollect.getUserId());
-                            wordCollect.setWordgroupId(bmobWordCollect.getWordgroupId());
-                            wordCollect.setWordId(bmobWordCollect.getWordId());
+                            WordCollect wordCollect = wordCollectResponse.body();
 
                             return Observable.just(wordCollect);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordCollectResponse.errorBody().string();
+                                String errjson =  wordCollectResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -3477,33 +3195,19 @@ public class BmobDataSource implements RemoteData {
         final int skip = (page) * pageSize;
         String regex = searchUtil.getBmobEqualsByAnd(new String[]{"userId","wordGroupId"},new String[]{userId,wordGroupId});
         return bmobService.getWordCollectRxByUserIdAndWordGroupId(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobWordCollectResult>, Observable<List<WordCollect>>>() {
+                .flatMap(new Func1<Response<WordCollectResult>, Observable<List<WordCollect>>>() {
                     @Override
-                    public Observable<List<WordCollect>> call(Response<BmobWordCollectResult> bmobWordCollectResultResponse) {
+                    public Observable<List<WordCollect>> call(Response<WordCollectResult> wordCollectResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordCollectResultResponse.isSuccessful()){
-                            BmobWordCollectResult bmobWordCollectResult = bmobWordCollectResultResponse.body();
+                        if(wordCollectResultResponse.isSuccessful()){
+                            WordCollectResult wordCollectResult = wordCollectResultResponse.body();
 
-                            List<BmobWordCollect> bmobWordCollects = bmobWordCollectResult.getResults();
-                            List<WordCollect> wordCollects = new ArrayList<>();
-
-                            for(BmobWordCollect bmobWordCollect:bmobWordCollects){
-
-                                WordCollect wordCollect = new WordCollect();
-
-                                wordCollect.setId(bmobWordCollect.getObjectId());
-                                wordCollect.setWordcollectId(bmobWordCollect.getWordcollectId());
-                                wordCollect.setCreateDate(bmobWordCollect.getCreateDate());
-                                wordCollect.setUserId(bmobWordCollect.getUserId());
-                                wordCollect.setWordgroupId(bmobWordCollect.getWordgroupId());
-                                wordCollect.setWordId(bmobWordCollect.getWordId());
-                                wordCollects.add(wordCollect);
-                            }
+                            List<WordCollect> wordCollects = wordCollectResult.getResults();
                             return Observable.just(wordCollects);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordCollectResultResponse.errorBody().string();
+                                String errjson =  wordCollectResultResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -3515,6 +3219,43 @@ public class BmobDataSource implements RemoteData {
                     }
                 }).compose(RxUtil.<List<WordCollect>>applySchedulers());
     }
+
+
+    @Override
+    public Observable<List<WordCollect>> getWordCollectRxByWordGroupId(String wordGroupId, int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getBmobEquals("wordGroupId",wordGroupId);
+        return bmobService.getWordCollectRxByWordGroupId(regex,limit,skip)
+                .flatMap(new Func1<Response<WordCollectResult>, Observable<List<WordCollect>>>() {
+                    @Override
+                    public Observable<List<WordCollect>> call(Response<WordCollectResult> wordCollectResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(wordCollectResultResponse.isSuccessful()){
+                            WordCollectResult wordCollectResult = wordCollectResultResponse.body();
+
+                            List<WordCollect> wordCollects = wordCollectResult.getResults();
+                            return Observable.just(wordCollects);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  wordCollectResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<WordCollect>>applySchedulers());
+    }
+
 
     @Override
     public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
@@ -3755,7 +3496,7 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Boolean> uploadFile(final File file) {
+    public Observable<UploadFile> uploadFile(final File file) {
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -3763,15 +3504,27 @@ public class BmobDataSource implements RemoteData {
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("audio/mp3", file.getName(), requestFile);
         return bmobService.uploadFile(file.getName(),body)
-                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                .flatMap(new Func1<Response<UploadFile>, Observable<UploadFile>>() {
                     @Override
-                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
-                        if(responseBodyResponse.isSuccessful()) {
-                            return Observable.just(true);
+                    public Observable<UploadFile> call(Response<UploadFile> bmobTractateCollectResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobTractateCollectResultResponse.isSuccessful()){
+                            UploadFile uploadFile = bmobTractateCollectResultResponse.body();
+
+                            return Observable.just(uploadFile);
                         }else{
-                            return Observable.just(false);
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobTractateCollectResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
                         }
+                        return Observable.error(bmobRequestException);
                     }
-                });
+                }).compose(RxUtil.<UploadFile>applySchedulers());
     }
 }

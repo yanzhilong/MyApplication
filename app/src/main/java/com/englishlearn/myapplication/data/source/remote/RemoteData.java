@@ -18,7 +18,7 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
 import java.util.List;
@@ -37,7 +37,7 @@ public interface RemoteData extends DataSource{
      * @param user
      * @return
      */
-    Observable<BmobCreateUserResult> register(User user);
+    Observable<User> register(User user);
 
     /**
      * 创建或登陆用户
@@ -733,6 +733,16 @@ public interface RemoteData extends DataSource{
     Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId,String wordGroupId,int page,int pageSize);
 
 
+    /**
+     * 根据收藏分组Id获取单词分组收藏分页展示
+     * @param wordGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordCollect>> getWordCollectRxByWordGroupId(String wordGroupId,int page,int pageSize);
+
+
     //句子收藏模块
     //*****************************************************************************
 
@@ -793,5 +803,5 @@ public interface RemoteData extends DataSource{
 
 
     //上传文件
-    Observable<Boolean> uploadFile(File file);
+    Observable<UploadFile> uploadFile(File file);
 }

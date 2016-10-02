@@ -7,6 +7,7 @@ import com.englishlearn.myapplication.domain.DeleteSentences;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter;
+import com.englishlearn.myapplication.phoneticssymbols.phoneticsdetails.PhoneticsDetailsPresenter;
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
@@ -42,5 +43,5 @@ public interface AppComponent {
 
     void inject(PhoneticsSymbolsPresenter phoneticsSymbolsPresenter);
 
-
+    void inject(PhoneticsDetailsPresenter phoneticsDetailsPresenter);
 }

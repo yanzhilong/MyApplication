@@ -1,7 +1,6 @@
 package com.englishlearn.myapplication.data;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -10,7 +9,7 @@ import android.util.Log;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.util.AndroidUtils;
+import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -20,16 +19,12 @@ import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
@@ -152,7 +147,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testPhoneticsWords_byId");
         TestSubscriber<PhoneticsWords> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getPhoneticsWordsRxById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getPhoneticsWordsRxById(phoneticsSymbols.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<PhoneticsWords> listbyid = testSubscriber_getById.getOnNextEvents();
         PhoneticsWords mPhoneticsSymbolsById = null;
@@ -191,7 +186,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testPhoneticsWords_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deletePhoneticsWordsById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deletePhoneticsWordsById(phoneticsSymbols.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -231,7 +226,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testPhoneticsSymbols_byId");
         TestSubscriber<PhoneticsSymbols> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getPhoneticsSymbolsRxById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getPhoneticsSymbolsRxById(phoneticsSymbols.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<PhoneticsSymbols> listbyid = testSubscriber_getById.getOnNextEvents();
         PhoneticsSymbols mPhoneticsSymbolsById = null;
@@ -256,7 +251,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testPhoneticsSymbols_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deletePhoneticsSymbolsById(phoneticsSymbols.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deletePhoneticsSymbolsById(phoneticsSymbols.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -455,7 +450,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testWord_byId");
         TestSubscriber<Word> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getWordRxById(word.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getWordRxById(word.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<Word> listbyid = testSubscriber_getById.getOnNextEvents();
         Word word1ById = null;
@@ -479,7 +474,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testWord_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteWordById(word.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteWordById(word.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -783,7 +778,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testWordGroup_byId");
         TestSubscriber<WordGroup> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getWordGroupRxById(wordGroup.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getWordGroupRxById(wordGroup.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<WordGroup> listbyid = testSubscriber_getById.getOnNextEvents();
         WordGroup wordGroup1ById = null;
@@ -820,7 +815,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testWordGroup_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteWordGroupRxById(wordGroup.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteWordGroupRxById(wordGroup.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -830,7 +825,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testWordGroup_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById1 = new TestSubscriber<>();
-        mBmobRemoteData.deleteWordGroupRxById(wordGroup1.getId()).toBlocking().subscribe(testSubscriber_deleteById1);
+        mBmobRemoteData.deleteWordGroupRxById(wordGroup1.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById1);
         testSubscriber_deleteById1.assertNoErrors();
         List<Boolean> listdeleteById1 = testSubscriber_deleteById1.getOnNextEvents();
         if(listdeleteById1 != null && listdeleteById1.size() > 0){
@@ -1141,7 +1136,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testWordCollect_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteWordCollectRxById(wordCollect.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteWordCollectRxById(wordCollect.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -1249,7 +1244,7 @@ public class BmobDataSourceTest {
         //try {
             //AndroidUtils.newInstance(context).addFile(R.raw.install,"install.tst",true);
             File file = new File("/data/data/com.englishlearn.myapplication/files/hello.mp3");
-            TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
+            TestSubscriber<UploadFile> testSubscriber_deleteById = new TestSubscriber<>();
             mBmobRemoteData.uploadFile(file).toBlocking().subscribe(testSubscriber_deleteById);
             //testSubscriber_deleteById.assertNoErrors();
         /*} catch (IOException e) {

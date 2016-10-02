@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.phoneticssymbols;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
+import com.englishlearn.myapplication.phoneticssymbols.phoneticsdetails.PhoneticsDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +74,11 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(mContext, phonetics.get(i).toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(mContext, phonetics.get(i).toString(), Toast.LENGTH_LONG).show();
+                PhoneticsSymbols phoneticsSymbols = phonetics.get(i);
+                Intent intent = new Intent(PhoneticsSymbolsFragment.this.getContext(), PhoneticsDetailsActivity.class);
+                intent.putExtra(PhoneticsDetailsActivity.PHONETICS,phoneticsSymbols);
+                startActivity(intent);
             }
 
         });
@@ -121,6 +127,7 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
     @Override
     public void showPhoneticsSymbolsFail() {
         Toast.makeText(this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+
     }
 
     private class PhoneticssAdapter extends RecyclerView.Adapter<PhoneticssAdapter.ViewHolder>{

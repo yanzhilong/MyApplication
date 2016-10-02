@@ -18,7 +18,7 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateUserResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
 import java.util.List;
@@ -44,7 +44,7 @@ public class RemoteDataSource implements RemoteData {
 
 
     @Override
-    public Observable<BmobCreateUserResult> register(User user) {
+    public Observable<User> register(User user) {
         return null;
     }
 
@@ -484,6 +484,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<WordCollect>> getWordCollectRxByWordGroupId(String wordGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
         return null;
     }
@@ -514,7 +519,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Boolean> uploadFile(File file) {
+    public Observable<UploadFile> uploadFile(File file) {
         return null;
     }
 }
