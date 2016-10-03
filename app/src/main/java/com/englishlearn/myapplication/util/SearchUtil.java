@@ -6,9 +6,12 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 
 import com.englishlearn.myapplication.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +39,142 @@ public class SearchUtil {
         }
         return INSTANCE;
     }
+
+    /**
+     * 根据音标id获得搜索关联的单词的json搜索语句
+     * @param phoneticsId
+     * @return
+     */
+    public String getWordJsonByPhoneticsId(String phoneticsId){
+
+        Gson gson = new Gson();
+        Map map1 = new HashMap();
+        map1.put("phoneticsSymbolsId",phoneticsId);
+        Map map2 = new HashMap();
+        map2.put("className","PhoneticsWords");
+        map2.put("where",map1);
+        Map map3 = new HashMap();
+        map3.put("query",map2);
+        map3.put("key","wordgroupId");
+        Map map4 = new HashMap();
+        map4.put("$select",map3);
+        Map map5 = new HashMap();
+        map5.put("wordgroupId",map4);
+        Map map6 = new HashMap();
+        map6.put("className","WordCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","wordId");
+        Map map8 = new HashMap();
+        map8.put("$select",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+
+        //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
+
+        String jsonStr = gson.toJson(map9);
+        return jsonStr;
+        //return where;
+    }
+
+
+    /**
+     * key name
+     * value yanzl
+     * return {"name":"yanzl"}
+     * @param key
+     * @param value
+     * @return
+     */
+    private String getWhere(String key,String value){
+
+        String start = "{\"";
+        String and = "\":\"";
+        String end = "\"}";
+        String result = start + key + and + value + end;
+        return result;
+    }
+
+
+
+    /**
+     * key name
+     * value yanzl
+     * return "name":"yanzl"
+     * @param key
+     * @param value
+     * @return
+     */
+    private String getKeyValue(String key,String value){
+        String start = "\"";
+        String and = "\":\"";
+        String end = "\"";
+        return start + key + and + value + end;
+    }
+
+    /**
+     * key name
+     * value {..}
+     * return "name":{..}
+     * @param key
+     * @param value
+     * @return
+     */
+    private String getKeyAndValue(String key,String value){
+        String start = "\"";
+        String and = "\":\"";
+        String end = "\"";
+        return start + key + and + value + end;
+    }
+
+    /**
+     * key name
+     * value {....}
+     * return {"name":{....}}
+     * @param key
+     * @param expression
+     * @return
+     */
+    private String getWhereSubquery(String key,String expression){
+
+        String start = "{";
+
+        String end = "}";
+        String result = start + getKeyAndValue(key,expression) + end;
+        return result;
+    }
+
+    private String getSelect(String className,String where,String key){
+
+        String selectStart = "{";
+        String query = getKeyValue("query",getQuery(className,where));
+        String and = ",";
+        String keyvalue = getKeyValue("key",key);
+        String selectEnd = "}";
+
+        return selectStart + query + and + keyvalue + selectEnd;
+    }
+
+    /**
+     * {
+     *     className": "...",
+     *     "where": ...
+     * }
+     * @param className
+     * @param where
+     * @return
+     */
+    private String getQuery(String className,String where){
+
+        String queryStart = "{";
+        String queryClassName = getKeyValue("className",className);
+        String queryWhere = getKeyAndValue("where",where);
+        String queryEnd = "}";
+        return queryStart + queryClassName + queryWhere + queryEnd;
+    }
+
 
     /**
      * 句子
@@ -177,12 +316,12 @@ public class SearchUtil {
      * @return
      */
     public String getUserByPhoneRegex(String mobilePhoneNumber){
-        String where = "{\"mobilePhoneNumber\":\""+mobilePhoneNumber+"\"}";
+      String where = "{\"mobilePhoneNumber\":\""+mobilePhoneNumber+"\"}";
         return where;
     }
 
     /**
-     * 根据搜索的关键詞及返回的数据返回Spannable
+     * 根据搜索的关键詞及返回的数据返回Spannable,用于设置指定文字的颜色
      * @param searchWord
      * @param result
      * @return

@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
-import com.englishlearn.myapplication.phoneticssymbols.phoneticsdetails.PhoneticsDetailsActivity;
+import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +76,8 @@ public class PhoneticsSymbolsFragment extends Fragment implements PhoneticsSymbo
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Toast.makeText(mContext, phonetics.get(i).toString(), Toast.LENGTH_LONG).show();
                 PhoneticsSymbols phoneticsSymbols = phonetics.get(i);
-                Intent intent = new Intent(PhoneticsSymbolsFragment.this.getContext(), PhoneticsDetailsActivity.class);
-                intent.putExtra(PhoneticsDetailsActivity.PHONETICS,phoneticsSymbols);
+                Intent intent = new Intent(PhoneticsSymbolsFragment.this.getContext(), PhoneticsDetailActivity.class);
+                intent.putExtra(PhoneticsDetailActivity.PHONETICS,phoneticsSymbols);
                 startActivity(intent);
             }
 

@@ -289,6 +289,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRxByPhoneticsId(String phoneticsId) {
+        return mBmobDataSource.getWordsRxByPhoneticsId(phoneticsId);
+    }
+
+    @Override
     public Observable<Sentence> addSentence(Sentence sentence) {
         return mBmobDataSource.addSentence(sentence);
     }

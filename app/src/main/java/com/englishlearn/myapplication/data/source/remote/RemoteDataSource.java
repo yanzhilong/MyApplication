@@ -259,6 +259,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRxByPhoneticsId(String phoneticsId) {
+        return null;
+    }
+
+    @Override
     public Observable<Sentence> addSentence(Sentence sentence) {
         return null;
     }

@@ -1536,6 +1536,37 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRxByPhoneticsId(String phoneticsId) {
+
+        String json = SearchUtil.getInstance().getWordJsonByPhoneticsId(phoneticsId);
+
+        return bmobService.getWordsRxByPhoneticsId(json)
+                .flatMap(new Func1<Response<WordResult>, Observable<List<Word>>>() {
+                    @Override
+                    public Observable<List<Word>> call(Response<WordResult> wordResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(wordResultResponse.isSuccessful()){
+                            WordResult wordResult = wordResultResponse.body();
+                            List<Word> words = wordResult.getResults();
+                            return Observable.just(words);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  wordResultResponse.errorBody().string();
+                                Log.d(TAG,"getWordsRxByPhoneticsId(String phoneticsId):" + errjson);
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<Word>>applySchedulers());
+    }
+
+    @Override
     public Observable<Sentence> addSentence(Sentence sentence) {
         BmobCreateSentenceRequest bmobCreateSentenceRequest = new BmobCreateSentenceRequest();
 

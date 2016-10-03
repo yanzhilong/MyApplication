@@ -482,7 +482,29 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<WordResult>> getWordsRxByPhoneticsId(@Query("where")String wordjson);
+    Observable<Response<WordResult>> getWordsRxByPhoneticsId( @Query("where") String phoneticsJson);
+
+
+    /**
+     * 如果您的查询条件某个列值要匹配另一个查询的返回值，举例有一个队伍(Team)保存了每个城市的得分情况且用户表中有一列为用户家乡(hometown), 您可以创建一个查询来寻找用户的家乡是得分大于0.5的城市的所有运动员， 就像这样查询:
+
+     curl -X GET \
+     -H "X-Bmob-Application-Id: Your Application ID" \
+     -H "X-Bmob-REST-API-Key: Your REST API Key" \
+     -G \
+     --data-urlencode 'where={"hometown":{"$select":{"query":{"className":"Team","where":{"winPct":{"$gt":0.5}}},"key":"city"}}}' \
+     https://api.bmob.cn/1/users
+     反之查询Team中得分小于等于0.5的城市的所有运动员，构造查询如下：
+
+     curl -X GET \
+     -H "X-Bmob-Application-Id: Your Application ID" \
+     -H "X-Bmob-REST-API-Key: Your REST API Key" \
+     -G \
+     --data-urlencode 'where={"hometown":{"$dontSelect":{"query":{"className":"Team","where":{"winPct":{"$gt":0.5}}},"key":"city"}}}' \
+     https://api.bmob.cn/1/users
+     * @param bmobCreateSentenceRequest
+     * @return
+     */
 
     //句子模块****************************************************************************
 

@@ -121,18 +121,21 @@
             android:exported="false" />
 
         <activity
-            android:theme="@style/NavTheme"
-            android:name=".main.MainActivity">
+            android:name=".main.MainActivity"
+            android:theme="@style/NavTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".common.CommonActivity"/>
+        <activity android:name=".common.CommonActivity" />
         <activity
             android:name=".phoneticssymbols.phoneticsdetails.PhoneticsDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".phoneticssymbols.PhoneticsDetail.PhoneticsDetailActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

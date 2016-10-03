@@ -113,4 +113,18 @@ public class WordTest {
         }
 
     }
+
+    /**
+     * 测试根据音标id获取单词列表
+     */
+    @Test
+    public void getWordsRxByPhoneticsIdTest(){
+
+        TestSubscriber<List<Word>> testSubscriber = new TestSubscriber<>();
+        mBmobRemoteData.getWordsRxByPhoneticsId("554224d6f9").subscribe(testSubscriber);
+        testSubscriber.assertNoErrors();
+        List<List<Word>> wordslist = testSubscriber.getOnNextEvents();
+        List<Word> words = wordslist.get(0);
+        Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+    }
 }
