@@ -39,6 +39,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -72,7 +73,35 @@ public class Repository implements DataSource,RemoteData,LocalData {
         return INSTANCE;
     }
 
+    /**
+     * 用于测试
+     * @return
+     */
+    public Observable<List<String>> getTestString(int page,int pageSize){
 
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+
+        List<String> list = new ArrayList<>();
+        for(int i = skip; i < skip + limit; i++){
+            list.add("test" + i);
+        }
+        return Observable.just(list);
+    }
+
+    /**
+     * 用于测试
+     * @return
+     */
+    public Observable<List<String>> getTestString(){
+
+        List<String> list = new ArrayList<>();
+        for(int i = 0; i < 100; i++){
+            list.add("test" + i);
+        }
+        return Observable.just(list);
+    }
+    
     @Override
     public Observable<User> register(User user) {
         return mBmobDataSource.register(user);
