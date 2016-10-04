@@ -515,7 +515,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testSentence_byId");
         TestSubscriber<Sentence> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getSentenceById(sentence.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getSentenceById(sentence.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<Sentence> listbyid = testSubscriber_getById.getOnNextEvents();
         Sentence sentence1ById = null;
@@ -551,7 +551,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testSentence_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteSentenceById(sentence.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteSentenceById(sentence.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -590,7 +590,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testGrammar_byId");
         TestSubscriber<Grammar> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getGrammarById(grammar.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getGrammarById(grammar.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<Grammar> listbyid = testSubscriber_getById.getOnNextEvents();
         Grammar grammar1ById = null;
@@ -638,7 +638,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testGrammar_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteGrammarById(grammar.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteGrammarById(grammar.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){

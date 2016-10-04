@@ -1,17 +1,27 @@
 package com.englishlearn.myapplication.grammar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Grammar;
+import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 /**
@@ -22,6 +32,8 @@ public class GrammarFragment extends Fragment implements GrammarContract.View {
     private static final String TAG = GrammarFragment.class.getSimpleName();
 
     private GrammarContract.Presenter mPresenter;
+    private ListView grammars_listview;
+    private GrammarsAdapter grammarsAdapter;
     public static GrammarFragment newInstance() {
         return new GrammarFragment();
     }
@@ -42,9 +54,23 @@ public class GrammarFragment extends Fragment implements GrammarContract.View {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.grammar_frag, container, false);
 
-        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
+        mPresenter = new GrammarPresenter(this);
 
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        grammarsAdapter = new GrammarsAdapter();
+        grammars_listview = (ListView) root.findViewById(R.id.grammars_listview);
+        grammars_listview.setAdapter(grammarsAdapter);
+
+        grammars_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Grammar grammar = grammarsAdapter.getGrammars().get(position);
+                    Intent detail = new Intent(GrammarFragment.this.getContext(), GrammarDetailActivity.class);
+                    detail.putExtra(GrammarDetailActivity.ID,grammar.getObjectId());
+                    startActivity(detail);
+            }
+        });
+
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
@@ -54,16 +80,95 @@ public class GrammarFragment extends Fragment implements GrammarContract.View {
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.getGrammars();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //mPresenter.unsubscribe();
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void showGrammars(List<Grammar> grammars) {
+        Log.d(TAG,"showGrammars" + grammars.size());
+        grammarsAdapter.replace(grammars);
+    }
+
+    @Override
+    public void emptyGrammars() {
+        Log.d(TAG,"emptyGrammars");
+        grammarsAdapter.replace(new ArrayList<Grammar>());
+        grammarsAdapter.notifyDataSetChanged();
+    }
+
+    private class GrammarsAdapter extends BaseAdapter {
+
+        private LayoutInflater inflater;
+
+        private List<Grammar> grammars;
+
+        public void replace(List<Grammar> grammars){
+            if(grammars != null){
+                this.grammars.clear();
+                this.grammars.addAll(grammars);
+                notifyDataSetChanged();
+            }
+        }
+
+        public List<Grammar> getGrammars() {
+            return grammars;
+        }
+
+        public GrammarsAdapter(){
+            grammars = new ArrayList<>();
+        }
+
+        @Override
+        public int getCount() {
+            return grammars.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return grammars.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(inflater == null){
+                inflater = LayoutInflater.from(parent.getContext());
+            }
+            ViewHolder viewHolder;
+            if(convertView == null){
+                convertView = inflater.inflate(R.layout.grammar_item,parent,false);
+                viewHolder = new ViewHolder();
+                viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+                viewHolder.content = (TextView) convertView.findViewById(R.id.content);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            final Grammar grammar = grammars.get(position);
+            viewHolder.name.setText(grammar.getTitle());
+            viewHolder.content.setText(grammar.getContent());
+
+            return convertView;
+        }
+    }
+
+    static class ViewHolder{
+        TextView name;//名称
+        TextView content;//说明
     }
 }

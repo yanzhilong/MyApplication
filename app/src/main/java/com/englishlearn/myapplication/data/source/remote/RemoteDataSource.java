@@ -264,6 +264,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRxByWordGroupId(String wordgroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<Sentence> addSentence(Sentence sentence) {
         return null;
     }
@@ -380,6 +385,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId) {
         return null;
     }
 

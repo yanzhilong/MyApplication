@@ -4,15 +4,17 @@ import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
 import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
+import com.englishlearn.myapplication.grammar.GrammarPresenter;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter;
-import com.englishlearn.myapplication.phoneticssymbols.phoneticsdetails.PhoneticsDetailsPresenter;
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
 import com.englishlearn.myapplication.sentences.SentencesPresenter;
+import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
+import com.englishlearn.myapplication.wordgroup.WordsActivity;
 
 import dagger.Component;
 
@@ -44,7 +46,13 @@ public interface AppComponent {
 
     void inject(PhoneticsSymbolsPresenter phoneticsSymbolsPresenter);
 
-    void inject(PhoneticsDetailsPresenter phoneticsDetailsPresenter);
-
     void inject(PhoneticsDetailPresenter phoneticsDetailPresenter);
+
+    void inject(GrammarPresenter grammarPresenter);
+
+    void inject(WordGroupsFragment wordGroupsFragment);
+
+    void inject(WordsActivity wordsActivity);
+
+
 }

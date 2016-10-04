@@ -90,8 +90,7 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
                     Intent detail = new Intent(SearchSentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceId());
-                    detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
+                    detail.putExtra(SentenceDetailActivity.ID,sentence.getObjectId());
                     startActivity(detail);
                 }
             }

@@ -121,8 +121,7 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
             return;
         }
         Intent edit = new Intent(SentenceDetailFragment.this.getContext(), AddEditSentenceActivity.class);
-        edit.putExtra(AddEditSentenceActivity.SENTENCE_ID,sentence.getSentenceId());
-        edit.putExtra(AddEditSentenceActivity.ID,sentence.getId());
+        edit.putExtra(AddEditSentenceActivity.ID,sentence.getObjectId());
         startActivity(edit);
     }
 

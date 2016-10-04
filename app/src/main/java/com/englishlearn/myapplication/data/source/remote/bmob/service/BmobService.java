@@ -1,35 +1,31 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
+import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
+import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateGrammarRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceGroupRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateGroupRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateTypeRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammar;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobGrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentence;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroup;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceGroupResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractate;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollectResult;
@@ -41,6 +37,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeRe
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
+import com.englishlearn.myapplication.data.source.remote.bmob.GrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetMobile;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetOldPwd;
@@ -49,6 +46,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsWordsResu
 import com.englishlearn.myapplication.data.source.remote.bmob.QuerySmsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.SentenceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
@@ -476,13 +474,21 @@ public interface BmobService{
     Observable<Response<WordResult>> getWordRxByName(@Query("where")String wordjson);
 
     //查询音标关联收藏分组的所有单词
-    //根据名称获取单词
     @GET("/1/classes/Word")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<WordResult>> getWordsRxByPhoneticsId( @Query("where") String phoneticsJson);
+
+
+    //查询收藏分组的所有单词
+    @GET("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordResult>> getWordsRxByWordGroupId( @Query("where") String wordgroupidJson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     /**
@@ -515,7 +521,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobSentence>> addSentenceRx(@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
+    Observable<Response<Sentence>> addSentenceRx(@Body Sentence sentence);
 
     //删除句子
     @DELETE("/1/classes/Sentence/{id}/")
@@ -532,7 +538,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateSentencRxById(@Path("id") String id,@Body BmobCreateSentenceRequest bmobCreateSentenceRequest);
+    Observable<Response<ResponseBody>> updateSentencRxById(@Path("id") String id,@Body Sentence sentence);
 
     //根据Id获取句子(Observable)
     @GET("/1/classes/Sentence/{id}/")
@@ -540,7 +546,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobSentence>> getSentenceRxById(@Path("id") String id);
+    Observable<Response<Sentence>> getSentenceRxById(@Path("id") String id);
 
     /**
      * 获取所有句子(分页)
@@ -554,7 +560,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobSentenceResult>> getSentencesRx(@Query("limit") int limit, @Query("skip")int skip);
+    Observable<Response<SentenceResult>> getSentencesRx(@Query("limit") int limit, @Query("skip")int skip);
 
     /**
      * 分页搜索自定义的正则
@@ -569,7 +575,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobSentenceResult>> getSentencesRx(@Query("where") String regex,@Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<SentenceResult>> getSentencesRx(@Query("where") String regex, @Query("limit")int limit, @Query("skip")int skip);
 
     //语法模块****************************************************************************
 
@@ -580,7 +586,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobGrammar>> addGrammarRx(@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
+    Observable<Response<Grammar>> addGrammarRx(@Body Grammar grammar);
 
     //删除語法
     @DELETE("/1/classes/Grammar/{id}/")
@@ -597,7 +603,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateGrammarRxById(@Path("id") String id,@Body BmobCreateGrammarRequest bmobCreateGrammarRequest);
+    Observable<Response<ResponseBody>> updateGrammarRxById(@Path("id") String id,@Body Grammar grammar);
 
     //根据Id获取语法(Observable)
     @GET("/1/classes/Grammar/{id}/")
@@ -605,7 +611,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobGrammar>> getGrammarRxById(@Path("id") String id);
+    Observable<Response<Grammar>> getGrammarRxById(@Path("id") String id);
 
     //获取所有语法
     @GET("/1/classes/Grammar")
@@ -614,7 +620,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobGrammarResult>> getGrammarsRx();
+    Observable<Response<GrammarResult>> getGrammarsRx();
 
     /**
      * 获取所有语法(分页)
@@ -626,7 +632,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobGrammarResult>> getGrammarsRx(@Query("limit") int limit, @Query("skip")int skip);
+    Observable<Response<GrammarResult>> getGrammarsRx(@Query("limit") int limit, @Query("skip")int skip);
 
     /**
      * 分页搜索自定义的正则
@@ -641,7 +647,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobGrammarResult>> getGrammarsRx(@Query("where") String regex,@Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<GrammarResult>> getGrammarsRx(@Query("where") String regex, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //文章模块****************************************************************************
@@ -738,6 +744,15 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<WordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+    //根据userId获取单词收藏分组分页展示
+    @GET("/1/classes/WordGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson);
+
 
     //获取所有公开的单词收藏分组分页展示,按时间降序(从近到远)
     @GET("/1/classes/WordGroup?order=-createdAt")

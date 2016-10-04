@@ -30,7 +30,6 @@ import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
 import com.englishlearn.myapplication.word.WordActivity;
 import com.englishlearn.myapplication.wordcollect.WordCollectActivity;
-import com.englishlearn.myapplication.wordgroup.WordGroupActivity;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 
 /**
@@ -163,10 +162,6 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
             case R.id.word:
                 Intent wordintent = new Intent(this.getContext(),WordActivity.class);
                 this.startActivity(wordintent);
-                break;
-            case R.id.wordgroup:
-                Intent wordgroupintent = new Intent(this.getContext(),WordGroupActivity.class);
-                this.startActivity(wordgroupintent);
                 break;
             case R.id.wordgroupcollect:
                 Intent wordgroupcollectintent = new Intent(this.getContext(),WordGroupCollectActivity.class);

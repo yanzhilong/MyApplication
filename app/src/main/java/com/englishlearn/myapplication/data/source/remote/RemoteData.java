@@ -368,6 +368,15 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<List<Word>> getWordsRxByPhoneticsId(String phoneticsId);
+
+    /**
+     * 根据单词收藏分组id获取单词列表
+     * @param wordgroupId
+     * @return
+     */
+    Observable<List<Word>> getWordsRxByWordGroupId(String wordgroupId,int page,int pageSize);
+
+
     //句子模块
     //*****************************************************************************
 
@@ -553,6 +562,13 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<List<WordGroup>> getWordGroupRxByUserId(String userId,int page,int pageSize);
+
+    /**
+     * 根据userId获取单词收藏分组分页展示
+     * @param userId
+     * @return
+     */
+    Observable<List<WordGroup>> getWordGroupRxByUserId(String userId);
 
     /**
      * 获取所有公开的单词收藏分组分页展示,按时间降序

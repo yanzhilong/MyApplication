@@ -11,7 +11,6 @@ import com.englishlearn.myapplication.util.ActivityUtils;
 
 public class GrammarDetailActivity extends AppCompatActivity {
 
-    public static final String GRAMMAR_ID = "grammar_id";
     public static final String ID = "id";
 
     private GrammarDetailContract.Presenter presenter;
@@ -30,7 +29,6 @@ public class GrammarDetailActivity extends AppCompatActivity {
         ab.setDisplayShowHomeEnabled(true);
         ab.setTitle(R.string.grammardetail_title);
 
-        String grammarid = getIntent().getStringExtra(GRAMMAR_ID);
         String id = getIntent().getStringExtra(ID);
 
         GrammarDetailFragment fragment = (GrammarDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -38,7 +36,7 @@ public class GrammarDetailActivity extends AppCompatActivity {
             fragment = GrammarDetailFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        presenter = new GrammarDetailPresenter(fragment,id,grammarid);
+        presenter = new GrammarDetailPresenter(fragment,id);
     }
 
     @Override

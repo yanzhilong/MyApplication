@@ -17,13 +17,11 @@ public class GrammarDetailPresenter extends GrammarDetailContract.Presenter{
 
     private GrammarDetailContract.View mView;
     private String id;
-    private String grammarid;
     @Inject
     Repository repository;
-    public GrammarDetailPresenter(GrammarDetailContract.View vew,String id,String grammarid){
+    public GrammarDetailPresenter(GrammarDetailContract.View vew,String id){
         mView = vew;
         this.id = id;
-        this.grammarid = grammarid;
         MyApplication.instance.getAppComponent().inject(this);
         mView.setPresenter(this);
     }

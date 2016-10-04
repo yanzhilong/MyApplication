@@ -1,10 +1,12 @@
 package com.englishlearn.myapplication.data;
 
+import java.io.Serializable;
+
 /**
  * Created by yanzl on 16-9-3.
  * 单詞
  */
-public class Word implements Cloneable{
+public class Word  implements Serializable,Cloneable{
 
     private String objectId;
     private String name;
@@ -88,16 +90,17 @@ public class Word implements Cloneable{
         this.remark = remark;
     }
 
+    @Override
     public Object clone(){
 
-                 Object o=null;
-                 try {
-                         o=super.clone();
-                     } catch (CloneNotSupportedException e) {
-                         e.printStackTrace();
-                     }
-                 return o;
-             }
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
 
     @Override
     public String toString() {

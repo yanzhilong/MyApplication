@@ -16,14 +16,12 @@ import rx.Subscription;
 public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
     private AddEditSentenceContract.View mainView;
-    private String sentenceid;
     private String id;
     @Inject
     Repository repository;
-    public AddEditSentencePresenter(AddEditSentenceContract.View vew,String id,String sentenceid){
+    public AddEditSentencePresenter(AddEditSentenceContract.View vew,String id){
         mainView = vew;
         this.id = id;
-        this.sentenceid = sentenceid;
         MyApplication.instance.getAppComponent().inject(this);
         mainView.setPresenter(this);
     }
@@ -68,12 +66,11 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
     }
 
     private void updateSentence(String content, String translate){
-        if(sentenceid == null || id == null){
+        if(id == null){
             throw new RuntimeException("updateSentence() was called but sentence is new.");
         }
         Sentence sentence = new Sentence();
-        sentence.setId(id);
-        sentence.setSentenceId(sentenceid);
+        sentence.setObjectId(id);
         sentence.setContent(content);
         sentence.setTranslation(translate);
         Subscription subscription = repository.updateSentenceById(sentence)
@@ -102,7 +99,7 @@ public class AddEditSentencePresenter extends AddEditSentenceContract.Presenter{
 
 
     private boolean isNewSentence() {
-        return sentenceid == null;
+        return id == null;
     }
 
 

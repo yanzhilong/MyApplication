@@ -79,9 +79,6 @@
             android:name=".word.WordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wordgroup.WordGroupActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".wordgroupcollect.WordGroupCollectActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -131,11 +128,9 @@
         </activity>
         <activity android:name=".common.CommonActivity" />
         <activity
-            android:name=".phoneticssymbols.phoneticsdetails.PhoneticsDetailsActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".phoneticssymbols.PhoneticsDetail.PhoneticsDetailActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".wordgroup.WordsActivity" />
     </application>
 
 </manifest>

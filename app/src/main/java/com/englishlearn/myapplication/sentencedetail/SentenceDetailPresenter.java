@@ -16,13 +16,11 @@ import rx.Subscription;
 public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
 
     private SentenceDetailContract.View mView;
-    private String sentenceid;
     private String id;
     @Inject
     Repository repository;
-    public SentenceDetailPresenter(SentenceDetailContract.View vew,String id,String sentenceid){
+    public SentenceDetailPresenter(SentenceDetailContract.View vew,String id){
         mView = vew;
-        this.sentenceid = sentenceid;
         this.id = id;
         MyApplication.instance.getAppComponent().inject(this);
         mView.setPresenter(this);
@@ -60,7 +58,7 @@ public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
 
     @Override
     void deleteSentence(Sentence sentence) {
-        Subscription subscription = repository.deleteSentenceById(sentence.getId())
+        Subscription subscription = repository.deleteSentenceById(sentence.getObjectId())
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
                     public void onCompleted() {

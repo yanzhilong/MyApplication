@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.Word;
-import com.englishlearn.myapplication.phoneticssymbols.phoneticsdetails.PhoneticsDetailsActivity;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class PhoneticsDetailFragment extends Fragment implements PhoneticsDetail
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        phoneticsSymbols = (PhoneticsSymbols) getArguments().get(PhoneticsDetailsActivity.PHONETICS);
+        phoneticsSymbols = (PhoneticsSymbols) getArguments().get(PhoneticsDetailActivity.PHONETICS);
         Log.d(TAG,phoneticsSymbols.toString());
     }
 

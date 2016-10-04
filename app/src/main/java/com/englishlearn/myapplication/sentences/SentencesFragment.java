@@ -103,8 +103,7 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
                     Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.SENTENCE_ID,sentence.getSentenceId());
-                    detail.putExtra(SentenceDetailActivity.ID,sentence.getId());
+                    detail.putExtra(SentenceDetailActivity.ID,sentence.getObjectId());
                     startActivity(detail);
                 }
             }
@@ -376,6 +375,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                 selectPresenter.dataSetChanged();//通知数据改变
             }
         }
+
+
 
         public SentencesAdapter(SentencesSelectContract.Presenter selectPresenter){
             sentences = new ArrayList<>();

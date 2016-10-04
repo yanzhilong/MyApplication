@@ -16,14 +16,12 @@ import rx.Subscription;
 public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
 
     private AddEditGrammarContract.View mainView;
-    private String grammarid;
     private String id;
     @Inject
     Repository repository;
-    public AddEditGrammarPresenter(AddEditGrammarContract.View vew,String id,String grammarid){
+    public AddEditGrammarPresenter(AddEditGrammarContract.View vew,String id){
         mainView = vew;
         this.id = id;
-        this.grammarid = grammarid;
         MyApplication.instance.getAppComponent().inject(this);
         mainView.setPresenter(this);
     }
@@ -66,12 +64,10 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
     }
 
     private void updateGrammar(String name, String content){
-        if(grammarid == null || id == null){
+        if(id == null){
             throw new RuntimeException("updateGrammar() was called but grammar is new.");
         }
         Grammar grammar = new Grammar();
-        grammar.setId(id);
-        grammar.setGrammarId(grammarid);
         grammar.setTitle(name);
         grammar.setContent(content);
         Subscription subscription = repository.updateGrammarRxById(grammar)
@@ -100,7 +96,7 @@ public class AddEditGrammarPresenter extends AddEditGrammarContract.Presenter{
 
 
     private boolean isNewSentence() {
-        return grammarid == null;
+        return id == null;
     }
 
 

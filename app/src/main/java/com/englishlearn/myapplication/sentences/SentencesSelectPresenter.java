@@ -57,13 +57,13 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
 
     @Override
     void onClick(Sentence sentence) {
-        boolean select = selects.get(sentence.getSentenceId()) != null ? selects.get(sentence.getSentenceId()) : false;
+        boolean select = selects.get(sentence.getObjectId()) != null ? selects.get(sentence.getObjectId()) : false;
         if(select){
             unselect(sentence);
-            selects.put(sentence.getSentenceId(),false);
+            selects.put(sentence.getObjectId(),false);
         }else{
             select(sentence);
-            selects.put(sentence.getSentenceId(),true);
+            selects.put(sentence.getObjectId(),true);
         }
         view.notifyDataSetChanged();
     }
@@ -80,7 +80,7 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
         Iterator<Sentence> iterator = view.getSentences().iterator();
         while (iterator.hasNext()){
             Sentence s = iterator.next();
-            selects.put(s.getSentenceId(),isAllSelect);
+            selects.put(s.getObjectId(),isAllSelect);
         }
         showEditCount();
         view.notifyDataSetChanged();
@@ -88,7 +88,7 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
 
     @Override
     boolean isSelect(Sentence sentence) {
-        return selects.get(sentence.getSentenceId()) != null ? selects.get(sentence.getSentenceId()) : false;
+        return selects.get(sentence.getObjectId()) != null ? selects.get(sentence.getObjectId()) : false;
     }
 
     @Override
@@ -101,14 +101,14 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
             boolean found = false;
             while (ite.hasNext()){
                 Sentence sentence = ite.next();
-                if(s.getSentenceId().equals(sentence.getSentenceId())){
+                if(s.getObjectId().equals(sentence.getObjectId())){
                     found = true;
                     break;
                 }
             }
             if(!found){
                 iterator.remove();
-                selects.remove(s.getSentenceId());
+                selects.remove(s.getObjectId());
             }
         }
         //判断是全选就要改变
@@ -131,7 +131,7 @@ public class SentencesSelectPresenter extends SentencesSelectContract.Presenter{
         Iterator<Sentence> iterator = selecteds.iterator();
         while (iterator.hasNext()){
             Sentence s = iterator.next();
-            if(s.getSentenceId().equals(sentence.getSentenceId())){
+            if(s.getObjectId().equals(sentence.getObjectId())){
                 iterator.remove();
                 break;
             }

@@ -36,7 +36,7 @@ public class WordFragment extends Fragment implements WordContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.wordgroup_frag, container, false);
+        View root = inflater.inflate(R.layout.wordgroups_frag, container, false);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);

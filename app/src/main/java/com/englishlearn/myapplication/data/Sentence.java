@@ -1,41 +1,28 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-7-17.
  * 句子
  */
-public class Sentence {
+public class Sentence implements Serializable,Cloneable {
 
-    private String id;
-    private String sentenceId; //句子唯一id
+    private String objectId;
     private String content; //内容
     private String translation; //译文
     private String userId; //用户Id
     private String source; //来源 (拉取来源id选择再提交来源的名称)
     private String tractateId; //来自的文章Id
-    private String createDate; //创建时间
     private String remark; //备注
 
-    public Sentence() {
-        sentenceId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSentenceId() {
-        return sentenceId;
-    }
-
-    public void setSentenceId(String sentenceId) {
-        this.sentenceId = sentenceId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getContent() {
@@ -78,14 +65,6 @@ public class Sentence {
         this.tractateId = tractateId;
     }
 
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -95,16 +74,26 @@ public class Sentence {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "Sentence{" +
-                "id='" + id + '\'' +
-                ", sentenceId='" + sentenceId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
                 ", userId='" + userId + '\'' +
                 ", source='" + source + '\'' +
                 ", tractateId='" + tractateId + '\'' +
-                ", createDate='" + createDate + '\'' +
                 ", remark='" + remark + '\'' +
                 '}';
     }

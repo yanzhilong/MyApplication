@@ -226,6 +226,16 @@
         <item>语法</item>
     </string-array>
 
+    <string-array name="intermediate_tablayout">
+        <item>词单</item>
+        <item>短语</item>
+    </string-array>
+
+    <string-array name="advanced_tablayout">
+        <item>短文</item>
+        <item>电影</item>
+    </string-array>
+
     <!-- Navgation -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

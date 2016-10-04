@@ -294,6 +294,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRxByWordGroupId(String wordgroupId, int page, int pageSize) {
+        return mBmobDataSource.getWordsRxByWordGroupId(wordgroupId,page,pageSize);
+    }
+
+    @Override
     public Observable<Sentence> addSentence(Sentence sentence) {
         return mBmobDataSource.addSentence(sentence);
     }
@@ -411,6 +416,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     @Override
     public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId, int page, int pageSize) {
         return mBmobDataSource.getWordGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId) {
+        return mBmobDataSource.getWordGroupRxByUserId(userId);
     }
 
     @Override

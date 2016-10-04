@@ -81,6 +81,37 @@ public class SearchUtil {
 
 
     /**
+     * 根据音标id获得搜索关联的单词的json搜索语句
+     * @param wordgroupId
+     * @return
+     */
+    public String getWordsRxByWordGroupId(String wordgroupId){
+
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("wordgroupId",wordgroupId);
+        Map map6 = new HashMap();
+        map6.put("className","WordCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","wordId");
+        Map map8 = new HashMap();
+        map8.put("$select",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+
+        //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
+
+        String jsonStr = gson.toJson(map9);
+        return jsonStr;
+        //return where;
+    }
+
+
+
+    /**
      * key name
      * value yanzl
      * return {"name":"yanzl"}
