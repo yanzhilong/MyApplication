@@ -12,7 +12,9 @@
     <!--<style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
     <style name="Base.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <!-- 主要颜色 -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- 状态栏颜色 -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>

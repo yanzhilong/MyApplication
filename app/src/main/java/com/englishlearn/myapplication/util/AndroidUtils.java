@@ -1,15 +1,17 @@
 package com.englishlearn.myapplication.util;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+
+import com.englishlearn.myapplication.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 /**
  * Created by yanzl on 16-7-26.
@@ -25,6 +27,26 @@ public class AndroidUtils {
     public AndroidUtils(Context context) {
         this.context = context;
     }
+
+
+    private static final Random RANDOM = new Random();
+
+    public static int getRandomCheeseDrawable() {
+        switch (RANDOM.nextInt(5)) {
+            default:
+            case 0:
+                return R.drawable.cheese_1;
+            case 1:
+                return R.drawable.cheese_2;
+            case 2:
+                return R.drawable.cheese_3;
+            case 3:
+                return R.drawable.cheese_4;
+            case 4:
+                return R.drawable.cheese_5;
+        }
+    }
+
 
     /**
      * dp转换成px

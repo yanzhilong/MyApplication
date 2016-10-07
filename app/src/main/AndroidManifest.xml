@@ -131,6 +131,7 @@
             android:name=".phoneticssymbols.PhoneticsDetail.PhoneticsDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".wordgroup.WordsActivity" />
+        <activity android:name=".worddetail.WordDetail"></activity>
     </application>
 
 </manifest>

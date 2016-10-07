@@ -30,6 +30,7 @@ import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
 import com.englishlearn.myapplication.word.WordActivity;
 import com.englishlearn.myapplication.wordcollect.WordCollectActivity;
+import com.englishlearn.myapplication.worddetail.WordDetail;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 
 /**
@@ -78,6 +79,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         Button wordcollect = (Button) root.findViewById(R.id.wordcollect);
         Button sentencecollect = (Button) root.findViewById(R.id.sentencecollect);
         Button tractatecollect = (Button) root.findViewById(R.id.tractatecollect);
+        Button worddetail = (Button) root.findViewById(R.id.worddetail);
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
@@ -97,6 +99,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         wordcollect.setOnClickListener(this);
         sentencecollect.setOnClickListener(this);
         tractatecollect.setOnClickListener(this);
+        worddetail.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -190,6 +193,10 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
             case R.id.tractatecollect:
                 Intent tractatecollectintent = new Intent(this.getContext(),TractateCollectActivity.class);
                 this.startActivity(tractatecollectintent);
+                break;
+            case R.id.worddetail:
+                Intent worddetail = new Intent(this.getContext(),WordDetail.class);
+                this.startActivity(worddetail);
                 break;
             default:
                 break;
