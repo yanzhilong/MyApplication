@@ -6,6 +6,7 @@ import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
 import com.englishlearn.myapplication.grammar.GrammarPresenter;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
+import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity;
@@ -59,6 +60,8 @@ public interface AppComponent {
     void inject(PhoneticsSymbolsActivity phoneticsSymbolsActivity);
 
     void inject(PhoneticsSymbolsDetailActivity phoneticsSymbolsDetailActivity);
+
+    void inject(GrammarsActivity grammarsActivity);
 
 
 }

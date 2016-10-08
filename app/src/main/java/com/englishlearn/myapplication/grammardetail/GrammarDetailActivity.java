@@ -1,42 +1,57 @@
 package com.englishlearn.myapplication.grammardetail;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.util.ActivityUtils;
-
+import com.englishlearn.myapplication.data.Grammar;
 
 public class GrammarDetailActivity extends AppCompatActivity {
 
-    public static final String ID = "id";
+    public static final String OBJECT = "object";
+    private static final String TAG = GrammarDetailActivity.class.getSimpleName();
+    private Grammar grammar;
 
-    private GrammarDetailContract.Presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grammardetail_act);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar ab = getSupportActionBar();
-        //返回按钮
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setDisplayShowHomeEnabled(true);
-        ab.setTitle(R.string.grammardetail_title);
-
-        String id = getIntent().getStringExtra(ID);
-
-        GrammarDetailFragment fragment = (GrammarDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (fragment == null) {
-            fragment = GrammarDetailFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
+        if (getIntent().hasExtra(OBJECT)) {
+            grammar = (Grammar) getIntent().getSerializableExtra(OBJECT);
         }
-        presenter = new GrammarDetailPresenter(fragment,id);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String cheeseName = getResources().getString(R.string.title_grammardetail);
+
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(cheeseName);
+
+        loadBackdrop();
+
+        TextView name = (TextView) findViewById(R.id.name);
+        TextView content = (TextView) findViewById(R.id.content);
+
+        if(grammar != null){
+            name.setText(grammar.getTitle());
+            content.setText(grammar.getContent());
+        }
+
+    }
+
+    private void loadBackdrop() {
+        final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
+        Glide.with(this).load(R.drawable.cheese_2).centerCrop().into(imageView);
     }
 
     @Override
@@ -45,3 +60,6 @@ public class GrammarDetailActivity extends AppCompatActivity {
         return true;
     }
 }
+
+
+

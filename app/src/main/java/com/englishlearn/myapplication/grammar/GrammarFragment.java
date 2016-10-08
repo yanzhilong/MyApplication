@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
+import com.englishlearn.myapplication.grammardetail.GrammarsDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +65,8 @@ public class GrammarFragment extends Fragment implements GrammarContract.View {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                     Grammar grammar = grammarsAdapter.getGrammars().get(position);
-                    Intent detail = new Intent(GrammarFragment.this.getContext(), GrammarDetailActivity.class);
-                    detail.putExtra(GrammarDetailActivity.ID,grammar.getObjectId());
+                    Intent detail = new Intent(GrammarFragment.this.getContext(), GrammarsDetailActivity.class);
+                    detail.putExtra(GrammarsDetailActivity.ID,grammar.getObjectId());
                     startActivity(detail);
             }
         });

@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarActivity;
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
+import com.englishlearn.myapplication.grammardetail.GrammarsDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +89,8 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
                     selectPresenter.onClick(grammarsAdapter.getGrammars().get(position));
                 }else{
                     Grammar grammar = grammarsAdapter.getGrammars().get(position);
-                    Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarDetailActivity.class);
-                    detail.putExtra(GrammarDetailActivity.ID,grammar.getObjectId());
+                    Intent detail = new Intent(GrammarsFragment.this.getContext(), GrammarsDetailActivity.class);
+                    detail.putExtra(GrammarsDetailActivity.ID,grammar.getObjectId());
                     startActivity(detail);
                 }
             }
@@ -299,7 +299,7 @@ public class GrammarsFragment extends Fragment implements GrammarsContract.View,
             }
             ViewHolder viewHolder;
             if(convertView == null){
-                convertView = inflater.inflate(R.layout.grammars_item,parent,false);
+                convertView = inflater.inflate(R.layout.grammarss_item,parent,false);
                 viewHolder = new ViewHolder();
                 viewHolder.select = (CheckBox) convertView.findViewById(R.id.select);
                 viewHolder.name = (TextView) convertView.findViewById(R.id.name);

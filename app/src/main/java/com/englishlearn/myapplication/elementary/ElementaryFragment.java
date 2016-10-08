@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammar.GrammarFragment;
+import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
 
@@ -102,7 +103,7 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
                 startActivity(new Intent(this.getContext(), PhoneticsSymbolsActivity.class));
                 break;
             case R.id.grammars:
-
+                startActivity(new Intent(this.getContext(), GrammarsActivity.class));
                 break;
             default:
                 break;

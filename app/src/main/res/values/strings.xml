@@ -249,4 +249,8 @@
 
     <string name="title_phoneticssymbolsdetail">PhoneticsSymbolsDetail</string>
 
+    <string name="title_语法列表">语法列表</string>
+
+    <string name="title_grammardetail">GrammarDetail</string>
+
 </resources>

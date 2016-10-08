@@ -54,12 +54,11 @@ dependencies {
     testCompile "org.powermock:powermock-core:$rootProject.powerMockito"
 
     //rx系列库
-    
 
     //图片加载库
-    
+
     //Volley
-    
+
     //injection
     apt 'com.google.dagger:dagger-compiler:2.4'
     provided 'javax.annotation:jsr250-api:1.0'
@@ -73,7 +72,7 @@ dependencies {
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$rootProject.ext.runnerVersion"
     // Espresso UI Testing
-   /* androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    /* androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion")
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"*/
 
@@ -83,8 +82,8 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'*/
 
     //Retrofit网絡请求框架
-    
-compile 'io.reactivex:rxandroid:1.2.0'
+
+    compile 'io.reactivex:rxandroid:1.2.0'
     compile 'io.reactivex:rxjava:1.1.5'
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.mcxiaoke.volley:library:1.0.19'

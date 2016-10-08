@@ -1,9 +1,10 @@
-package com.englishlearn.myapplication.phoneticssymbols;
+package com.englishlearn.myapplication.grammars;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +17,9 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.PhoneticsSymbols;
+import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity;
+import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +30,20 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-public class PhoneticsSymbolsActivity extends AppCompatActivity {
+public class GrammarsActivity extends AppCompatActivity {
 
-    private static final String TAG = PhoneticsSymbolsActivity.class.getSimpleName();
+    private static final String TAG = GrammarsActivity.class.getSimpleName();
 
     private MyAdapter myAdapter;
 
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phonetics_symbols);
+        setContentView(R.layout.grammars_act);
 
         MyApplication.instance.getAppComponent().inject(this);
 
@@ -57,22 +59,29 @@ public class PhoneticsSymbolsActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
         //标题
-        ab.setTitle(R.string.phoneticssymbols_title);
+        ab.setTitle(R.string.title_语法列表);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
         final LinearLayoutManager mgrlistview = new LinearLayoutManager(this);
         mgrlistview.setOrientation(LinearLayoutManager.VERTICAL);
+
+        //GridLayout 3列
+        GridLayoutManager mgrgridview = new GridLayoutManager(this, 3);
+
         recyclerView.setLayoutManager(mgrlistview);
+
+        //recyclerView.setLayoutManager(mgrgridview);
         myAdapter = new MyAdapter();
-        myAdapter.setOnItemClickListener(new OnItemClickListener(){
+        myAdapter.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
 
-                PhoneticsSymbols phoneticsSymbols = myAdapter.getPhonetics().get(position);
-                Intent intent = new Intent(PhoneticsSymbolsActivity.this,PhoneticsSymbolsDetailActivity.class);
-                intent.putExtra(PhoneticsSymbolsDetailActivity.OBJECT,phoneticsSymbols);
+                Grammar grammar = myAdapter.getGrammars().get(position);
+                Log.d(TAG, myAdapter.getGrammars().get(position).toString());
+                Intent intent = new Intent(GrammarsActivity.this,GrammarDetailActivity.class);
+                intent.putExtra(GrammarDetailActivity.OBJECT,grammar);
                 startActivity(intent);
             }
 
@@ -96,26 +105,28 @@ public class PhoneticsSymbolsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mSubscriptions.clear();
     }
 
     void getList() {
-        Subscription subscription = repository.getPhoneticsSymbolsRx().subscribe(new Subscriber<List<PhoneticsSymbols>>() {
-            @Override
-            public void onCompleted() {
+        Subscription subscription = repository.getGrammars()
+                .subscribe(new Subscriber<List<Grammar>>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                showPhoneticsSymbolsFail();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        showPhoneticsSymbolsFail();
+                    }
 
-            @Override
-            public void onNext(List<PhoneticsSymbols> phoneticsSymbolses) {
-                showList(phoneticsSymbolses);
-            }
-        });
+                    @Override
+                    public void onNext(List<Grammar> grammars) {
+                        if(grammars != null){
+                            showList(grammars);
+                        }
+                    }
+                });
         mSubscriptions.add(subscription);
     }
 
@@ -124,32 +135,37 @@ public class PhoneticsSymbolsActivity extends AppCompatActivity {
 
     }
 
-    void showList(List<PhoneticsSymbols> list) {
+    void showList(List<Grammar> list) {
         myAdapter.replaceData(list);
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    //接口
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
 
-        private List<PhoneticsSymbols> phonetics;
+    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+
+        private List<Grammar> grammars;
 
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            phonetics = new ArrayList<>();
+            grammars = new ArrayList<>();
         }
 
-        public List<PhoneticsSymbols> getPhonetics() {
-            return phonetics;
+        public List<Grammar> getGrammars() {
+            return grammars;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<PhoneticsSymbols> phonetics){
-            if(phonetics != null){
-                this.phonetics.clear();
-                this.phonetics.addAll(phonetics);
+        public void replaceData(List<Grammar> grammars) {
+            if (grammars != null) {
+                this.grammars.clear();
+                this.grammars.addAll(grammars);
                 notifyDataSetChanged();
             }
         }
@@ -158,20 +174,20 @@ public class PhoneticsSymbolsActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View v =  LayoutInflater.from(parent.getContext()).inflate(R.layout.phoneticssymbolsitem, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grammars_act_item, parent, false);
             return new ViewHolder(v);
         }
 
         //将数据绑定到子View，会自动复用View
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            Log.d(TAG,"onBindViewHolder" + position);
-            holder.textView.setText(phonetics.get(position).getIpaname());
+            Log.d(TAG, "onBindViewHolder" + position);
+            holder.textView.setText(grammars.get(position).getTitle());
         }
 
         @Override
         public int getItemCount() {
-            return phonetics.size();
+            return grammars.size();
         }
 
 
@@ -186,19 +202,16 @@ public class PhoneticsSymbolsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        if(onItemClickListener != null){
-                            onItemClickListener.onItemClick(itemView,getAdapterPosition());
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(itemView, getAdapterPosition());
                         }
                     }
                 });
 
-                textView = (TextView) itemView.findViewById(R.id.phonetics_name);
+                textView = (TextView) itemView.findViewById(R.id.name);
             }
         }
     }
-
-    //接口
-    public interface OnItemClickListener{
-        void onItemClick(View view,int position);
-    }
 }
+
+
