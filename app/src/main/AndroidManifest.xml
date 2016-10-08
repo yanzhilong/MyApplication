@@ -138,12 +138,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".grammars.GrammarsActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".grammardetail.GrammarDetailActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
+        <activity android:name=".wordgroups.WordGroupsActivity"></activity>
     </application>
 
 </manifest>

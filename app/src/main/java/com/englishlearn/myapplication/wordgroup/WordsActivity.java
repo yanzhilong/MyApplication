@@ -55,7 +55,7 @@ public class WordsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_word_groups);
+        setContentView(R.layout.activity_words);
 
         MyApplication.instance.getAppComponent().inject(this);
 

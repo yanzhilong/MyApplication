@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -55,15 +56,15 @@ public class IntermediateFragment extends Fragment implements IntermediateContra
         list.add(WordGroupsFragment.newInstance());
         list.add(GrammarFragment.newInstance());
 
-        View root = inflater.inflate(R.layout.elementary_frag, container, false);
+        View root = inflater.inflate(R.layout.intermediate_frag, container, false);
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
-        /*//ViewPager
+        //ViewPager
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) root.findViewById(R.id.tabLayout);
         viewPager.setAdapter(new IntermediateFragment.IntermediateFragmentPagerAdapter(getChildFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
-        tableLayout.getTabTextColors();*/
+        tableLayout.getTabTextColors();
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //如果有设置菜单，需要加这个

@@ -19,6 +19,7 @@ import com.englishlearn.myapplication.grammar.GrammarFragment;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
+import com.englishlearn.myapplication.wordgroups.WordGroupsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,8 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
 
         root.findViewById(R.id.phonetics).setOnClickListener(this);
         root.findViewById(R.id.grammars).setOnClickListener(this);
+        root.findViewById(R.id.words).setOnClickListener(this);
+        root.findViewById(R.id.sentences).setOnClickListener(this);
 
        /* //ViewPager
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
@@ -103,6 +106,12 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
                 startActivity(new Intent(this.getContext(), PhoneticsSymbolsActivity.class));
                 break;
             case R.id.grammars:
+                startActivity(new Intent(this.getContext(), GrammarsActivity.class));
+                break;
+            case R.id.words:
+                startActivity(new Intent(this.getContext(), WordGroupsActivity.class));
+                break;
+            case R.id.sentences:
                 startActivity(new Intent(this.getContext(), GrammarsActivity.class));
                 break;
             default:
