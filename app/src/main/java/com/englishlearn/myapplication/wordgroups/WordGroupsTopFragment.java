@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,21 +13,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Grammar;
+import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailActivity;
-import com.englishlearn.myapplication.ui.LoadMoreListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Subscriber;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 
@@ -38,10 +40,17 @@ public class WordGroupsTopFragment extends Fragment {
 
     private MyAdapter myAdapter;
 
+    private int page = 0;
+    private final int PAGESIZE = 10;
+
+    private List<WordGroup> mList;
+
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
     private LinearLayoutManager mgrlistview;
+
+    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
     public static WordGroupsTopFragment newInstance() {
         return new WordGroupsTopFragment();
@@ -53,10 +62,10 @@ public class WordGroupsTopFragment extends Fragment {
 
         MyApplication.instance.getAppComponent().inject(this);
 
+        mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
-
     }
 
     @Nullable
@@ -64,7 +73,7 @@ public class WordGroupsTopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.intermediate_frag, container, false);
+        View root = inflater.inflate(R.layout.wordgroupstop_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -83,16 +92,42 @@ public class WordGroupsTopFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                Grammar grammar = myAdapter.getGrammars().get(position);
-                Log.d(TAG, myAdapter.getGrammars().get(position).toString());
+                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
+                Log.d(TAG, wordGroup.toString());
                 Intent intent = new Intent(WordGroupsTopFragment.this.getContext(),GrammarDetailActivity.class);
-                intent.putExtra(GrammarDetailActivity.OBJECT,grammar);
+                intent.putExtra(GrammarDetailActivity.OBJECT,wordGroup);
                 startActivity(intent);
             }
 
         });
+
+        myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                getNextPage();
+            }
+        });
         //设置适配器
         recyclerView.setAdapter(myAdapter);
+
+
+        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
+        );
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSubscriptions.clear();
+                Log.d(TAG, "下拉刷新");
+                refershList();
+            }
+        });
+
+        refershList();//刷新列表
 
         return root;
     }
@@ -105,14 +140,76 @@ public class WordGroupsTopFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        mSubscriptions.clear();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * 刷新列表
+     */
+    public void refershList(){
+        page = 0;
+        mList.clear();
+        myAdapter.hasMore();
+        swipeRefreshLayout.setRefreshing(true);
+        getNextPage();
+    }
+
+    //获取下一页
+    public void getNextPage() {
+        Subscription subscription = repository.getWordGroupsByOpenRx(page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+            @Override
+            public void onCompleted() {
+                loadingComplete();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                loadingFail(e);
+            }
+
+            @Override
+            public void onNext(List list) {
+                Log.d(TAG,"onNext size:" + list.size());
+
+                if(list == null || list.size() == 0){
+                    myAdapter.loadingGone();
+                    myAdapter.notifyDataSetChanged();
+                }else{
+                    page++;//页数增加
+                    mList.addAll(list);
+                    showList(mList);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //加载完成
+    public void loadingComplete(){
+        Log.d(TAG,"loadingComplete");
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * 加载失败
+     */
+    public void loadingFail(Throwable e){
+        Log.d(TAG,"loadingFail:" + e.toString());
+        e.printStackTrace();
+
     }
 
     //显示列表
     private void showList(List list){
         Log.d(TAG,"showList:" + list.toString());
-        listview.setIsEnd(hasMore() ? false : true);
-        myAdapter.replace(list);
-        listview.loadingComplete();
+
+        if(list == null || list.size() == 0){
+            myAdapter.loadingGone();
+            myAdapter.notifyDataSetChanged();
+        }else{
+            myAdapter.replaceData(list);
+        }
     }
 
 
@@ -126,11 +223,19 @@ public class WordGroupsTopFragment extends Fragment {
         void onLoadMore();
     }
 
-    private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    private class MyAdapter extends RecyclerView.Adapter {
 
-        private final int VIEW_TYPE_ITEM = 0;
-        private final int VIEW_TYPE_LOADING = 1;
-        private final int VIEW_TYPE_LOADINGGONE = 2;
+        private boolean isGone = false;//是否加载完成
+
+        //已经加载完成了
+        public void loadingGone(){
+            isGone = true;
+        }
+
+        //还有更多
+        public void hasMore(){
+            isGone = false;
+        }
 
         private OnLoadMoreListener mOnLoadMoreListener;
 
@@ -138,76 +243,81 @@ public class WordGroupsTopFragment extends Fragment {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        private List<Grammar> grammars;
+        private List<WordGroup> wordGroups;
 
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            grammars = new ArrayList<>();
+            wordGroups = new ArrayList<>();
         }
 
-        public MyAdapter() {
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mgrlistview.getLayoutManager();
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                    if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                        if (mOnLoadMoreListener != null) {
-                            mOnLoadMoreListener.onLoadMore();
-                        }
-                        isLoading = true;
-                    }
-                }
-            });
-        }
-
-        public List<Grammar> getGrammars() {
-            return grammars;
+        public List<WordGroup> getWordGroups() {
+            return wordGroups;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<Grammar> grammars) {
-            if (grammars != null) {
-                this.grammars.clear();
-                this.grammars.addAll(grammars);
+        public void replaceData(List<WordGroup> wordGroups) {
+            if (wordGroups != null) {
+                this.wordGroups.clear();
+                this.wordGroups.addAll(wordGroups);
                 notifyDataSetChanged();
             }
         }
 
-        //该方法返回是ViewHolder，当有可复用View时，就不再调用
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grammars_act_item, parent, false);
-            return new ViewHolder(v);
+        public int getItemViewType(int position) {
+            if(position != wordGroups.size() ){
+                Log.d(TAG,"wordgroupstop_item");
+                return R.layout.wordgroupstop_item;
+            }else{
+                if(isGone){
+                    Log.d(TAG,"load_done_layout");
+                    return R.layout.load_done_layout;
+                }
+                Log.d(TAG,"load_more_layout");
+                return R.layout.load_more_layout;
+            }
         }
 
-        //将数据绑定到子View，会自动复用View
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+            switch (viewType){
+                case R.layout.wordgroupstop_item:
+                    return new ItemViewHolder(v);
+                case R.layout.load_more_layout:
+                    return new LoadingMoreViewHolder(v);
+                case R.layout.load_done_layout:
+                    return new LoadingGoneViewHolder(v);
+            }
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Log.d(TAG, "onBindViewHolder" + position);
-            holder.textView.setText(grammars.get(position).getTitle());
+            if(holder instanceof ItemViewHolder){
+                ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+                itemViewHolder.name.setText(wordGroups.get(position).getName());
+            }else if(holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null){
+                mOnLoadMoreListener.onLoadMore();
+            }
         }
 
         @Override
         public int getItemCount() {
-            return grammars.size();
+            return wordGroups.size() + 1;
         }
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView textView;
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+            TextView name;
 
-            public ViewHolder(final View itemView) {
+            public ItemViewHolder(final View itemView) {
                 super(itemView);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -220,19 +330,23 @@ public class WordGroupsTopFragment extends Fragment {
                     }
                 });
 
-                textView = (TextView) itemView.findViewById(R.id.name);
+                name = (TextView) itemView.findViewById(R.id.name);
             }
         }
+        //加载更多
+        class LoadingMoreViewHolder extends RecyclerView.ViewHolder {
 
-        class LoadingViewHolder extends RecyclerView.ViewHolder {
-            public ProgressBar progressBar;
-
-            public LoadingViewHolder(View itemView) {
+            public LoadingMoreViewHolder(View itemView) {
                 super(itemView);
-                progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar1);
             }
         }
+        //加载完成
+        class LoadingGoneViewHolder extends RecyclerView.ViewHolder {
 
+            public LoadingGoneViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
     }
 
 }

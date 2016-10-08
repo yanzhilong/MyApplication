@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammar.GrammarFragment;
-import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class WordGroupsActivity extends AppCompatActivity {
         titles = getResources().getStringArray(R.array.intermediate_tablayout);
         //初始Fragment
         list = new ArrayList<>();
-        list.add(WordGroupsFragment.newInstance());
+        list.add(WordGroupsTopFragment.newInstance());
         list.add(GrammarFragment.newInstance());
 
         //ViewPager
