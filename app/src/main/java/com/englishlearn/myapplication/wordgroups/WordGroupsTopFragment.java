@@ -203,13 +203,7 @@ public class WordGroupsTopFragment extends Fragment {
     //显示列表
     private void showList(List list){
         Log.d(TAG,"showList:" + list.toString());
-
-        if(list == null || list.size() == 0){
-            myAdapter.loadingGone();
-            myAdapter.notifyDataSetChanged();
-        }else{
-            myAdapter.replaceData(list);
-        }
+        myAdapter.replaceData(list);
     }
 
 
