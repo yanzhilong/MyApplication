@@ -8,6 +8,8 @@ import com.englishlearn.myapplication.grammar.GrammarPresenter;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailPresenter;
+import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity;
+import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter;
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
@@ -53,6 +55,10 @@ public interface AppComponent {
     void inject(WordGroupsFragment wordGroupsFragment);
 
     void inject(WordsActivity wordsActivity);
+
+    void inject(PhoneticsSymbolsActivity phoneticsSymbolsActivity);
+
+    void inject(PhoneticsSymbolsDetailActivity phoneticsSymbolsDetailActivity);
 
 
 }

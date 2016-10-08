@@ -1,5 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_normal"
+    android:paddingBottom="@dimen/space_normal"
+    android:paddingLeft="@dimen/space_small"
+    android:paddingRight="@dimen/space_small"
+    android:showDividers="middle">
+
+    <!-- 音标 -->
+    <android.support.v7.widget.CardView
+        android:layout_marginTop="@dimen/space_xlarge"
+        android:layout_marginBottom="@dimen/space_xlarge"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/space_normal"
+        android:layout_marginRight="@dimen/space_normal"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:id="@+id/phonetics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:tint="?attr/colorPrimary"
+                android:scaleType="centerInside"
+                android:id="@+id/phonetics_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_tune_black_24dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phonetics_image"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:text="音标"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <!-- 语法 -->
+    <android.support.v7.widget.CardView
+        android:layout_marginTop="@dimen/space_xlarge"
+        android:layout_marginBottom="@dimen/space_xlarge"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/space_normal"
+        android:layout_marginRight="@dimen/space_normal"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/grammars"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:tint="?attr/colorPrimary"
+                android:scaleType="centerInside"
+                android:id="@+id/grammars_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_text_format_black_24dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/grammars_image"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:text="语法"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
+
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -20,4 +110,4 @@
         android:background="@color/facebook_blue4"
         android:layout_below="@id/toolbar" />
 
-</LinearLayout>
+</LinearLayout>-->

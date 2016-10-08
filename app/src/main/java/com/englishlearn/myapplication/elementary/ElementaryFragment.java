@@ -1,11 +1,11 @@
 package com.englishlearn.myapplication.elementary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammar.GrammarFragment;
+import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class ElementaryFragment extends Fragment implements ElementaryContract.View {
+public class ElementaryFragment extends Fragment implements ElementaryContract.View, View.OnClickListener {
 
     private static final String TAG = ElementaryFragment.class.getSimpleName();
 
@@ -61,12 +62,15 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
         View root = inflater.inflate(R.layout.elementary_frag, container, false);
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
 
-        //ViewPager
+        root.findViewById(R.id.phonetics).setOnClickListener(this);
+        root.findViewById(R.id.grammars).setOnClickListener(this);
+
+       /* //ViewPager
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) root.findViewById(R.id.tabLayout);
         viewPager.setAdapter(new ElementaryFragmentPagerAdapter(getChildFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
-        tableLayout.getTabTextColors();
+        tableLayout.getTabTextColors();*/
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //如果有设置菜单，需要加这个
@@ -89,6 +93,20 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.phonetics:
+                startActivity(new Intent(this.getContext(), PhoneticsSymbolsActivity.class));
+                break;
+            case R.id.grammars:
+
+                break;
+            default:
+                break;
+        }
     }
 
     private class ElementaryFragmentPagerAdapter extends FragmentPagerAdapter{

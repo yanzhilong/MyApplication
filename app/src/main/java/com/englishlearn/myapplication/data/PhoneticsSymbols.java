@@ -9,8 +9,9 @@ import java.io.Serializable;
 public class PhoneticsSymbols implements Serializable,Cloneable{
 
     private String objectId;
-    private String ipaname; //国际音标（IPA）美英
-    private String kkname; //国际音标（KK）英音
+    //国际音标（IPA）
+    private String ipaname; //国际音标（DJ）英音
+    private String kkname; //国际音标（KK）美音
     private String soundurl;//读音
     private String videourl;//视频
     private String content;//发音方法,及相关说明

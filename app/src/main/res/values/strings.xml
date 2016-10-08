@@ -141,8 +141,8 @@
     <!-- UpdateUserActivity -->
     <string name="updateuser_title">UpdateUser</string>
 
-    <!-- PhoneticsSymbols -->
-
+    <!-- PhoneticsSymbolsActivity -->
+    <string name="phoneticssymbols_title">音标</string>
 
     <!-- MessageSourceActivity -->
     <string name="messagesource_title">MessageSource</string>
@@ -246,5 +246,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_phoneticsdetail">PhoneticsDetail</string>
+
+    <string name="title_phoneticssymbolsdetail">PhoneticsSymbolsDetail</string>
 
 </resources>

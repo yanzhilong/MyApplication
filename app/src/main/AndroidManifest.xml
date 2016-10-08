@@ -46,7 +46,7 @@
             android:name=".searchsentences.SearchSentencesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".grammars.GrammarsActivity"
+            android:name=".grammars.GrammarActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".addeditsentence.AddEditSentenceActivity"
@@ -131,7 +131,10 @@
             android:name=".phoneticssymbols.PhoneticsDetail.PhoneticsDetailActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".wordgroup.WordsActivity" />
-        <activity android:name=".worddetail.WordDetail"></activity>
+        <activity android:name=".worddetail.WordDetail" />
+        <activity android:name=".phoneticssymbols.PhoneticsSymbolsActivity"></activity>
+        <activity android:name=".phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

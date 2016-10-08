@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.grammars.GrammarsActivity;
+import com.englishlearn.myapplication.grammars.GrammarActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
 import com.englishlearn.myapplication.messagesource.MessageSourceActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
@@ -131,7 +131,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 this.startActivity(sentenceintent);
                 break;
             case R.id.grammars:
-                Intent grammarintent = new Intent(this.getContext(),GrammarsActivity.class);
+                Intent grammarintent = new Intent(this.getContext(),GrammarActivity.class);
                 this.startActivity(grammarintent);
                 break;
             case R.id.search:
