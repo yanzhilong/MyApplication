@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.grammar.GrammarFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +32,13 @@ public class WordGroupsActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
         //标题
-        ab.setTitle(R.string.phoneticssymbols_title);
+        ab.setTitle(R.string.wordgroups_title);
 
-        titles = getResources().getStringArray(R.array.intermediate_tablayout);
+        titles = getResources().getStringArray(R.array.wordgroups_tablayout);
         //初始Fragment
         list = new ArrayList<>();
         list.add(WordGroupsTopFragment.newInstance());
-        list.add(GrammarFragment.newInstance());
+        list.add(MyWordGroupsFragment.newInstance());
 
         //ViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
