@@ -21,11 +21,47 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentFrame"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_anchor="@id/contentFrame"
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_anchorGravity="bottom|right|end">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_edit_wordgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="0dp"
+                android:src="@drawable/ic_edit"
+                app:fabSize="normal"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_deleteorfavorite_wordgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_delete"
+                app:fabSize="normal"
+                app:layout_anchor="@id/fab_edit_grammar"
+                app:layout_anchorGravity="bottom|right|end"/>
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
 </LinearLayout>

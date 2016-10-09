@@ -12,8 +12,10 @@ import com.englishlearn.myapplication.data.WordGroup;
 public class WordsActivity extends AppCompatActivity {
 
     public static final String OBJECT = "object";
+    public static final String TYPE = "wordgrouptype";
     private static final String TAG = WordsActivity.class.getSimpleName();
     private WordGroup wordGroup;
+    private WordGroupType wordGroupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,7 @@ public class WordsActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(OBJECT)) {
             wordGroup = (WordGroup) getIntent().getSerializableExtra(OBJECT);
+            wordGroupType = (WordGroupType) getIntent().getSerializableExtra(TYPE);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -36,7 +39,8 @@ public class WordsActivity extends AppCompatActivity {
 
         Fragment fragment = WordsFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(WordsActivity.OBJECT,wordGroup);
+        bundle.putSerializable(WordsFragment.OBJECT,wordGroup);
+        bundle.putSerializable(WordsFragment.TYPE,wordGroupType);
         fragment.setArguments(bundle);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

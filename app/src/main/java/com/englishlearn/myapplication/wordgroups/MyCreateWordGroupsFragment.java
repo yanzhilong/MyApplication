@@ -20,6 +20,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
 import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
 
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class MyCreateWordGroupsFragment extends Fragment {
                 Log.d(TAG, wordGroup.toString());
                 Intent intent = new Intent(MyCreateWordGroupsFragment.this.getContext(),WordsActivity.class);
                 intent.putExtra(WordsActivity.OBJECT,wordGroup);
+                intent.putExtra(WordsActivity.TYPE, WordGroupType.CREATE);
                 startActivity(intent);
             }
 

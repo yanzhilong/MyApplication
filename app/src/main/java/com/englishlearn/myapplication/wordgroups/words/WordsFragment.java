@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.wordgroups.words;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,12 +35,14 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class WordsFragment extends Fragment {
+public class WordsFragment extends Fragment implements View.OnClickListener {
 
     public static final String OBJECT = "object";
+    public static final String TYPE = "wordgrouptype";
     private static final String TAG = WordsFragment.class.getSimpleName();
     private final int PAGESIZE = 10;
     private WordGroup wordGroup;
+    private WordGroupType wordGroupType;
     private MyAdapter myAdapter;
     private int page = 0;
     private List<String> mList;
@@ -61,6 +64,7 @@ public class WordsFragment extends Fragment {
 
         if(getArguments().containsKey(OBJECT)){
             wordGroup = (WordGroup) getArguments().getSerializable(OBJECT);
+            wordGroupType = (WordGroupType) getArguments().getSerializable(TYPE);
         }
 
         MyApplication.instance.getAppComponent().inject(this);
@@ -69,7 +73,6 @@ public class WordsFragment extends Fragment {
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
-
     }
 
     @Nullable
@@ -112,6 +115,34 @@ public class WordsFragment extends Fragment {
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
+        FloatingActionButton fab_edit_wordgroup =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_wordgroup);
+        fab_edit_wordgroup.setOnClickListener(this);
+
+        FloatingActionButton fab_deleteorfavorite_wordgroup =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_deleteorfavorite_wordgroup);
+        fab_deleteorfavorite_wordgroup.setOnClickListener(this);
+
+        switch (wordGroupType){
+            case TOP:
+                fab_edit_wordgroup.setVisibility(View.GONE);
+                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
+                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+                break;
+            case CREATE:
+                fab_edit_wordgroup.setVisibility(View.VISIBLE);
+                fab_edit_wordgroup.setBackgroundResource(R.drawable.ic_edit);
+                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
+                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_delete);
+                break;
+            case FAVORITE:
+                fab_edit_wordgroup.setVisibility(View.GONE);
+                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
+                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                break;
+            default:
+                break;
+        }
 
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -208,6 +239,20 @@ public class WordsFragment extends Fragment {
         myAdapter.replaceData(list);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.fab_edit_wordgroup:
+
+                break;
+            case R.id.fab_deleteorfavorite_wordgroup:
+
+                break;
+            default:
+                break;
+        }
+    }
+
 
     //接口
     public interface OnItemClickListener {
@@ -252,8 +297,8 @@ public class WordsFragment extends Fragment {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<Word> strings) {
-            if (strings != null) {
+        public void replaceData(List<Word> words) {
+            if (words != null) {
                 this.words.clear();
                 this.words.addAll(words);
                 notifyDataSetChanged();
