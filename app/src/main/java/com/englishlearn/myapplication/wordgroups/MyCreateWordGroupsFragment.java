@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.wordgroups;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,9 @@ public class MyCreateWordGroupsFragment extends Fragment {
 
                 WordGroup wordGroup = myAdapter.getWordGroups().get(position);
                 Log.d(TAG, wordGroup.toString());
+                Intent intent = new Intent(MyCreateWordGroupsFragment.this.getContext(),WordsActivity.class);
+                intent.putExtra(WordsActivity.OBJECT,wordGroup);
+                startActivity(intent);
             }
 
         });

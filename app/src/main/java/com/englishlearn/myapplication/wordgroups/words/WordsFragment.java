@@ -1,6 +1,5 @@
-package com.englishlearn.myapplication.wordgroups;
+package com.englishlearn.myapplication.wordgroups.words;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,9 +17,9 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,31 +34,34 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCollectWordGroupsFragment extends Fragment {
+public class WordsFragment extends Fragment {
 
     public static final String OBJECT = "object";
-    private static final String TAG = MyCollectWordGroupsFragment.class.getSimpleName();
+    private static final String TAG = WordsFragment.class.getSimpleName();
     private final int PAGESIZE = 10;
-    private Object object;
+    private WordGroup wordGroup;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<WordGroup> mList;
+    private List<String> mList;
 
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
-
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
-    public static MyCollectWordGroupsFragment newInstance() {
-        return new MyCollectWordGroupsFragment();
+    public static WordsFragment newInstance() {
+        return new WordsFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getArguments().containsKey(OBJECT)){
+            wordGroup = (WordGroup) getArguments().getSerializable(OBJECT);
+        }
 
         MyApplication.instance.getAppComponent().inject(this);
 
@@ -75,7 +77,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.mycollectwordgroups_frag, container, false);
+        View root = inflater.inflate(R.layout.words_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -94,11 +96,8 @@ public class MyCollectWordGroupsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
-                Log.d(TAG, wordGroup.toString());
-                Intent intent = new Intent(MyCollectWordGroupsFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                startActivity(intent);
+                Word word = myAdapter.getStrings().get(position);
+                Log.d(TAG, word.toString());
 
             }
 
@@ -159,7 +158,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getCollectWordGroupRxByUserId("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordsRxByWordGroupId(wordGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Word>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -224,11 +223,11 @@ public class MyCollectWordGroupsFragment extends Fragment {
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<WordGroup> wordGroups;
+        private List<Word> words;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            wordGroups = new ArrayList<>();
+            words = new ArrayList<>();
         }
 
         //已经加载完成了
@@ -245,34 +244,34 @@ public class MyCollectWordGroupsFragment extends Fragment {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<WordGroup> getWordGroups() {
-            return wordGroups;
+        public List<Word> getStrings() {
+            return words;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<WordGroup> wordGroups) {
-            if (wordGroups != null) {
-                this.wordGroups.clear();
-                this.wordGroups.addAll(wordGroups);
+        public void replaceData(List<Word> strings) {
+            if (strings != null) {
+                this.words.clear();
+                this.words.addAll(words);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position != wordGroups.size()) {
+            if (position != words.size()) {
                 Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mycollectwordgroups_frag_item;
+                return R.layout.words_frag_item;
             } else {
                 if (isGone) {
                     Log.d(TAG, "load_done_layout");
-                    return R.layout.mycollectwordgroups_frag_loaddone_item;
+                    return R.layout.words_frag_loaddone_item;
                 }
                 Log.d(TAG, "load_more_layout");
-                return R.layout.mycollectwordgroups_frag_loadmore_item;
+                return R.layout.words_frag_loadmore_item;
             }
         }
 
@@ -280,11 +279,11 @@ public class MyCollectWordGroupsFragment extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.mycollectwordgroups_frag_item:
+                case R.layout.words_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mycollectwordgroups_frag_loadmore_item:
+                case R.layout.words_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.mycollectwordgroups_frag_loaddone_item:
+                case R.layout.words_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
@@ -295,7 +294,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(wordGroups.get(position).getName());
+                itemViewHolder.name.setText(words.get(position).getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -308,7 +307,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return wordGroups.size() + 1;
+            return words.size() + 1;
         }
 
 

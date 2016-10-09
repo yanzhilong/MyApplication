@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.MyCreateWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.WordGroupsTopFragment;
+import com.englishlearn.myapplication.wordgroups.words.WordsFragment;
 
 import dagger.Component;
 
@@ -71,6 +72,8 @@ public interface AppComponent {
     void inject(MyCreateWordGroupsFragment myWordGroupsFragment);
 
     void inject(MyCollectWordGroupsFragment myCollectWordGroupsFragment);
+
+    void inject(WordsFragment wordsFragment);
 
 
 }
