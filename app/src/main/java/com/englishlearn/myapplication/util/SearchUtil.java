@@ -110,6 +110,36 @@ public class SearchUtil {
     }
 
 
+    /**
+     * 根据用户id获得搜索收藏的单詞分组的json搜索语句
+     * @param userId
+     * @return
+     */
+    public String getCollectWordGroupRxByuserId(String userId){
+
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","WordGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","wordgroupId");
+        Map map8 = new HashMap();
+        map8.put("$select",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+
+        //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
+
+        String jsonStr = gson.toJson(map9);
+        return jsonStr;
+        //return where;
+    }
+
+
 
     /**
      * key name

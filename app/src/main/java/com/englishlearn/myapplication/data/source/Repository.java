@@ -448,6 +448,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<WordGroup>> getCollectWordGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getCollectWordGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId) {
         return mBmobDataSource.getWordGroupRxByUserId(userId);
     }

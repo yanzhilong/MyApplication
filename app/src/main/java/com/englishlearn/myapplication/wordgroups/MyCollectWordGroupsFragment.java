@@ -15,38 +15,56 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.source.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyWordGroupsFragment extends Fragment {
+public class MyCollectWordGroupsFragment extends Fragment {
 
     public static final String OBJECT = "object";
-    private static final String TAG = MyWordGroupsFragment.class.getSimpleName();
+    private static final String TAG = MyCollectWordGroupsFragment.class.getSimpleName();
     private final int PAGESIZE = 10;
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<String> mList;
+    private List<WordGroup> mList;
+
+    private CompositeSubscription mSubscriptions;
+    @Inject
+    Repository repository;
 
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
-    public static MyWordGroupsFragment newInstance() {
-        return new MyWordGroupsFragment();
+    public static MyCollectWordGroupsFragment newInstance() {
+        return new MyCollectWordGroupsFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        MyApplication.instance.getAppComponent().inject(this);
+
         mList = new ArrayList();
+        if (mSubscriptions == null) {
+            mSubscriptions = new CompositeSubscription();
+        }
 
     }
 
@@ -55,7 +73,7 @@ public class MyWordGroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.mywordgroups_frag, container, false);
+        View root = inflater.inflate(R.layout.mycollectwordgroups_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -74,8 +92,8 @@ public class MyWordGroupsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                String string = myAdapter.getStrings().get(position);
-                Log.d(TAG, string.toString());
+                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
+                Log.d(TAG, wordGroup.toString());
 
             }
 
@@ -122,7 +140,6 @@ public class MyWordGroupsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-
     /**
      * 刷新列表
      */
@@ -137,21 +154,32 @@ public class MyWordGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        List<String> strings = new ArrayList<>();
-        for (int i = page * PAGESIZE; i < page * PAGESIZE + PAGESIZE; i++) {
-            strings.add("test" + i);
-        }
+        Subscription subscription = repository.getCollectWordGroupRxByUserId("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+            @Override
+            public void onCompleted() {
+                loadingComplete();
+            }
 
-        Log.d(TAG, "onNext size:" + strings.size());
+            @Override
+            public void onError(Throwable e) {
+                loadingFail(e);
+            }
 
-        if (strings == null || strings.size() == 0) {
-            myAdapter.loadingGone();
-            myAdapter.notifyDataSetChanged();
-        } else {
-            page++;//页数增加
-            mList.addAll(strings);
-            showList(mList);
-        }
+            @Override
+            public void onNext(List list) {
+                Log.d(TAG,"onNext size:" + list.size());
+
+                if(list == null || list.size() == 0){
+                    myAdapter.loadingGone();
+                    myAdapter.notifyDataSetChanged();
+                }else{
+                    page++;//页数增加
+                    mList.addAll(list);
+                    showList(mList);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
 
     }
 
@@ -191,11 +219,11 @@ public class MyWordGroupsFragment extends Fragment {
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<String> strings;
+        private List<WordGroup> wordGroups;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            strings = new ArrayList<>();
+            wordGroups = new ArrayList<>();
         }
 
         //已经加载完成了
@@ -212,34 +240,34 @@ public class MyWordGroupsFragment extends Fragment {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<String> getStrings() {
-            return strings;
+        public List<WordGroup> getWordGroups() {
+            return wordGroups;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<String> strings) {
-            if (strings != null) {
-                this.strings.clear();
-                this.strings.addAll(strings);
+        public void replaceData(List<WordGroup> wordGroups) {
+            if (wordGroups != null) {
+                this.wordGroups.clear();
+                this.wordGroups.addAll(wordGroups);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position != strings.size()) {
+            if (position != wordGroups.size()) {
                 Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mywordgroups_frag_item;
+                return R.layout.mycollectwordgroups_frag_item;
             } else {
                 if (isGone) {
                     Log.d(TAG, "load_done_layout");
-                    return R.layout.mywordgroups_frag_loaddone_item;
+                    return R.layout.mycollectwordgroups_frag_loaddone_item;
                 }
                 Log.d(TAG, "load_more_layout");
-                return R.layout.mywordgroups_frag_loadmore_item;
+                return R.layout.mycollectwordgroups_frag_loadmore_item;
             }
         }
 
@@ -247,11 +275,11 @@ public class MyWordGroupsFragment extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.mywordgroups_frag_item:
+                case R.layout.mycollectwordgroups_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mywordgroups_frag_loadmore_item:
+                case R.layout.mycollectwordgroups_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.mywordgroups_frag_loaddone_item:
+                case R.layout.mycollectwordgroups_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
@@ -262,7 +290,7 @@ public class MyWordGroupsFragment extends Fragment {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(strings.get(position));
+                itemViewHolder.name.setText(wordGroups.get(position).getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -275,7 +303,7 @@ public class MyWordGroupsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return strings.size() + 1;
+            return wordGroups.size() + 1;
         }
 
 

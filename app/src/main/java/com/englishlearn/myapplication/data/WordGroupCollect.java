@@ -1,36 +1,22 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-12.
  * 单词分级收藏表
  */
 public class WordGroupCollect {
 
-    private String id;
-    private String wordGroupcollectId;
+    private String objectId;
     private String userId; //用户Id
     private String wordgroupId; //单词分组Id
 
-    public WordGroupCollect() {
-        this.wordGroupcollectId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getWordGroupcollectId() {
-        return wordGroupcollectId;
-    }
-
-    public void setWordGroupcollectId(String wordGroupcollectId) {
-        this.wordGroupcollectId = wordGroupcollectId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getUserId() {
@@ -52,8 +38,7 @@ public class WordGroupCollect {
     @Override
     public String toString() {
         return "WordGroupCollect{" +
-                "id='" + id + '\'' +
-                ", wordGroupcollectId='" + wordGroupcollectId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", wordgroupId='" + wordgroupId + '\'' +
                 '}';

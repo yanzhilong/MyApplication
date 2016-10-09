@@ -2407,6 +2407,42 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<WordGroup>> getCollectWordGroupRxByUserId(String userId, int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getCollectWordGroupRxByuserId(userId);
+
+        return bmobService.getWordGroupRxByUserId(regex,limit,skip)
+                .flatMap(new Func1<Response<WordGroupResult>, Observable<List<WordGroup>>>() {
+                    @Override
+                    public Observable<List<WordGroup>> call(Response<WordGroupResult> bmobWordGroupResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobWordGroupResultResponse.isSuccessful()){
+                            WordGroupResult wordGroupResult = bmobWordGroupResultResponse.body();
+
+                            List<WordGroup> wordGroups = wordGroupResult.getResults();
+                            return Observable.just(wordGroups);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobWordGroupResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<WordGroup>>applySchedulers());
+    }
+
+    @Override
     public Observable<List<WordGroup>> getWordGroupRxByUserId(String userId) {
         String regex = searchUtil.getBmobEquals("userId",userId);
 
@@ -2476,30 +2512,20 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
 
-        final BmobCreateWordGroupCollectRequest wordGroupCollectRequest = new BmobCreateWordGroupCollectRequest();
 
-        wordGroupCollectRequest.setWordGroupcollectId(wordGroupCollect.getWordGroupcollectId());
-        wordGroupCollectRequest.setWordgroupId(wordGroupCollect.getWordgroupId());
-        wordGroupCollectRequest.setUserId(wordGroupCollect.getUserId());
-
-        return bmobService.addWordGroupCollect(wordGroupCollectRequest)
-                .flatMap(new Func1<Response<BmobWordGroupCollect>, Observable<WordGroupCollect>>() {
+        return bmobService.addWordGroupCollect(wordGroupCollect)
+                .flatMap(new Func1<Response<WordGroupCollect>, Observable<WordGroupCollect>>() {
                     @Override
-                    public Observable<WordGroupCollect> call(Response<BmobWordGroupCollect> bmobWordGroupCollectResponse) {
+                    public Observable<WordGroupCollect> call(Response<WordGroupCollect> wordGroupCollectResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobWordGroupCollectResponse.isSuccessful()){
+                        if(wordGroupCollectResponse.isSuccessful()){
 
-                            BmobWordGroupCollect bmobWordGroupCollect = bmobWordGroupCollectResponse.body();
-                            WordGroupCollect wordGroupCollect =  new WordGroupCollect();
-                            wordGroupCollect.setId(bmobWordGroupCollect.getObjectId());
-                            wordGroupCollect.setUserId(bmobWordGroupCollect.getUserId());
-                            wordGroupCollect.setWordGroupcollectId(bmobWordGroupCollect.getWordGroupcollectId());
-                            wordGroupCollect.setWordgroupId(bmobWordGroupCollect.getWordgroupId());
+                            WordGroupCollect wordGroupCollect =  wordGroupCollectResponse.body();
                             return Observable.just(wordGroupCollect);
                         }else{
                             Gson gson = new GsonBuilder().create();
                             try {
-                                String errjson =  bmobWordGroupCollectResponse.errorBody().string();
+                                String errjson =  wordGroupCollectResponse.errorBody().string();
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
@@ -2548,25 +2574,15 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getBmobEquals("userId",userId);
 
         return bmobService.getWordGroupCollectRxByUserId(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobWordGroupCollectResult>, Observable<List<WordGroupCollect>>>() {
+                .flatMap(new Func1<Response<WordGroupCollectResult>, Observable<List<WordGroupCollect>>>() {
                     @Override
-                    public Observable<List<WordGroupCollect>> call(Response<BmobWordGroupCollectResult> bmobWordGroupCollectResultResponse) {
+                    public Observable<List<WordGroupCollect>> call(Response<WordGroupCollectResult> bmobWordGroupCollectResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobWordGroupCollectResultResponse.isSuccessful()){
-                            BmobWordGroupCollectResult bmobWordGroupCollectResult = bmobWordGroupCollectResultResponse.body();
+                            WordGroupCollectResult bmobWordGroupCollectResult = bmobWordGroupCollectResultResponse.body();
 
-                            List<BmobWordGroupCollect> bmobWordGroups = bmobWordGroupCollectResult.getResults();
-                            List<WordGroupCollect> wordGroupCollects = new ArrayList<>();
+                            List<WordGroupCollect> wordGroupCollects = bmobWordGroupCollectResult.getResults();
 
-                            for(BmobWordGroupCollect bmobWordGroupCollect:bmobWordGroups){
-
-                                WordGroupCollect wordGroupCollect =  new WordGroupCollect();
-                                wordGroupCollect.setId(bmobWordGroupCollect.getObjectId());
-                                wordGroupCollect.setUserId(bmobWordGroupCollect.getUserId());
-                                wordGroupCollect.setWordGroupcollectId(bmobWordGroupCollect.getWordGroupcollectId());
-                                wordGroupCollect.setWordgroupId(bmobWordGroupCollect.getWordgroupId());
-                                wordGroupCollects.add(wordGroupCollect);
-                            }
                             return Observable.just(wordGroupCollects);
                         }else{
                             Gson gson = new GsonBuilder().create();

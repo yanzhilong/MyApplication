@@ -237,6 +237,7 @@
     <string-array name="wordgroups_tablayout">
         <item>热门推荐</item>
         <item>我的词单</item>
+        <item>我的收藏</item>
     </string-array>
 
     <string-array name="advanced_tablayout">

@@ -18,6 +18,8 @@ import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
 import com.englishlearn.myapplication.sentences.SentencesPresenter;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
+import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
+import com.englishlearn.myapplication.wordgroups.MyCreateWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.WordGroupsTopFragment;
 
 import dagger.Component;
@@ -65,6 +67,10 @@ public interface AppComponent {
     void inject(GrammarsActivity grammarsActivity);
 
     void inject(WordGroupsTopFragment wordGroupsTopFragment);
+
+    void inject(MyCreateWordGroupsFragment myWordGroupsFragment);
+
+    void inject(MyCollectWordGroupsFragment myCollectWordGroupsFragment);
 
 
 }

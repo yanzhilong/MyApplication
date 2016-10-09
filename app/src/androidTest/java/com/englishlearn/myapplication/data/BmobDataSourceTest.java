@@ -871,7 +871,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testWordGroupCollect_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteWordGroupCollectRxById(wordGroupCollect.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteWordGroupCollectRxById(wordGroupCollect.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){

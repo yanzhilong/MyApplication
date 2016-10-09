@@ -38,7 +38,8 @@ public class WordGroupsActivity extends AppCompatActivity {
         //初始Fragment
         list = new ArrayList<>();
         list.add(WordGroupsTopFragment.newInstance());
-        list.add(MyWordGroupsFragment.newInstance());
+        list.add(MyCreateWordGroupsFragment.newInstance());
+        list.add(MyCollectWordGroupsFragment.newInstance());
 
         //ViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);

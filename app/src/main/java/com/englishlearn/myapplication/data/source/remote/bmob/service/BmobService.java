@@ -8,6 +8,7 @@ import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateSentenceCollectRequest;
@@ -17,7 +18,6 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractate
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateGroupRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateTypeRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateWordGroupCollectRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobSentenceCollect;
@@ -34,8 +34,6 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupR
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateType;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobWordGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.GrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
@@ -51,6 +49,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordCollectResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.WordGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordResult;
 
@@ -508,7 +507,7 @@ public interface BmobService{
      -G \
      --data-urlencode 'where={"hometown":{"$dontSelect":{"query":{"className":"Team","where":{"winPct":{"$gt":0.5}}},"key":"city"}}}' \
      https://api.bmob.cn/1/users
-     * @param bmobCreateSentenceRequest
+     * @param
      * @return
      */
 
@@ -779,7 +778,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobWordGroupCollect>> addWordGroupCollect(@Body BmobCreateWordGroupCollectRequest bmobCreateWordGroupCollectRequest);
+    Observable<Response<WordGroupCollect>> addWordGroupCollect(@Body WordGroupCollect wordGroupCollect);
 
     //删除单词分組收藏
     @DELETE("/1/classes/WordGroupCollect/{id}/")
@@ -795,7 +794,16 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobWordGroupCollectResult>> getWordGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<WordGroupCollectResult>> getWordGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+    //根据userId获取用户收藏的单词分組,分页展示
+    @GET("/1/classes/WordGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordGroupCollectResult>> getCollectWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
 
     //句子收藏分组模块****************************************************************************
 

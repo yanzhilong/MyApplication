@@ -36,7 +36,8 @@ import static org.junit.Assert.assertNotNull;
 public class WordGroupTest {
 
     private static final String TAG = WordGroupTest.class.getSimpleName();
-    private static final String USERID = "468c3f629d";
+    private static final String USERID_189 = "468c3f629d";
+    private static final String USERID_159 = "943a8a40ed";
     private RemoteData mBmobRemoteData;
     private Context context;
 
@@ -57,9 +58,9 @@ public class WordGroupTest {
     }
 
 
-    //添加单词分组
+    //添加音标单词分组
     @Test
-    public void addWordGroup() throws IOException {
+    public void addPhoneticsWordGroup() throws IOException {
 
         //读取音标
         List<PhoneticsSymbols> phoneticsSymbolses = new ArrayList<>();
@@ -71,10 +72,10 @@ public class WordGroupTest {
 
         String line;
 
-        while ((line = bufferedReader.readLine()) != null){
+        while ((line = bufferedReader.readLine()) != null) {
 
-            if(!line.startsWith("#") && !line.equals("")){
-                if(line.contains("p")){
+            if (!line.startsWith("#") && !line.equals("")) {
+                if (line.contains("p")) {
                     isvowel = true;
                 }
                 PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
@@ -82,10 +83,10 @@ public class WordGroupTest {
                 String[] names = line.split("\\s+");
                 String ipaname;
                 String kkname;
-                if(names.length > 1){
+                if (names.length > 1) {
                     ipaname = names[0];
                     kkname = names[1];
-                }else {
+                } else {
                     ipaname = line;
                     kkname = line;
                 }
@@ -96,28 +97,52 @@ public class WordGroupTest {
 
             }
         }
-        Log.d(TAG,phoneticsSymbolses.size()+"");
-        Log.d(TAG,phoneticsSymbolses.toString());
+        Log.d(TAG, phoneticsSymbolses.size() + "");
+        Log.d(TAG, phoneticsSymbolses.toString());
 
-        for(PhoneticsSymbols phoneticsSymbols : phoneticsSymbolses){
+        for (PhoneticsSymbols phoneticsSymbols : phoneticsSymbolses) {
             //添加　
-            Log.d(TAG,"testWordGroup_add");
+            Log.d(TAG, "testWordGroup_add");
             WordGroup addwordGroup = new WordGroup();
             addwordGroup.setName(phoneticsSymbols.getIpaname() + " or " + phoneticsSymbols.getKkname() + "示例单词");
             addwordGroup.setOpen("true");
-            addwordGroup.setUserId(USERID);
+            addwordGroup.setUserId(USERID_189);
 
             TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
             mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);
             testSubscriber_add.assertNoErrors();
             List<WordGroup> list = testSubscriber_add.getOnNextEvents();
             Assert.assertNotNull(list);
-            if(list == null || list.size() == 0){
+            if (list == null || list.size() == 0) {
                 return;
             }
             WordGroup wordGroup = list.get(0);
-            Log.d(TAG,"testWordGroup_add_result:" + wordGroup.toString());
+            Log.d(TAG, "testWordGroup_add_result:" + wordGroup.toString());
         }
+
+    }
+
+    //添加音标单词分组
+    @Test
+    public void addWordGroup() {
+
+        //添加　
+        Log.d(TAG, "testWordGroup_add");
+        WordGroup addwordGroup = new WordGroup();
+        addwordGroup.setName("新概念英语第一册(1-10)");
+        addwordGroup.setOpen("false");
+        addwordGroup.setUserId(USERID_159);
+
+        TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<WordGroup> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if (list == null || list.size() == 0) {
+            return;
+        }
+        WordGroup wordGroup = list.get(0);
+        Log.d(TAG, "testWordGroup_add_result:" + wordGroup.toString());
 
     }
 }
