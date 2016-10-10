@@ -429,7 +429,7 @@ public class Repository implements DataSource,RemoteData,LocalData {
 
     @Override
     public Observable<Boolean> deleteWordGroupRxById(String wordGroupId) {
-        return mBmobDataSource.deleteWordById(wordGroupId);
+        return mBmobDataSource.deleteWordGroupRxById(wordGroupId);
     }
 
     @Override
@@ -478,8 +478,18 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<Boolean> deleteWordGroupCollectRxByuserIdAndwordGroupId(String userId, String wordGroupId) {
+        return mBmobDataSource.deleteWordGroupCollectRxByuserIdAndwordGroupId(userId,wordGroupId);
+    }
+
+    @Override
     public Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserId(String userId, int page, int pageSize) {
         return mBmobDataSource.getWordGroupCollectRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserIdAndwordGroupId(String userId, String wordGroupId) {
+        return mBmobDataSource.getWordGroupCollectRxByUserIdAndwordGroupId(userId,wordGroupId);
     }
 
     @Override

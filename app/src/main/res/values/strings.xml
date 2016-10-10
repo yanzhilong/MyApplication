@@ -177,11 +177,22 @@
     <!-- WordActivity -->
     <string name="word_title">Word</string>
 
+    <!-- WordsActivity -->
+    <string name="favoritesuccess">收藏成功</string>
+    <string name="unfavoritesuccess">取消收藏成功</string>
+    <string name="favoritefail">收藏失败，请稍后再試</string>
+    <string name="unfavoritefail">取消收藏失败，请稍后再試</string>
+    <string name="words_nameunique">名称不能重复</string>
+    <string name="updatewordgroupsuccess">更新成功</string>
+    <string name="deletesuccess">删除成功</string>
+
     <!-- WordGroupActivity -->
     <string name="wordgroup_title">WordGroup</string>
 
     <!-- WordGroupsActivity -->
     <string name="wordgroups_title">词单</string>
+    <string name="wordgroups_nameunique">名称不能重复</string>
+    <string name="createwordgroupsuccess">创建成功</string>
 
     <!-- TractateActivity -->
     <string name="tractate_title">Tractate</string>

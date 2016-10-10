@@ -806,6 +806,15 @@ public interface BmobService{
     })
     Observable<Response<WordGroupCollectResult>> getWordGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+    //根据userId和单詞wvxe获取单词分組收藏,分页展示
+    @GET("/1/classes/WordGroupCollect")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordGroupCollectResult>> getWordGroupCollectRxByUserIdAndwordGroupId(@Query("where")String userIdjson);
+
+
     //根据userId获取用户收藏的单词分組,分页展示
     @GET("/1/classes/WordGroup")
     @Headers({

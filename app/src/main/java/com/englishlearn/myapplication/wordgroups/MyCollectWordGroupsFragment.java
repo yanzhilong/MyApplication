@@ -36,11 +36,12 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCollectWordGroupsFragment extends Fragment {
+public class MyCollectWordGroupsFragment extends Fragment implements View.OnClickListener {
 
-    public static final String OBJECT = "object";
     private static final String TAG = MyCollectWordGroupsFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private String userId = "943a8a40ed";
+    public static final String OBJECT = "object";
+    private final int PAGESIZE = 20;
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
@@ -147,6 +148,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
     }
 
+
     /**
      * 刷新列表
      */
@@ -161,7 +163,7 @@ public class MyCollectWordGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getCollectWordGroupRxByUserId("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getCollectWordGroupRxByUserId(userId,page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -209,6 +211,11 @@ public class MyCollectWordGroupsFragment extends Fragment {
     private void showList(List list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
 

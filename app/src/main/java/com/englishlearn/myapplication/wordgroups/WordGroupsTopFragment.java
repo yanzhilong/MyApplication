@@ -39,10 +39,11 @@ public class WordGroupsTopFragment extends Fragment {
 
     private static final String TAG = WordGroupsTopFragment.class.getSimpleName();
 
+    private String userId = "943a8a40ed";
     private MyAdapter myAdapter;
 
     private int page = 0;
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 20;
 
     private List<WordGroup> mList;
 
@@ -160,7 +161,7 @@ public class WordGroupsTopFragment extends Fragment {
 
     //获取下一页
     public void getNextPage() {
-        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx(userId,page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

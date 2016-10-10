@@ -618,6 +618,15 @@ public interface RemoteData extends DataSource{
 
 
     /**
+     * 删除单词分組收藏
+     * @param userId
+     * @param wordGroupId
+     * @return
+     */
+    Observable<Boolean> deleteWordGroupCollectRxByuserIdAndwordGroupId(String userId,String wordGroupId);
+
+
+    /**
      * 根据userId获取单词分组收藏分页展示
      * @param userId
      * @param page
@@ -627,6 +636,13 @@ public interface RemoteData extends DataSource{
     Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserId(String userId,int page,int pageSize);
 
 
+    /**
+     * 根据userId和wordGroupId获取单词分组收藏分页展示
+     * @param userId
+     * @param wordGroupId
+     * @return
+     */
+    Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserIdAndwordGroupId(String userId,String wordGroupId);
 
     //句子收藏分组模块
     //*****************************************************************************

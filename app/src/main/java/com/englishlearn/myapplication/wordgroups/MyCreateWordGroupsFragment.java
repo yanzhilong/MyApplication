@@ -15,11 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
+import com.englishlearn.myapplication.dialog.CreateWordGroupFragment;
 import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
 import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
 
@@ -36,11 +39,12 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCreateWordGroupsFragment extends Fragment {
+public class MyCreateWordGroupsFragment extends Fragment implements View.OnClickListener {
 
-    public static final String OBJECT = "object";
     private static final String TAG = MyCreateWordGroupsFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private String userId = "943a8a40ed";
+    public static final String OBJECT = "object";
+    private final int PAGESIZE = 20;
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
@@ -76,6 +80,8 @@ public class MyCreateWordGroupsFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View root = inflater.inflate(R.layout.mywordgroups_frag, container, false);
+
+        root.findViewById(R.id.createwordgroup).setOnClickListener(this);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -145,6 +151,71 @@ public class MyCreateWordGroupsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    /**
+     * 显示对话框
+     */
+    private void showCreateWordGroupDialog(){
+        CreateWordGroupFragment createWordGroupFragment = new CreateWordGroupFragment();
+        createWordGroupFragment.setCreateWordGroupListener(new CreateWordGroupFragment.CreateWordGroupListener() {
+            @Override
+            public void onClick(String name) {
+                createWordGroup(name);
+            }
+        });
+        createWordGroupFragment.show(getFragmentManager(),"create");
+    }
+
+
+    /**
+     * 创建词单
+     */
+    private void createWordGroup(String name){
+
+        WordGroup createwg = new WordGroup();
+        createwg.setUserId(userId);
+        createwg.setName(name);
+        createwg.setOpen("false");
+        Subscription subscription = repository.addWordGroup(createwg).subscribe(new Subscriber<WordGroup>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
+                    createWGFail(getString(R.string.wordgroups_nameunique));
+                }else{
+                    Toast.makeText(MyCreateWordGroupsFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onNext(WordGroup wordGroup) {
+
+                if(wordGroup != null){
+                    createWGSuccess();
+                }else{
+
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //创建失败
+    private void createWGFail(String message){
+
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    //创建成功
+    private void createWGSuccess(){
+
+        Toast.makeText(this.getContext(),R.string.createwordgroupsuccess,Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * 刷新列表
@@ -160,7 +231,7 @@ public class MyCreateWordGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getWordGroupRxByUserId("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupRxByUserId(userId,page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -207,6 +278,17 @@ public class MyCreateWordGroupsFragment extends Fragment {
     private void showList(List list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.createwordgroup:
+                showCreateWordGroupDialog();
+                break;
+            default:
+                break;
+        }
     }
 
 

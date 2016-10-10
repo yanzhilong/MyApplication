@@ -15,12 +15,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.RemoteCode;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
+import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
+import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +53,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     private MyAdapter myAdapter;
     private int page = 0;
     private List<String> mList;
+    private String userId = "943a8a40ed";
 
     private CompositeSubscription mSubscriptions;
     @Inject
@@ -53,6 +61,8 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
+    private FloatingActionButton fab_deleteorfavorite_wordgroup;
+    private FloatingActionButton fab_edit_wordgroup;
 
     public static WordsFragment newInstance() {
         return new WordsFragment();
@@ -115,19 +125,17 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
-        FloatingActionButton fab_edit_wordgroup =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_wordgroup);
+        fab_edit_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_wordgroup);
         fab_edit_wordgroup.setOnClickListener(this);
 
-        FloatingActionButton fab_deleteorfavorite_wordgroup =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_deleteorfavorite_wordgroup);
+        fab_deleteorfavorite_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_deleteorfavorite_wordgroup);
         fab_deleteorfavorite_wordgroup.setOnClickListener(this);
 
         switch (wordGroupType){
             case TOP:
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 break;
             case CREATE:
                 fab_edit_wordgroup.setVisibility(View.VISIBLE);
@@ -138,7 +146,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             case FAVORITE:
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
                 break;
             default:
                 break;
@@ -239,14 +247,235 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         myAdapter.replaceData(list);
     }
 
+
+    /**
+     * 显示确认删除对话框
+     */
+    private void showDeleteWordGroupConfirm() {
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteWordGroup();
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
+
+
+    /**
+     * 显示对话框
+     */
+    private void showUpdateWordGroupDialog(){
+        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
+        updateWordGroupFragment.setOldName(wordGroup.getName());
+        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
+        {
+            @Override
+            public void onUpdate(String name) {
+                updateWordGroup(name);
+            }
+        });
+        updateWordGroupFragment.show(getFragmentManager(),"update");
+    }
+
+    //删除詞单
+    private void deleteWordGroup(){
+        Subscription subscription = repository.deleteWordGroupRxById(wordGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobDefaultError bm = ((BmobRequestException) e).getBmobDefaultError();
+                    if(bm != null){
+                        deleteFail(bm.getError());
+                    }else{
+                        deleteFail(RemoteCode.COMMON.getDefauleError().getMessage());
+                    }
+                }else{
+                    Toast.makeText(WordsFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 更新词单
+     */
+    private void updateWordGroup(String name){
+
+        WordGroup createwg = new WordGroup();
+        createwg.setObjectId(wordGroup.getObjectId());
+        createwg.setUserId(userId);
+        createwg.setName(name);
+        createwg.setOpen("false");
+        Subscription subscription = repository.updateWordGroupRxById(createwg).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401){
+                        updateWGFail(getString(R.string.words_nameunique));
+                    }else{
+                        updateWGFail(RemoteCode.COMMON.DEFAULT.getMessage());
+                    }
+                }else{
+                    Toast.makeText(WordsFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                    updateWGSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //删除失败
+    private void deleteFail(String message){
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
+    }
+    //删除成功
+    private void deleteSuccess(){
+        Toast.makeText(this.getContext(),R.string.deletesuccess,Toast.LENGTH_SHORT).show();
+    }
+
+    //创建失败
+    private void updateWGFail(String message){
+
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
+    }
+
+    //创建成功
+    private void updateWGSuccess(){
+
+        Toast.makeText(this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    /**
+     * 取消收藏
+     */
+    private void unFavorite(){
+        fab_deleteorfavorite_wordgroup.setEnabled(false);
+        Subscription subscription = repository.deleteWordGroupCollectRxByuserIdAndwordGroupId(userId,wordGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+                fab_deleteorfavorite_wordgroup.setEnabled(true);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                fab_deleteorfavorite_wordgroup.setEnabled(true);
+                unFavoriteResult(false);
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+
+                unFavoriteResult(true);
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 收藏
+     */
+    private void favorite(){
+
+        fab_deleteorfavorite_wordgroup.setEnabled(false);
+        WordGroupCollect wordGroupCollect = new WordGroupCollect();
+        wordGroupCollect.setUserId(userId);
+        wordGroupCollect.setWordgroupId(wordGroup.getObjectId());
+        repository.addWordGroupCollect(wordGroupCollect).subscribe(new Subscriber<WordGroupCollect>() {
+            @Override
+            public void onCompleted() {
+                fab_deleteorfavorite_wordgroup.setEnabled(true);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                fab_deleteorfavorite_wordgroup.setEnabled(true);
+                favoriteResult(false);
+            }
+
+            @Override
+            public void onNext(WordGroupCollect wordGroupCollect) {
+
+                if(wordGroupCollect != null){
+                    favoriteResult(true);
+                }else {
+                    favoriteResult(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * 收藏结果
+     * @param isSuccess 成功或失败
+     */
+    private void favoriteResult(boolean isSuccess){
+        if(isSuccess){
+            Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
+            fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }else {
+            Toast.makeText(this.getContext(),R.string.favoritefail,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 取消收藏结果
+     * @param isSuccess 成功或失败
+     */
+    private void unFavoriteResult(boolean isSuccess){
+        if(isSuccess){
+            Toast.makeText(this.getContext(),R.string.unfavoritesuccess,Toast.LENGTH_SHORT).show();
+            fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+        }else {
+            Toast.makeText(this.getContext(),R.string.unfavoritefail,Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.fab_edit_wordgroup:
-
+                showUpdateWordGroupDialog();
                 break;
             case R.id.fab_deleteorfavorite_wordgroup:
-
+                switch (wordGroupType){
+                    case TOP:
+                        favorite();
+                        break;
+                    case CREATE:
+                        showDeleteWordGroupConfirm();
+                        break;
+                    case FAVORITE:
+                        unFavorite();
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
                 break;
