@@ -275,4 +275,6 @@
 
     <string name="title_words">Words</string>
 
+    <string name="title_worddetail">WordDetail</string>
+
 </resources>

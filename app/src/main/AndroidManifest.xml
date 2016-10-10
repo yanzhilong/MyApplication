@@ -145,6 +145,9 @@
         <activity android:name=".wordgroups.WordGroupsActivity" />
         <activity
             android:name=".wordgroups.words.WordsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wordgroups.words.word.WordDetailActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

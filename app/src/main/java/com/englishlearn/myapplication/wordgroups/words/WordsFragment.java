@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.wordgroups.words;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
+import com.englishlearn.myapplication.wordgroups.words.word.WordDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +89,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View root = inflater.inflate(R.layout.words_frag, container, false);
@@ -111,6 +113,9 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
                 Word word = myAdapter.getStrings().get(position);
                 Log.d(TAG, word.toString());
+                Intent intent = new Intent(WordsFragment.this.getContext(),WordDetailActivity.class);
+                intent.putExtra(WordDetailActivity.OBJECT,word);
+                startActivity(intent);
 
             }
 
