@@ -1,37 +1,25 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-3.
  */
-public class SentenceCollect {
+public class SentenceCollect implements Serializable,Cloneable{
 
-    private String id;
-    private String sentenceCollectId;
+    private String objectId;
     private String userId; //用户Id
     private String createDate; //创建时间
     private String sentencegroupId; //分组Id
     private String sentenceId; //(句子，单词，文章)
 
-    public SentenceCollect() {
-        this.sentenceCollectId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getSentenceCollectId() {
-        return sentenceCollectId;
-    }
-
-    public void setSentenceCollectId(String sentenceCollectId) {
-        this.sentenceCollectId = sentenceCollectId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getUserId() {
@@ -67,10 +55,21 @@ public class SentenceCollect {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "SentenceCollect{" +
-                "id='" + id + '\'' +
-                ", sentenceCollectId='" + sentenceCollectId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", createDate='" + createDate + '\'' +
                 ", sentencegroupId='" + sentencegroupId + '\'' +

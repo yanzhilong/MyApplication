@@ -15,7 +15,7 @@ import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
-import com.englishlearn.myapplication.sentences.SentencesPresenter;
+import com.englishlearn.myapplication.sentence.SentencesPresenter;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;

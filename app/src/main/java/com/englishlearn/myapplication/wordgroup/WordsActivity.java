@@ -20,7 +20,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.sentences.ScrollChildSwipeRefreshLayout;
+import com.englishlearn.myapplication.sentence.ScrollChildSwipeRefreshLayout;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
 
 import java.util.ArrayList;

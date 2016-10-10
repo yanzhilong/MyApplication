@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.sentence;
 
 
 import android.util.Log;

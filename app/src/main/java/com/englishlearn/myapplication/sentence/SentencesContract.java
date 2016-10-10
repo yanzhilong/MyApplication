@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.sentence;
 
 import com.englishlearn.myapplication.BasePresenter;
 import com.englishlearn.myapplication.BaseView;

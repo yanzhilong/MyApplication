@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".sentences.SentencesActivity"
+            android:name=".sentence.SentencesActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -148,6 +148,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".wordgroups.words.word.WordDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentences.SentenceActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

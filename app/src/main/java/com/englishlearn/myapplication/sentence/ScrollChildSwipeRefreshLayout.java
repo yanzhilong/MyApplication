@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.sentence;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;

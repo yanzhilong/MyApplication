@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
-import com.englishlearn.myapplication.sentences.ScrollChildSwipeRefreshLayout;
+import com.englishlearn.myapplication.sentence.ScrollChildSwipeRefreshLayout;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
 import com.englishlearn.myapplication.util.SearchUtil;
 

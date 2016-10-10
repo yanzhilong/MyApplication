@@ -1,36 +1,22 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-3.
  */
 public class SentenceGroup {
 
-    private String id;
-    private String sentencegroupId;
+    private String objectId;;
     private String open; //是否公开
     private String name; //分组名称
     private String userId; //用户Id
 
-    public SentenceGroup() {
-        sentencegroupId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSentencegroupId() {
-        return sentencegroupId;
-    }
-
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getOpen() {
@@ -58,10 +44,21 @@ public class SentenceGroup {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "SentenceGroup{" +
-                "id='" + id + '\'' +
-                ", sentencegroupId='" + sentencegroupId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", open='" + open + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +

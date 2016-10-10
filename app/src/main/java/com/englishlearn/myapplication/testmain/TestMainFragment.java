@@ -23,7 +23,7 @@ import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
 import com.englishlearn.myapplication.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
 import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
-import com.englishlearn.myapplication.sentences.SentencesActivity;
+import com.englishlearn.myapplication.sentence.SentencesActivity;
 import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;

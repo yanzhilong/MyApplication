@@ -1,35 +1,21 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
-
 /**
  * Created by yanzl on 16-9-12.
  */
 public class SentenceGroupCollect {
 
-    private String id;
-    private String sentenceGroupCollectId;
+    private String objectId;
     private String userId; //用户Id
     private String sentencegroupId; //句子分组Id
 
-    public SentenceGroupCollect() {
-        sentenceGroupCollectId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSentenceGroupCollectId() {
-        return sentenceGroupCollectId;
-    }
-
-    public void setSentenceGroupCollectId(String sentenceGroupCollectId) {
-        this.sentenceGroupCollectId = sentenceGroupCollectId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getUserId() {
@@ -51,8 +37,7 @@ public class SentenceGroupCollect {
     @Override
     public String toString() {
         return "SentenceGroupCollect{" +
-                "id='" + id + '\'' +
-                ", sentenceGroupCollectId='" + sentenceGroupCollectId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", sentencegroupId='" + sentencegroupId + '\'' +
                 '}';

@@ -277,4 +277,11 @@
 
     <string name="title_worddetail">WordDetail</string>
 
+    <string name="title_sentence">Sentence</string>
+
+    <string-array name="sentenceactivity_tablayout">
+        <item>Fragment1</item>
+        <item>Fragment2</item>
+    </string-array>
+
 </resources>

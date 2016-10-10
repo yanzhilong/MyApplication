@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentences;
+package com.englishlearn.myapplication.sentence;
 
 import android.app.SearchManager;
 import android.content.Context;
