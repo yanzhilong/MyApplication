@@ -160,7 +160,7 @@ public class WordGroupsTopFragment extends Fragment {
 
     //获取下一页
     public void getNextPage() {
-        Subscription subscription = repository.getWordGroupsByOpenRx(page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx("943a8a40ed",page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

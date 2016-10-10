@@ -581,12 +581,23 @@ public interface RemoteData extends DataSource{
     Observable<List<WordGroup>> getWordGroupRxByUserId(String userId);
 
     /**
-     * 获取所有公开的单词收藏分组分页展示,按时间降序
+     * 获取所有公开的单词分组分页展示,按时间降序
      * @param page
      * @param pageSize
      * @return
      */
     Observable<List<WordGroup>> getWordGroupsByOpenRx(int page,int pageSize);
+
+
+    /**
+     * 获取所有公开的未收藏的单词分组分页展示,按时间降序
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<WordGroup>> getWordGroupsByOpenAndNotCollectRx(String userId,int page,int pageSize);
+
+
 
     //单词分組收藏模块
     //*****************************************************************************

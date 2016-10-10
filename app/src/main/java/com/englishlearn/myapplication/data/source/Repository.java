@@ -463,6 +463,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<WordGroup>> getWordGroupsByOpenAndNotCollectRx(String userId,int page, int pageSize) {
+        return mBmobDataSource.getWordGroupsByOpenAndNotCollectRx(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
         return mBmobDataSource.addWordGroupCollect(wordGroupCollect);
     }

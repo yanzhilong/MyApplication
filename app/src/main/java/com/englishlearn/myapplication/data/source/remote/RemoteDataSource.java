@@ -404,6 +404,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<WordGroup>> getWordGroupsByOpenAndNotCollectRx(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
         return null;
     }

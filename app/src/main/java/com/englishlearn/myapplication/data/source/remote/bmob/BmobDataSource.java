@@ -2510,6 +2510,43 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<WordGroup>> getWordGroupsByOpenAndNotCollectRx(String userId,int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getWordgroupsOpenAndNotCollect(userId);
+
+        return bmobService.getWordGroupsByOpenAndNotCollectRx(regex,limit,skip)
+                .flatMap(new Func1<Response<WordGroupResult>, Observable<List<WordGroup>>>() {
+                    @Override
+                    public Observable<List<WordGroup>> call(Response<WordGroupResult> bmobWordGroupResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobWordGroupResultResponse.isSuccessful()){
+                            WordGroupResult wordGroupResult = bmobWordGroupResultResponse.body();
+
+                            List<WordGroup> wordGroups = wordGroupResult.getResults();
+
+                            return Observable.just(wordGroups);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobWordGroupResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<WordGroup>>applySchedulers());
+    }
+
+    @Override
     public Observable<WordGroupCollect> addWordGroupCollect(WordGroupCollect wordGroupCollect) {
 
 

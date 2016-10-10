@@ -753,13 +753,23 @@ public interface BmobService{
     Observable<Response<WordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson);
 
 
-    //获取所有公开的单词收藏分组分页展示,按时间降序(从近到远)
+    //获取所有公开的单词分组分页展示,按时间降序(从近到远)
     @GET("/1/classes/WordGroup?order=-createdAt")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<WordGroupResult>> getWordGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
+    //获取所有公开的未收藏单词分组分页展示,按时间降序(从近到远)
+    @GET("/1/classes/WordGroup?order=-createdAt")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordGroupResult>> getWordGroupsByOpenAndNotCollectRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
+
 
     //根据id获取单词收藏分组
     @GET("/1/classes/WordGroup/{id}/")

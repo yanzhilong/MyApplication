@@ -81,7 +81,7 @@ public class SearchUtil {
 
 
     /**
-     * 根据音标id获得搜索关联的单词的json搜索语句
+     * 根据分组id获得搜索组里面的单词的json搜索语句
      * @param wordgroupId
      * @return
      */
@@ -139,6 +139,35 @@ public class SearchUtil {
         //return where;
     }
 
+    public String getWordgroupsOpenAndNotCollect(String userId){
+
+        //排除查询用户收藏的单词分组Id
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","WordGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","wordgroupId");
+        Map map8 = new HashMap();
+        map8.put("$dontSelect",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+        Map map10 = new HashMap();
+        map10.put("open","true");
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map10);
+        list.add(map9);
+        Map<String,List<Map<String,String>>> map11 = new HashMap();
+        map11.put("$and",list);
+
+        String jsonStr = gson.toJson(map11);
+        return jsonStr;
+    }
 
 
     /**
