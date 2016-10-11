@@ -34,6 +34,7 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.local.LocalData;
+import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesData;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
@@ -44,7 +45,7 @@ import java.util.List;
 
 import rx.Observable;
 
-public class Repository implements DataSource,RemoteData,LocalData {
+public class Repository implements DataSource,RemoteData,LocalData,SharedPreferencesData {
 
     private static Repository INSTANCE = null;
 
@@ -54,21 +55,26 @@ public class Repository implements DataSource,RemoteData,LocalData {
 
     private final RemoteData mBmobDataSource;
 
+    private final SharedPreferencesData mSharedPreferencesData;
+
 
 
     boolean mCacheIsDirty = false;
 
     private Repository(RemoteData remoteDataSource,
-                       LocalData localDataSource) {
+                       LocalData localDataSource,
+                       SharedPreferencesData sharedPreferencesData) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
+        mSharedPreferencesData = sharedPreferencesData;
         mBmobDataSource = BmobDataSource.getInstance();
     }
 
     public static Repository getInstance(RemoteData remoteData,
-                                         LocalData localData) {
+                                         LocalData localData,
+                                         SharedPreferencesData sharedPreferencesData) {
         if (INSTANCE == null) {
-            INSTANCE = new Repository(remoteData, localData);
+            INSTANCE = new Repository(remoteData, localData,sharedPreferencesData);
         }
         return INSTANCE;
     }
@@ -523,6 +529,11 @@ public class Repository implements DataSource,RemoteData,LocalData {
     }
 
     @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupsByOpenAndNotCollectRx(String userId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceGroupsByOpenAndNotCollectRx(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
         return mBmobDataSource.addSentenceGroupCollect(sentenceGroupCollect);
     }
@@ -615,5 +626,20 @@ public class Repository implements DataSource,RemoteData,LocalData {
     @Override
     public Observable<UploadFile> uploadFile(File file) {
         return null;
+    }
+
+    @Override
+    public void saveUserInfo(User user) {
+        mSharedPreferencesData.saveUserInfo(user);
+    }
+
+    @Override
+    public User getUserInfo() {
+        return mSharedPreferencesData.getUserInfo();
+    }
+
+    @Override
+    public void cleanUserInfo() {
+        mSharedPreferencesData.cleanUserInfo();
     }
 }

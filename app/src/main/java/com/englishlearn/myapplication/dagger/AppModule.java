@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.local.LocalDataSource;
+import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesDataSource;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.RemoteDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
@@ -30,7 +31,7 @@ public class AppModule {
 
     @Provides
     public Repository provideRepository() {
-        return Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication));
+        return Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication), SharedPreferencesDataSource.getInstance(mApplication));
     }
 
     @Provides

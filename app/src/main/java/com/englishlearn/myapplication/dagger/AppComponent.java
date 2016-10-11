@@ -8,14 +8,15 @@ import com.englishlearn.myapplication.grammar.GrammarPresenter;
 import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
+import com.englishlearn.myapplication.main.MainActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter;
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
-import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
 import com.englishlearn.myapplication.sentence.SentencesPresenter;
+import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
@@ -74,6 +75,8 @@ public interface AppComponent {
     void inject(MyCollectWordGroupsFragment myCollectWordGroupsFragment);
 
     void inject(WordsFragment wordsFragment);
+
+    void inject(MainActivity mainActivity);
 
 
 }

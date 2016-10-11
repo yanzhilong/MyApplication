@@ -23,7 +23,10 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
 
     private static final String TAG = RegisterUserFragment.class.getSimpleName();
 
+    private TextView user_objectid;
     private TextView user_name;
+    private TextView user_mobile;
+    private TextView user_email;
     private TextView sessiontoken;
 
     private EditText username;
@@ -77,7 +80,10 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.registeruser_frag, container, false);
 
+        user_objectid = (TextView) root.findViewById(R.id.user_objectid);
         user_name = (TextView) root.findViewById(R.id.user_name);
+        user_mobile = (TextView) root.findViewById(R.id.user_mobile);
+        user_email = (TextView) root.findViewById(R.id.user_email);
         sessiontoken = (TextView) root.findViewById(R.id.sessiontoken);
 
         username = (EditText) root.findViewById(R.id.username);
@@ -131,6 +137,7 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.checkoutUser();
     }
 
     @Override
@@ -259,6 +266,7 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
     public void loginSuccess(User user) {
         Toast.makeText(this.getContext(),R.string.loginsuccess,Toast.LENGTH_LONG).show();
         showUser(user);
+
     }
 
     @Override
@@ -277,6 +285,11 @@ public class RegisterUserFragment extends Fragment implements RegisterUserContra
         }else if(user.getMobilePhoneNumber() != null && !user.getMobilePhoneNumber().equals("")) {
             user_name.setText(user.getMobilePhoneNumber());
         }
+
+        user_objectid.setText(user.getObjectId() != null ? user.getObjectId():"");
+        user_email.setText(user.getEmail() != null ? user.getEmail():"");
+        user_mobile.setText(user.getMobilePhoneNumber() != null ? user.getMobilePhoneNumber():"");
+
         if(user.getSessionToken() != null){
             sessiontoken.setText(user.getSessionToken());
         }

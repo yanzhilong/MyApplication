@@ -73,5 +73,9 @@ public class RegisterUserContract {
         abstract void login();//注册成功后登陆
 
         abstract void logout();//注销
+
+        abstract void checkoutUser();//检测用户是否有登陆
+
+
     }
 }

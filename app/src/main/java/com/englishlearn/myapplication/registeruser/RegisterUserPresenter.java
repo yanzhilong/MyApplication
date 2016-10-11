@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 
@@ -27,6 +28,8 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
 
     @Inject
     RemoteData remoteData;
+    @Inject
+    Repository repository;
 
     private RegisterUserContract.View mView;
 
@@ -281,6 +284,8 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
             public void onNext(User user) {
                 RegisterUserPresenter.this.user = user;
                 mView.loginSuccess(user);
+                repository.saveUserInfo(user);
+
             }
         });
         add(subscription);
@@ -394,5 +399,14 @@ public class RegisterUserPresenter extends RegisterUserContract.Presenter{
     void logout() {
         this.user = null;
         mView.logout();
+        repository.cleanUserInfo();
+    }
+
+    @Override
+    void checkoutUser() {
+        User user = repository.getUserInfo();
+        if(user != null){
+            mView.showUser(user);
+        }
     }
 }

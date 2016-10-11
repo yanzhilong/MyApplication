@@ -19,6 +19,7 @@ import com.englishlearn.myapplication.grammar.GrammarFragment;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
+import com.englishlearn.myapplication.sentences.SentenceActivity;
 import com.englishlearn.myapplication.wordgroups.WordGroupsActivity;
 
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
                 startActivity(new Intent(this.getContext(), WordGroupsActivity.class));
                 break;
             case R.id.sentences:
-                startActivity(new Intent(this.getContext(), GrammarsActivity.class));
+                startActivity(new Intent(this.getContext(), SentenceActivity.class));
                 break;
             default:
                 break;

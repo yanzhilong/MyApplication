@@ -139,6 +139,7 @@ public class SearchUtil {
         //return where;
     }
 
+    //获得未收藏的单詞分組
     public String getWordgroupsOpenAndNotCollect(String userId){
 
         //排除查询用户收藏的单词分组Id
@@ -151,6 +152,38 @@ public class SearchUtil {
         Map map7 = new HashMap();
         map7.put("query",map6);
         map7.put("key","wordgroupId");
+        Map map8 = new HashMap();
+        map8.put("$dontSelect",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+        Map map10 = new HashMap();
+        map10.put("open","true");
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map10);
+        list.add(map9);
+        Map<String,List<Map<String,String>>> map11 = new HashMap();
+        map11.put("$and",list);
+
+        String jsonStr = gson.toJson(map11);
+        return jsonStr;
+    }
+
+
+    //获得未收藏的句子分組
+    public String getSentenceGroupsOpenAndNotCollect(String userId){
+
+        //排除查询用户收藏的单词分组Id
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","SentenceGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","sentencegroupId");
         Map map8 = new HashMap();
         map8.put("$dontSelect",map7);
         Map map9 = new HashMap();

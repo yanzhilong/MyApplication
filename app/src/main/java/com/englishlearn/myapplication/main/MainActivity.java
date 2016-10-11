@@ -14,15 +14,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.advanced.AdvancedFragment;
+import com.englishlearn.myapplication.data.User;
+import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.elementary.ElementaryFragment;
 import com.englishlearn.myapplication.intermediate.IntermediateFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -32,10 +38,16 @@ public class MainActivity extends AppCompatActivity
     String[] titles;
     private List<Fragment> list;
 
+    @Inject
+    Repository repository;
+    private TextView loginname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MyApplication.instance.getAppComponent().inject(this);
 
         titles = getResources().getStringArray(R.array.main_tablayout);
         //初始Fragment
@@ -64,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         //设置登陆的按钮监听
         View headerView = navigationView.getHeaderView(0);
         View login_layout = headerView.findViewById(R.id.login_layout);
+        loginname = (TextView) headerView.findViewById(R.id.loginname);
         login_layout.setOnClickListener(this);
 
 
@@ -76,6 +89,19 @@ public class MainActivity extends AppCompatActivity
         tableLayout.setupWithViewPager(viewPager);
         tableLayout.getTabTextColors();
 
+        //检查用户
+        checkoutLogin();
+    }
+
+    /**
+     * 检测用户登陆信息
+     */
+    private void checkoutLogin(){
+
+        User user = repository.getUserInfo();
+        if(user != null){
+            loginname.setText(user.getUsername());
+        }
     }
 
 

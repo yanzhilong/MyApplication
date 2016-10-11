@@ -464,6 +464,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupsByOpenAndNotCollectRx(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
         return null;
     }

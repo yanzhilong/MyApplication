@@ -9,7 +9,6 @@ public class SentenceCollect implements Serializable,Cloneable{
 
     private String objectId;
     private String userId; //用户Id
-    private String createDate; //创建时间
     private String sentencegroupId; //分组Id
     private String sentenceId; //(句子，单词，文章)
 
@@ -28,14 +27,6 @@ public class SentenceCollect implements Serializable,Cloneable{
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
     }
 
     public String getSentencegroupId() {
@@ -71,7 +62,6 @@ public class SentenceCollect implements Serializable,Cloneable{
         return "SentenceCollect{" +
                 "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
-                ", createDate='" + createDate + '\'' +
                 ", sentencegroupId='" + sentencegroupId + '\'' +
                 ", sentenceId='" + sentenceId + '\'' +
                 '}';
