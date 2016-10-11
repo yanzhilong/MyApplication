@@ -364,6 +364,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId, int page, int pageSize) {
+        return mBmobDataSource.getSentencesRxBySentenceGroupId(sentencegroupId,page,pageSize);
+    }
+
+    @Override
     public Observable<Grammar> addGrammar(Grammar grammar) {
         return mBmobDataSource.addGrammar(grammar);
     }
@@ -524,6 +529,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<SentenceGroup>> getCollectSentenceGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getCollectSentenceGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<List<SentenceGroup>> getSentenceGroupsByOpenRx(int page, int pageSize) {
         return mBmobDataSource.getSentenceGroupsByOpenRx(page,pageSize);
     }
@@ -544,8 +554,18 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(String userId, String sentencegroupId) {
+        return mBmobDataSource.deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(userId,sentencegroupId);
+    }
+
+    @Override
     public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId, int page, int pageSize) {
         return mBmobDataSource.getSentenceGroupCollectRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserIdAndsentencegroupId(String userId, String sentencegroupId) {
+        return null;
     }
 
     @Override

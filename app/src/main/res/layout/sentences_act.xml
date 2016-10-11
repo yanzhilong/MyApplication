@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.englishlearn.myapplication.sentencegroups.sentences.SentencesActivity">
 
-    <include layout="@layout/toolbar"/>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
@@ -15,17 +29,37 @@
         <FrameLayout
             android:id="@+id/contentFrame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_add_sentence"
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add"
-            app:fabSize="normal"
+            android:orientation="vertical"
             app:layout_anchor="@id/contentFrame"
-            app:layout_anchorGravity="bottom|right|end" />
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_anchorGravity="bottom|right|end">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_edit_wordgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:layout_marginBottom="0dp"
+                android:src="@drawable/ic_edit"
+                app:fabSize="normal"/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_deleteorfavorite_wordgroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_delete"
+                app:fabSize="normal"
+                app:layout_anchor="@id/fab_edit_grammar"
+                app:layout_anchorGravity="bottom|right|end"/>
+
+        </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -13,15 +13,15 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
-public class SentencesActivity extends AppCompatActivity {
+public class SentencessActivity extends AppCompatActivity {
 
-    private static final String TAG = SentencesActivity.class.getSimpleName();
+    private static final String TAG = SentencessActivity.class.getSimpleName();
     private SentencesContract.Presenter presenter;
     private SentencesSelectContract.Presenter selectPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentences_act);
+        setContentView(R.layout.sentencess_act);
 
         Log.d(TAG,"onCreate");
         handleIntent(getIntent());

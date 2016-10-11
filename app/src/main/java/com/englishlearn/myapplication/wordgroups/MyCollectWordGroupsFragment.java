@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
@@ -39,7 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 public class MyCollectWordGroupsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = MyCollectWordGroupsFragment.class.getSimpleName();
-    private String userId = "943a8a40ed";
     public static final String OBJECT = "object";
     private final int PAGESIZE = 20;
     private Object object;
@@ -47,6 +47,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
     private int page = 0;
     private List<WordGroup> mList;
 
+    private User user;
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
@@ -64,6 +65,8 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
         super.onCreate(savedInstanceState);
 
         MyApplication.instance.getAppComponent().inject(this);
+
+        user = repository.getUserInfo();
 
         mList = new ArrayList();
         if (mSubscriptions == null) {
@@ -163,7 +166,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getCollectWordGroupRxByUserId(userId,page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getCollectWordGroupRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

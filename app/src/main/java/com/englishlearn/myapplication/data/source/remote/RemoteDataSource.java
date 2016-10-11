@@ -299,6 +299,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<Grammar> addGrammar(Grammar grammar) {
         return null;
     }
@@ -459,6 +464,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<SentenceGroup>> getCollectSentenceGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<List<SentenceGroup>> getSentenceGroupsByOpenRx(int page, int pageSize) {
         return null;
     }
@@ -479,9 +489,20 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(String userId, String sentencegroupId) {
+        return null;
+    }
+
+    @Override
     public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId, int page, int pageSize) {
         return null;
     }
+
+    @Override
+    public Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserIdAndsentencegroupId(String userId, String sentencegroupId) {
+        return null;
+    }
+
 
     @Override
     public Observable<TractateGroup> addTractateGroup(TractateGroup tractateGroup) {

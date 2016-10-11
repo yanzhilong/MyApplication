@@ -280,8 +280,11 @@
     <string name="title_sentence">Sentence</string>
 
     <string-array name="sentenceactivity_tablayout">
-        <item>Fragment1</item>
-        <item>Fragment2</item>
+        <item>热门推荐</item>
+        <item>我的句組</item>
+        <item>我的收藏</item>
     </string-array>
+
+    <string name="title_sentences">Sentences</string>
 
 </resources>

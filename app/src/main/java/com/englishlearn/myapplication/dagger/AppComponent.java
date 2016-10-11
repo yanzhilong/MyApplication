@@ -17,6 +17,10 @@ import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentence.SentencesPresenter;
 import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
+import com.englishlearn.myapplication.sentencegroups.MyCollectSentenceGroupsFragment;
+import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceGroupsFragment;
+import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFragment;
+import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
@@ -77,6 +81,17 @@ public interface AppComponent {
     void inject(WordsFragment wordsFragment);
 
     void inject(MainActivity mainActivity);
+
+    void inject(MyCollectSentenceGroupsFragment myCollectSentenceGroupsFragment);
+
+    void inject(MyCreateSentenceGroupsFragment myCreateSentenceGroupsFragment);
+
+    void inject(SentenceGroupsTopFragmentFragment sentenceGroupsTopFragmentFragment);
+
+    void inject(SentencesFragment sentencesFragment);
+
+
+
 
 
 }

@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.wordgroups;
+package com.englishlearn.myapplication.sentencegroups;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,17 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.User;
-import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
-import com.englishlearn.myapplication.dialog.CreateWordGroupFragment;
-import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
-import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
+import com.englishlearn.myapplication.sentencegroups.sentences.SentenceGroupType;
+import com.englishlearn.myapplication.sentencegroups.sentences.SentencesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,27 +37,25 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCreateWordGroupsFragment extends Fragment implements View.OnClickListener {
+public class SentenceGroupsTopFragmentFragment extends Fragment {
 
-    private static final String TAG = MyCreateWordGroupsFragment.class.getSimpleName();
     public static final String OBJECT = "object";
-    private final int PAGESIZE = 20;
+    private static final String TAG = SentenceGroupsTopFragmentFragment.class.getSimpleName();
+    private final int PAGESIZE = 10;
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<String> mList;
-
+    private List<SentenceGroup> mList;
     private User user;
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
-
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
-    public static MyCreateWordGroupsFragment newInstance() {
-        return new MyCreateWordGroupsFragment();
+    public static SentenceGroupsTopFragmentFragment newInstance() {
+        return new SentenceGroupsTopFragmentFragment();
     }
 
     @Override
@@ -75,6 +70,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
+
     }
 
     @Nullable
@@ -82,9 +78,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.mywordgroups_frag, container, false);
-
-        root.findViewById(R.id.createwordgroup).setOnClickListener(this);
+        View root = inflater.inflate(R.layout.sentencegroupstopfragment_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -103,11 +97,11 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
             @Override
             public void onItemClick(View view, int position) {
 
-                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
-                Log.d(TAG, wordGroup.toString());
-                Intent intent = new Intent(MyCreateWordGroupsFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                intent.putExtra(WordsActivity.TYPE, WordGroupType.CREATE);
+                SentenceGroup sentenceGroup = myAdapter.getSentenceGroups().get(position);
+                Log.d(TAG, sentenceGroup.toString());
+                Intent intent = new Intent(SentenceGroupsTopFragmentFragment.this.getContext(),SentencesActivity.class);
+                intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
+                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.TOP);
                 startActivity(intent);
             }
 
@@ -155,72 +149,6 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     }
 
     /**
-     * 显示对话框
-     */
-    private void showCreateWordGroupDialog(){
-        CreateWordGroupFragment createWordGroupFragment = new CreateWordGroupFragment();
-        createWordGroupFragment.setCreateWordGroupListener(new CreateWordGroupFragment.CreateWordGroupListener() {
-            @Override
-            public void onClick(String name) {
-                createWordGroup(name);
-            }
-        });
-        createWordGroupFragment.show(getFragmentManager(),"create");
-    }
-
-
-    /**
-     * 创建词单
-     */
-    private void createWordGroup(String name){
-
-        WordGroup createwg = new WordGroup();
-        createwg.setUserId(user.getObjectId());
-        createwg.setName(name);
-        createwg.setOpen("false");
-        Subscription subscription = repository.addWordGroup(createwg).subscribe(new Subscriber<WordGroup>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
-                    createWGFail(getString(R.string.wordgroups_nameunique));
-                }else{
-                    Toast.makeText(MyCreateWordGroupsFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onNext(WordGroup wordGroup) {
-
-                if(wordGroup != null){
-                    createWGSuccess();
-                }else{
-
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    //创建失败
-    private void createWGFail(String message){
-
-        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    //创建成功
-    private void createWGSuccess(){
-
-        Toast.makeText(this.getContext(),R.string.createwordgroupsuccess,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
      * 刷新列表
      */
     public void refershList() {
@@ -234,7 +162,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getWordGroupRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getSentenceGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -274,24 +202,13 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     public void loadingFail(Throwable e) {
         Log.d(TAG, "loadingFail:" + e.toString());
         e.printStackTrace();
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     //显示列表
     private void showList(List list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.createwordgroup:
-                showCreateWordGroupDialog();
-                break;
-            default:
-                break;
-        }
     }
 
 
@@ -309,11 +226,11 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<WordGroup> wordGroups;
+        private List<SentenceGroup> sentenceGroups;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            wordGroups = new ArrayList<>();
+            sentenceGroups = new ArrayList<>();
         }
 
         //已经加载完成了
@@ -330,34 +247,34 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<WordGroup> getWordGroups() {
-            return wordGroups;
+        public List<SentenceGroup> getSentenceGroups() {
+            return sentenceGroups;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<WordGroup> wordGroups) {
-            if (wordGroups != null) {
-                this.wordGroups.clear();
-                this.wordGroups.addAll(wordGroups);
+        public void replaceData(List<SentenceGroup> sentenceGroups) {
+            if (sentenceGroups != null) {
+                this.sentenceGroups.clear();
+                this.sentenceGroups.addAll(sentenceGroups);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position != wordGroups.size()) {
+            if (position != sentenceGroups.size()) {
                 Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mywordgroups_frag_item;
+                return R.layout.sentencegroupstopfragment_frag_item;
             } else {
                 if (isGone) {
                     Log.d(TAG, "load_done_layout");
-                    return R.layout.mywordgroups_frag_loaddone_item;
+                    return R.layout.sentencegroupstopfragment_frag_loaddone_item;
                 }
                 Log.d(TAG, "load_more_layout");
-                return R.layout.mywordgroups_frag_loadmore_item;
+                return R.layout.sentencegroupstopfragment_frag_loadmore_item;
             }
         }
 
@@ -365,11 +282,11 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.mywordgroups_frag_item:
+                case R.layout.sentencegroupstopfragment_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mywordgroups_frag_loadmore_item:
+                case R.layout.sentencegroupstopfragment_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.mywordgroups_frag_loaddone_item:
+                case R.layout.sentencegroupstopfragment_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
@@ -380,7 +297,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(wordGroups.get(position).getName());
+                itemViewHolder.name.setText(sentenceGroups.get(position).getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -393,7 +310,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
 
         @Override
         public int getItemCount() {
-            return wordGroups.size() + 1;
+            return sentenceGroups.size() + 1;
         }
 
 

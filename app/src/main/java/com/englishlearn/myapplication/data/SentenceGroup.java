@@ -1,9 +1,11 @@
 package com.englishlearn.myapplication.data;
 
+import java.io.Serializable;
+
 /**
  * Created by yanzl on 16-9-3.
  */
-public class SentenceGroup {
+public class SentenceGroup implements Serializable,Cloneable {
 
     private String objectId;;
     private String open; //是否公开

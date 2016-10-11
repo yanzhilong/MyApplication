@@ -19,7 +19,7 @@ import com.englishlearn.myapplication.grammar.GrammarFragment;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
-import com.englishlearn.myapplication.sentences.SentenceActivity;
+import com.englishlearn.myapplication.sentencegroups.SentenceActivity;
 import com.englishlearn.myapplication.wordgroups.WordGroupsActivity;
 
 import java.util.ArrayList;

@@ -12,7 +12,6 @@ public class Sentence implements Serializable,Cloneable {
     private String content; //内容
     private String translation; //译文
     private String userId; //用户Id
-    private String source; //来源 (拉取来源id选择再提交来源的名称)
     private String tractateId; //来自的文章Id
     private String remark; //备注
 
@@ -47,14 +46,6 @@ public class Sentence implements Serializable,Cloneable {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public String getTractateId() {
@@ -92,7 +83,6 @@ public class Sentence implements Serializable,Cloneable {
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
                 ", userId='" + userId + '\'' +
-                ", source='" + source + '\'' +
                 ", tractateId='" + tractateId + '\'' +
                 ", remark='" + remark + '\'' +
                 '}';

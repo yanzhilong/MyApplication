@@ -931,7 +931,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testSentenceGroup_byId");
         TestSubscriber<SentenceGroup> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getSentenceGroupRxById(sentenceGroup.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getSentenceGroupRxById(sentenceGroup.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<SentenceGroup> listbyid = testSubscriber_getById.getOnNextEvents();
         SentenceGroup wordGroup1ById = null;
@@ -968,7 +968,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testSentenceGroup_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteSentenceGroupRxById(sentenceGroup.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteSentenceGroupRxById(sentenceGroup.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -978,7 +978,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testSentenceGroup_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById1 = new TestSubscriber<>();
-        mBmobRemoteData.deleteSentenceGroupRxById(sentenceGroup1.getId()).toBlocking().subscribe(testSubscriber_deleteById1);
+        mBmobRemoteData.deleteSentenceGroupRxById(sentenceGroup1.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById1);
         testSubscriber_deleteById1.assertNoErrors();
         List<Boolean> listdeleteById1 = testSubscriber_deleteById1.getOnNextEvents();
         if(listdeleteById1 != null && listdeleteById1.size() > 0){
@@ -1024,7 +1024,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testSentenceGroupCollect_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteSentenceGroupCollectRxById(sentenceGroupCollect.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteSentenceGroupCollectRxById(sentenceGroupCollect.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -1182,7 +1182,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testSentenceCollect_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteSentenceCollectRxById(sentenceCollect.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteSentenceCollectRxById(sentenceCollect.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){

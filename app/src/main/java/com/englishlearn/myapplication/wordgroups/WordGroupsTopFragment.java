@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
@@ -39,14 +40,13 @@ public class WordGroupsTopFragment extends Fragment {
 
     private static final String TAG = WordGroupsTopFragment.class.getSimpleName();
 
-    private String userId = "943a8a40ed";
     private MyAdapter myAdapter;
 
     private int page = 0;
     private final int PAGESIZE = 20;
 
     private List<WordGroup> mList;
-
+    private User user;
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
@@ -63,6 +63,8 @@ public class WordGroupsTopFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         MyApplication.instance.getAppComponent().inject(this);
+
+        user = repository.getUserInfo();
 
         mList = new ArrayList();
         if (mSubscriptions == null) {
@@ -161,7 +163,7 @@ public class WordGroupsTopFragment extends Fragment {
 
     //获取下一页
     public void getNextPage() {
-        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx(userId,page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

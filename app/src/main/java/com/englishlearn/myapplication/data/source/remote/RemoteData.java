@@ -422,6 +422,12 @@ public interface RemoteData extends DataSource{
     Observable<List<Sentence>> getSentences(String serachWord,int page,int pageSize);
 
 
+    /**
+     * 根据句子收藏分组id获取句子列表
+     * @param sentencegroupId
+     * @return
+     */
+    Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId,int page,int pageSize);
     //语法模块
     //*****************************************************************************
 
@@ -684,6 +690,18 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize);
 
+
+
+    /**
+     * 根据userId获取所收藏的句子分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceGroup>> getCollectSentenceGroupRxByUserId(String userId, int page, int pageSize);
+
+
     /**
      * 获取所有公开的句子收藏分组分页展示,按时间降序
      * @param page
@@ -722,11 +740,30 @@ public interface RemoteData extends DataSource{
     /**
      * 根据userId获取单词分组收藏分页展示
      * @param userId
+     * @param sentencegroupId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(String userId, String sentencegroupId);
+
+
+    /**
+     * 根据userId获取单词分组收藏分页展示
+     * @param userId
      * @param page
      * @param pageSize
      * @return
      */
     Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserId(String userId,int page,int pageSize);
+
+
+    /**
+     * 根据userId获取单词分组收藏分页展示
+     * @param userId
+     * @param sentencegroupId
+     * @return
+     */
+    Observable<List<SentenceGroupCollect>> getSentenceGroupCollectRxByUserIdAndsentencegroupId(String userId, String sentencegroupId);
+
 
 
     //文章收藏分组模块

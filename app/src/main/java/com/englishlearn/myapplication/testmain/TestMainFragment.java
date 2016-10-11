@@ -23,7 +23,7 @@ import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
 import com.englishlearn.myapplication.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
 import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
-import com.englishlearn.myapplication.sentence.SentencesActivity;
+import com.englishlearn.myapplication.sentence.SentencessActivity;
 import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
@@ -127,7 +127,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sentences:
-                Intent sentenceintent = new Intent(this.getContext(),SentencesActivity.class);
+                Intent sentenceintent = new Intent(this.getContext(),SentencessActivity.class);
                 this.startActivity(sentenceintent);
                 break;
             case R.id.grammars:

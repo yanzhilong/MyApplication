@@ -573,6 +573,15 @@ public interface BmobService{
     })
     Observable<Response<SentenceResult>> getSentencesRx(@Query("where") String regex, @Query("limit")int limit, @Query("skip")int skip);
 
+
+    //查询句子分组的所有句子
+    @GET("/1/classes/Sentence")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<SentenceResult>> getSentencesRxBySentenceGroupId( @Query("where") String sentencegroupidJson, @Query("limit")int limit, @Query("skip")int skip);
+
     //语法模块****************************************************************************
 
     //添加语法
@@ -749,6 +758,16 @@ public interface BmobService{
     })
     Observable<Response<WordGroupResult>> getWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+
+    //根据userId获取用户所收藏的单词分组分页展示
+    @GET("/1/classes/WordGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordGroupResult>> getCollectWordGroupRxByUserId(@Query("where")String collectAnduserIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
     //根据userId获取单词收藏分组分页展示
     @GET("/1/classes/WordGroup")
     @Headers({
@@ -810,15 +829,6 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<WordGroupCollectResult>> getWordGroupCollectRxByUserIdAndwordGroupId(@Query("where")String userIdjson);
-
-
-    //根据userId获取用户收藏的单词分組,分页展示
-    @GET("/1/classes/WordGroup")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
-    })
-    Observable<Response<WordGroupCollectResult>> getCollectWordGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //句子收藏分组模块****************************************************************************
@@ -921,6 +931,14 @@ public interface BmobService{
     })
     Observable<Response<SentenceGroupCollectResult>> getSentenceGroupCollectRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+
+    //根据userId和单詞wvxe获取单词分組收藏,分页展示
+    @GET("/1/classes/SentenceGroupCollect")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<SentenceGroupCollectResult>> getSentenceGroupCollectRxByUserIdAndsentenceGroupId(@Query("where")String userIdAndwordgroupIdjson);
 
     //文章收藏分组模块****************************************************************************
 
