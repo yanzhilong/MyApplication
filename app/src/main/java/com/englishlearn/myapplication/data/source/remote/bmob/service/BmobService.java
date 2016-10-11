@@ -7,27 +7,16 @@ import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateMsSourceRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateCollectRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateGroupRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateTractateTypeRequest;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobMsSourceResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractate;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollect;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateCollectResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroup;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateGroupResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateType;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobTractateTypeResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.GrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
@@ -43,6 +32,10 @@ import com.englishlearn.myapplication.data.source.remote.bmob.SentenceGroupColle
 import com.englishlearn.myapplication.data.source.remote.bmob.SentenceGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SentenceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
+import com.englishlearn.myapplication.data.source.remote.bmob.TractateCollectResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.TractateResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.TractateTypeResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordCollectResult;
@@ -329,55 +322,6 @@ public interface BmobService{
     })
     Observable<Response<PhoneticsWordsResult>> getPhoneticsWordsRx();
 
-
-
-    //信息来源模块****************************************************************************
-
-    //增加信息来源
-    @POST("/1/classes/Mssource")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Observable<Response<BmobMsSource>> addMssource(@Body BmobCreateMsSourceRequest bmobCreateMsSourceRequest);
-
-    //删除信息来源
-    @DELETE("/1/classes/Mssource/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Observable<Response<ResponseBody>> deleteMssourceById(@Path("id") String id);
-
-
-    //修改信息来源
-    @PUT("/1/classes/Mssource/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json",
-    })
-    Observable<Response<ResponseBody>> updateMssourceRxById(@Path("id") String id,@Body BmobCreateMsSourceRequest bmobCreateMsSourceRequest);
-
-    //根据id获取信息来源
-    @GET("/1/classes/Mssource/{id}/")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-    })
-    Observable<Response<BmobMsSource>> getMssourceRxById(@Path("id") String id);
-
-    //获取所有信息来源
-    @GET("/1/classes/Mssource")
-    @Headers({
-            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: application/json"
-    })
-    Observable<Response<BmobMsSourceResult>> getMssourceRx();
-
     //文章分类模块****************************************************************************
 
     //增加文章分类
@@ -387,7 +331,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobTractateType>> addTractateType(@Body BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest);
+    Observable<Response<TractateType>> addTractateType(@Body TractateType tractateType);
 
     //删除文章分类
     @DELETE("/1/classes/TractateType/{id}/")
@@ -405,7 +349,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateTractateTypeRxById(@Path("id") String id,@Body BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest);
+    Observable<Response<ResponseBody>> updateTractateTypeRxById(@Path("id") String id,@Body TractateType tractateType);
 
     //根据id获取文章分类
     @GET("/1/classes/TractateType/{id}/")
@@ -413,7 +357,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobTractateType>> getTractateTypeRxById(@Path("id") String id);
+    Observable<Response<TractateType>> getTractateTypeRxById(@Path("id") String id);
 
     //获取所有文章分类
     @GET("/1/classes/TractateType")
@@ -422,7 +366,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobTractateTypeResult>> getTractateTypeRx();
+    Observable<Response<TractateTypeResult>> getTractateTypeRx();
 
     //单词模块****************************************************************************
 
@@ -664,7 +608,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobTractate>> addTractate(@Body BmobCreateTractateRequest bmobCreateTractateRequest);
+    Observable<Response<Tractate>> addTractate(@Body Tractate tractate);
 
     //删除文章
     @DELETE("/1/classes/Tractate/{id}/")
@@ -681,7 +625,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateTractateRxById(@Path("id") String id,@Body BmobCreateTractateRequest bmobCreateTractateRequest);
+    Observable<Response<ResponseBody>> updateTractateRxById(@Path("id") String id,@Body Tractate tractate);
 
     //根据文章id获取文章
     @GET("/1/classes/Tractate/{id}/")
@@ -689,7 +633,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobTractate>> getTractateRxById(@Path("id") String id);
+    Observable<Response<Tractate>> getTractateRxById(@Path("id") String id);
 
 
     //根据分类id获取文章列表分页展示
@@ -698,7 +642,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobTractateResult>> getTractateRxByTractateTypeId(@Query("where")String tractatetypeidjson,@Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<TractateResult>> getTractateRxByTractateTypeId(@Query("where")String tractatetypeidjson, @Query("limit")int limit, @Query("skip")int skip);
 
     /**
      * 根据分类id,关键词的正则,获取文章列表分页展示
@@ -712,7 +656,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobTractateResult>> getTractatesRx(@Query("where") String serachjson,@Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<TractateResult>> getTractatesRx(@Query("where") String serachjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //单词收藏分组模块****************************************************************************
 
@@ -949,7 +893,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobTractateGroup>> addTractateGroup(@Body BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest);
+    Observable<Response<TractateGroup>> addTractateGroup(@Body TractateGroup tractateGroup);
 
     //修改文章收藏分组
     @PUT("/1/classes/TractateGroup/{id}/")
@@ -958,7 +902,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json",
     })
-    Observable<Response<ResponseBody>> updateTractateGroupRxById(@Path("id") String id,@Body BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest);
+    Observable<Response<ResponseBody>> updateTractateGroupRxById(@Path("id") String id,@Body TractateGroup tractateGroup);
 
     //删除文章收藏分组
     @DELETE("/1/classes/TractateGroup/{id}/")
@@ -974,7 +918,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobTractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<TractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
 
     //根据id获取文章收藏分组
@@ -983,7 +927,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
-    Observable<Response<BmobTractateGroup>> getTractateGroupRxById(@Path("id") String id);
+    Observable<Response<TractateGroup>> getTractateGroupRxById(@Path("id") String id);
 
 
     //单词收藏模块****************************************************************************
@@ -1079,7 +1023,7 @@ public interface BmobService{
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
             "Content-Type: application/json"
     })
-    Observable<Response<BmobTractateCollect>> addTractateCollect(@Body BmobCreateTractateCollectRequest bmobCreateTractateCollectRequest);
+    Observable<Response<TractateCollect>> addTractateCollect(@Body TractateCollect tractateCollect);
 
     //删除文章收藏
     @DELETE("/1/classes/TractateCollect/{id}/")
@@ -1102,7 +1046,7 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
-    Observable<Response<BmobTractateCollectResult>> getTractateCollectRxByUserIdAndTractateGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+    Observable<Response<TractateCollectResult>> getTractateCollectRxByUserIdAndTractateGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //上传模块****************************************************************************
 

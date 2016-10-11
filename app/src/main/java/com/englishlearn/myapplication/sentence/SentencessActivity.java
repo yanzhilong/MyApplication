@@ -21,7 +21,7 @@ public class SentencessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentencess_act);
+        setContentView(R.layout.sentencegroups_act);
 
         Log.d(TAG,"onCreate");
         handleIntent(getIntent());

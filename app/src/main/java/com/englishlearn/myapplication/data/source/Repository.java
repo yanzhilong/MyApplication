@@ -17,7 +17,6 @@
 package com.englishlearn.myapplication.data.source;
 
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
@@ -248,30 +247,6 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
         return null;
     }
 
-    @Override
-    public Observable<MsSource> addMssource(MsSource msSource) {
-        return mBmobDataSource.addMssource(msSource);
-    }
-
-    @Override
-    public Observable<Boolean> deleteMssourceById(String msSourceId) {
-        return mBmobDataSource.deleteMssourceById(msSourceId);
-    }
-
-    @Override
-    public Observable<Boolean> updateMssourceRxById(MsSource msSource) {
-        return mBmobDataSource.updateMssourceRxById(msSource);
-    }
-
-    @Override
-    public Observable<MsSource> getMssourceRxById(String msSourceId) {
-        return mBmobDataSource.getMssourceRxById(msSourceId);
-    }
-
-    @Override
-    public Observable<List<MsSource>> getMssourcesRx() {
-        return mBmobDataSource.getMssourcesRx();
-    }
 
     @Override
     public Observable<TractateType> addTractateType(TractateType tractateType) {

@@ -3,7 +3,6 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
 import android.util.Log;
 
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
@@ -30,7 +29,6 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -1069,185 +1067,18 @@ public class BmobDataSource implements RemoteData {
                 }).compose(RxUtil.<List<PhoneticsWords>>applySchedulers());
     }
 
-    @Override
-    public Observable<MsSource> addMssource(MsSource msSource) {
-
-        final BmobCreateMsSourceRequest bmobCreateMsSourceRequest = new BmobCreateMsSourceRequest();
-        bmobCreateMsSourceRequest.setName(msSource.getName());
-        bmobCreateMsSourceRequest.setMsSourceId(msSource.getMsSourceId());
-
-        return bmobService.addMssource(bmobCreateMsSourceRequest)
-                .flatMap(new Func1<Response<BmobMsSource>, Observable<MsSource>>() {
-                    @Override
-                    public Observable<MsSource> call(Response<BmobMsSource> bmobMsSourceResponse) {
-                        Log.d(TAG,"addMssource->call" + Thread.currentThread().getName());
-                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                        if(bmobMsSourceResponse.isSuccessful()){
-
-                            BmobMsSource bmobMsSource = bmobMsSourceResponse.body();
-                            MsSource msSource = new MsSource();
-                            msSource.setMsSourceId(bmobMsSource.getMsSourceId());
-                            msSource.setId(bmobMsSource.getObjectId());
-                            msSource.setName(bmobMsSource.getName());
-
-                            return Observable.just(msSource);
-                        }else{
-                            Gson gson = new GsonBuilder().create();
-                            try {
-                                String errjson =  bmobMsSourceResponse.errorBody().string();
-                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                                bmobRequestException = new BmobRequestException(createuser.getMessage());
-                            }catch (IOException e){
-                                e.printStackTrace();
-                            }
-                        }
-                        return Observable.error(bmobRequestException);
-                    }
-                }).compose(RxUtil.<MsSource>applySchedulers());
-
-    }
-
-    @Override
-    public Observable<Boolean> deleteMssourceById(String msSourceId) {
-        return bmobService.deleteMssourceById(msSourceId)
-        .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
-                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                if(responseBodyResponse.isSuccessful()){
-                    return Observable.just(true);
-                }else{
-                    Gson gson = new GsonBuilder().create();
-                    try {
-                        String errjson =  responseBodyResponse.errorBody().string();
-                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                        bmobRequestException = new BmobRequestException(createuser.getMessage());
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-                return Observable.error(bmobRequestException);
-            }
-        }).compose(RxUtil.<Boolean>applySchedulers());
-    }
-
-    @Override
-    public Observable<Boolean> updateMssourceRxById(MsSource msSource) {
-
-        BmobCreateMsSourceRequest bmobCreateMsSourceRequest = new BmobCreateMsSourceRequest();
-        bmobCreateMsSourceRequest.setName(msSource.getName());
-        bmobCreateMsSourceRequest.setMsSourceId(msSource.getMsSourceId());
-
-        return bmobService.updateMssourceRxById(msSource.getId(),bmobCreateMsSourceRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
-            @Override
-            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
-                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                if(responseBodyResponse.isSuccessful()){
-                    return Observable.just(true);
-                }else{
-                    Gson gson = new GsonBuilder().create();
-                    try {
-                        String errjson =  responseBodyResponse.errorBody().string();
-                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                        bmobRequestException = new BmobRequestException(createuser.getMessage());
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-                return Observable.error(bmobRequestException);
-            }
-        }).compose(RxUtil.<Boolean>applySchedulers());
-    }
-
-    @Override
-    public Observable<MsSource> getMssourceRxById(String msSourceId) {
-        return bmobService.getMssourceRxById(msSourceId)
-        .flatMap(new Func1<Response<BmobMsSource>, Observable<MsSource>>() {
-            @Override
-            public Observable<MsSource> call(Response<BmobMsSource> bmobMsSourceResponse) {
-                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                if(bmobMsSourceResponse.isSuccessful()){
-
-                    BmobMsSource bmobMsSource = bmobMsSourceResponse.body();
-                    MsSource msSource = new MsSource();
-                    msSource.setMsSourceId(bmobMsSource.getMsSourceId());
-                    msSource.setId(bmobMsSource.getObjectId());
-                    msSource.setName(bmobMsSource.getName());
-
-                    return Observable.just(msSource);
-                }else{
-                    Gson gson = new GsonBuilder().create();
-                    try {
-                        String errjson =  bmobMsSourceResponse.errorBody().string();
-                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                        bmobRequestException = new BmobRequestException(createuser.getMessage());
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-                return Observable.error(bmobRequestException);
-            }
-        }).compose(RxUtil.<MsSource>applySchedulers());
-    }
-
-    @Override
-    public Observable<List<MsSource>> getMssourcesRx() {
-        return bmobService.getMssourceRx()
-        .flatMap(new Func1<Response<BmobMsSourceResult>, Observable<List<MsSource>>>() {
-            @Override
-            public Observable<List<MsSource>> call(Response<BmobMsSourceResult> bmobMsSourceResultResponse) {
-                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
-                if(bmobMsSourceResultResponse.isSuccessful()){
-                    BmobMsSourceResult bmobMsSourceResult = bmobMsSourceResultResponse.body();
-
-                    List<BmobMsSource> bmobMsSources = bmobMsSourceResult.getResults();
-                    List<MsSource> msSources = new ArrayList<MsSource>();
-
-                    for(BmobMsSource bmobMsSource:bmobMsSources){
-                        MsSource msSource = new MsSource();
-                        msSource.setId(bmobMsSource.getObjectId());
-                        msSource.setMsSourceId(bmobMsSource.getMsSourceId());
-                        msSource.setName(bmobMsSource.getName());
-                        msSources.add(msSource);
-                    }
-                    return Observable.just(msSources);
-                }else{
-                    Gson gson = new GsonBuilder().create();
-                    try {
-                        String errjson =  bmobMsSourceResultResponse.errorBody().string();
-                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                        bmobRequestException = new BmobRequestException(createuser.getMessage());
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
-                }
-                return Observable.error(bmobRequestException);
-            }
-        }).compose(RxUtil.<List<MsSource>>applySchedulers());
-    }
 
     @Override
     public Observable<TractateType> addTractateType(TractateType tractateType) {
-        final BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest = new BmobCreateTractateTypeRequest();
-        bmobCreateTractateTypeRequest.setName(tractateType.getName());
-        bmobCreateTractateTypeRequest.setTractatetypeId(tractateType.getTractatetypeId());
-        return bmobService.addTractateType(bmobCreateTractateTypeRequest)
-                .flatMap(new Func1<Response<BmobTractateType>, Observable<TractateType>>() {
+
+        return bmobService.addTractateType(tractateType)
+                .flatMap(new Func1<Response<TractateType>, Observable<TractateType>>() {
                     @Override
-                    public Observable<TractateType> call(Response<BmobTractateType> bmobMsSourceResponse) {
+                    public Observable<TractateType> call(Response<TractateType> bmobMsSourceResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobMsSourceResponse.isSuccessful()){
 
-                            BmobTractateType bmobTractateType = bmobMsSourceResponse.body();
-                            TractateType tractateType = new TractateType();
-                            tractateType.setTractatetypeId(bmobTractateType.getTractatetypeId());
-                            tractateType.setId(bmobTractateType.getObjectId());
-                            tractateType.setName(bmobTractateType.getName());
+                            TractateType tractateType = bmobMsSourceResponse.body();
 
                             return Observable.just(tractateType);
                         }else{
@@ -1293,11 +1124,10 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> updateTractateTypeRxById(TractateType tractateType) {
-        final BmobCreateTractateTypeRequest bmobCreateTractateTypeRequest = new BmobCreateTractateTypeRequest();
-        bmobCreateTractateTypeRequest.setName(tractateType.getName());
-        bmobCreateTractateTypeRequest.setTractatetypeId(tractateType.getTractatetypeId());
 
-        return bmobService.updateTractateTypeRxById(tractateType.getId(),bmobCreateTractateTypeRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        String objectId = tractateType.getObjectId();
+        tractateType.setObjectId(null);
+        return bmobService.updateTractateTypeRxById(objectId,tractateType).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -1322,17 +1152,13 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<TractateType> getTractateTypeRxById(String tractateTypeId) {
         return bmobService.getTractateTypeRxById(tractateTypeId)
-                .flatMap(new Func1<Response<BmobTractateType>, Observable<TractateType>>() {
+                .flatMap(new Func1<Response<TractateType>, Observable<TractateType>>() {
                     @Override
-                    public Observable<TractateType> call(Response<BmobTractateType> bmobTractateTypeResponse) {
+                    public Observable<TractateType> call(Response<TractateType> bmobTractateTypeResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateTypeResponse.isSuccessful()){
 
-                            BmobTractateType bmobTractateType = bmobTractateTypeResponse.body();
-                            TractateType tractateType = new TractateType();
-                            tractateType.setTractatetypeId(bmobTractateType.getTractatetypeId());
-                            tractateType.setId(bmobTractateType.getObjectId());
-                            tractateType.setName(bmobTractateType.getName());
+                            TractateType tractateType = bmobTractateTypeResponse.body();
 
                             return Observable.just(tractateType);
                         }else{
@@ -1354,23 +1180,15 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<List<TractateType>> getTractateTypesRx() {
         return bmobService.getTractateTypeRx()
-                .flatMap(new Func1<Response<BmobTractateTypeResult>, Observable<List<TractateType>>>() {
+                .flatMap(new Func1<Response<TractateTypeResult>, Observable<List<TractateType>>>() {
                     @Override
-                    public Observable<List<TractateType>> call(Response<BmobTractateTypeResult> bmobTractateTypeResultResponse) {
+                    public Observable<List<TractateType>> call(Response<TractateTypeResult> bmobTractateTypeResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateTypeResultResponse.isSuccessful()){
-                            BmobTractateTypeResult bmobTractateTypeResult = bmobTractateTypeResultResponse.body();
+                            TractateTypeResult bmobTractateTypeResult = bmobTractateTypeResultResponse.body();
 
-                            List<BmobTractateType> bmobTractateTypes = bmobTractateTypeResult.getResults();
-                            List<TractateType> tractateTypes = new ArrayList<>();
+                            List<TractateType> tractateTypes = bmobTractateTypeResult.getResults();
 
-                            for(BmobTractateType bmobTractateType:bmobTractateTypes){
-                                TractateType tractateType = new TractateType();
-                                tractateType.setTractatetypeId(bmobTractateType.getTractatetypeId());
-                                tractateType.setId(bmobTractateType.getObjectId());
-                                tractateType.setName(bmobTractateType.getName());
-                                tractateTypes.add(tractateType);
-                            }
                             return Observable.just(tractateTypes);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -2043,37 +1861,16 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Tractate> addTractate(Tractate tractate) {
-        final BmobCreateTractateRequest bmobCreateTractateRequest = new BmobCreateTractateRequest();
 
-        bmobCreateTractateRequest.setUserId(tractate.getUserId());
-        bmobCreateTractateRequest.setSource(tractate.getSource());
-        bmobCreateTractateRequest.setTractateId(tractate.getTractateId());
-        bmobCreateTractateRequest.setTractatetypeId(tractate.getTractatetypeId());
-        bmobCreateTractateRequest.setRemark(tractate.getRemark());
-        bmobCreateTractateRequest.setContent(tractate.getContent());
-        bmobCreateTractateRequest.setCreateDate(tractate.getCreateDate());
-        bmobCreateTractateRequest.setTitle(tractate.getTitle());
-        bmobCreateTractateRequest.setTranslation(tractate.getTranslation());
-
-        return bmobService.addTractate(bmobCreateTractateRequest)
-                .flatMap(new Func1<Response<BmobTractate>, Observable<Tractate>>() {
+        return bmobService.addTractate(tractate)
+                .flatMap(new Func1<Response<Tractate>, Observable<Tractate>>() {
                     @Override
-                    public Observable<Tractate> call(Response<BmobTractate> bmobTractateResponse) {
+                    public Observable<Tractate> call(Response<Tractate> bmobTractateResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateResponse.isSuccessful()){
 
-                            BmobTractate bmobTractate = bmobTractateResponse.body();
-                            Tractate tractate = new Tractate();
-                            tractate.setId(bmobTractate.getObjectId());
-                            tractate.setUserId(bmobTractate.getUserId());
-                            tractate.setSource(bmobTractate.getSource());
-                            tractate.setTractateId(bmobTractate.getTractateId());
-                            tractate.setTractatetypeId(bmobTractate.getTractatetypeId());
-                            tractate.setRemark(bmobTractate.getRemark());
-                            tractate.setContent(bmobTractate.getContent());
-                            tractate.setCreateDate(bmobTractate.getCreateDate());
-                            tractate.setTitle(bmobTractate.getTitle());
-                            tractate.setTranslation(bmobTractate.getTranslation());
+                            Tractate tractate = bmobTractateResponse.body();
+
                             return Observable.just(tractate);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -2118,19 +1915,10 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> updateTractateRxById(Tractate tractate) {
-        final BmobCreateTractateRequest bmobCreateTractateRequest = new BmobCreateTractateRequest();
 
-        bmobCreateTractateRequest.setUserId(tractate.getUserId());
-        bmobCreateTractateRequest.setSource(tractate.getSource());
-        bmobCreateTractateRequest.setTractateId(tractate.getTractateId());
-        bmobCreateTractateRequest.setTractatetypeId(tractate.getTractatetypeId());
-        bmobCreateTractateRequest.setRemark(tractate.getRemark());
-        bmobCreateTractateRequest.setContent(tractate.getContent());
-        bmobCreateTractateRequest.setCreateDate(tractate.getCreateDate());
-        bmobCreateTractateRequest.setTitle(tractate.getTitle());
-        bmobCreateTractateRequest.setTranslation(tractate.getTranslation());
-
-        return bmobService.updateTractateRxById(tractate.getId(),bmobCreateTractateRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        String objectId = tractate.getObjectId();
+        tractate.setObjectId(null);
+        return bmobService.updateTractateRxById(objectId,tractate).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -2155,24 +1943,14 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<Tractate> getTractateRxById(String tractateId) {
         return bmobService.getTractateRxById(tractateId)
-                .flatMap(new Func1<Response<BmobTractate>, Observable<Tractate>>() {
+                .flatMap(new Func1<Response<Tractate>, Observable<Tractate>>() {
                     @Override
-                    public Observable<Tractate> call(Response<BmobTractate> bmobBmobTractateResponse) {
+                    public Observable<Tractate> call(Response<Tractate> bmobBmobTractateResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobBmobTractateResponse.isSuccessful()){
 
-                            BmobTractate bmobTractate = bmobBmobTractateResponse.body();
-                            Tractate tractate = new Tractate();
-                            tractate.setId(bmobTractate.getObjectId());
-                            tractate.setUserId(bmobTractate.getUserId());
-                            tractate.setSource(bmobTractate.getSource());
-                            tractate.setTractateId(bmobTractate.getTractateId());
-                            tractate.setTractatetypeId(bmobTractate.getTractatetypeId());
-                            tractate.setRemark(bmobTractate.getRemark());
-                            tractate.setContent(bmobTractate.getContent());
-                            tractate.setCreateDate(bmobTractate.getCreateDate());
-                            tractate.setTitle(bmobTractate.getTitle());
-                            tractate.setTranslation(bmobTractate.getTranslation());
+                            Tractate tractate = bmobBmobTractateResponse.body();
+
                             return Observable.just(tractate);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -2201,31 +1979,15 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getBmobEquals("tractateId",tractateTypeId);
 
         return bmobService.getTractatesRx(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobTractateResult>, Observable<List<Tractate>>>() {
+                .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {
                     @Override
-                    public Observable<List<Tractate>> call(Response<BmobTractateResult> bmobTractateResultResponse) {
+                    public Observable<List<Tractate>> call(Response<TractateResult> bmobTractateResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateResultResponse.isSuccessful()){
-                            BmobTractateResult bmobTractateResult = bmobTractateResultResponse.body();
+                            TractateResult bmobTractateResult = bmobTractateResultResponse.body();
 
-                            List<BmobTractate> bmobTractates = bmobTractateResult.getResults();
-                            List<Tractate> tractates = new ArrayList<>();
+                            List<Tractate> tractates = bmobTractateResult.getResults();
 
-                            for(BmobTractate bmobTractate:bmobTractates){
-
-                                Tractate tractate = new Tractate();
-                                tractate.setId(bmobTractate.getObjectId());
-                                tractate.setUserId(bmobTractate.getUserId());
-                                tractate.setSource(bmobTractate.getSource());
-                                tractate.setTractateId(bmobTractate.getTractateId());
-                                tractate.setTractatetypeId(bmobTractate.getTractatetypeId());
-                                tractate.setRemark(bmobTractate.getRemark());
-                                tractate.setContent(bmobTractate.getContent());
-                                tractate.setCreateDate(bmobTractate.getCreateDate());
-                                tractate.setTitle(bmobTractate.getTitle());
-                                tractate.setTranslation(bmobTractate.getTranslation());
-                                tractates.add(tractate);
-                            }
                             return Observable.just(tractates);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -2255,31 +2017,15 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getSearchTractateRegex(searchword);
 
         return bmobService.getTractatesRx(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobTractateResult>, Observable<List<Tractate>>>() {
+                .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {
                     @Override
-                    public Observable<List<Tractate>> call(Response<BmobTractateResult> bmobTractateResultResponse) {
+                    public Observable<List<Tractate>> call(Response<TractateResult> bmobTractateResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateResultResponse.isSuccessful()){
-                            BmobTractateResult bmobTractateResult = bmobTractateResultResponse.body();
+                            TractateResult bmobTractateResult = bmobTractateResultResponse.body();
 
-                            List<BmobTractate> bmobTractates = bmobTractateResult.getResults();
-                            List<Tractate> tractates = new ArrayList<>();
+                            List<Tractate> tractates = bmobTractateResult.getResults();
 
-                            for(BmobTractate bmobTractate:bmobTractates){
-
-                                Tractate tractate = new Tractate();
-                                tractate.setId(bmobTractate.getObjectId());
-                                tractate.setUserId(bmobTractate.getUserId());
-                                tractate.setSource(bmobTractate.getSource());
-                                tractate.setTractateId(bmobTractate.getTractateId());
-                                tractate.setTractatetypeId(bmobTractate.getTractatetypeId());
-                                tractate.setRemark(bmobTractate.getRemark());
-                                tractate.setContent(bmobTractate.getContent());
-                                tractate.setCreateDate(bmobTractate.getCreateDate());
-                                tractate.setTitle(bmobTractate.getTitle());
-                                tractate.setTranslation(bmobTractate.getTranslation());
-                                tractates.add(tractate);
-                            }
                             return Observable.just(tractates);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -3120,26 +2866,15 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<TractateGroup> addTractateGroup(TractateGroup tractateGroup) {
-        final BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest = new  BmobCreateTractateGroupRequest();
 
-        bmobCreateTractateGroupRequest.setTractategroupId(tractateGroup.getTractategroupId());
-        bmobCreateTractateGroupRequest.setUserId(tractateGroup.getUserId());
-        bmobCreateTractateGroupRequest.setName(tractateGroup.getName());
-
-        return bmobService.addTractateGroup(bmobCreateTractateGroupRequest)
-                .flatMap(new Func1<Response<BmobTractateGroup>, Observable<TractateGroup>>() {
+        return bmobService.addTractateGroup(tractateGroup)
+                .flatMap(new Func1<Response<TractateGroup>, Observable<TractateGroup>>() {
                     @Override
-                    public Observable<TractateGroup> call(Response<BmobTractateGroup> bmobTractateGroupResponse) {
+                    public Observable<TractateGroup> call(Response<TractateGroup> bmobTractateGroupResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateGroupResponse.isSuccessful()){
 
-                            BmobTractateGroup bmobTractateGroup = bmobTractateGroupResponse.body();
-                            TractateGroup tractateGroup = new TractateGroup();
-
-                            tractateGroup.setId(bmobTractateGroup.getObjectId());
-                            tractateGroup.setTractategroupId(bmobTractateGroup.getTractategroupId());
-                            tractateGroup.setUserId(bmobTractateGroup.getUserId());
-                            tractateGroup.setName(bmobTractateGroup.getName());
+                            TractateGroup tractateGroup = bmobTractateGroupResponse.body();
 
                             return Observable.just(tractateGroup);
                         }else{
@@ -3185,14 +2920,10 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> updateTractateGroupRxById(TractateGroup tractateGroup) {
-        final BmobCreateTractateGroupRequest bmobCreateTractateGroupRequest = new  BmobCreateTractateGroupRequest();
 
-        bmobCreateTractateGroupRequest.setTractategroupId(tractateGroup.getTractategroupId());
-        bmobCreateTractateGroupRequest.setUserId(tractateGroup.getUserId());
-        bmobCreateTractateGroupRequest.setName(tractateGroup.getName());
-
-
-        return bmobService.updateTractateGroupRxById(tractateGroup.getId(),bmobCreateTractateGroupRequest).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+        String objectId = tractateGroup.getObjectId();
+        tractateGroup.setObjectId(null);
+        return bmobService.updateTractateGroupRxById(objectId,tractateGroup).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -3217,19 +2948,13 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<TractateGroup> getTractateGroupRxById(String tractateGroupId) {
         return bmobService.getTractateGroupRxById(tractateGroupId)
-                .flatMap(new Func1<Response<BmobTractateGroup>, Observable<TractateGroup>>() {
+                .flatMap(new Func1<Response<TractateGroup>, Observable<TractateGroup>>() {
                     @Override
-                    public Observable<TractateGroup> call(Response<BmobTractateGroup> bmobBmobTractateGroupResponse) {
+                    public Observable<TractateGroup> call(Response<TractateGroup> bmobBmobTractateGroupResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobBmobTractateGroupResponse.isSuccessful()){
 
-                            BmobTractateGroup bmobTractateGroup = bmobBmobTractateGroupResponse.body();
-                            TractateGroup tractateGroup = new TractateGroup();
-
-                            tractateGroup.setId(bmobTractateGroup.getObjectId());
-                            tractateGroup.setTractategroupId(bmobTractateGroup.getTractategroupId());
-                            tractateGroup.setUserId(bmobTractateGroup.getUserId());
-                            tractateGroup.setName(bmobTractateGroup.getName());
+                            TractateGroup tractateGroup = bmobBmobTractateGroupResponse.body();
 
                             return Observable.just(tractateGroup);
                         }else{
@@ -3259,26 +2984,15 @@ public class BmobDataSource implements RemoteData {
         String regex = searchUtil.getBmobEquals("userId",userId);
 
         return bmobService.getTractateGroupsRxByUserId(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobTractateGroupResult>, Observable<List<TractateGroup>>>() {
+                .flatMap(new Func1<Response<TractateGroupResult>, Observable<List<TractateGroup>>>() {
                     @Override
-                    public Observable<List<TractateGroup>> call(Response<BmobTractateGroupResult> bmobTractateGroupResultResponse) {
+                    public Observable<List<TractateGroup>> call(Response<TractateGroupResult> bmobTractateGroupResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateGroupResultResponse.isSuccessful()){
-                            BmobTractateGroupResult bmobSentenceGroupCollectResult = bmobTractateGroupResultResponse.body();
+                            TractateGroupResult bmobSentenceGroupCollectResult = bmobTractateGroupResultResponse.body();
 
-                            List<BmobTractateGroup> bmobTractateGroups = bmobSentenceGroupCollectResult.getResults();
-                            List<TractateGroup> tractateGroups = new ArrayList<>();
+                            List<TractateGroup> tractateGroups = bmobSentenceGroupCollectResult.getResults();
 
-                            for(BmobTractateGroup bmobTractateGroup:bmobTractateGroups){
-
-                                TractateGroup tractateGroup = new TractateGroup();
-
-                                tractateGroup.setId(bmobTractateGroup.getObjectId());
-                                tractateGroup.setTractategroupId(bmobTractateGroup.getTractategroupId());
-                                tractateGroup.setUserId(bmobTractateGroup.getUserId());
-                                tractateGroup.setName(bmobTractateGroup.getName());
-                                tractateGroups.add(tractateGroup);
-                            }
                             return Observable.just(tractateGroups);
                         }else{
                             Gson gson = new GsonBuilder().create();
@@ -3514,30 +3228,15 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect) {
-        final BmobCreateTractateCollectRequest bmobCreateTractateCollectRequest = new  BmobCreateTractateCollectRequest();
 
-        bmobCreateTractateCollectRequest.setTractatecollectId(tractateCollect.getTractatecollectId());
-        bmobCreateTractateCollectRequest.setUserId(tractateCollect.getUserId());
-        bmobCreateTractateCollectRequest.setCreateDate(tractateCollect.getCreateDate());
-        bmobCreateTractateCollectRequest.setTractategroupId(tractateCollect.getTractategroupId());
-        bmobCreateTractateCollectRequest.setTractateId(tractateCollect.getTractateId());
-
-        return bmobService.addTractateCollect(bmobCreateTractateCollectRequest)
-                .flatMap(new Func1<Response<BmobTractateCollect>, Observable<TractateCollect>>() {
+        return bmobService.addTractateCollect(tractateCollect)
+                .flatMap(new Func1<Response<TractateCollect>, Observable<TractateCollect>>() {
                     @Override
-                    public Observable<TractateCollect> call(Response<BmobTractateCollect> bmobTractateCollectResponse) {
+                    public Observable<TractateCollect> call(Response<TractateCollect> bmobTractateCollectResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateCollectResponse.isSuccessful()){
 
-                            BmobTractateCollect bmobTractateCollect = bmobTractateCollectResponse.body();
-                            TractateCollect tractateCollect = new TractateCollect();
-
-                            tractateCollect.setId(bmobTractateCollect.getObjectId());
-                            tractateCollect.setTractatecollectId(bmobTractateCollect.getTractatecollectId());
-                            tractateCollect.setUserId(bmobTractateCollect.getUserId());
-                            tractateCollect.setCreateDate(bmobTractateCollect.getCreateDate());
-                            tractateCollect.setTractategroupId(bmobTractateCollect.getTractategroupId());
-                            tractateCollect.setTractateId(bmobTractateCollect.getTractateId());
+                            TractateCollect tractateCollect = bmobTractateCollectResponse.body();
 
                             return Observable.just(tractateCollect);
                         }else{
@@ -3591,28 +3290,15 @@ public class BmobDataSource implements RemoteData {
         final int skip = (page) * pageSize;
         String regex = searchUtil.getBmobEqualsByAnd(new String[]{"userId","tractateGroupId"},new String[]{userId,tractateGroupId});
         return bmobService.getTractateCollectRxByUserIdAndTractateGroupId(regex,limit,skip)
-                .flatMap(new Func1<Response<BmobTractateCollectResult>, Observable<List<TractateCollect>>>() {
+                .flatMap(new Func1<Response<TractateCollectResult>, Observable<List<TractateCollect>>>() {
                     @Override
-                    public Observable<List<TractateCollect>> call(Response<BmobTractateCollectResult> bmobTractateCollectResultResponse) {
+                    public Observable<List<TractateCollect>> call(Response<TractateCollectResult> bmobTractateCollectResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateCollectResultResponse.isSuccessful()){
-                            BmobTractateCollectResult bmobTractateCollectResult = bmobTractateCollectResultResponse.body();
+                            TractateCollectResult bmobTractateCollectResult = bmobTractateCollectResultResponse.body();
 
-                            List<BmobTractateCollect> bmobTractateCollects = bmobTractateCollectResult.getResults();
-                            List<TractateCollect> tractateCollects = new ArrayList<>();
+                            List<TractateCollect> tractateCollects = bmobTractateCollectResult.getResults();
 
-                            for(BmobTractateCollect bmobTractateCollect:bmobTractateCollects){
-
-                                TractateCollect tractateCollect = new TractateCollect();
-
-                                tractateCollect.setId(bmobTractateCollect.getObjectId());
-                                tractateCollect.setTractatecollectId(bmobTractateCollect.getTractatecollectId());
-                                tractateCollect.setUserId(bmobTractateCollect.getUserId());
-                                tractateCollect.setCreateDate(bmobTractateCollect.getCreateDate());
-                                tractateCollect.setTractategroupId(bmobTractateCollect.getTractategroupId());
-                                tractateCollect.setTractateId(bmobTractateCollect.getTractateId());
-                                tractateCollects.add(tractateCollect);
-                            }
                             return Observable.just(tractateCollects);
                         }else{
                             Gson gson = new GsonBuilder().create();

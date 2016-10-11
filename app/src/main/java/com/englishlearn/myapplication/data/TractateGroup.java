@@ -1,35 +1,22 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-3.
  */
-public class TractateGroup {
+public class TractateGroup implements Serializable,Cloneable{
 
-    private String id;
-    private String tractategroupId;
+    private String objectId;
     private String name; //分组名称
     private String userId; //用户Id
 
-    public TractateGroup() {
-        tractategroupId = UUID.randomUUID().toString();
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTractategroupId() {
-        return tractategroupId;
-    }
-
-    public void setTractategroupId(String tractategroupId) {
-        this.tractategroupId = tractategroupId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getName() {
@@ -49,10 +36,21 @@ public class TractateGroup {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "TractateGroup{" +
-                "id='" + id + '\'' +
-                ", tractategroupId='" + tractategroupId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

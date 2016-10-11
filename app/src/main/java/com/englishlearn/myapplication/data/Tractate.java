@@ -1,41 +1,36 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-3.
  * 文章
  */
-public class Tractate {
-    private String id;
-    private String tractateId;
+public class Tractate implements Serializable,Cloneable{
+
+    private String objectId;
     private String userId; //用户Id
-    private String source; //来源 (拉取来源id选择再提交来源的名称)
     private String title; //标题
     private String content; //内容
     private String translation; //译文
-    private String createDate; //创建时间
     private String tractatetypeId; //分类Id
     private String remark; //备注
+    private int sort;//排序字段
 
-    public Tractate() {
-        tractateId = UUID.randomUUID().toString();
+    public int getSort() {
+        return sort;
     }
 
-    public String getId() {
-        return id;
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getTractateId() {
-        return tractateId;
-    }
-
-    public void setTractateId(String tractateId) {
-        this.tractateId = tractateId;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getUserId() {
@@ -44,14 +39,6 @@ public class Tractate {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public String getTitle() {
@@ -78,14 +65,6 @@ public class Tractate {
         this.translation = translation;
     }
 
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
-
     public String getTractatetypeId() {
         return tractatetypeId;
     }
@@ -103,18 +82,28 @@ public class Tractate {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "Tractate{" +
-                "id='" + id + '\'' +
-                ", tractateId='" + tractateId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
-                ", source='" + source + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
-                ", createDate='" + createDate + '\'' +
                 ", tractatetypeId='" + tractatetypeId + '\'' +
                 ", remark='" + remark + '\'' +
+                ", sort=" + sort +
                 '}';
     }
 }

@@ -259,69 +259,6 @@ public class BmobDataSourceTest {
         }
     }
 
-    @Test
-    public void testMsSource() {
-        //添加　
-        Log.d(TAG,"testMsSource_add");
-        MsSource addMsSource = new MsSource();
-        addMsSource.setName("88890");
-        TestSubscriber<MsSource> testSubscriber_add = new TestSubscriber<>();
-        mBmobRemoteData.addMssource(addMsSource).toBlocking().subscribe(testSubscriber_add);
-        testSubscriber_add.assertNoErrors();
-        Thread thread = testSubscriber_add.getLastSeenThread();
-        Log.d(TAG,"testMsSource_add_thread:" + thread.getName());
-        List<MsSource> list = testSubscriber_add.getOnNextEvents();
-        Assert.assertNotNull(list);
-        if(list == null || list.size() == 0){
-            return;
-        }
-        MsSource msSource = list.get(0);
-        Log.d(TAG,"testMsSource_add_result:" + msSource.toString());
-        //修改
-        msSource.setName("8890");
-        Log.d(TAG,"testMsSource_update");
-        TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
-        mBmobRemoteData.updateMssourceRxById(msSource).toBlocking().subscribe(testSubscriber_update);
-        testSubscriber_update.assertNoErrors();
-        List<Boolean> listupdate = testSubscriber_update.getOnNextEvents();
-        if(listupdate != null && listupdate.size() > 0){
-            Log.d(TAG,"testMsSource_update"+"success");
-        }
-        //根据Id获取信息来源　
-        Log.d(TAG,"testMsSource_byId");
-        TestSubscriber<MsSource> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getMssourceRxById(msSource.getId()).toBlocking().subscribe(testSubscriber_getById);
-        testSubscriber_getById.assertNoErrors();
-        List<MsSource> listbyid = testSubscriber_getById.getOnNextEvents();
-        MsSource msSourceById = null;
-        if(listbyid != null && listbyid.size() > 0){
-            msSourceById = listbyid.get(0);
-        }
-        Log.d(TAG,"testMsSource_byId_result:" + msSourceById.toString());
-
-        //获取所有信息来源　
-        Log.d(TAG,"testMsSource_all");
-        TestSubscriber<List<MsSource>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getMssourcesRx().toBlocking().subscribe(testSubscriber_getall);
-        testSubscriber_getById.assertNoErrors();
-        List<List<MsSource>> listall = testSubscriber_getall.getOnNextEvents();
-        List<MsSource> msSourceall = null;
-        if(listall != null && listall.size() > 0){
-            msSourceall = listall.get(0);
-        }
-        Log.d(TAG,"testMsSource_all_resultSize:" + msSourceall.size());
-        Log.d(TAG,"testMsSource_all_result:" + msSourceall.toString());
-
-        //删除指定的信息来源　
-        Log.d(TAG,"testMsSource_deleteById");
-        TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteMssourceById(msSource.getId()).toBlocking().subscribe(testSubscriber_deleteById);
-        testSubscriber_deleteById.assertNoErrors();
-        List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
-        if(listdeleteById != null && listdeleteById.size() > 0){
-            Log.d(TAG,"testMsSource_deleteById"+"success");
-        }
-    }
 
     @Test
     public void testTractateType() {
@@ -352,7 +289,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testTractateType_byId");
         TestSubscriber<TractateType> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getTractateTypeRxById(tractateType.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getTractateTypeRxById(tractateType.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<TractateType> listbyid = testSubscriber_getById.getOnNextEvents();
         TractateType tractateTypeById = null;
@@ -377,7 +314,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testTractateType_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteTractateTypeById(tractateType.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteTractateTypeById(tractateType.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -681,7 +618,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testTractate_byId");
         TestSubscriber<Tractate> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getTractateRxById(tractate.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getTractateRxById(tractate.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<Tractate> listbyid = testSubscriber_getById.getOnNextEvents();
         Tractate tractate1ById = null;
@@ -693,7 +630,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testTractate_getAll");
         TestSubscriber<List<Tractate>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getTractateRxByTractateTypeId(tractate1ById.getTractateId(),0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getTractateRxByTractateTypeId(tractate1ById.getObjectId(),0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<Tractate>> listall = testSubscriber_getall.getOnNextEvents();
         List<Tractate> sentences = null;
@@ -718,7 +655,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testTractate_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteTractateRxById(tractate.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteTractateRxById(tractate.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){
@@ -1065,7 +1002,7 @@ public class BmobDataSourceTest {
         //根据Id获取信息来源　
         Log.d(TAG,"testTractateGroup_byId");
         TestSubscriber<TractateGroup> testSubscriber_getById = new TestSubscriber<>();
-        mBmobRemoteData.getTractateGroupRxById(tractateGroup.getId()).toBlocking().subscribe(testSubscriber_getById);
+        mBmobRemoteData.getTractateGroupRxById(tractateGroup.getObjectId()).toBlocking().subscribe(testSubscriber_getById);
         testSubscriber_getById.assertNoErrors();
         List<TractateGroup> listbyid = testSubscriber_getById.getOnNextEvents();
         TractateGroup tractateGroup1ById = null;
@@ -1089,7 +1026,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testTractateGroup_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById1 = new TestSubscriber<>();
-        mBmobRemoteData.deleteTractateGroupRxById(tractateGroup.getId()).toBlocking().subscribe(testSubscriber_deleteById1);
+        mBmobRemoteData.deleteTractateGroupRxById(tractateGroup.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById1);
         testSubscriber_deleteById1.assertNoErrors();
         List<Boolean> listdeleteById1 = testSubscriber_deleteById1.getOnNextEvents();
         if(listdeleteById1 != null && listdeleteById1.size() > 0){
@@ -1229,7 +1166,7 @@ public class BmobDataSourceTest {
         //删除指定的信息来源　
         Log.d(TAG,"testTractateCollect_deleteById");
         TestSubscriber<Boolean> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.deleteTractateCollectRxById(tractateCollect.getId()).toBlocking().subscribe(testSubscriber_deleteById);
+        mBmobRemoteData.deleteTractateCollectRxById(tractateCollect.getObjectId()).toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_deleteById.getOnNextEvents();
         if(listdeleteById != null && listdeleteById.size() > 0){

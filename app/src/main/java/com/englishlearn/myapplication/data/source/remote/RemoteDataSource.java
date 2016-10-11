@@ -2,7 +2,6 @@
 package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
@@ -180,31 +179,6 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<PhoneticsWords>> getPhoneticsWordsRx() {
-        return null;
-    }
-
-    @Override
-    public Observable<MsSource> addMssource(MsSource msSource) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> deleteMssourceById(String msSourceId) {
-        return null;
-    }
-
-    @Override
-    public Observable<Boolean> updateMssourceRxById(MsSource msSource) {
-        return null;
-    }
-
-    @Override
-    public Observable<MsSource> getMssourceRxById(String msSourceId) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<MsSource>> getMssourcesRx() {
         return null;
     }
 

@@ -16,7 +16,6 @@ import android.widget.Button;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.grammars.GrammarActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
-import com.englishlearn.myapplication.messagesource.MessageSourceActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
 import com.englishlearn.myapplication.search.SearchActivity;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
@@ -155,7 +154,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 this.startActivity(updateuserintent);
                 break;
             case R.id.messagesource:
-                Intent messagesourceintent = new Intent(this.getContext(),MessageSourceActivity.class);
+                Intent messagesourceintent = new Intent(this.getContext(),UpdateUserActivity.class);
                 this.startActivity(messagesourceintent);
                 break;
             case R.id.tractatetype:

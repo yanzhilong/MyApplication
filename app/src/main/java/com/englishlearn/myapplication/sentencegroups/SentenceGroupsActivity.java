@@ -14,10 +14,10 @@ import com.englishlearn.myapplication.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SentenceActivity extends AppCompatActivity {
+public class SentenceGroupsActivity extends AppCompatActivity {
 
     public static final String OBJECT = "object";
-    private static final String TAG = SentenceActivity.class.getSimpleName();
+    private static final String TAG = SentenceGroupsActivity.class.getSimpleName();
     String[] titles;
     private Object object;
     private List<Fragment> list;
@@ -25,7 +25,7 @@ public class SentenceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentencess_act);
+        setContentView(R.layout.sentencegroups_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

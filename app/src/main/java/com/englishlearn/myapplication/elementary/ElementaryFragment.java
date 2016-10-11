@@ -19,7 +19,8 @@ import com.englishlearn.myapplication.grammar.GrammarFragment;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsFragment;
-import com.englishlearn.myapplication.sentencegroups.SentenceActivity;
+import com.englishlearn.myapplication.sentencegroups.SentenceGroupsActivity;
+import com.englishlearn.myapplication.tractategroup.TractateGroupsActivity;
 import com.englishlearn.myapplication.wordgroups.WordGroupsActivity;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
         root.findViewById(R.id.grammars).setOnClickListener(this);
         root.findViewById(R.id.words).setOnClickListener(this);
         root.findViewById(R.id.sentences).setOnClickListener(this);
-
+        root.findViewById(R.id.tractates).setOnClickListener(this);
        /* //ViewPager
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) root.findViewById(R.id.tabLayout);
@@ -113,8 +114,12 @@ public class ElementaryFragment extends Fragment implements ElementaryContract.V
                 startActivity(new Intent(this.getContext(), WordGroupsActivity.class));
                 break;
             case R.id.sentences:
-                startActivity(new Intent(this.getContext(), SentenceActivity.class));
+                startActivity(new Intent(this.getContext(), SentenceGroupsActivity.class));
                 break;
+            case R.id.tractates:
+                startActivity(new Intent(this.getContext(), TractateGroupsActivity.class));
+                break;
+
             default:
                 break;
         }

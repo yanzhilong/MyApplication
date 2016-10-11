@@ -150,10 +150,13 @@
             android:name=".wordgroups.words.word.WordDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".sentencegroups.SentenceActivity"
+            android:name=".sentencegroups.SentenceGroupsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".sentencegroups.sentences.SentencesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.TractateGroupsActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

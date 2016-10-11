@@ -1,37 +1,24 @@
 package com.englishlearn.myapplication.data;
 
-import java.util.UUID;
+import java.io.Serializable;
 
 /**
  * Created by yanzl on 16-9-3.
  */
-public class TractateCollect {
+public class TractateCollect implements Serializable,Cloneable{
 
-    private String id;
-    private String tractatecollectId;//
+    private String objectId;
     private String userId; //用户Id
-    private String createDate; //创建时间
     private String tractategroupId; //分组Id
     private String tractateId; //(句子，单词，文章)
 
-    public TractateCollect() {
-        this.tractatecollectId = UUID.randomUUID().toString();
+
+    public String getObjectId() {
+        return objectId;
     }
 
-    public String getTractatecollectId() {
-        return tractatecollectId;
-    }
-
-    public void setTractatecollectId(String tractatecollectId) {
-        this.tractatecollectId = tractatecollectId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     public String getUserId() {
@@ -40,14 +27,6 @@ public class TractateCollect {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
     }
 
     public String getTractategroupId() {
@@ -67,12 +46,22 @@ public class TractateCollect {
     }
 
     @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
+    }
+
+    @Override
     public String toString() {
         return "TractateCollect{" +
-                "id='" + id + '\'' +
-                ", tractatecollectId='" + tractatecollectId + '\'' +
+                "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
-                ", createDate='" + createDate + '\'' +
                 ", tractategroupId='" + tractategroupId + '\'' +
                 ", tractateId='" + tractateId + '\'' +
                 '}';

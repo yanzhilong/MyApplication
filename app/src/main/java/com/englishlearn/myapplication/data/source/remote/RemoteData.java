@@ -1,7 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote;
 
 import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.MsSource;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
@@ -244,43 +243,6 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<List<PhoneticsWords>> getPhoneticsWordsRx();
-
-    //信息来源模块
-    //*****************************************************************************
-    /**
-     * 增加信息来源
-     * @param msSource
-     * @return
-     */
-    Observable<MsSource> addMssource(MsSource msSource);
-
-    /**
-     * 删除信息来源
-     * @param msSourceId
-     * @return
-     */
-    Observable<Boolean> deleteMssourceById(String msSourceId);
-
-    /**
-     * 修改信息来源
-     * @param msSource
-     * @return
-     */
-    Observable<Boolean> updateMssourceRxById(MsSource msSource);
-
-    /**
-     * 根据id获取信息来源
-     * @param msSourceId
-     * @return
-     */
-    Observable<MsSource> getMssourceRxById(String msSourceId);
-
-
-    /**
-     * 获取所有信息来源
-     * @return
-     */
-    Observable<List<MsSource>> getMssourcesRx();
 
 
     //文章分类模块
