@@ -19,6 +19,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity;
 
 import java.util.ArrayList;
 import java.util.List;

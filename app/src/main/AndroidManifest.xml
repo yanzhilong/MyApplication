@@ -156,7 +156,10 @@
             android:name=".tractategroup.TractateGroupsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".tractategroup.TractatesActivity"
+            android:name=".tractategroup.tractates.TractatesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.tractates.tractate.TractateDetailActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

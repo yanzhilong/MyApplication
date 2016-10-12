@@ -1,5 +1,6 @@
-package com.englishlearn.myapplication.tractategroup;
+package com.englishlearn.myapplication.tractategroup.tractates;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.tractategroup.tractates.tractate.TractateDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +100,9 @@ public class TractatesFragment extends Fragment {
             public void onItemClick(View view, int position) {
 
                 Tractate tractate = myAdapter.getTractates().get(position);
+                Intent intent = new Intent(TractatesFragment.this.getContext(),TractateDetailActivity.class);
+                intent.putExtra(TractateDetailActivity.OBJECT,tractate);
+                startActivity(intent);
                 Log.d(TAG, tractate.toString());
 
             }

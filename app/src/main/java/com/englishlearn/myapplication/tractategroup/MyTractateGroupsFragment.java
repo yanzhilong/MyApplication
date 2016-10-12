@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity;
 
 import java.util.ArrayList;
 import java.util.List;

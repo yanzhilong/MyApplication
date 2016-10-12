@@ -297,4 +297,6 @@
 
     <string name="title_tractates">Tractates</string>
 
+    <string name="title_tractatedetail">TractateDetail</string>
+
 </resources>

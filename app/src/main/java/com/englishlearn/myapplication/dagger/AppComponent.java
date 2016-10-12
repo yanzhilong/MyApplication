@@ -23,7 +23,7 @@ import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFr
 import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
 import com.englishlearn.myapplication.tractategroup.MyTractateGroupsFragment;
 import com.englishlearn.myapplication.tractategroup.TractateTypesFragment;
-import com.englishlearn.myapplication.tractategroup.TractatesFragment;
+import com.englishlearn.myapplication.tractategroup.tractates.TractatesFragment;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
