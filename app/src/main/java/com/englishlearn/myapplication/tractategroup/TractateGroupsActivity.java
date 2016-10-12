@@ -40,6 +40,9 @@ public class TractateGroupsActivity extends AppCompatActivity {
         titles = getResources().getStringArray(R.array.tractategroupsactivity_tablayout);
         //初始Fragment
         list = new ArrayList<>();
+        list.add(TractateTypesFragment.newInstance());
+        list.add(MyTractateGroupsFragment.newInstance());
+
 
         //ViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);

@@ -1976,7 +1976,45 @@ public class BmobDataSource implements RemoteData {
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getBmobEquals("tractateId",tractateTypeId);
+        String regex = searchUtil.getBmobEquals("tractatetypeId",tractateTypeId);
+
+        return bmobService.getTractatesRx(regex,limit,skip)
+                .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {
+                    @Override
+                    public Observable<List<Tractate>> call(Response<TractateResult> bmobTractateResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobTractateResultResponse.isSuccessful()){
+                            TractateResult bmobTractateResult = bmobTractateResultResponse.body();
+
+                            List<Tractate> tractates = bmobTractateResult.getResults();
+
+                            return Observable.just(tractates);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobTractateResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<Tractate>>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<Tractate>> getTractateRxByTractateGroupId(String tractateGroupId, int page, int pageSize) {
+
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getTractateRxByTractateGroupId(tractateGroupId);
 
         return bmobService.getTractatesRx(regex,limit,skip)
                 .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {
@@ -3009,6 +3047,7 @@ public class BmobDataSource implements RemoteData {
                     }
                 }).compose(RxUtil.<List<TractateGroup>>applySchedulers());
     }
+
 
     @Override
     public Observable<WordCollect> addWordCollect(WordCollect wordCollect) {

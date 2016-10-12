@@ -70,9 +70,6 @@
             android:name=".updateuser.UpdateUserActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".messagesource.MessageSourceActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".tractatetype.TractateTypeActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -157,6 +154,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".tractategroup.TractateGroupsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.TractatesActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

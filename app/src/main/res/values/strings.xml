@@ -291,8 +291,10 @@
 
     <string-array name="tractategroupsactivity_tablayout">
         <item>热门短文</item>
-        <item>我的短文</item>
+        <item>我的收藏</item>
         <item>我的收藏</item>
     </string-array>
+
+    <string name="title_tractates">Tractates</string>
 
 </resources>

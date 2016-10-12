@@ -142,6 +142,36 @@ public class SearchUtil {
 
 
     /**
+     * 根据分组id获得搜索组里面的句子的json搜索语句
+     * @param tractateGroupId
+     * @return
+     */
+    public String getTractateRxByTractateGroupId(String tractateGroupId){
+
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("tractategroupId",tractateGroupId);
+        Map map6 = new HashMap();
+        map6.put("className","TractateCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","tractateId");
+        Map map8 = new HashMap();
+        map8.put("$select",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+
+        //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
+
+        String jsonStr = gson.toJson(map9);
+        return jsonStr;
+        //return where;
+    }
+
+
+    /**
      * 根据用户id获得搜索收藏的句子分组的json搜索语句
      * @param userId
      * @return
@@ -199,6 +229,7 @@ public class SearchUtil {
         return jsonStr;
         //return where;
     }
+
 
     //获得未收藏的单詞分組
     public String getWordgroupsOpenAndNotCollect(String userId){

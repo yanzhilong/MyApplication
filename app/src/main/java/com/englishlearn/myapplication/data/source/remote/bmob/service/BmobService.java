@@ -920,7 +920,6 @@ public interface BmobService{
     })
     Observable<Response<TractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
-
     //根据id获取文章收藏分组
     @GET("/1/classes/TractateGroup/{id}/")
     @Headers({

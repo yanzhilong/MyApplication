@@ -1,7 +1,7 @@
-package com.englishlearn.myapplication.wordgroups;
+package com.englishlearn.myapplication.tractategroup;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -17,11 +17,10 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.User;
-import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
-import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,36 +35,38 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class WordGroupsTopFragment extends Fragment {
+public class TractatesFragment extends Fragment {
 
-    private static final String TAG = WordGroupsTopFragment.class.getSimpleName();
-
+    public static final String TRACTATETYPE = "TractateType";
+    public static final String TRACTATEGROUP = "TractateGroup";
+    private static final String TAG = TractatesFragment.class.getSimpleName();
+    private final int PAGESIZE = 10;
+    private TractateType tractateType;
+    private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
-
     private int page = 0;
-    private final int PAGESIZE = 20;
+    private List<Tractate> mList;
 
-    private List<WordGroup> mList;
-    private User user;
-    private CompositeSubscription mSubscriptions;
-    @Inject
-    Repository repository;
     private LinearLayoutManager mgrlistview;
-
+    private CompositeSubscription mSubscriptions;
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
-    public static WordGroupsTopFragment newInstance() {
-        return new WordGroupsTopFragment();
+    public static TractatesFragment newInstance() {
+        return new TractatesFragment();
     }
-
+    @Inject
+    Repository repository;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         MyApplication.instance.getAppComponent().inject(this);
-
-        user = repository.getUserInfo();
-
+        if (getArguments() != null && getArguments().containsKey(TRACTATETYPE)) {
+            tractateType = (TractateType) getArguments().getSerializable(TRACTATETYPE);
+        }
+        if (getArguments() != null && getArguments().containsKey(TRACTATEGROUP)) {
+            tractateGroup = (TractateGroup) getArguments().getSerializable(TRACTATEGROUP);
+        }
         mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -77,7 +78,7 @@ public class WordGroupsTopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.wordgroupstop_frag, container, false);
+        View root = inflater.inflate(R.layout.tractates_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -96,12 +97,9 @@ public class WordGroupsTopFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
-                Log.d(TAG, wordGroup.toString());
-                Intent intent = new Intent(WordGroupsTopFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                intent.putExtra(WordsActivity.TYPE, WordGroupType.TOP);
-                startActivity(intent);
+                Tractate tractate = myAdapter.getTractates().get(position);
+                Log.d(TAG, tractate.toString());
+
             }
 
         });
@@ -109,7 +107,11 @@ public class WordGroupsTopFragment extends Fragment {
         myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                getNextPage();
+                if(tractateType != null){
+                    getNextPageByTractateTypeId();
+                }else{
+                    getNextPageByTractateGroupId();
+                }
             }
         });
         //设置适配器
@@ -123,11 +125,9 @@ public class WordGroupsTopFragment extends Fragment {
                 ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
         );
 
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSubscriptions.clear();
                 Log.d(TAG, "下拉刷新");
                 refershList();
             }
@@ -146,24 +146,60 @@ public class WordGroupsTopFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSubscriptions.clear();
         swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
      * 刷新列表
      */
-    public void refershList(){
+    public void refershList() {
         page = 0;
         mList.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
-        getNextPage();
+        if(tractateType != null){
+            getNextPageByTractateTypeId();
+        }else{
+            getNextPageByTractateGroupId();
+        }
+
     }
 
     //获取下一页
-    public void getNextPage() {
-        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+    public void getNextPageByTractateTypeId() {
+
+        Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
+            @Override
+            public void onCompleted() {
+                loadingComplete();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                loadingFail(e);
+            }
+
+            @Override
+            public void onNext(List list) {
+                Log.d(TAG,"onNext size:" + list.size());
+
+                if(list == null || list.size() == 0){
+                    myAdapter.loadingGone();
+                    myAdapter.notifyDataSetChanged();
+                }else{
+                    page++;//页数增加
+                    mList.addAll(list);
+                    showList(mList);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //获取下一页
+    public void getNextPageByTractateGroupId() {
+
+        Subscription subscription = repository.getTractateRxByTractateGroupId(tractateGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -192,23 +228,22 @@ public class WordGroupsTopFragment extends Fragment {
     }
 
     //加载完成
-    public void loadingComplete(){
-        Log.d(TAG,"loadingComplete");
+    public void loadingComplete() {
+        Log.d(TAG, "loadingComplete");
         swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
      * 加载失败
      */
-    public void loadingFail(Throwable e){
-        Log.d(TAG,"loadingFail:" + e.toString());
+    public void loadingFail(Throwable e) {
+        Log.d(TAG, "loadingFail:" + e.toString());
         e.printStackTrace();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     //显示列表
-    private void showList(List list){
-        Log.d(TAG,"showList:" + list.toString());
+    private void showList(List list) {
+        Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
     }
 
@@ -226,71 +261,68 @@ public class WordGroupsTopFragment extends Fragment {
     private class MyAdapter extends RecyclerView.Adapter {
 
         private boolean isGone = false;//是否加载完成
+        private OnLoadMoreListener mOnLoadMoreListener;
+        private List<Tractate> tractates;
+        private OnItemClickListener onItemClickListener = null;
+
+        public MyAdapter() {
+            tractates = new ArrayList<>();
+        }
 
         //已经加载完成了
-        public void loadingGone(){
+        public void loadingGone() {
             isGone = true;
         }
 
         //还有更多
-        public void hasMore(){
+        public void hasMore() {
             isGone = false;
         }
-
-        private OnLoadMoreListener mOnLoadMoreListener;
 
         public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        private List<WordGroup> wordGroups;
-
-        private OnItemClickListener onItemClickListener = null;
-
-        public MyAdapter() {
-            wordGroups = new ArrayList<>();
-        }
-
-        public List<WordGroup> getWordGroups() {
-            return wordGroups;
+        public List<Tractate> getTractates() {
+            return tractates;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<WordGroup> wordGroups) {
-            if (wordGroups != null) {
-                this.wordGroups.clear();
-                this.wordGroups.addAll(wordGroups);
+        public void replaceData(List<Tractate> tractates) {
+            if (tractates != null) {
+                this.tractates.clear();
+                this.tractates.addAll(tractates);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if(position != wordGroups.size() ){
-                Log.d(TAG,"wordgroupstop_item");
-                return R.layout.wordgroupstop_item;
-            }else{
-                if(isGone){
-                    Log.d(TAG,"load_done_layout");
-                    return R.layout.load_done_layout;
+            if (position != tractates.size()) {
+                Log.d(TAG, "wordgroupstop_item");
+                return R.layout.tractates_frag_item;
+            } else {
+                if (isGone) {
+                    Log.d(TAG, "load_done_layout");
+                    return R.layout.tractates_frag_loaddone_item;
                 }
-                Log.d(TAG,"load_more_layout");
-                return R.layout.load_more_layout;
+                Log.d(TAG, "load_more_layout");
+                return R.layout.tractates_frag_loadmore_item;
             }
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-            switch (viewType){
-                case R.layout.wordgroupstop_item:
+            switch (viewType) {
+                case R.layout.tractates_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.load_more_layout:
+                case R.layout.tractates_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.load_done_layout:
+                case R.layout.tractates_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
@@ -299,17 +331,22 @@ public class WordGroupsTopFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Log.d(TAG, "onBindViewHolder" + position);
-            if(holder instanceof ItemViewHolder){
+            if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(wordGroups.get(position).getName());
-            }else if(holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null){
-                mOnLoadMoreListener.onLoadMore();
+                itemViewHolder.name.setText(tractates.get(position).getTitle());
+            } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mOnLoadMoreListener.onLoadMore();
+                    }
+                }, 100);
             }
         }
 
         @Override
         public int getItemCount() {
-            return wordGroups.size() + 1;
+            return tractates.size() + 1;
         }
 
 
@@ -333,6 +370,7 @@ public class WordGroupsTopFragment extends Fragment {
                 name = (TextView) itemView.findViewById(R.id.name);
             }
         }
+
         //加载更多
         class LoadingMoreViewHolder extends RecyclerView.ViewHolder {
 
@@ -340,6 +378,7 @@ public class WordGroupsTopFragment extends Fragment {
                 super(itemView);
             }
         }
+
         //加载完成
         class LoadingGoneViewHolder extends RecyclerView.ViewHolder {
 
@@ -350,3 +389,5 @@ public class WordGroupsTopFragment extends Fragment {
     }
 
 }
+
+

@@ -481,6 +481,18 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId,int page,int pageSize);
 
+
+
+    /**
+     * 根据收藏分組id获取文章列表分页展示
+     * @param tractateGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<Tractate>> getTractateRxByTractateGroupId(String tractateGroupId,int page,int pageSize);
+
+
     /**
      * 根据分类id,关键词的正则,获取文章列表分页展示
      * @param searchword

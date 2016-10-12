@@ -404,6 +404,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<Tractate>> getTractateRxByTractateGroupId(String tractateGroupId, int page, int pageSize) {
+        return mBmobDataSource.getTractateRxByTractateGroupId(tractateGroupId,page,pageSize);
+    }
+
+    @Override
     public Observable<List<Tractate>> getTractatesRx(String searchword, int page, int pageSize) {
         return mBmobDataSource.getTractatesRx(searchword,page,pageSize);
     }
