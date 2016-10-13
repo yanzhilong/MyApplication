@@ -1,0 +1,5 @@
+Displaying large amounts of data in an Android app can be a tricky balancing act. Even on devices with larger screens (such as a laptop or computer) being confronted with a solid wall of data isn’t particularly appealing! This is even more true on Android devices, as the smaller screen of a tablet or smartphone tends to make blocks of content appear even larger.
+
+If your app needs to display a considerable amount of data, then presentation is everything. Android provides several UI components that can help you bring instant structure and design to even the largest data sets, so you can deliver data-packed screens that users won’t mind scrolling through.
+
+In this article, I’m going to show you how to use two data-focused UI components in your projects: CardViews and GridViews.

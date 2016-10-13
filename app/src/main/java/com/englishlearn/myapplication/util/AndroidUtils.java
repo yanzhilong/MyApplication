@@ -1,16 +1,21 @@
 package com.englishlearn.myapplication.util;
 
 import android.content.Context;
+import android.text.Layout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 /**
@@ -18,6 +23,7 @@ import java.util.Random;
  */
 public class AndroidUtils {
 
+    private static final String TAG = AndroidUtils.class.getSimpleName();
     private static Context context;
 
     public static AndroidUtils newInstance(Context context) {
@@ -84,7 +90,12 @@ public class AndroidUtils {
         lInputStream.close();
     }
 
-
+    /**
+     * 从/data/data/<package name>/files目录/
+     * @param targetName
+     * @return
+     * @throws FileNotFoundException
+     */
     public static InputStream loadFile(String targetName) throws FileNotFoundException {
 
         String basePath = context.getFilesDir().getAbsolutePath();
@@ -97,4 +108,77 @@ public class AndroidUtils {
         return lInputStream;
     }
 
+    /**
+     * 获取TextView某一行的内容
+     * @param textView
+     * @param lineNum
+     * @return
+     */
+    public static String getTextViewString(TextView textView){
+        Layout layout = textView.getLayout();
+        //总行数
+        int line = textView.getLayout().getLineCount();
+        Log.d(TAG,"总行数：" + line);
+        String result = "";
+        String text = layout.getText().toString();
+        for(int i = 0; i < line-1; i++){
+            int start = layout.getLineStart(i);
+            int end = layout.getLineEnd(i);
+            String sub = text.substring(start, end);
+            Log.d(TAG,"SUB:"+sub);
+            result += sub + System.getProperty("line.separator");
+        }
+
+        Log.d(TAG,"result" + result);
+        System.out.print(result);
+        return result;
+    }
+
+    /**
+     * 获取TextView某一行的内容
+     * @param textView
+     * @param lineNum
+     * @return
+     */
+    public static String getTextViewStringByLine(TextView textView,int lineNum){
+        Layout layout = textView.getLayout();
+        //总行数
+        int line = textView.getLayout().getLineCount();
+        Log.d(TAG,"总行数：" + line);
+        String result = "";
+        String text = layout.getText().toString();
+        for(int i = 0; i < line-1; i++){
+            int start = layout.getLineStart(i);
+            int end = layout.getLineEnd(i);
+            String sub = text.substring(start, end);
+            Log.d(TAG,"SUB:"+sub);
+            result += sub + System.getProperty("line.separator");
+        }
+
+        Log.d(TAG,"result" + result);
+        System.out.print(result);
+        return result;
+    }
+
+    public static String getRawResource(int resId){
+
+        StringBuffer sb = new StringBuffer();
+        try {
+            InputStream inputStream = context.getResources().openRawResource(resId);
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null){
+                sb.append(line + System.getProperty("line.separator"));
+                //sb.append(line + "\r\n");
+            }
+            bufferedReader.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
 }
