@@ -10,6 +10,7 @@ import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.util.AndroidUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -169,6 +170,8 @@ public class TractateTest {
 
         String title = bufferedReader.readLine();
         String remark = bufferedReader.readLine();
+        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
 
         while ((line = bufferedReader.readLine()) != null){
 
@@ -245,6 +248,161 @@ public class TractateTest {
             Log.d(TAG,"英文第"+i+"段的标点个数 : " + count + "chinese:" + count1);
             Log.d(TAG,"中文第"+i+"段的标点个数 : " + count1);
         }
+
+
+        /*StringBuffer content = new StringBuffer();
+        StringBuffer translation = new StringBuffer();
+
+        for(String c:contentlist){
+            content.append(c);
+            content.append("\r\n");
+        }
+
+        for(String t:translationlist){
+            translation.append(t);
+            translation.append("\r\n");
+        }
+        //添加　
+        Log.d(TAG,"testTractate_add");
+        Tractate addtractate = new Tractate();
+        addtractate.setTractatetypeId("880d538e1d");
+        addtractate.setTitle(title);
+        addtractate.setRemark(remark);
+        addtractate.setUserId(Constant.userId0703);
+        addtractate.setContent(content.toString());
+        addtractate.setTranslation(translation.toString());
+
+        TestSubscriber<Tractate> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addTractate(addtractate).toBlocking().subscribe(testSubscriber_add);
+        List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
+        if(throwables.size() > 0){
+            Log.d(TAG,throwables.get(0).getMessage());
+        }
+        testSubscriber_add.assertNoErrors();
+        List<Tractate> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list != null || list.size() > 0){
+            Tractate tractate = list.get(0);
+            Log.d(TAG,"testTractate_add_result:" + tractate.toString());
+        }*/
+    }
+
+
+    /**
+     * 添加文章，以标点符号间隔每一句
+     * @throws IOException
+     */
+    @Test
+    public void addTractateByUtil() throws IOException {
+
+        AddTractate addTractate = AndroidUtils.newInstance(context).checkoutTractateByRaw(R.raw.myfather);
+
+        Tractate tractate = addTractate.getTractate();
+        Log.d(TAG,"结果：" + addTractate.isCheckout());
+        Log.d(TAG,"标题：" + tractate.getTitle());
+        Log.d(TAG,"备注：" + tractate.getRemark());
+        Log.d(TAG,"内容：" + tractate.getContent());
+        Log.d(TAG,"译文：" + tractate.getTranslation());
+        Log.d(TAG,"检测报告：" + addTractate.getCheckoutResult());
+        Log.d(TAG,"文章详情：" + addTractate.getTractateResult());
+        List<List<List<String>>> lists = AndroidUtils.newInstance(context).splitTractate(tractate);
+        Log.d(TAG,"lists：" + lists.toString());
+
+        /*InputStream inputStream = context.getResources().openRawResource(R.raw.myfather);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        String line;
+
+        List<String> english_paragraph = new ArrayList<>();//英文段落数
+        List<String> chinese_paragraph = new ArrayList<>();//中文段落数
+
+        boolean isTranslation = false;//是否是译文
+
+        String title = bufferedReader.readLine();
+        String remark = bufferedReader.readLine();
+        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+        while ((line = bufferedReader.readLine()) != null){
+
+            Log.d(TAG,line);
+            if(!line.startsWith("#") && !line.equals("")){
+
+                if(!isTranslation && !line.startsWith("!!!")){
+                    Log.d(TAG,"英文:"+line);
+                    english_paragraph.add(line);
+
+                }else if(line.startsWith("!!!")){
+                    //是译文
+                    isTranslation = true;
+                }else{
+                    Log.d(TAG,"中文:"+line);
+                    chinese_paragraph.add(line);
+
+                }
+            }
+        }
+        bufferedReader.close();
+        inputStream.close();
+        Log.d(TAG,"英文段落数：" + english_paragraph.size() + "" + chinese_paragraph.size());
+        Log.d(TAG,"中文段落数：" + chinese_paragraph.size());
+        if(english_paragraph.size() != chinese_paragraph.size()){
+            Log.d(TAG,"英文和译文行数不同");
+            return;
+        }
+
+        //判断每一个段落的标点符号数量
+        for(int i = 0; i < english_paragraph.size(); i++){
+
+            String englishParagraph = english_paragraph.get(i);
+            String chinestParagraph = chinese_paragraph.get(i);
+
+            String regEx = "[\\u4e00-\\u9fa5，。！、……a-zA-Z\\d]+";
+            Pattern p = Pattern.compile(regEx,Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(englishParagraph);
+            Matcher m1 = p.matcher(chinestParagraph);
+            boolean rs = m.find();
+            boolean rs1 = m1.find();
+            Log.d(TAG,rs1 ? "中文合法" : "中文不合法");
+            Log.d(TAG,rs ? "英文合法" : "英文不合法");
+            Log.d(TAG,rs ? "中文合法" : "英文不合法");
+            Log.d(TAG,rs ? "英文合法" : "英文不合法");
+            *//*int count = 0;
+            while(m.find()){
+                count ++;
+            }
+            System.out.println("ABC的个数 : " + count);*//*
+
+        }
+
+        //判断每一个段落的标点符号数量
+        for(int i = 0; i < english_paragraph.size(); i++){
+
+            String englishParagraph = english_paragraph.get(i);
+            String chinestParagraph = chinese_paragraph.get(i);
+
+            String english = "[,.?;!]";//英文标点
+            String chinese = "[，。？；！、]";//中文标点
+            Pattern p = Pattern.compile(english,Pattern.CASE_INSENSITIVE);
+            Pattern p1 = Pattern.compile(chinese,Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(englishParagraph);
+            Matcher m1 = p1.matcher(chinestParagraph);
+            int count = 0;
+            int count1 = 0;
+            while(m.find()){
+                count ++;
+            }
+            while(m1.find()){
+                count1 ++;
+            }
+            Log.d(TAG,"英文第"+i+"段的标点个数 : " + count + "chinese:" + count1);
+            Log.d(TAG,"中文第"+i+"段的标点个数 : " + count1);
+        }*/
+
+
+
 
 
         /*StringBuffer content = new StringBuffer();
