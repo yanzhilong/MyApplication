@@ -31,8 +31,8 @@ public class AndroidUtils {
 
     private static final String TAG = AndroidUtils.class.getSimpleName();
     private static Context context;
-    private static String englishregex = "[,.?;!]";//英文标点正则
-    private static String chineseregex = "[，。？；！、]";//中文标点正则
+    public static String englishregex = "[,.?;!]";//英文标点正则
+    public static String chineseregex = "[，。？；！、]";//中文标点正则
 
     public static AndroidUtils newInstance(Context context) {
         return new AndroidUtils(context);
@@ -385,4 +385,5 @@ public class AndroidUtils {
 
         return lists;
     }
+
 }

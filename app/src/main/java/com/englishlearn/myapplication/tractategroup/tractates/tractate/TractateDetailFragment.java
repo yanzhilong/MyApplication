@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.tractategroup.tractates.tractate;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.tractatedetail_frag, container, false);
 
@@ -49,14 +50,24 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         final AddTractate addTractate = AndroidUtils.newInstance(this.getContext()).checkoutTractateByRaw(R.raw.myfather);
         Log.d(TAG,"setText:" + addTractate.getTractate().getContent());
 
-        TextView contenttv = (TextView) root.findViewById(R.id.contenttv);
-        TextView translationtv = (TextView) root.findViewById(R.id.translationtv);
+        final TextView contenttv = (TextView) root.findViewById(R.id.contenttv);
+        final TextView translationtv = (TextView) root.findViewById(R.id.translationtv);
+
 
         //分别显示两个TextView
-       /* contenttv.setText(addTractate.getTractate().getContent());
-        translationtv.setText(addTractate.getTractate().getTranslation());*/
+        contenttv.setText(addTractate.getTractate().getContent());
+        /*translationtv.setText(addTractate.getTractate().getTranslation());*/
 
-        tractatetv.setText(addTractate.getTractate().getContent() + System.getProperty("line.separator") + addTractate.getTractate().getTranslation());
+        //1. 将英文和中文的内容分解成List
+        //获得英文和中文的段落和句子List
+        List<List<List<String>>> tractateList = AndroidUtils.newInstance(this.getContext()).splitTractate(addTractate.getTractate());
+        //英文段落
+        final List<List<String>> englishParagraph = tractateList.get(0);
+        final List<List<String>> chineseParagraph = tractateList.get(1);
+
+        //得到英文的每一段的每一句，添加到一个StringBuffer中
+
+       // tractatetv.setText(addTractate.getTractate().getContent() + System.getProperty("line.separator") + addTractate.getTractate().getTranslation());
 
         StringBuffer sb = new StringBuffer();
         sb.append("fist line");
@@ -69,13 +80,84 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         final StringBuffer textViewNew = new StringBuffer();
 
-        tractatetv.post(new Runnable() {
+        final String[] chineseFirst = new String[1];
+        contenttv.post(new Runnable() {
+
             @Override
             public void run() {
-                //英文每一行内容
-                List<String> list = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).getTextViewStringByLine(tractatetv);
+                //1. 将英文和中文的内容分解成List(上面已经分好了)
+                //英文采用先放到一个TextView中再取来的加"\n"的方式，这个TextView要比真正显示的要padding5dp，因为要留空间加換行符
+                //按英文一行中文一行的方式插入StringBuffer中
+                StringBuffer english = new StringBuffer();//用来记录英文，便于单独加效果，也便于只显示英文
+                StringBuffer chinese = new StringBuffer();//同上
+                StringBuffer tractate = new StringBuffer();//用于最后放入TextView中
+                int eParagraph = 0;//用于记录当前段落数(英)
+                int cParagraph = 0;//同上(中)
+                int eSentence = 0;//用于记录当前句子数(英)
+                int cSentence = 0;//同上(中)
 
-                List<List<List<String>>> lists = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).splitTractate(addTractate.getTractate());
+                int width = contenttv.getWidth();//当前TextView宽度
+                TextPaint textPaint = contenttv.getPaint();//用于计算占用空间
+
+                //英文每一行内容
+                List<String> list = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).getTextViewStringByLine(contenttv);
+
+                for(int i = 0; i < list.size(); i++){
+                    //判断当前行是否是換行符,是跳过
+                    if(list.get(i).equals(System.getProperty("line.separator"))){
+                        break;
+                    }
+                    //判断当前行英文包含的句子数
+
+
+                }
+
+
+
+
+
+             /*   //英文每一行内容
+                List<String> list = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).getTextViewStringByLine(contenttv);
+
+                //每一行重新加上一个空行，重新设置回去
+                StringBuffer contentNew = new StringBuffer();
+                for(int i = 0; i < list.size(); i ++){
+                    contentNew.append(list.get(i) + System.getProperty("line.separator") + System.getProperty("line.separator"));
+
+                }
+
+                contenttv.setText("");
+                translationtv.setText(contentNew.toString());*/
+
+             /*   //获得第一行是否有一句話，有的話截取家句話计算占用的空间
+                for(int i = 0; i < list.size(); i ++){
+                    Pattern english = Pattern.compile(AndroidUtils.englishregex,Pattern.CASE_INSENSITIVE);
+                    String[] englishsentences = english.split(list.get(i));
+                    if(englishsentences.length > 0){
+                        //第一句有分句，取出第一句的占用位置，
+                        TextPaint textPaint = contenttv.getPaint();
+                        float textPaintWidth = textPaint.measureText(englishsentences[0]+".");
+                        //判断中文第一句的宽度
+                        chineseFirst[0] = chineseParagraph.get(0).get(0)+".";
+                        while (textPaint.measureText(chineseFirst[0]) < textPaintWidth){
+                            chineseFirst[0] += " ";
+                        }
+                        //计算出第一句后面需要的空格
+                        //中文每一行内容
+                        //每一行重新加上一个空行，重新设置回去
+                        StringBuffer translationNew = new StringBuffer();
+                *//*for(int i = 0; i < list.size(); i ++){
+                    translationNew.append(System.getProperty("line.separator") + list.get(i) + System.getProperty("line.separator"));
+
+                }*//*
+                        translationNew.append(System.getProperty("line.separator") + chineseFirst[0] + "他是");
+                        translationtv.setText(translationNew.toString());
+                        break;
+                    }
+                }
+*/
+
+               /* List<List<List<String>>> lists = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).splitTractate(addTractate.getTractate());
                 List<List<String>> chineses = lists.get(1);//获得中文的段落
 
                 int paragraph = 0;//段落
@@ -89,13 +171,32 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                     textViewNew.append(chineses.get(0).get(0) + System.getProperty("line.separator"));
                     break;
                 }
-
+*/
                 //tractatetv.setText(textViewNew);
 
 
 
             }
         });
+
+
+        /*translationtv.post(new Runnable() {
+            @Override
+            public void run() {
+                //中文每一行内容
+                List<String> list = AndroidUtils.newInstance(TractateDetailFragment.this.getContext()).getTextViewStringByLine(translationtv);
+
+                //每一行重新加上一个空行，重新设置回去
+                StringBuffer translationNew = new StringBuffer();
+                *//*for(int i = 0; i < list.size(); i ++){
+                    translationNew.append(System.getProperty("line.separator") + list.get(i) + System.getProperty("line.separator"));
+
+                }*//*
+                translationNew.append(chineseFirst[0] + "他是");
+                translationtv.setText(translationNew.toString());
+            }
+        });*/
+
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
 
