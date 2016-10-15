@@ -142,12 +142,13 @@ public class AndroidUtils {
     }
 
     /**
-     * 获取TextView某一行的内容
+     * 获取TextView每一行的内容
      * @param textView
-     * @param lineNum
      * @return
      */
-    public static String getTextViewStringByLine(TextView textView,int lineNum){
+    public static List<String> getTextViewStringByLine(TextView textView){
+
+        List<String> list = new ArrayList<>();
         Layout layout = textView.getLayout();
         //总行数
         int line = textView.getLayout().getLineCount();
@@ -158,13 +159,15 @@ public class AndroidUtils {
             int start = layout.getLineStart(i);
             int end = layout.getLineEnd(i);
             String sub = text.substring(start, end);
+            list.add(sub);
+            Log.d(TAG,"has " + System.getProperty("line.separator") +sub.contains(System.getProperty("line.separator")));
             Log.d(TAG,"SUB:"+sub);
             result += sub + System.getProperty("line.separator");
         }
 
         Log.d(TAG,"result" + result);
         System.out.print(result);
-        return result;
+        return list;
     }
 
     /**
