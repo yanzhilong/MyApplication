@@ -24,6 +24,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     private static final String TAG = TractateDetailFragment.class.getSimpleName();
     private Tractate tractate;
     private TextView tractatetv;
+    TractateHelper tractateHelper;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
