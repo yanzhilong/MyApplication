@@ -61,7 +61,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         //1. 将英文和中文的内容分解成List
         //获得英文和中文的段落和句子List
-        List<List<List<String>>> tractateList = AndroidUtils.newInstance(this.getContext()).splitTractate(addTractate.getTractate());
+        final List<List<List<String>>> tractateList = AndroidUtils.newInstance(this.getContext()).splitTractate(addTractate.getTractate());
         //英文段落
         final List<List<String>> englishParagraph = tractateList.get(0);
         final List<List<String>> chineseParagraph = tractateList.get(1);
@@ -86,6 +86,19 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
             @Override
             public void run() {
+
+                tractateHelper = new TractateHelper(TractateDetailFragment.this.getContext(),addTractate.getTractate(),contenttv,contenttv.getPaint());
+
+                String result = tractateHelper.getTractateString();
+
+                if(result != null){
+                    tractatetv.setText(result);
+                }
+
+                if( 1 > 0){
+                    return;
+                }
+
                 //1. 将英文和中文的内容分解成List(上面已经分好了)
                 //英文采用先放到一个TextView中再取来的加"\n"的方式，这个TextView要比真正显示的要padding5dp，因为要留空间加換行符
                 //按英文一行中文一行的方式插入StringBuffer中
