@@ -94,7 +94,12 @@ public class TractateHelper {
 
             if(line.contains(System.getProperty("line.separator"))){
                 stringBuffer.append(line);
-                paragraph++;
+                if(paragraph < englishParagraph.size()){
+                    paragraph++;
+
+                }else{
+                    break;
+                }
                 continue;
             }
 
@@ -108,9 +113,9 @@ public class TractateHelper {
                 paragraph++;
             }
 
-            if(i > 4){
+            /*if(i > 3){
                 break;
-            }
+            }*/
 
             if(1 > 0){
                 continue;
@@ -644,7 +649,7 @@ public class TractateHelper {
             //当前段落
             currentParaEnglish = englishParagraph.get(englishPara);
             //取出当前行
-            String currentSentence = currentParaEnglish.get(currentIndex);
+            //String currentSentence = currentParaEnglish.get(currentIndex);
             List<Float> widths = new ArrayList<>();//保存当前行所有句子头的位置
             List<Integer> indexs = new ArrayList<>();//保存当前行所有句子的下标
             //判断剩余句子有没有显示完成
@@ -661,25 +666,30 @@ public class TractateHelper {
                         continue;
                     }
                     int index = 0;
+                    //lastIndex从哪里开始找，会包括
                     if((index = line.indexOf(currentSent.toCharArray()[0],lastIndex)) != -1){
+                        //"asd".substring(0,2),as,0,1,a,0,0 0
                         //当前句子头部有显示，计算当前句头的位置值
-                        float width = textPaint.measureText(line.substring(0,(index > 0 ? index - 1 : index)));
+                        float width = textPaint.measureText(line.substring(0,index));
                         widths.add(width);
                         indexs.add(currentIndex);
 
                         //判断当前句子有没有显示完成
-                        if(!line.contains(currentSent)){
+                        if(!line.substring(lastIndex,line.length()).contains(currentSent)){
                             //没有显示完,判断显示了多少
                             currentSent = cutSpan(currentSent);
                             char[] senchars = currentSent.toCharArray();
                             int j = 0;
                             for(; j < senchars.length; j++){
                                 if(!line.contains(String.valueOf(senchars,0,j))){
+                                    j--;
                                     break;
                                 }
                             }
+                            //valueOf(char[] data, int start, int length)保存长度
+                            //My father was a self-taught mandolin  String.valueOf(senchars,0,2) My  0,1 M
                             //保存剩余的句子
-                            englishOther.append(cutSpan(String.valueOf(senchars,(j > 0 ? j - 1: j),senchars.length - j)));
+                            englishOther.append(cutSpan(String.valueOf(senchars,j-1,senchars.length - j)));
                             currentIndex++;//句子加1,下次检测下一条句子
                             break;
                         }else {
@@ -700,8 +710,9 @@ public class TractateHelper {
                         break;
                     }
                 }
+                englishOther = new StringBuffer();
                 //保存剩余的句子
-                englishOther.append(cutSpan(String.valueOf(senchars,j,senchars.length - j)));
+                englishOther.append(cutSpan(other.substring(j,senchars.length)));
             }
             englishSents = new int[widths.size()];
             englishSentX = new float[widths.size()];
@@ -732,6 +743,27 @@ public class TractateHelper {
          * @return
          */
         private String getChineseLise(int englishPara,int[] englishSents,float[] englishSentX){
+
+            List<String> currentParaChin1 = chineseParagraph.get(englishPara);//当前段落
+            String current;
+            StringBuffer stringBuffer = new StringBuffer();
+            for(int p = 0; p < englishSents.length; p ++){
+
+                current = currentParaChin1.get(englishSents[p]);
+                float len1 = englishSentX[p];
+                String add = "";
+                while (textPaint.measureText(add) < len1){
+                    add += " ";
+                }
+                stringBuffer.append(add + current.substring(0,1));
+            }
+
+
+
+
+            if( 1 > 0){
+                return stringBuffer.toString();
+            }
 
             line = new StringBuffer();
             List<String> currentParaChin = chineseParagraph.get(englishPara);//当前段落
@@ -792,14 +824,15 @@ public class TractateHelper {
                     String currentSentenceAdd = "";//当前句子能加入的
                     for(; j < currentSentenceChars.length; j++){
                         if(linefloat + textPaint.measureText(add + String.valueOf(currentSentenceChars,0,j)) > (width - newLineLength)){
+                            j--;
                             isbreak = true;
                             break;
                         }
                     }
                     if(isbreak){
                         //保存剩余的内容
-                        chineseOther.append(String.valueOf(currentSentenceChars,j - 1,currentSentenceChars.length - (j - 1)));
-                        currentSentenceAdd = add + String.valueOf(currentSentenceChars,0,j - 1);
+                        chineseOther.append(currentSentence.substring(j,currentSentenceChars.length));
+                        currentSentenceAdd = add + String.valueOf(currentSentenceChars,0,j);
 
                         lineFull = true;
                     }else{
