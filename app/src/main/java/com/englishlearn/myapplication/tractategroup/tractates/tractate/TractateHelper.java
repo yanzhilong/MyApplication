@@ -654,6 +654,7 @@ public class TractateHelper {
             List<Integer> indexs = new ArrayList<>();//保存当前行所有句子的下标
             //判断剩余句子有没有显示完成
             if(line.contains(englishOther.toString())){
+
                 //剩余句子显示完成,循环加入新句子
                 int lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length();//已经显示的距离下标
 
@@ -662,12 +663,12 @@ public class TractateHelper {
 
                     String currentSent = currentParaEnglish.get(currentIndex);
                     currentSent = cutSpan(currentSent);//取出前后空格
-                    if(currentSent.equals("")){
+                    if(currentSent == null || currentSent.equals("") || currentSent.length() == 0 ){
                         continue;
                     }
                     int index = 0;
-                    //lastIndex从哪里开始找，会包括
-                    if((index = line.indexOf(currentSent.toCharArray()[0],lastIndex)) != -1){
+                    //lastIndex不越界，lastIndex从哪里开始找，会包括
+                    if(lastIndex <= line.length() && (index = line.indexOf(currentSent.toCharArray()[0],lastIndex)) != -1){
                         //"asd".substring(0,2),as,0,1,a,0,0 0
                         //当前句子头部有显示，计算当前句头的位置值
                         float width = textPaint.measureText(line.substring(0,index));
@@ -696,8 +697,10 @@ public class TractateHelper {
                             lastIndex = lastIndex + currentSent.length();
                             continue;
                         }
+                    }else{
+                        //没有显示下一句,或显示不下了
+                        break;
                     }
-
                 }
 
             }else{
