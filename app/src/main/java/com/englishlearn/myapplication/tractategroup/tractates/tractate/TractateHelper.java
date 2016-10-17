@@ -92,7 +92,14 @@ public class TractateHelper {
             //判断当前行包含的段落数，句子数
             String line = list.get(i);
 
+            if(line.contains(System.getProperty("line.separator"))){
+                stringBuffer.append(line);
+                paragraph++;
+                continue;
+            }
+
             stringBuffer.append(line + System.getProperty("line.separator"));//增加一行英文
+
             englishManager.checkEnglishLine(paragraph,line);
             String ch = chineseManager.getChineseLise(paragraph,englishSents,englishSentX);
             stringBuffer.append(ch + System.getProperty("line.separator"));//增加一行中文
@@ -101,7 +108,7 @@ public class TractateHelper {
                 paragraph++;
             }
 
-            if(i > 2){
+            if(i > 4){
                 break;
             }
 
