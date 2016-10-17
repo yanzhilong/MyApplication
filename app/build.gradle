@@ -33,6 +33,12 @@ android {
         //Bmob需要的5 rxjava 会和 bmob冲突
         exclude 'META-INF/rxjava.properties'
     }
+    //这样可以直接将.so文件放到libs里了，或直接创建在man/jniLibs
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
 }
 
 dependencies {
