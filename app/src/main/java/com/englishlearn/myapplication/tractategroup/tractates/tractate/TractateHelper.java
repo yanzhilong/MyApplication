@@ -10,6 +10,8 @@ import com.englishlearn.myapplication.util.AndroidUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.valueOf;
+
 
 /**
  * Created by yanzl on 16-10-15.
@@ -143,14 +145,14 @@ public class TractateHelper {
                     while (Character.isWhitespace(chars[c-1])){
                         c--;
                     }
-                    String currentSentNew = String.valueOf(chars,0,c);
+                    String currentSentNew = valueOf(chars,0,c);
                     //去除当前句子前面空格
                     char[] chars1 = currentSentNew.toCharArray();
                     int c1 = 0;
                     while (Character.isWhitespace(chars1[c1])){
                         c1++;
                     }
-                    String currentSentNew1 = String.valueOf(chars1,c1,chars1.length - c1);
+                    String currentSentNew1 = valueOf(chars1,c1,chars1.length - c1);
 
                     //当前剩余字符串
                     String otherLine = line.substring(currentIndex,line.length());
@@ -181,13 +183,13 @@ public class TractateHelper {
                             char[] charChinOther = chineseother.toCharArray();
                             int o = 0;
                             for(; o < charChinOther.length; o++){
-                                if(textPaint.measureText(String.valueOf(charChinOther,0,o)) > (width - newLineLength)){
+                                if(textPaint.measureText(valueOf(charChinOther,0,o)) > (width - newLineLength)){
                                     o--;
                                     break;
                                 }
                             }
                             //中文放入
-                            stringBuffer.append(String.valueOf(charChinOther,0,o));//增加上一行剩余的中文
+                            stringBuffer.append(valueOf(charChinOther,0,o));//增加上一行剩余的中文
                             //剩余的存到字符串中
                             chineseother = chineseother.substring(o,chineseother.length());
                             isChinLineEnd  = true;//中文放不下了
@@ -211,7 +213,7 @@ public class TractateHelper {
                         boolean isbreak = false;
                         String addchin = "";
                         for(; j < chin.length; j++){
-                            if(lenother + textPaint.measureText(add + String.valueOf(chin,0,j)) > (width - newLineLength)){
+                            if(lenother + textPaint.measureText(add + valueOf(chin,0,j)) > (width - newLineLength)){
                                 isbreak = true;
                                 break;
                             }
@@ -219,8 +221,8 @@ public class TractateHelper {
                         j--;
                         if(isbreak){
                             //保存剩余的内容
-                            chineseother = String.valueOf(chin,j,chin.length - j);
-                            addchin = add + String.valueOf(chin,0,j);
+                            chineseother = valueOf(chin,j,chin.length - j);
+                            addchin = add + valueOf(chin,0,j);
                             isChinLineEnd  = true;
                             stringBuffer.append(System.getProperty("line.separator"));
                         }else{
@@ -282,7 +284,7 @@ public class TractateHelper {
                         boolean isbreak = false;
                         String addchin = "";
                         for(; j < chin.length; j++){
-                            if(lenother + textPaint.measureText(add + String.valueOf(chin,0,j)) > (width - newLineLength)){
+                            if(lenother + textPaint.measureText(add + valueOf(chin,0,j)) > (width - newLineLength)){
                                 isbreak = true;
                                 break;
                             }
@@ -290,8 +292,8 @@ public class TractateHelper {
                         j--;
                         if(isbreak){
                             //保存剩余的内容
-                            chineseother = String.valueOf(chin,j,chin.length - j);
-                            addchin = add + String.valueOf(chin,0,j);
+                            chineseother = valueOf(chin,j,chin.length - j);
+                            addchin = add + valueOf(chin,0,j);
                             isChinLineEnd  = true;
                         }else{
                             addchin = add + currentSentChin;
@@ -317,13 +319,13 @@ public class TractateHelper {
                             char[] charChinOther = chineseother.toCharArray();
                             int o = 0;
                             for(; o < charChinOther.length; o++){
-                                if(textPaint.measureText(String.valueOf(charChinOther,0,o)) > (width - newLineLength)){
+                                if(textPaint.measureText(valueOf(charChinOther,0,o)) > (width - newLineLength)){
                                     o--;
                                     break;
                                 }
                             }
                             //中文放入
-                            stringBuffer.append(String.valueOf(charChinOther,0,o));//增加上一行剩余的中文
+                            stringBuffer.append(valueOf(charChinOther,0,o));//增加上一行剩余的中文
                             //剩余的存到字符串中
                             chineseother = chineseother.substring(o,chineseother.length());
                             isChinLineEnd  = true;//中文放不下了
@@ -420,14 +422,14 @@ public class TractateHelper {
                     while (Character.isWhitespace(chars[c-1])){
                         c--;
                     }
-                    String currentSentNew = String.valueOf(chars,0,c);
+                    String currentSentNew = valueOf(chars,0,c);
                     //去除当前句子前面空格
                     char[] chars1 = currentSentNew.toCharArray();
                     int c1 = 0;
                     while (Character.isWhitespace(chars1[c1])){
                         c1++;
                     }
-                    String currentSentNew1 = String.valueOf(chars1,c1,chars1.length - c1);
+                    String currentSentNew1 = valueOf(chars1,c1,chars1.length - c1);
 
                     //当前剩余字符串
                     String otherLine = line.substring(currentIndex,line.length());
@@ -458,13 +460,13 @@ public class TractateHelper {
                             char[] charChinOther = chineseother.toCharArray();
                             int o = 0;
                             for(; o < charChinOther.length; o++){
-                                if(textPaint.measureText(String.valueOf(charChinOther,0,o)) > (width - newLineLength)){
+                                if(textPaint.measureText(valueOf(charChinOther,0,o)) > (width - newLineLength)){
                                     o--;
                                     break;
                                 }
                             }
                             //中文放入
-                            stringBuffer.append(String.valueOf(charChinOther,0,o));//增加上一行剩余的中文
+                            stringBuffer.append(valueOf(charChinOther,0,o));//增加上一行剩余的中文
                             //剩余的存到字符串中
                             chineseother = chineseother.substring(o,chineseother.length());
                             isChinLineEnd  = true;//中文放不下了
@@ -488,7 +490,7 @@ public class TractateHelper {
                         boolean isbreak = false;
                         String addchin = "";
                         for(; j < chin.length; j++){
-                            if(lenother + textPaint.measureText(add + String.valueOf(chin,0,j)) > (width - newLineLength)){
+                            if(lenother + textPaint.measureText(add + valueOf(chin,0,j)) > (width - newLineLength)){
                                 isbreak = true;
                                 break;
                             }
@@ -496,8 +498,8 @@ public class TractateHelper {
                         j--;
                         if(isbreak){
                             //保存剩余的内容
-                            chineseother = String.valueOf(chin,j,chin.length - j);
-                            addchin = add + String.valueOf(chin,0,j);
+                            chineseother = valueOf(chin,j,chin.length - j);
+                            addchin = add + valueOf(chin,0,j);
                             isChinLineEnd  = true;
                             stringBuffer.append(System.getProperty("line.separator"));
                         }else{
@@ -559,7 +561,7 @@ public class TractateHelper {
                         boolean isbreak = false;
                         String addchin = "";
                         for(; j < chin.length; j++){
-                            if(lenother + textPaint.measureText(add + String.valueOf(chin,0,j)) > (width - newLineLength)){
+                            if(lenother + textPaint.measureText(add + valueOf(chin,0,j)) > (width - newLineLength)){
                                 isbreak = true;
                                 break;
                             }
@@ -567,8 +569,8 @@ public class TractateHelper {
                         j--;
                         if(isbreak){
                             //保存剩余的内容
-                            chineseother = String.valueOf(chin,j,chin.length - j);
-                            addchin = add + String.valueOf(chin,0,j);
+                            chineseother = valueOf(chin,j,chin.length - j);
+                            addchin = add + valueOf(chin,0,j);
                             isChinLineEnd  = true;
                         }else{
                             addchin = add + currentSentChin;
@@ -594,13 +596,13 @@ public class TractateHelper {
                             char[] charChinOther = chineseother.toCharArray();
                             int o = 0;
                             for(; o < charChinOther.length; o++){
-                                if(textPaint.measureText(String.valueOf(charChinOther,0,o)) > (width - newLineLength)){
+                                if(textPaint.measureText(valueOf(charChinOther,0,o)) > (width - newLineLength)){
                                     o--;
                                     break;
                                 }
                             }
                             //中文放入
-                            stringBuffer.append(String.valueOf(charChinOther,0,o));//增加上一行剩余的中文
+                            stringBuffer.append(valueOf(charChinOther,0,o));//增加上一行剩余的中文
                             //剩余的存到字符串中
                             chineseother = chineseother.substring(o,chineseother.length());
                             isChinLineEnd  = true;//中文放不下了
@@ -639,23 +641,77 @@ public class TractateHelper {
     class EnglishManager{
 
         private int currentIndex = 0;//当前的句子行
+        private int englishPara = 0;//当前段落
         final List<List<String>> englishParagraph = tractateList.get(0);//英文
         StringBuffer englishOther = new StringBuffer();//剩余英文
 
+        List<Float> widths = new ArrayList<>();//保存当前行所有句子头的位置
+        List<Integer> indexs = new ArrayList<>();//保存当前行所有句子的下标
 
         List<String> currentParaEnglish;//当前段落
 
+        private int lastIndex;//记录已经显示的最后一个下标
+
+        /**
+         * 1、放上次剩下的
+         *  剩下的为空
+         *      放当前句子
+         *          放得下
+         *              放下一句
+         *                  放得下
+         *                      ....
+         *                  放不下
+         *          放不下
+         *  放得下
+         *      放当前句子
+         *          放得下
+         *              ....
+         *          放不下
+         *  放不下
+         * 2、
+         * @param englishPara
+         * @param line
+         */
         public void checkEnglishLine(int englishPara,String line){
+
+            if(this.englishPara != englishPara){
+                englishPara = englishPara;
+                currentIndex = 0;//恢复句子数
+            }
+            if(line == null || line.equals("")){
+                return;
+            }
             //当前段落
             currentParaEnglish = englishParagraph.get(englishPara);
+
+            if(englishOther.toString().equals("")){
+                lastIndex = 0;//从0开始依次检测每个句子能不能放下
+                checkoutEverySentence(line);
+            }else if(line.contains(englishOther.toString())){
+                //放得下，记录这个句子的最后一个字符的下标，依次检测每个句子
+                lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length() - 1;//已经显示的englishOther的最后一个字母的下标
+                if(lastIndex == line.length() - 1){
+                    //放不下了
+                    return;
+                }
+                checkoutEverySentence(line);
+            }else{
+                //上次剩余的句子放不下了
+                lastIndex = 0;
+                checkoutLageSentence(line,englishOther.toString());
+                englishSents = new int[widths.size()];
+                englishSentX = new float[widths.size()];
+            }
+            if(1 > 0){
+                return;
+            }
+
             //取出当前行
             //String currentSentence = currentParaEnglish.get(currentIndex);
-            List<Float> widths = new ArrayList<>();//保存当前行所有句子头的位置
-            List<Integer> indexs = new ArrayList<>();//保存当前行所有句子的下标
+
             //判断剩余句子有没有显示完成
             if(line.contains(englishOther.toString())){
 
-                int lastIndex;
                 if(englishOther.toString().equals("")){
                     //剩余句子显示完成,循环加入新句子
                     lastIndex = 0;
@@ -694,7 +750,7 @@ public class TractateHelper {
                             char[] senchars = currentSent.toCharArray();
                             int j = 0;
                             for(; j < senchars.length; j++){
-                                if(!line.contains(String.valueOf(senchars,0,j + 1))){
+                                if(!line.contains(valueOf(senchars,0,j + 1))){
                                     break;
                                 }
                             }
@@ -702,7 +758,7 @@ public class TractateHelper {
                             //My father was a self-taught mandolin  String.valueOf(senchars,0,2) My  0,1 M
 
                             //保存剩余的句子
-                            englishOther.append(cutSpan(String.valueOf(senchars,j,senchars.length - j)));
+                            englishOther.append(cutSpan(valueOf(senchars,j,senchars.length - j)));
                             currentIndex++;//句子加1,下次检测下一条句子
                             break;
                         }else {
@@ -721,7 +777,7 @@ public class TractateHelper {
                 char[] othersenchars = englishOther.toString().toCharArray();
                 int j = 0;
                 for(; j < othersenchars.length; j++){
-                    if(!line.contains(String.valueOf(othersenchars,0,j + 1))){
+                    if(!line.contains(valueOf(othersenchars,0,j + 1))){
                         break;
                     }
                 }
@@ -730,7 +786,7 @@ public class TractateHelper {
                 //删除已经显示的句子
                 englishOther = new StringBuffer();
                 //保存剩余的句子
-                englishOther.append(cutSpan(String.valueOf(othersenchars,j,othersenchars.length - j)));
+                englishOther.append(cutSpan(valueOf(othersenchars,j,othersenchars.length - j)));
 
                /* //剩余句子没有显示完成，判断显示了多少
                 String other = cutSpan(englishOther.toString());
@@ -756,6 +812,75 @@ public class TractateHelper {
 
         }
 
+        /**
+         * 检测依次检测句子能不能放下
+         */
+        public void checkoutEverySentence(String line){
+
+            for (; currentIndex < currentParaEnglish.size(); currentIndex++){
+
+                String currentSent = currentParaEnglish.get(currentIndex);
+                currentSent = cutSpan(currentSent);//取出前后空格
+                if(currentSent == null || currentSent.equals("") || currentSent.length() == 0 ){
+                    continue;
+                }
+                int index = 0;
+                //从lastIndex那里开始找，会包括lastIndex这一項
+                if((index = line.indexOf(currentSent.toCharArray()[0],lastIndex == 0 ? lastIndex : lastIndex + 1)) != -1){
+                    //"asd".substring(0,2),as,0,1,a,0,0 0
+                    //当前句子头部有显示，计算当前句头的位置值
+                    float width = textPaint.measureText(line.substring(0,index));
+                    widths.add(width);
+                    indexs.add(currentIndex);
+
+                    //判断当前句子有没有显示完成
+                    int currentIn = 0;
+                    if((currentIn = line.indexOf(currentSent,lastIndex == 0 ? lastIndex : lastIndex + 1)) != -1){
+                        //当前句子显示完成了
+                        lastIndex = currentIn + currentSent.length() - 1;
+                        continue;
+                    }else {
+                        //没有显示完,判断显示了多少
+                        checkoutLageSentence(line,currentSent);
+                        currentIndex++;//下次检测下一句
+                        break;
+                    }
+                }else{
+                    //没有显示下一句,或显示不下了
+                    break;
+                }
+            }
+
+            englishSents = new int[widths.size()];
+            englishSentX = new float[widths.size()];
+            if(widths.size() > 0){
+                for (int i = 0; i < widths.size(); i++){
+                    englishSents[i] = indexs.get(i);
+                    englishSentX[i] = widths.get(i);
+                }
+            }
+            widths.clear();
+            indexs.clear();
+        }
+
+
+
+        /**
+         * 这个句子，放不下了
+         */
+        public void checkoutLageSentence(String line,String currentOrOther){
+
+            char[] senchars = currentOrOther.toCharArray();
+            int j = 1;
+            for(; j <= senchars.length; j++){
+                if(line.indexOf(String.valueOf(senchars,0,j),lastIndex == 0 ? lastIndex : lastIndex + 1) == -1){
+                    break;
+                }
+            }
+            englishOther = new StringBuffer();
+            //保存剩余的句子
+            englishOther.append(cutSpan(currentOrOther.substring(j - 1,currentOrOther.length())));
+        }
     }
 
 
@@ -806,13 +931,13 @@ public class TractateHelper {
                 char[] charChinOther = chineseOther.toString().toCharArray();
                 int o = 0;
                 for(; o < charChinOther.length; o++){
-                    if(textPaint.measureText(String.valueOf(charChinOther,0,o)) > (width - newLineLength)){
+                    if(textPaint.measureText(valueOf(charChinOther,0,o)) > (width - newLineLength)){
                         o--;
                         break;
                     }
                 }
                 //中文放入部分
-                line.append(String.valueOf(charChinOther,0,o));//增加上一行剩余的中文
+                line.append(valueOf(charChinOther,0,o));//增加上一行剩余的中文
                 //剩余的存到字符串中
                 chineseOther = new StringBuffer(chineseOther.toString().substring(o,chineseOther.toString().length()));
                 lineFull = true;//中文放不下了
@@ -854,7 +979,7 @@ public class TractateHelper {
                     boolean isbreak = false;
                     String currentSentenceAdd = "";//当前句子能加入的
                     for(; j < currentSentenceChars.length; j++){
-                        if(linefloat + textPaint.measureText(add + String.valueOf(currentSentenceChars,0,j)) > (width - newLineLength)){
+                        if(linefloat + textPaint.measureText(add + valueOf(currentSentenceChars,0,j)) > (width - newLineLength)){
                             j--;
                             isbreak = true;
                             break;
@@ -863,7 +988,7 @@ public class TractateHelper {
                     if(isbreak){
                         //保存剩余的内容
                         chineseOther.append(currentSentence.substring(j,currentSentenceChars.length));
-                        currentSentenceAdd = add + String.valueOf(currentSentenceChars,0,j);
+                        currentSentenceAdd = add + valueOf(currentSentenceChars,0,j);
 
                         lineFull = true;
                     }else{
@@ -898,7 +1023,7 @@ public class TractateHelper {
         while (Character.isWhitespace(chars[c-1])){
             c--;
         }
-        String result = String.valueOf(chars,0,c);
+        String result = valueOf(chars,0,c);
         return result;
     }
 
@@ -913,7 +1038,7 @@ public class TractateHelper {
         while (Character.isWhitespace(chars1[c1])){
             c1++;
         }
-        String result = String.valueOf(chars1,c1,chars1.length - c1);
+        String result = valueOf(chars1,c1,chars1.length - c1);
         return result;
     }
 
