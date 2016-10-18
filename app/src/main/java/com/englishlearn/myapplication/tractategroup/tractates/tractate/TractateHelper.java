@@ -655,11 +655,24 @@ public class TractateHelper {
             //判断剩余句子有没有显示完成
             if(line.contains(englishOther.toString())){
 
-                //剩余句子显示完成,循环加入新句子
-                int lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length();//已经显示的距离下标
+                int lastIndex;
+                if(englishOther.toString().equals("")){
+                    //剩余句子显示完成,循环加入新句子
+                    lastIndex = 0;
+                }else{
+                    //剩余句子显示完成,循环加入新句子
+                    lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length() - 1;//已经显示的englishOther的最后一个字母的下标
+                }
 
                 englishOther = new StringBuffer();
+
+
                 for (; currentIndex < currentParaEnglish.size(); currentIndex++){
+
+                    if(lastIndex == line.length() - 1){
+                        //是最后一位了,放不下了
+                        break;
+                    }
 
                     String currentSent = currentParaEnglish.get(currentIndex);
                     currentSent = cutSpan(currentSent);//取出前后空格
@@ -667,8 +680,8 @@ public class TractateHelper {
                         continue;
                     }
                     int index = 0;
-                    //lastIndex不越界，lastIndex从哪里开始找，会包括
-                    if(lastIndex <= line.length() && (index = line.indexOf(currentSent.toCharArray()[0],lastIndex)) != -1){
+                    //从lastIndex那里开始找，会包括lastIndex这一項
+                    if((index = line.indexOf(currentSent.toCharArray()[0],lastIndex)) != -1){
                         //"asd".substring(0,2),as,0,1,a,0,0 0
                         //当前句子头部有显示，计算当前句头的位置值
                         float width = textPaint.measureText(line.substring(0,index));
@@ -678,23 +691,22 @@ public class TractateHelper {
                         //判断当前句子有没有显示完成
                         if(!line.substring(lastIndex,line.length()).contains(currentSent)){
                             //没有显示完,判断显示了多少
-                            currentSent = cutSpan(currentSent);
                             char[] senchars = currentSent.toCharArray();
                             int j = 0;
                             for(; j < senchars.length; j++){
-                                if(!line.contains(String.valueOf(senchars,0,j))){
-                                    j--;
+                                if(!line.contains(String.valueOf(senchars,0,j + 1))){
                                     break;
                                 }
                             }
                             //valueOf(char[] data, int start, int length)保存长度
                             //My father was a self-taught mandolin  String.valueOf(senchars,0,2) My  0,1 M
+
                             //保存剩余的句子
-                            englishOther.append(cutSpan(String.valueOf(senchars,j-1,senchars.length - j)));
+                            englishOther.append(cutSpan(String.valueOf(senchars,j,senchars.length - j)));
                             currentIndex++;//句子加1,下次检测下一条句子
                             break;
                         }else {
-                            lastIndex = lastIndex + currentSent.length();
+                            lastIndex = lastIndex + currentSent.length() - 1;//已经显示的最后一位
                             continue;
                         }
                     }else{
@@ -704,7 +716,23 @@ public class TractateHelper {
                 }
 
             }else{
-                //剩余句子没有显示完成，判断显示了多少
+
+                //没有显示完,判断显示了多少
+                char[] othersenchars = englishOther.toString().toCharArray();
+                int j = 0;
+                for(; j < othersenchars.length; j++){
+                    if(!line.contains(String.valueOf(othersenchars,0,j + 1))){
+                        break;
+                    }
+                }
+                //valueOf(char[] data, int start, int length)保存长度
+                //My father was a self-taught mandolin  String.valueOf(senchars,0,2) My  0,1 M
+                //删除已经显示的句子
+                englishOther = new StringBuffer();
+                //保存剩余的句子
+                englishOther.append(cutSpan(String.valueOf(othersenchars,j,othersenchars.length - j)));
+
+               /* //剩余句子没有显示完成，判断显示了多少
                 String other = cutSpan(englishOther.toString());
                 char[] senchars = other.toCharArray();
                 int j = 0;
@@ -715,7 +743,7 @@ public class TractateHelper {
                 }
                 englishOther = new StringBuffer();
                 //保存剩余的句子
-                englishOther.append(cutSpan(other.substring(j,senchars.length)));
+                englishOther.append(cutSpan(other.substring(j,senchars.length)));*/
             }
             englishSents = new int[widths.size()];
             englishSentX = new float[widths.size()];

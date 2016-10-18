@@ -27,6 +27,8 @@ android {
         }
     }
 
+
+
     //anddroidTest需要配置的(2)
     packagingOptions {
         exclude 'LICENSE.txt'
