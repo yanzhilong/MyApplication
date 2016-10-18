@@ -907,10 +907,13 @@ public class TractateHelper {
 
                 current = currentParaChin1.get(englishSents[p]);
                 float len1 = englishSentX[p];
+                //计算已经存入的中文位置
+                float linefloat = textPaint.measureText(stringBuffer.toString());
                 String add = "";
-                while (textPaint.measureText(add) < len1){
+                while (linefloat + textPaint.measureText(add) < len1){
                     add += " ";
                 }
+                //需要判断还能不能放下，这里先直接放 下去
                 stringBuffer.append(add + current.substring(0,1));
             }
 
