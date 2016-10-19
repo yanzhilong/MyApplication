@@ -87,11 +87,15 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
             @Override
             public void run() {
 
+
+
                 tractateHelper = new TractateHelper(TractateDetailFragment.this.getContext(),addTractate.getTractate(),contenttv,contenttv.getPaint());
 
                 String result = tractateHelper.getTractateString();
 
                 if(result != null){
+                    //tractatetv.setText("Hello World\\n\\n\\n");
+                    Log.d(TAG,result);
                     tractatetv.setText(result);
                 }
 

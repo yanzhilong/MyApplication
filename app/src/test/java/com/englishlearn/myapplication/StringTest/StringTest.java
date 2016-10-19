@@ -46,6 +46,8 @@ public class StringTest {
     public void containsTest(){
         boolean result = "hello,world!".contains("");
         assertEquals(result,true);
+        boolean result1 = (""+System.getProperty("line.separator")).contains(System.getProperty("line.separator"));
+        assertEquals(result1,true);
     }
 
     @Test

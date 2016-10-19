@@ -94,7 +94,7 @@ public class TractateHelper {
             //判断当前行包含的段落数，句子数
             String line = list.get(i);
 
-            if(line.contains(System.getProperty("line.separator"))){
+           /* if(line.contains(System.getProperty("line.separator"))){
                 stringBuffer.append(line);
                 if(paragraph < englishParagraph.size()){
                     paragraph++;
@@ -103,21 +103,34 @@ public class TractateHelper {
                     break;
                 }
                 continue;
+            }*/
+
+
+
+           /* if(1 >0 ){
+                continue;
+            }*/
+
+            if(line.contains(System.getProperty("line.separator"))){
+                stringBuffer.append(line);//已经到达最后了不加換行符了
+            }else{
+                stringBuffer.append(line + System.getProperty("line.separator"));//增加一行英文,加上换行符
             }
-
-            stringBuffer.append(line + System.getProperty("line.separator"));//增加一行英文
-
             englishManager.checkEnglishLine(paragraph,line);
             String ch = chineseManager.getChineseLise(paragraph,englishSents,englishSentX);
             stringBuffer.append(ch + System.getProperty("line.separator"));//增加一行中文
 
-            if(line.contains(System.getProperty("line.separator"))){
-                paragraph++;
-            }
-
-            /*if(i > 3){
-                break;
+            /*if(line.contains(System.getProperty("line.separator"))){
+                stringBuffer.append(System.getProperty("line.separator"));//最后加完中文再加一下换行符，空一格
             }*/
+
+            if(line.contains(System.getProperty("line.separator"))){
+                if(paragraph < englishParagraph.size() - 1){
+                    paragraph++;
+                }else{
+                    break;
+                }
+            }
 
             if(1 > 0){
                 continue;
@@ -675,7 +688,7 @@ public class TractateHelper {
         public void checkEnglishLine(int englishPara,String line){
 
             if(this.englishPara != englishPara){
-                englishPara = englishPara;
+                this.englishPara = englishPara;
                 currentIndex = 0;//恢复句子数
             }
             if(line == null || line.equals("")){
@@ -690,6 +703,7 @@ public class TractateHelper {
             }else if(line.contains(englishOther.toString())){
                 //放得下，记录这个句子的最后一个字符的下标，依次检测每个句子
                 lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length() - 1;//已经显示的englishOther的最后一个字母的下标
+                englishOther = new StringBuffer();//清空剩余句子
                 if(lastIndex == line.length() - 1){
                     //放不下了
                     return;
