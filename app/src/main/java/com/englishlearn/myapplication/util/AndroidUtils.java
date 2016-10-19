@@ -368,19 +368,24 @@ public class AndroidUtils {
             if(i % 2 == 1){
                 isEnglish = !isEnglish;
             }else{
-                
+                if(isEnglish){
+                    english_stringBuffer.append(System.getProperty("line.separator"));
+                }else{
+                    chinese_stringBuffer.append(System.getProperty("line.separator"));
+                }
+                continue;
             }
             String line = tractateArray[i];
 
             if(isEnglish){
-                    Log.d(TAG,"英文:"+line);
-                    english_paragraph.add(line);
-                    english_stringBuffer.append(line + System.getProperty("line.separator"));
-                }else{
-                    Log.d(TAG,"中文:"+line);
-                    chinese_paragraph.add(line);
-                    chinese_stringBuffer.append(line + System.getProperty("line.separator"));
-                }
+                Log.d(TAG,"英文:"+line);
+                english_paragraph.add(line);
+                english_stringBuffer.append(line + System.getProperty("line.separator"));
+            }else{
+                Log.d(TAG,"中文:"+line);
+                chinese_paragraph.add(line);
+                chinese_stringBuffer.append(line + System.getProperty("line.separator"));
+            }
         }
 
         //检测段落数量
@@ -390,8 +395,8 @@ public class AndroidUtils {
             Log.e(TAG,"译文段落：" + chinese_paragraph.size());
             result = false;
         }else {
-            Log.d(TAG,"英文和译文行数一致" + System.getProperty("line.separator"));
-            Log.d(TAG,"英文和译文行数一致");
+            Log.d(TAG,"英文和译文段落数一致" + System.getProperty("line.separator"));
+            Log.d(TAG,"英文和译文段落数一致");
         }
 
         for (int i = 0; i < english_paragraph.size() || i < chinese_paragraph.size(); i ++){
@@ -401,15 +406,16 @@ public class AndroidUtils {
 
             //检测标点数量　
             if(english_sentences == chinese_sentences){
-                Log.d(TAG,"英文和译文第" + i + "段句子数相同" + System.getProperty("line.separator"));
+                Log.d(TAG,"英文和译文第" + i + "段句子数相同，都为：" + english_sentences + System.getProperty("line.separator"));
             }else {
-                Log.d(TAG,"英文和译文第" + i + "段句子数不同" + System.getProperty("line.separator"));
+                Log.d(TAG,"英文和译文第" + i + "段句子数不同，英文：" + english_sentences + "译文：" + chinese_sentences + System.getProperty("line.separator"));
                 result = false;
             }
         }
-
+        Log.d(TAG,"检测结果:" + result);
         tractate.setTitle(englishtitle + SPLITTAG + chinesetitle);
-
+        tractate.setContent(english_stringBuffer.toString());
+        tractate.setTranslation(chinese_stringBuffer.toString());
         return tractate;
     }
 
