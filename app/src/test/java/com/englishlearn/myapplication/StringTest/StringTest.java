@@ -56,4 +56,10 @@ public class StringTest {
         System.out.println(result[0]);
         assertEquals(result.length,1);
     }
+
+    @Test
+    public void spanTest(){
+        String result = " ";
+        assertEquals(result.length(),1);
+    }
 }
