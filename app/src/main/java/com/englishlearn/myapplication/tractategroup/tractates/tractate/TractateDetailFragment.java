@@ -49,6 +49,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         tractatetv = (TextView) root.findViewById(R.id.tractatetv);
         //String decumentdemo = AndroidUtils.newInstance(this.getContext()).getRawResource(R.raw.myfather);
         final AddTractate addTractate = AndroidUtils.newInstance(this.getContext()).checkoutTractateByRaw(R.raw.myfather);
+        final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
         Log.d(TAG,"setText:" + addTractate.getTractate().getContent());
 
         final TextView contenttv = (TextView) root.findViewById(R.id.contenttv);
@@ -56,7 +57,9 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
 
         //分别显示两个TextView
-        contenttv.setText(addTractate.getTractate().getContent());
+        //contenttv.setText(addTractate.getTractate().getContent());
+        String content = tractate.getContent().replace("\\|","");
+        contenttv.setText(content);
         /*translationtv.setText(addTractate.getTractate().getTranslation());*/
 
         //1. 将英文和中文的内容分解成List
@@ -89,7 +92,8 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
 
 
-                tractateHelper = new TractateHelper(TractateDetailFragment.this.getContext(),addTractate.getTractate(),contenttv,contenttv.getPaint());
+                //tractateHelper = new TractateHelper(TractateDetailFragment.this.getContext(),addTractate.getTractate(),contenttv,contenttv.getPaint());
+                tractateHelper = new TractateHelper(TractateDetailFragment.this.getContext(),tractate,contenttv,contenttv.getPaint());
 
                 String result = tractateHelper.getTractateString();
 

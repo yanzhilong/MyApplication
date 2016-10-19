@@ -20,9 +20,7 @@ import static java.lang.String.valueOf;
 
 public class TractateHelper {
 
-    private Context context;
     private Tractate tractate;//文章
-    private TextView textView;//显示文章的TextView
     private TextPaint textPaint;//用于计算占用空间
     private float newLineLength;//换行符空间
     private float width;//TextView最大宽
@@ -36,9 +34,7 @@ public class TractateHelper {
     private List<List<List<String>>> tractateList;
 
     public TractateHelper(Context context, Tractate tractate, TextView textView, TextPaint textPaint) {
-        this.context = context;
         this.tractate = tractate;
-        this.textView = textView;
         this.textPaint = textPaint;
         newLineLength = textPaint.measureText(System.getProperty("line.separator"));
         width = textView.getWidth();
@@ -55,7 +51,8 @@ public class TractateHelper {
 
         //1. 将英文和中文的内容分解成List
         //获得英文和中文的段落和句子List
-        tractateList = AndroidUtils.splitTractate(tractate);
+        //tractateList = AndroidUtils.splitTractate(tractate);
+        tractateList = AndroidUtils.splitTractate1(tractate);
         //英文段落
         final List<List<String>> englishParagraph = tractateList.get(0);
 
@@ -69,6 +66,11 @@ public class TractateHelper {
 
             String line = list.get(i);
 
+            if(line.equals(System.getProperty("line.separator"))){
+                //stringBuffer.append(System.getProperty("line.separator"));
+                continue;
+            }
+
             if(line.contains(System.getProperty("line.separator"))){
                 stringBuffer.append(line);//已经到达最后了不加換行符了
             }else{
@@ -76,7 +78,14 @@ public class TractateHelper {
             }
             englishManager.checkEnglishLine(paragraph,line);
             //String ch = chineseManager.getChineseLise(paragraph,englishSents,englishSentX);
-            String ch = chineseManager.getChineseLise1(paragraph,englishSents,englishSentX);
+            String ch = "";
+            if(line.contains(System.getProperty("line.separator"))){
+                //最后一行了，加上所有的剩下的中文
+                ch = chineseManager.getChineseLise1(paragraph,englishSents,englishSentX,true);
+            }else{
+                ch = chineseManager.getChineseLise1(paragraph,englishSents,englishSentX,false);
+            }
+
             stringBuffer.append(ch + System.getProperty("line.separator"));//增加一行中文
 
             if(line.contains(System.getProperty("line.separator"))){
@@ -286,7 +295,7 @@ public class TractateHelper {
         int lastIndex = 0;//已经存放的中文尾部的位置
         float spanWidth = textPaint.measureText(" ");//一个空格的大小
 
-        private String getChineseLise1(int englishPara,int[] englishSents,float[] englishSentX){
+        private String getChineseLise1(int englishPara,int[] englishSents,float[] englishSentX,boolean isLastLine){
 
             List<String> currentParaChin1 = chineseParagraph.get(englishPara);//当前段落
             line = new StringBuffer();
@@ -296,7 +305,7 @@ public class TractateHelper {
 
             if(lastIndex == Integer.MAX_VALUE){
                 mEnglishSents = englishSents;
-                addAll(englishPara,mEnglishSents);
+                addAll(englishPara,mEnglishSents,isLastLine);
                 return line.toString();
             }
 
@@ -305,24 +314,31 @@ public class TractateHelper {
                 lastIndex = getLargeSentence(englishSentX[p],currentParaChin1.get(englishSents[p]),true);
 
                 if(lastIndex == Integer.MAX_VALUE){
-                    mEnglishSents = new int[englishSents.length - 1 - p];
-                    addAll(englishPara,mEnglishSents);
+                    if(p == englishSents.length - 1){
+
+                    }else{
+                        mEnglishSents = new int[englishSents.length - 1 - p];
+                        for(int i = p,j =  0; i < englishSents.length; i++,j++){
+                            mEnglishSents[j] = englishSents[j];
+                        }
+                        addAll(englishPara,mEnglishSents,isLastLine);
+                    }
                 }
             }
             return line.toString();
         }
 
-        private void addAll(int englishPara,int[] englishSents){
+        private void addAll(int englishPara,int[] englishSents,boolean isLastLine){
 
             List<String> currentParaChin1 = chineseParagraph.get(englishPara);//当前段落
             for(int p = 0; p < englishSents.length; p++){
-                chineseOther.append(currentParaChin1.get(p));
+                chineseOther.append(currentParaChin1.get(englishSents[p]));
             }
             //判断是不是最后一句了，是的話全部加入
-            if((englishSents.length > 0 ? englishSents[englishSents.length - 1] : -1) == currentParaChin1.size() - 1){
+            if(isLastLine){
                 if(chineseOther.toString().length() > 0){
                     line.append(System.getProperty("line.separator"));
-                    int lasIn = 0;
+                    int lasIn = Integer.MAX_VALUE;
                     while (lasIn == Integer.MAX_VALUE){
                         lasIn = getLargeSentence(0,chineseOther.toString(),false);
                     }
@@ -371,6 +387,9 @@ public class TractateHelper {
             //计算已经存放的大小位置
             float addedWidth = textPaint.measureText(line.toString());
 
+            if(!isSingleLine){
+                addedWidth = 0f;
+            }
             if(addedWidth >= targetWidth - spanWidth / 2){
                 // 看是否能全部放入当前下标中文
                 if(targetWidth + textPaint.measureText(sentence) > (width - newLineLength)){
@@ -402,6 +421,9 @@ public class TractateHelper {
                     span.append(" ");
                 }
                 line.append(span.toString());
+                if(!isSingleLine){
+                    return getLargeSentence(targetWidth,chineseOther.toString(),false);
+                }
                 return getLargeSentence(targetWidth,sentence,true);
             }
         }

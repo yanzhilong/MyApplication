@@ -34,6 +34,7 @@ public class AndroidUtils {
     public static String englishregex = "[,.?;!]";//英文标点正则
     public static String chineseregex = "[，。？；！、]";//中文标点正则
     public static String SPLIT = "|";
+    static String SPLITTAG = "\\|";
 
     public static AndroidUtils newInstance(Context context) {
         return new AndroidUtils(context);
@@ -356,7 +357,7 @@ public class AndroidUtils {
         String chinesetitle = tractateArray[1];
         String remark = tractateArray[2];
 
-        String SPLITTAG = "\\|";
+
 
         Log.d(TAG,"标题：" + englishtitle + SPLITTAG + chinesetitle + System.getProperty("line.separator"));
         Log.d(TAG,"备注：" + remark + System.getProperty("line.separator"));
@@ -475,4 +476,61 @@ public class AndroidUtils {
         return lists;
     }
 
+    /**
+     * 将Tractate分解成英文和中文各个段落的各个句子的List(英文在前面，中文在后面)
+     * @param tractate
+     * @return
+     */
+    public static List<List<List<String>>> splitTractate1(Tractate tractate){
+
+        List<List<List<String>>> lists = new ArrayList<>();
+
+        //英文和中文組
+        String english = tractate.getContent();
+        String chinese = tractate.getTranslation();
+
+        String[] englishArray = cutSpanLine(english).split(System.getProperty("line.separator"));
+        String[] chineseArray = cutSpanLine(chinese).split(System.getProperty("line.separator"));
+        List<List<String>> englishList = new ArrayList<>();
+        List<List<String>> chineseList = new ArrayList<>();
+        //各个段落
+        for(String s: englishArray){
+
+            String[] sentenceArray = s.split(SPLITTAG);
+            List<String> englishSentences = new ArrayList<>();
+
+            for(String s1:sentenceArray){
+                englishSentences.add(s1);
+            }
+            englishList.add(englishSentences);
+        }
+
+        //各个语句
+        for(String s: chineseArray){
+
+            String[] sentenceArray = s.split(SPLITTAG);
+            List<String> chineseSentences = new ArrayList<>();
+
+            for(String s1:sentenceArray){
+                chineseSentences.add(s1);
+            }
+            chineseList.add(chineseSentences);
+        }
+        lists.add(englishList);
+        lists.add(chineseList);
+        return lists;
+    }
+
+    //去除空行
+    public static String cutSpanLine(String res){
+        String[] strings = res.split(System.getProperty("line.separator"));
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String s:strings){
+            if(s.equals("")){
+                continue;
+            }
+            stringBuffer.append(s + System.getProperty("line.separator"));
+        }
+        return stringBuffer.toString();
+    }
 }
