@@ -441,4 +441,11 @@ public class TractateTest {
             Log.d(TAG,"testTractate_add_result:" + tractate.toString());
         }*/
     }
+
+
+    @Test
+    public void getTractate(){
+        Tractate tractate = AndroidUtils.newInstance(context).getTractateByRaw(R.raw.abundleofsticks);
+        Log.d(TAG,tractate.toString());
+    }
 }

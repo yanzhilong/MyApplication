@@ -188,7 +188,6 @@ public class AndroidUtils {
 
             while ((line = bufferedReader.readLine()) != null){
                 sb.append(line + System.getProperty("line.separator"));
-                //sb.append(line + "\r\n");
             }
             bufferedReader.close();
             inputStream.close();
@@ -338,13 +337,9 @@ public class AndroidUtils {
      * @param resId
      * @return
      */
-    public static AddTractate getTractateByRaw(int resId){
+    public static Tractate getTractateByRaw(int resId){
 
-        AddTractate addTractate = new AddTractate();
         Tractate tractate = new Tractate();
-
-        StringBuffer checkoutResult = new StringBuffer();//检测报告
-        StringBuffer tractateResult = new StringBuffer();//文章字符串
 
         List<String> english_paragraph = new ArrayList<>();//英文段落数
         List<String> chinese_paragraph = new ArrayList<>();//中文段落数
@@ -353,118 +348,69 @@ public class AndroidUtils {
         StringBuffer chinese_stringBuffer = new StringBuffer();
 
         boolean result = true;
-        boolean isTranslation = false;
 
         String tractateStr = getRawResource(resId);
         String[] tractateArray = tractateStr.split(System.getProperty("line.separator"));
 
-        String title = tractateArray[0];
-        String remark = tractateArray[1];
+        String englishtitle = tractateArray[0];
+        String chinesetitle = tractateArray[1];
+        String remark = tractateArray[2];
 
-        tractateResult.append("标题：" + title + System.getProperty("line.separator"));
-        tractateResult.append("备注：" + remark + System.getProperty("line.separator"));
+        String SPLITTAG = "\\|";
 
+        Log.d(TAG,"标题：" + englishtitle + SPLITTAG + chinesetitle + System.getProperty("line.separator"));
+        Log.d(TAG,"备注：" + remark + System.getProperty("line.separator"));
+
+
+        boolean isEnglish = false;
         //检测段落是否一样
-        for (int i = 2; i < tractateArray.length; i++){
-
+        for (int i = 3; i < tractateArray.length; i++){
+            if(i % 2 == 1){
+                isEnglish = !isEnglish;
+            }else{
+                
+            }
             String line = tractateArray[i];
-            if(!line.startsWith("#") && !line.equals("")){
 
-                if(!isTranslation && !line.startsWith("!!!")){
+            if(isEnglish){
                     Log.d(TAG,"英文:"+line);
                     english_paragraph.add(line);
                     english_stringBuffer.append(line + System.getProperty("line.separator"));
-                }else if(line.startsWith("!!!")){
-                    //是译文
-                    isTranslation = true;
                 }else{
                     Log.d(TAG,"中文:"+line);
                     chinese_paragraph.add(line);
                     chinese_stringBuffer.append(line + System.getProperty("line.separator"));
                 }
-            }
         }
 
         //检测段落数量
         if(english_paragraph.size() != chinese_paragraph.size()){
-            Log.e(TAG,"英文和译文行数不同");
-            Log.e(TAG,"英文行数：" + english_paragraph.size());
-            Log.e(TAG,"译文行数：" + chinese_paragraph.size());
-            checkoutResult.append("英文和译文行数不同" + System.getProperty("line.separator"));
-            checkoutResult.append("英文行数" + english_paragraph.size() + System.getProperty("line.separator"));
-            checkoutResult.append("译文行数" + chinese_paragraph.size() + System.getProperty("line.separator"));
+            Log.e(TAG,"英文和译文段落不同");
+            Log.e(TAG,"英文段落：" + english_paragraph.size());
+            Log.e(TAG,"译文段落：" + chinese_paragraph.size());
             result = false;
         }else {
-            checkoutResult.append("英文和译文行数一致" + System.getProperty("line.separator"));
+            Log.d(TAG,"英文和译文行数一致" + System.getProperty("line.separator"));
             Log.d(TAG,"英文和译文行数一致");
         }
 
-        Pattern english = Pattern.compile(englishregex,Pattern.CASE_INSENSITIVE);
-        Pattern chinese = Pattern.compile(chineseregex,Pattern.CASE_INSENSITIVE);
-
         for (int i = 0; i < english_paragraph.size() || i < chinese_paragraph.size(); i ++){
 
-            //英文某一段落的标点
-            String[] englishsentences = null;
-            if( i <= english_paragraph.size() - 1){
-                Log.d(TAG,"英文第" + i + "段:" + english_paragraph.get(i).toString());
-                //检测中英文段落的标点是否是合法
-                Matcher englishMatcher = chinese.matcher(english_paragraph.get(i).toString());
-                boolean englishcheck = englishMatcher.find();
-                Log.d(TAG,"英文第" + i + "段:" + (englishcheck ? "存在中文标点" : "不存在中文标点"));
-                checkoutResult.append("英文第" + i + "段:" + (englishcheck ? "存在中文标点" : "不存在中文标点") + System.getProperty("line.separator"));
-
-                //检测英文各个标点
-                englishsentences = english.split(english_paragraph.get(i).toString());
-                for (int j = 0; j < englishsentences.length; j ++){
-                    tractateResult.append("英文第" + i + "段第" + j + "句:" + englishsentences[j] + System.getProperty("line.separator"));
-                    Log.d(TAG,"英文第" + i + "段第" + j + "句:" + englishsentences[j]);
-                }
-            }
-
-            //中文某一段落的标点
-            String[] chinesesentences = null;
-            if( i <= chinese_paragraph.size() - 1){
-                Log.d(TAG,"中文第" + i + "段:" + chinese_paragraph.get(i).toString());
-                //检测中英文段落的标点是否是合法
-                Matcher chineseMatcher = english.matcher(chinese_paragraph.get(i).toString());
-                boolean chinesecheck = chineseMatcher.find();
-                Log.d(TAG,"中文第" + i + "段:" + (chinesecheck ? "存在英文标点" : "不存在英文标点"));
-                checkoutResult.append("中文第" + i + "段:" + (chinesecheck ? "存在英文标点" : "不存在英文标点") + System.getProperty("line.separator"));
-
-                //检测中文各个标点
-                chinesesentences = chinese.split(chinese_paragraph.get(i).toString());
-                for (int j = 0; j < chinesesentences.length; j ++){
-                    tractateResult.append("中文第" + i + "段第" + j + "句:" + chinesesentences[j] + System.getProperty("line.separator"));
-                    Log.d(TAG,"中文第" + i + "段第" + j + "句:" + chinesesentences[j]);
-                }
-            }
+            int english_sentences = english_paragraph.get(i).split(SPLITTAG).length;
+            int chinese_sentences = chinese_paragraph.get(i).split(SPLITTAG).length;
 
             //检测标点数量　
-            if(englishsentences != null && chinesesentences != null && englishsentences.length == chinesesentences.length){
-                checkoutResult.append("英文和译文第" + i + "行标点数相同" + System.getProperty("line.separator"));
+            if(english_sentences == chinese_sentences){
+                Log.d(TAG,"英文和译文第" + i + "段句子数相同" + System.getProperty("line.separator"));
             }else {
-                checkoutResult.append("英文和译文第" + i + "行标点数不同" + System.getProperty("line.separator"));
-                checkoutResult.append("英文第" + i + "行标点数：" + (englishsentences != null ? englishsentences.length : null) + System.getProperty("line.separator"));
-                checkoutResult.append("译文第" + i + "行标点数：" + (chinesesentences != null ? chinesesentences.length : null) + System.getProperty("line.separator"));
-                Log.e(TAG,"英文和译文第" + i + "行标点数不同");
-                Log.e(TAG,"英文第" + i + "行标点数：" + (englishsentences != null ? englishsentences.length : null));
-                Log.e(TAG,"译文第" + i + "行标点数：" + (chinesesentences != null ? chinesesentences.length : null));
+                Log.d(TAG,"英文和译文第" + i + "段句子数不同" + System.getProperty("line.separator"));
                 result = false;
             }
         }
 
-        tractate.setTitle(title);
-        tractate.setRemark(remark);
-        tractate.setContent(english_stringBuffer.toString());
-        tractate.setTranslation(chinese_stringBuffer.toString());
-        addTractate.setCheckout(result);
-        addTractate.setTractate(tractate);
-        addTractate.setCheckout(result);
-        addTractate.setCheckoutResult(checkoutResult.toString());
-        addTractate.setTractateResult(tractateResult.toString());
+        tractate.setTitle(englishtitle + SPLITTAG + chinesetitle);
 
-        return addTractate;
+        return tractate;
     }
 
 
