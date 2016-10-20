@@ -1,11 +1,6 @@
 package com.englishlearn.myapplication.tractategroup.tractates.tractate;
 
-import android.content.Context;
 import android.text.TextPaint;
-import android.widget.TextView;
-
-import com.englishlearn.myapplication.data.Tractate;
-import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,27 +15,28 @@ import static java.lang.String.valueOf;
 
 public class TractateHelper {
 
-    private Tractate tractate;//文章
     private TextPaint textPaint;//用于计算占用空间
+
     private float newLineLength;//换行符空间
     private float width;//TextView最大宽
-    List<String> list;//当前显示的英文的每行
 
+    List<String> list;//当前显示的英文的每行
     int[] englishSents;//当前行的句首数
     float[] englishSentX;//当前行的句首位置
 
-    CurrentEnglishIndex currentEnglishIndex;
-    CurrentChineseIndex currentChineseIndex;
     private List<List<List<String>>> tractateList;
 
-    public TractateHelper(Context context, Tractate tractate, TextView textView, TextPaint textPaint) {
-        this.tractate = tractate;
+    private List<List<String>> english;//英语段落列表
+    private List<List<String>> chinese;//译文段落列表
+
+    public TractateHelper(List<List<String>> english,List<List<String>> chinese,List<String> list,float textViewMaxWidth,TextPaint textPaint) {
+        this.english = english;
+        this.chinese = chinese;
         this.textPaint = textPaint;
         newLineLength = textPaint.measureText(System.getProperty("line.separator"));
-        width = textView.getWidth();
-        list = AndroidUtils.newInstance(context).getTextViewStringByLine(textView);
+        width = textViewMaxWidth;
+        this.list = list;
     }
-
 
 
     /**
@@ -49,12 +45,6 @@ public class TractateHelper {
      */
     public String getTractateString(){
 
-        //1. 将英文和中文的内容分解成List
-        //获得英文和中文的段落和句子List
-        //tractateList = AndroidUtils.splitTractate(tractate);
-        tractateList = AndroidUtils.splitTractate1(tractate);
-        //英文段落
-        final List<List<String>> englishParagraph = tractateList.get(0);
 
         StringBuffer stringBuffer = new StringBuffer();
 
@@ -65,7 +55,6 @@ public class TractateHelper {
         for (int i = 0; i < list.size(); i++){
 
             String line = list.get(i);
-
             if(line.equals(System.getProperty("line.separator"))){
                 //stringBuffer.append(System.getProperty("line.separator"));
                 continue;
@@ -77,7 +66,6 @@ public class TractateHelper {
                 stringBuffer.append(line + System.getProperty("line.separator"));//增加一行英文,加上换行符
             }
             englishManager.checkEnglishLine(paragraph,line);
-            //String ch = chineseManager.getChineseLise(paragraph,englishSents,englishSentX);
             String ch = "";
             if(line.contains(System.getProperty("line.separator"))){
                 //最后一行了，加上所有的剩下的中文
@@ -89,11 +77,11 @@ public class TractateHelper {
             stringBuffer.append(ch + System.getProperty("line.separator"));//增加一行中文
 
             if(line.contains(System.getProperty("line.separator"))){
-                stringBuffer.append(System.getProperty("line.separator"));//最后加完中文再加一下换行符，空一格
+                stringBuffer.append(System.getProperty("line.separator"));//最后加完中文再加一下换行符，空一行
             }
 
             if(line.contains(System.getProperty("line.separator"))){
-                if(paragraph < englishParagraph.size() - 1){
+                if(paragraph < english.size() - 1){
                     paragraph++;
                 }else{
                     break;
@@ -108,7 +96,6 @@ public class TractateHelper {
 
         private int currentIndex = 0;//当前的句子行
         private int englishPara = 0;//当前段落
-        final List<List<String>> englishParagraph = tractateList.get(0);//英文
         StringBuffer englishOther = new StringBuffer();//剩余英文
 
         List<Float> widths = new ArrayList<>();//保存当前行所有句子头的位置
@@ -148,7 +135,7 @@ public class TractateHelper {
                 return;
             }
             //当前段落
-            currentParaEnglish = englishParagraph.get(englishPara);
+            currentParaEnglish = english.get(englishPara);
 
             if(englishOther.toString().equals("")){
                 lastIndex = 0;//从0开始依次检测每个句子能不能放下
@@ -288,8 +275,6 @@ public class TractateHelper {
          */
 
 
-        final List<List<String>> chineseParagraph = tractateList.get(1);//中文
-        boolean lineFull = false;
         StringBuffer chineseOther = new StringBuffer();//剩余中文
         StringBuffer line = new StringBuffer();//当前行已经添加的中文
         int lastIndex = 0;//已经存放的中文尾部的位置
@@ -297,7 +282,7 @@ public class TractateHelper {
 
         private String getChineseLise1(int englishPara,int[] englishSents,float[] englishSentX,boolean isLastLine){
 
-            List<String> currentParaChin1 = chineseParagraph.get(englishPara);//当前段落
+            List<String> currentParaChin1 = chinese.get(englishPara);//当前段落
             line = new StringBuffer();
             int[] mEnglishSents;
             //放剩下的中文
@@ -330,7 +315,7 @@ public class TractateHelper {
 
         private void addAll(int englishPara,int[] englishSents,boolean isLastLine){
 
-            List<String> currentParaChin1 = chineseParagraph.get(englishPara);//当前段落
+            List<String> currentParaChin1 = chinese.get(englishPara);//当前段落
             for(int p = 0; p < englishSents.length; p++){
                 chineseOther.append(currentParaChin1.get(englishSents[p]));
             }
@@ -468,163 +453,13 @@ public class TractateHelper {
      * @return
      */
     public String cutSpan(String res){
+        if(res.equals("")){
+            return res;
+        }
         res = cutAfterSpan(res);
         res = cutBeforeSpan(res);
         return res;
     }
 
 
-
-    List<String> eng;//英文当前行的
-    /**
-     * 获取一行英文
-     * @return
-     */
-    public String getEnglishLine(){
-
-        if(currentEnglishIndex == null){
-            currentEnglishIndex = new CurrentEnglishIndex();
-        }
-        //取当前段落剩余的内容
-        
-        return null;
-    }
-
-    /**
-     * 读取一行，返回数组0为读取的，并加了"\n"，1为剩余的
-     * @return
-     */
-    private String[] readLine(String string){
-
-        int start = 0,i = 0,end = 0;
-        int lastIndex = 0;
-        char[] chars = string.toCharArray();
-        String result = "";
-        String other = "";//剩余的
-        while(textPaint.measureText(result) <= (width - newLineLength) && i < chars.length){
-            lastIndex = i;
-            if(!Character.isLetter(chars[i])){
-                i++;
-            }else{
-                while (Character.isLetter(chars[i])){
-                    i++;
-                }
-            }
-            result = string.substring(start,i);
-        }
-        result = string.substring(0,lastIndex);
-        if(textPaint.measureText(result) > (width - newLineLength)){
-            other = string.substring(lastIndex,string.length());
-        }
-        return new String[]{result,other};
-    }
-
-
-    /**
-     * 获取一行中文
-     * @return
-     */
-    public String getChineseLine(){
-
-
-        return null;
-    }
-
-    //标识上面英文的当前位置
-    private class CurrentEnglishIndex{
-        private boolean isParagraphEnd;//段落结束
-        private boolean isEnd;//全部结束
-        private int currentParagrap;//当前段落
-        private List<int[]> currentSentence;//当前句子和当前句子的头部位置
-        private String currentSentenceOther;//当前句子剩余部分
-
-        public boolean isParagraphEnd() {
-            return isParagraphEnd;
-        }
-
-        public void setParagraphEnd(boolean paragraphEnd) {
-            isParagraphEnd = paragraphEnd;
-        }
-
-        public boolean isEnd() {
-            return isEnd;
-        }
-
-        public void setEnd(boolean end) {
-            isEnd = end;
-        }
-
-        public int getCurrentParagrap() {
-            return currentParagrap;
-        }
-
-        public void setCurrentParagrap(int currentParagrap) {
-            this.currentParagrap = currentParagrap;
-        }
-
-        public List<int[]> getCurrentSentence() {
-            return currentSentence;
-        }
-
-        public void setCurrentSentence(List<int[]> currentSentence) {
-            this.currentSentence = currentSentence;
-        }
-
-        public String getCurrentSentenceOther() {
-            return currentSentenceOther;
-        }
-
-        public void setCurrentSentenceOther(String currentSentenceOther) {
-            this.currentSentenceOther = currentSentenceOther;
-        }
-    }
-
-    //标识下面中文的当前位置
-    private class CurrentChineseIndex{
-        private boolean isParagraphEnd;//段落结束
-        private boolean isEnd;//全部结束
-        private int currentParagrap;//当前段落
-        private int currentSentence;//当前句子
-        private String currentSentenceOther;//当前句子剩余部分
-
-        public boolean isParagraphEnd() {
-            return isParagraphEnd;
-        }
-
-        public void setParagraphEnd(boolean paragraphEnd) {
-            isParagraphEnd = paragraphEnd;
-        }
-
-        public boolean isEnd() {
-            return isEnd;
-        }
-
-        public void setEnd(boolean end) {
-            isEnd = end;
-        }
-
-        public int getCurrentParagrap() {
-            return currentParagrap;
-        }
-
-        public void setCurrentParagrap(int currentParagrap) {
-            this.currentParagrap = currentParagrap;
-        }
-
-        public int getCurrentSentence() {
-            return currentSentence;
-        }
-
-        public void setCurrentSentence(int currentSentence) {
-            this.currentSentence = currentSentence;
-        }
-
-        public String getCurrentSentenceOther() {
-            return currentSentenceOther;
-        }
-
-        public void setCurrentSentenceOther(String currentSentenceOther) {
-            this.currentSentenceOther = currentSentenceOther;
-        }
-    }
 }

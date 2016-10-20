@@ -4,37 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/contenttv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="Hello World!"/>
+
+        <TextView
             android:id="@+id/tractatetv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text=""/>
 
-        <TextView
-            android:layout_marginTop="50dp"
-            android:id="@+id/contenttv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:paddingRight="5dp"
-            android:text="Hello World!"/>
-
-        <TextView
-            android:id="@+id/translationtv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text=""
-            android:visibility="gone"/>
-
-
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>
