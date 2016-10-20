@@ -63,7 +63,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         //分别显示两个TextView
         String content1 = tractate1.getContent().replace("|","");
-        contenttv.setText(content1);
+        //contenttv.setText(content1);
 
         //获得英文和中文的段落和句子List
         final List<List<List<String>>> tractateList = AndroidUtils.newInstance(mContext).splitTractate(tractate);
@@ -86,7 +86,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                 List<String> textViewLine = AndroidUtils.newInstance(mContext).getTextViewStringByLine(contenttv);
                 tractateHelper = new TractateHelper(english,chinese,textViewLine,contenttv.getWidth(),contenttv.getPaint());
 
-                tractateHelper = new TractateHelper(english1,chinese1,textViewLine,contenttv.getWidth(),contenttv.getPaint());
+                //tractateHelper = new TractateHelper(english1,chinese1,textViewLine,contenttv.getWidth(),contenttv.getPaint());
 
                 String result = tractateHelper.getTractateString();
 

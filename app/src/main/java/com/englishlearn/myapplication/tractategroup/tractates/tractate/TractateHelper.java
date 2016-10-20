@@ -29,6 +29,10 @@ public class TractateHelper {
     private List<List<String>> english;//英语段落列表
     private List<List<String>> chinese;//译文段落列表
 
+    private List<List<int[]>> sentenceIndexs;//当前文章对应的每个段落每句英文对应的下标，方便点击事件的时候显示当前句英文
+    private List<int[]> currentSentenceIndex;//当前段落每句的前后下标
+    private StringBuffer stringBuffer;
+
     public TractateHelper(List<List<String>> english,List<List<String>> chinese,List<String> list,float textViewMaxWidth,TextPaint textPaint) {
         this.english = english;
         this.chinese = chinese;
@@ -36,8 +40,15 @@ public class TractateHelper {
         newLineLength = textPaint.measureText(System.getProperty("line.separator"));
         width = textViewMaxWidth;
         this.list = list;
+
+        sentenceIndexs = new ArrayList<>();
+        currentSentenceIndex = new ArrayList<>();
     }
 
+
+    public List<List<int[]>> getSentenceIndexs() {
+        return sentenceIndexs;
+    }
 
     /**
      * 返回适用于当前TextView的上英文下中文的字符串
@@ -46,7 +57,7 @@ public class TractateHelper {
     public String getTractateString(){
 
 
-        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer = new StringBuffer();
 
         EnglishManager englishManager = new EnglishManager();
         ChineseManager chineseManager = new ChineseManager();
@@ -83,6 +94,12 @@ public class TractateHelper {
             if(line.contains(System.getProperty("line.separator"))){
                 if(paragraph < english.size() - 1){
                     paragraph++;
+
+                    //下标保存
+                    List<int[]> currentSentenceIndexTmp = new ArrayList<>();
+                    currentSentenceIndexTmp.addAll(currentSentenceIndex);
+                    currentSentenceIndex.clear();
+                    sentenceIndexs.add(currentSentenceIndexTmp);
                 }else{
                     break;
                 }
@@ -102,7 +119,7 @@ public class TractateHelper {
         List<Integer> indexs = new ArrayList<>();//保存当前行所有句子的下标
 
         List<String> currentParaEnglish;//当前段落
-
+        int[] currentSentenceArray  = new int[2];//当前句子
         private int lastIndex;//记录已经显示的最后一个下标
 
         /**
@@ -143,6 +160,12 @@ public class TractateHelper {
             }else if(line.contains(englishOther.toString())){
                 //放得下，记录这个句子的最后一个字符的下标，依次检测每个句子
                 lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length() - 1;//已经显示的englishOther的最后一个字母的下标
+
+                //一个句子的下标结束
+                currentSentenceArray[1] = stringBuffer.toString().indexOf(englishOther.toString(),stringBuffer.toString().lastIndexOf(line)) + lastIndex;
+                saveCurrendSentence(currentSentenceArray);
+
+
                 englishOther = new StringBuffer();//清空剩余句子
                 if(lastIndex == line.length() - 1){
                     //放不下了
@@ -180,11 +203,19 @@ public class TractateHelper {
                     widths.add(width);
                     indexs.add(currentIndex);
 
+                    //一个句子的下标开始
+                    int start = stringBuffer.toString().lastIndexOf(line) + index;
+                    currentSentenceArray[0] = start;
+
                     //判断当前句子有没有显示完成
                     int currentIn = 0;
                     if((currentIn = line.indexOf(currentSent,lastIndex == 0 ? lastIndex : lastIndex + 1)) != -1){
                         //当前句子显示完成了
                         lastIndex = currentIn + currentSent.length() - 1;
+                        //一个句子的下标结束
+                        currentSentenceArray[1] = stringBuffer.toString().indexOf(currentSent,stringBuffer.toString().lastIndexOf(line)) + lastIndex;
+                        saveCurrendSentence(currentSentenceArray);
+
                         continue;
                     }else {
                         //没有显示完,判断显示了多少
@@ -210,6 +241,13 @@ public class TractateHelper {
             indexs.clear();
         }
 
+
+        private void saveCurrendSentence(int[] sentenceIndex){
+            int[] currentSent = new int[2];
+            currentSent[0] = sentenceIndex[0];
+            currentSent[1] = sentenceIndex[1];
+            currentSentenceIndex.add(currentSent);
+        }
 
 
         /**
