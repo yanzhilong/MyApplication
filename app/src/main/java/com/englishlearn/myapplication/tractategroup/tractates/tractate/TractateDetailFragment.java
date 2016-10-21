@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.tractategroup.tractates.tractate;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ import com.englishlearn.myapplication.util.AndroidUtils;
 import java.text.BreakIterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class TractateDetailFragment extends Fragment implements View.OnClickListener {
 
@@ -36,6 +38,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     TractateHelper tractateHelper;
     private Context mContext;
     private String result;
+    private MyClickableSpan clickableSpan;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
@@ -127,18 +130,42 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                     iterator.setText(result);
                     int start = iterator.first();
 
+
+                    Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+
                     for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
                             .next()) {
 
                         String possibleWord = result.substring(start, end);
-                        if (Character.isLetterOrDigit(possibleWord.charAt(0))) {
+                        //是字符数字，排除中文
+                        if (Character.isLetterOrDigit(possibleWord.charAt(0)) && !p.matcher(String.valueOf(possibleWord.charAt(0))).find()) {
                             int[] ints = getSentenceIndex(sents,possibleWord,start,end);
 
-                            ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+                            //ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+                            ClickableSpan clickSpan = new MyClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+
                             spans.setSpan(clickSpan, start, end,
                                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }
+
+                    /*BreakIterator iterator_span = BreakIterator.getWordInstance(Locale.US);
+                    iterator_span.setText(result);
+                    int start_span = iterator_span.first();
+
+                    for (int end_span = iterator_span.next(); end_span != BreakIterator.DONE; start_span = end_span, end_span = iterator_span
+                            .next()) {
+
+                        String possibleWord = result.substring(start_span, end_span);
+                        if (Character.isSpaceChar(possibleWord.charAt(0))) {
+
+                            //ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+                            ClickableSpan clickSpan = new SpanClickableSpan();
+
+                            spans.setSpan(clickSpan, start_span, end_span,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                    }*/
                 }
 
             }
@@ -175,7 +202,71 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         return ints;
     }
 
+    /*private class SpanClickableSpan extends ClickableSpan{
 
+        @Override
+        public void onClick(View widget) {
+            if(clickableSpan != null){
+                clickableSpan.cancelBackGroundColor();
+            }
+        }
+    }*/
+
+    private class MyClickableSpan extends ClickableSpan{
+
+        String mWord;
+        String englishSentence;
+        String chineseSentence;
+        private TextPaint textpaint;
+        boolean isAddBackGroundColor = false;
+
+        public MyClickableSpan(String mWord, int paragraph, int sentence, List<List<String>> english, List<List<String>> chinese) {
+            this.mWord = mWord;
+            englishSentence = english.get(paragraph).get(sentence);
+            chineseSentence = chinese.get(paragraph).get(sentence);
+        }
+
+        @Override
+        public void onClick(View widget) {
+
+            if(clickableSpan != this){
+                if(clickableSpan != null){
+                    clickableSpan.cancelBackGroundColor();
+                }
+                clickableSpan = this;
+            }
+            addBackgroundColor(widget);
+
+            //显示单词
+            Toast.makeText(widget.getContext(), mWord, Toast.LENGTH_SHORT)
+                    .show();
+                /*//显示句子
+                Toast.makeText(widget.getContext(), englishSentence.substring(0,3) + englishSentence.substring(englishSentence.length() - 2,englishSentence.length() - 1) + "\\n" + chineseSentence.substring(0,1) + chineseSentence.substring(chineseSentence.length() - 2,chineseSentence.length() - 1), Toast.LENGTH_SHORT)
+                        .show();*/
+            Toast.makeText(widget.getContext(), englishSentence.substring(0,10), Toast.LENGTH_SHORT)
+                    .show();
+            Log.d(TAG,englishSentence + "\\\n" + chineseSentence);
+        }
+
+        public void addBackgroundColor(View widget){
+            isAddBackGroundColor = true;
+            updateDrawState(textpaint);
+            widget.invalidate();
+        }
+
+        public void cancelBackGroundColor(){
+            isAddBackGroundColor = false;
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            this.textpaint = ds;
+            if(isAddBackGroundColor){
+                textpaint.bgColor = Color.GRAY;
+                textpaint.setARGB(255, 255, 255, 255);
+            }
+        }
+    }
 
     /**
      *
@@ -246,6 +337,9 @@ public class MovementMethod extends LinkMovementMethod {
                 // Return true so click won't be triggered in the leftover empty space
                 if (spannable != null) {
                     Selection.removeSelection(spannable);
+                    if(clickableSpan != null){
+                        clickableSpan.cancelBackGroundColor();
+                    }
                 }
                 return true;
             } else {
