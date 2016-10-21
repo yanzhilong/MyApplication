@@ -33,7 +33,13 @@ public class TractateHelper {
     private List<int[]> currentSentenceIndex;//当前段落每句的前后下标
     private StringBuffer stringBuffer;
 
-    public TractateHelper(List<List<String>> english,List<List<String>> chinese,List<String> list,float textViewMaxWidth,TextPaint textPaint) {
+    public TractateHelper(List<List<String>> english, List<List<String>> chinese) {
+
+        this.english = english;
+        this.chinese = chinese;
+    }
+
+    public TractateHelper(List<List<String>> english, List<List<String>> chinese, List<String> list, float textViewMaxWidth, TextPaint textPaint) {
         this.english = english;
         this.chinese = chinese;
         this.textPaint = textPaint;
@@ -49,6 +55,104 @@ public class TractateHelper {
     public List<List<int[]>> getSentenceIndexs() {
         return sentenceIndexs;
     }
+
+
+    /**
+     * 返回只有英文的字符串
+     * @return
+     */
+    public String getTractateByEnglishString(){
+
+        sentenceIndexs = new ArrayList<>();
+        currentSentenceIndex = new ArrayList<>();
+
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for(int i = 0; i < english.size(); i++){
+
+            List<String> paragraphenglish = english.get(i);
+            List<String> paragraphchinese = chinese.get(i);
+            for(int j = 0; j < paragraphenglish.size(); j++){
+                stringBuffer.append(paragraphenglish.get(j));
+
+                int[] currentSentenceArray = new int[2];
+
+                //一个句子的下标开始
+                int start = stringBuffer.toString().lastIndexOf(paragraphenglish.get(j));
+                currentSentenceArray[0] = start;
+
+                //一个句子的下标结束
+                currentSentenceArray[1] = stringBuffer.toString().indexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
+
+                currentSentenceIndex.add(currentSentenceArray);
+            }
+
+            //下标保存
+            List<int[]> currentSentenceIndexTmp = new ArrayList<>();
+            currentSentenceIndexTmp.addAll(currentSentenceIndex);
+            currentSentenceIndex.clear();
+            sentenceIndexs.add(currentSentenceIndexTmp);
+
+            stringBuffer.append(System.getProperty("line.separator"));
+            stringBuffer.append(System.getProperty("line.separator"));
+
+        }
+
+        return stringBuffer.toString();
+    }
+
+
+
+    /**
+     * 返回一段英文，一段中文的字符串
+     * @return
+     */
+    public String getTractateByParagraphString(){
+
+        sentenceIndexs = new ArrayList<>();
+        currentSentenceIndex = new ArrayList<>();
+
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for(int i = 0; i < english.size(); i++){
+
+            List<String> paragraphenglish = english.get(i);
+            List<String> paragraphchinese = chinese.get(i);
+            for(int j = 0; j < paragraphenglish.size(); j++){
+                stringBuffer.append(paragraphenglish.get(j));
+
+                int[] currentSentenceArray = new int[2];
+
+                //一个句子的下标开始
+                int start = stringBuffer.toString().lastIndexOf(paragraphenglish.get(j));
+                currentSentenceArray[0] = start;
+
+                //一个句子的下标结束
+                currentSentenceArray[1] = stringBuffer.toString().indexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
+
+                currentSentenceIndex.add(currentSentenceArray);
+            }
+
+            //下标保存
+            List<int[]> currentSentenceIndexTmp = new ArrayList<>();
+            currentSentenceIndexTmp.addAll(currentSentenceIndex);
+            currentSentenceIndex.clear();
+            sentenceIndexs.add(currentSentenceIndexTmp);
+
+            stringBuffer.append(System.getProperty("line.separator"));
+            stringBuffer.append(System.getProperty("line.separator"));
+
+            for(int j = 0; j < paragraphchinese.size(); j++){
+                stringBuffer.append(paragraphchinese.get(j));
+            }
+
+            stringBuffer.append(System.getProperty("line.separator"));
+            stringBuffer.append(System.getProperty("line.separator"));
+        }
+
+        return stringBuffer.toString();
+    }
+
 
     /**
      * 返回适用于当前TextView的上英文下中文的字符串

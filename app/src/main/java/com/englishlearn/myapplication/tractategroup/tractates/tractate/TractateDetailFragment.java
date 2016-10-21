@@ -39,10 +39,15 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     private Context mContext;
     private String result;
     private MyClickableSpan clickableSpan;
+    private List<List<String>> chinese;
+    private List<List<String>> english;
+    private TextView contenttv;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
     }
+
+
 
 
     @Override
@@ -61,11 +66,15 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.tractatedetail_frag, container, false);
 
-        final TextView contenttv = (TextView) root.findViewById(R.id.contenttv);
+        contenttv = (TextView) root.findViewById(R.id.contenttv);
         float newLineWidth = contenttv.getPaint().measureText(System.getProperty("line.separator")) + 1f;
         contenttv.setPadding(0,0, (int) newLineWidth * 2,0);
 
         tractatetv = (TextView) root.findViewById(R.id.tractatetv);
+
+        root.findViewById(R.id.byline).setOnClickListener(this);
+        root.findViewById(R.id.byparagraph).setOnClickListener(this);
+        root.findViewById(R.id.byenglish).setOnClickListener(this);
 
         final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
 
@@ -86,12 +95,54 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         final List<List<List<String>>> tractateList1 = AndroidUtils.newInstance(mContext).splitTractate(tractate1);
 
 
-        final List<List<String>> english = tractateList.get(0);//英语段落列表
-        final List<List<String>> chinese = tractateList.get(1);//译文段落列表
+        //英语段落列表
+        english = tractateList.get(0);
+        //译文段落列表
+        chinese = tractateList.get(1);
 
         final List<List<String>> english1 = tractateList1.get(0);//英语段落列表
         final List<List<String>> chinese1 = tractateList1.get(1);//译文段落列表
 
+        //setBysentence();
+        //setByparagraph();
+        setJustEnglish();
+
+        //如果有设置菜单，需要加这个
+        setHasOptionsMenu(true);
+
+        return root;
+    }
+
+    //只显示英文
+    private void setJustEnglish(){
+
+        contenttv.setVisibility(View.GONE);
+        tractateHelper = new TractateHelper(english,chinese);
+        String result = tractateHelper.getTractateByEnglishString();
+        //获得句子下标
+        List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
+
+        setClickableSpan(sents,tractatetv,result);
+
+    }
+
+    //一段英文一段中文
+    private void setByparagraph(){
+
+        contenttv.setVisibility(View.GONE);
+        tractateHelper = new TractateHelper(english,chinese);
+        String result = tractateHelper.getTractateByParagraphString();
+        //获得句子下标
+        List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
+
+        setClickableSpan(sents,tractatetv,result);
+
+    }
+
+    //一行英文一行中文
+    private void setBysentence(){
+
+        contenttv.setVisibility(View.VISIBLE);
         contenttv.post(new Runnable() {
 
             @Override
@@ -100,83 +151,53 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                 List<String> textViewLine = AndroidUtils.newInstance(mContext).getTextViewStringByLine(contenttv);
                 tractateHelper = new TractateHelper(english,chinese,textViewLine,contenttv.getWidth(),contenttv.getPaint());
 
-                //tractateHelper = new TractateHelper(english1,chinese1,textViewLine,contenttv.getWidth(),contenttv.getPaint());
-
                 result = tractateHelper.getTractateString();
 
                 if(result != null){
                     Log.d(TAG, result);
                     contenttv.setVisibility(View.GONE);
-                    //tractatetv.setText(result);
 
 
                     //获得句子下标
                     List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
 
-                    /*for(int i = 0; i < sents.size(); i++){
-                        List<int[]> list = sents.get(i);
+                    setClickableSpan(sents,tractatetv,result);
 
-                        for (int j = 0; j < list.size(); j++){
-                            int[] sentent = list.get(j);
-                            Log.d(TAG,"第"+i+"段第"+j+"句" + result.substring(sentent[0],sentent[1]));
-                        }
-                    }*/
-
-                    tractatetv.setMovementMethod(new MovementMethod());
-                    tractatetv.setText(result, TextView.BufferType.SPANNABLE);
-                    Spannable spans = (Spannable) tractatetv.getText();
-
-                    BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
-                    iterator.setText(result);
-                    int start = iterator.first();
-
-
-                    Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
-
-                    for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
-                            .next()) {
-
-                        String possibleWord = result.substring(start, end);
-                        //是字符数字，排除中文
-                        if (Character.isLetterOrDigit(possibleWord.charAt(0)) && !p.matcher(String.valueOf(possibleWord.charAt(0))).find()) {
-                            int[] ints = getSentenceIndex(sents,possibleWord,start,end);
-
-                            //ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
-                            ClickableSpan clickSpan = new MyClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
-
-                            spans.setSpan(clickSpan, start, end,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }
-
-                    /*BreakIterator iterator_span = BreakIterator.getWordInstance(Locale.US);
-                    iterator_span.setText(result);
-                    int start_span = iterator_span.first();
-
-                    for (int end_span = iterator_span.next(); end_span != BreakIterator.DONE; start_span = end_span, end_span = iterator_span
-                            .next()) {
-
-                        String possibleWord = result.substring(start_span, end_span);
-                        if (Character.isSpaceChar(possibleWord.charAt(0))) {
-
-                            //ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
-                            ClickableSpan clickSpan = new SpanClickableSpan();
-
-                            spans.setSpan(clickSpan, start_span, end_span,
-                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }*/
                 }
 
             }
         });
-
-
-        //如果有设置菜单，需要加这个
-        setHasOptionsMenu(true);
-
-        return root;
     }
+
+    private void setClickableSpan(List<List<int[]>> sents,TextView textview,String textString){
+
+        textview.setMovementMethod(new MovementMethod());
+        textview.setText(textString, TextView.BufferType.SPANNABLE);
+        Spannable spans = (Spannable) textview.getText();
+
+        BreakIterator iterator = BreakIterator.getWordInstance(Locale.US);
+        iterator.setText(textString);
+        int start = iterator.first();
+
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+
+        for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
+                .next()) {
+
+            String possibleWord = textString.substring(start, end);
+            //是字符数字，排除中文
+            if (Character.isLetterOrDigit(possibleWord.charAt(0)) && !p.matcher(String.valueOf(possibleWord.charAt(0))).find()) {
+                int[] ints = getSentenceIndex(sents,possibleWord,start,end);
+
+                ClickableSpan clickSpan = new MyClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+
+                spans.setSpan(clickSpan, start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+    }
+
 
 
     private int[] getSentenceIndex(List<List<int[]>> sents,String word,int start,int end){
@@ -201,16 +222,6 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         return ints;
     }
-
-    /*private class SpanClickableSpan extends ClickableSpan{
-
-        @Override
-        public void onClick(View widget) {
-            if(clickableSpan != null){
-                clickableSpan.cancelBackGroundColor();
-            }
-        }
-    }*/
 
     private class MyClickableSpan extends ClickableSpan{
 
@@ -268,44 +279,6 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         }
     }
 
-    /**
-     *
-     * @param word 单词
-     * @param paragraph 所属段落
-     * @param sentence 所属句子
-     * @return
-     */
-    private ClickableSpan getClickableSpan(final String word, final int paragraph, final int sentence, final List<List<String>> english, final List<List<String>> chinese) {
-        return new ClickableSpan() {
-            final String mWord;
-            final String englishSentence;
-            final String chineseSentence;
-            {
-                mWord = word;
-                englishSentence = english.get(paragraph).get(sentence);
-                chineseSentence = chinese.get(paragraph).get(sentence);
-            }
-
-            @Override
-            public void onClick(View widget) {
-                Log.d("tapped on:", mWord);
-                //显示单词
-                Toast.makeText(widget.getContext(), mWord, Toast.LENGTH_SHORT)
-                        .show();
-                /*//显示句子
-                Toast.makeText(widget.getContext(), englishSentence.substring(0,3) + englishSentence.substring(englishSentence.length() - 2,englishSentence.length() - 1) + "\\n" + chineseSentence.substring(0,1) + chineseSentence.substring(chineseSentence.length() - 2,chineseSentence.length() - 1), Toast.LENGTH_SHORT)
-                        .show();*/
-                Toast.makeText(widget.getContext(), englishSentence.substring(0,10), Toast.LENGTH_SHORT)
-                        .show();
-                Log.d(TAG,englishSentence + "\\\n" + chineseSentence);
-            }
-
-            public void updateDrawState(TextPaint ds) {
-                //super.updateDrawState(ds);
-                ds.setUnderlineText(false); //去掉下划线
-            }
-        };
-    }
 
 /**
  *
@@ -370,7 +343,15 @@ public class MovementMethod extends LinkMovementMethod {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.byline:
+                setBysentence();
+                break;
+            case R.id.byparagraph:
+                setByparagraph();
+                break;
+            case R.id.byenglish:
+                setJustEnglish();
+                break;
 
             default:
                 break;
