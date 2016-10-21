@@ -35,6 +35,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     private TextView tractatetv;
     TractateHelper tractateHelper;
     private Context mContext;
+    private String result;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
@@ -98,16 +99,25 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
                 //tractateHelper = new TractateHelper(english1,chinese1,textViewLine,contenttv.getWidth(),contenttv.getPaint());
 
-                String result = tractateHelper.getTractateString();
+                result = tractateHelper.getTractateString();
 
                 if(result != null){
-                    Log.d(TAG,result);
+                    Log.d(TAG, result);
                     contenttv.setVisibility(View.GONE);
                     //tractatetv.setText(result);
 
 
                     //获得句子下标
                     List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
+
+                    /*for(int i = 0; i < sents.size(); i++){
+                        List<int[]> list = sents.get(i);
+
+                        for (int j = 0; j < list.size(); j++){
+                            int[] sentent = list.get(j);
+                            Log.d(TAG,"第"+i+"段第"+j+"句" + result.substring(sentent[0],sentent[1]));
+                        }
+                    }*/
 
                     tractatetv.setMovementMethod(new MovementMethod());
                     tractatetv.setText(result, TextView.BufferType.SPANNABLE);
@@ -127,7 +137,6 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                             ClickableSpan clickSpan = getClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
                             spans.setSpan(clickSpan, start, end,
                                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            break;
                         }
                     }
                 }

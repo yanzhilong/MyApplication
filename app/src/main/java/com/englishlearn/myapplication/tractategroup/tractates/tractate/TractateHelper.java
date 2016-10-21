@@ -100,6 +100,13 @@ public class TractateHelper {
                     currentSentenceIndexTmp.addAll(currentSentenceIndex);
                     currentSentenceIndex.clear();
                     sentenceIndexs.add(currentSentenceIndexTmp);
+                }else if(paragraph == english.size() - 1){
+                    //下标保存
+                    List<int[]> currentSentenceIndexTmp = new ArrayList<>();
+                    currentSentenceIndexTmp.addAll(currentSentenceIndex);
+                    currentSentenceIndex.clear();
+                    sentenceIndexs.add(currentSentenceIndexTmp);
+                    break;
                 }else{
                     break;
                 }
@@ -162,7 +169,7 @@ public class TractateHelper {
                 lastIndex = line.indexOf(englishOther.toString()) + englishOther.toString().length() - 1;//已经显示的englishOther的最后一个字母的下标
 
                 //一个句子的下标结束
-                currentSentenceArray[1] = stringBuffer.toString().indexOf(englishOther.toString(),stringBuffer.toString().lastIndexOf(line)) + lastIndex;
+                currentSentenceArray[1] = stringBuffer.toString().indexOf(englishOther.toString(),stringBuffer.toString().lastIndexOf(line)) + englishOther.length();
                 saveCurrendSentence(currentSentenceArray);
 
 
@@ -207,13 +214,19 @@ public class TractateHelper {
                     int start = stringBuffer.toString().lastIndexOf(line) + index;
                     currentSentenceArray[0] = start;
 
+                    if(currentSent.contains("he asked the youngest son")){
+                        int ss = 0;
+                        ss = ss + 1;
+                        ss = ss + 2;
+                    }
+
                     //判断当前句子有没有显示完成
                     int currentIn = 0;
                     if((currentIn = line.indexOf(currentSent,lastIndex == 0 ? lastIndex : lastIndex + 1)) != -1){
                         //当前句子显示完成了
                         lastIndex = currentIn + currentSent.length() - 1;
                         //一个句子的下标结束
-                        currentSentenceArray[1] = stringBuffer.toString().indexOf(currentSent,stringBuffer.toString().lastIndexOf(line)) + lastIndex;
+                        currentSentenceArray[1] = stringBuffer.toString().indexOf(currentSent,stringBuffer.toString().lastIndexOf(line)) + currentSent.length();
                         saveCurrendSentence(currentSentenceArray);
 
                         continue;
