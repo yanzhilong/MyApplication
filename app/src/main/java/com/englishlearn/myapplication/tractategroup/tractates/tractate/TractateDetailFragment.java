@@ -42,6 +42,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     private List<List<String>> chinese;
     private List<List<String>> english;
     private TextView contenttv;
+    private TextView loading;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
@@ -66,6 +67,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.tractatedetail_frag, container, false);
 
+        loading = (TextView) root.findViewById(R.id.loading);
         contenttv = (TextView) root.findViewById(R.id.contenttv);
         float newLineWidth = contenttv.getPaint().measureText(System.getProperty("line.separator")) + 1f;
         contenttv.setPadding(0,0, (int) newLineWidth * 2,0);
@@ -142,6 +144,8 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     //一行英文一行中文
     private void setBysentence(){
 
+        loading.setVisibility(View.VISIBLE);
+        tractatetv.setText("");
         contenttv.setVisibility(View.VISIBLE);
         contenttv.post(new Runnable() {
 
@@ -149,6 +153,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
             public void run() {
 
                 List<String> textViewLine = AndroidUtils.newInstance(mContext).getTextViewStringByLine(contenttv);
+                contenttv.setVisibility(View.GONE);
                 tractateHelper = new TractateHelper(english,chinese,textViewLine,contenttv.getWidth(),contenttv.getPaint());
 
                 result = tractateHelper.getTractateString();
@@ -164,6 +169,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                     setClickableSpan(sents,tractatetv,result);
 
                 }
+                loading.setVisibility(View.GONE);
 
             }
         });
@@ -190,6 +196,11 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
                 int[] ints = getSentenceIndex(sents,possibleWord,start,end);
 
                 ClickableSpan clickSpan = new MyClickableSpan(possibleWord, ints[0], ints[1], english, chinese);
+
+                spans.setSpan(clickSpan, start, end,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }else if(p.matcher(String.valueOf(possibleWord.charAt(0))).find()){
+                ClickableSpan clickSpan = new MyChineseClickableSpan();
 
                 spans.setSpan(clickSpan, start, end,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -280,6 +291,20 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     }
 
 
+    private class MyChineseClickableSpan extends ClickableSpan{
+
+        @Override
+        public void onClick(View widget) {
+
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            //ds.setTextSize(14);
+            ds.setColor(getResources().getColor(R.color.text_color_grey1));
+        }
+    }
+
 /**
  *
  * 空白点击不会显示最后一个单词
@@ -344,7 +369,9 @@ public class MovementMethod extends LinkMovementMethod {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.byline:
+                loading.setVisibility(View.VISIBLE);
                 setBysentence();
+                loading.setVisibility(View.GONE);
                 break;
             case R.id.byparagraph:
                 setByparagraph();

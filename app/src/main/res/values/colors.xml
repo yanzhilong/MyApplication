@@ -22,7 +22,9 @@
 
     <!--  常用颜色 -->
     <color name="text_color_grey">#9da1a0</color>
-    
+    <color name="text_color_grey1">#3f3f3f</color>
+
+
     <!--  句子列表 -->
     <color name="sentence_content">#4480A8</color>
     <color name="sentence_translation">#5F5F5F</color>

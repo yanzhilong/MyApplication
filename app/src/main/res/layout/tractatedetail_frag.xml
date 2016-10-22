@@ -18,6 +18,7 @@
                 android:id="@+id/byline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Button"
                 android:text="Line"/>
 
             <Button
@@ -40,6 +41,10 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -47,6 +52,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:lineSpacingMultiplier="1.2"
                     android:text="Hello World!"/>
 
                 <TextView
@@ -54,7 +61,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:lineSpacingMultiplier="1.2"
                     android:text=""/>
+
+                <TextView
+                    android:id="@+id/loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="正在加载......"
+                    android:gravity="center_horizontal"
+                    android:layout_centerInParent="true"/>
 
             </RelativeLayout>
         </ScrollView>
