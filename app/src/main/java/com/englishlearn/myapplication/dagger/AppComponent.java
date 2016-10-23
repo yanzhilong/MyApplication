@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.dagger;
 
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
+import com.englishlearn.myapplication.dialog.WordDetailDialog;
 import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
 import com.englishlearn.myapplication.grammar.GrammarPresenter;
@@ -98,6 +99,8 @@ public interface AppComponent {
     void inject(TractatesFragment tractatesFragment);
 
     void inject(MyTractateGroupsFragment myCollectTractateGroupsFragment);
+
+    void inject(WordDetailDialog wordDetailDialog);
 
 
 

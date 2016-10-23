@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.dialog.WordDetailDialog;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.text.BreakIterator;
@@ -49,7 +50,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     }
 
 
-
+    private WordDetailDialog wordDetailDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
             tractate = (Tractate) getArguments().getSerializable(OBJECT);
             Toast.makeText(this.getContext(),tractate.toString(),Toast.LENGTH_SHORT).show();
         }
+        wordDetailDialog = new WordDetailDialog();
     }
 
     @Nullable
@@ -105,9 +107,9 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         final List<List<String>> english1 = tractateList1.get(0);//英语段落列表
         final List<List<String>> chinese1 = tractateList1.get(1);//译文段落列表
 
+        setByparagraph();
         //setBysentence();
-        //setByparagraph();
-        setJustEnglish();
+        //setJustEnglish();
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -259,15 +261,21 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
             }
             addBackgroundColor(widget);
 
+            Bundle bundle = new Bundle();
+            bundle.putString(WordDetailDialog.WORDTAG,mWord);
+            bundle.putString(WordDetailDialog.ENSENTENCE,englishSentence);
+            bundle.putString(WordDetailDialog.CHSENTENCE,chineseSentence);
+            wordDetailDialog.setArguments(bundle);
+            wordDetailDialog.show(TractateDetailFragment.this.getFragmentManager(),"dialog");
             //显示单词
-            Toast.makeText(widget.getContext(), mWord, Toast.LENGTH_SHORT)
-                    .show();
+            /*Toast.makeText(widget.getContext(), mWord, Toast.LENGTH_SHORT)
+                    .show();*/
                 /*//显示句子
                 Toast.makeText(widget.getContext(), englishSentence.substring(0,3) + englishSentence.substring(englishSentence.length() - 2,englishSentence.length() - 1) + "\\n" + chineseSentence.substring(0,1) + chineseSentence.substring(chineseSentence.length() - 2,chineseSentence.length() - 1), Toast.LENGTH_SHORT)
                         .show();*/
-            Toast.makeText(widget.getContext(), englishSentence.substring(0,10), Toast.LENGTH_SHORT)
+            /*Toast.makeText(widget.getContext(), englishSentence.substring(0,10), Toast.LENGTH_SHORT)
                     .show();
-            Log.d(TAG,englishSentence + "\\\n" + chineseSentence);
+            Log.d(TAG,englishSentence + "\\\n" + chineseSentence);*/
         }
 
         public void addBackgroundColor(View widget){
@@ -371,13 +379,17 @@ public class MovementMethod extends LinkMovementMethod {
             case R.id.byline:
                 loading.setVisibility(View.VISIBLE);
                 setBysentence();
-                loading.setVisibility(View.GONE);
+
                 break;
             case R.id.byparagraph:
+                loading.setVisibility(View.VISIBLE);
                 setByparagraph();
+                loading.setVisibility(View.GONE);
                 break;
             case R.id.byenglish:
+                loading.setVisibility(View.VISIBLE);
                 setJustEnglish();
+                loading.setVisibility(View.GONE);
                 break;
 
             default:
