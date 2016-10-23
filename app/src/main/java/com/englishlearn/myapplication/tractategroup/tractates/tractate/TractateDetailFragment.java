@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 public class TractateDetailFragment extends Fragment implements View.OnClickListener {
 
     public static final String OBJECT = "object";
+
     private Spannable spannable = null;
     private static final String TAG = TractateDetailFragment.class.getSimpleName();
     private Tractate tractate;
@@ -51,6 +52,10 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
 
     private WordDetailDialog wordDetailDialog;
+
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

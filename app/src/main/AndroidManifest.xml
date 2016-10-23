@@ -161,6 +161,8 @@
         <activity
             android:name=".tractategroup.tractates.tractate.TractateDetailActivity"
             android:screenOrientation="portrait"></activity>
+
+        <service android:name=".service.MusicService"/>
     </application>
 
 </manifest>

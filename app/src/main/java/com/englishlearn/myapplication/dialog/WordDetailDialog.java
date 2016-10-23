@@ -1,7 +1,12 @@
 package com.englishlearn.myapplication.dialog;
 
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -15,6 +20,9 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.service.MusicService;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -46,8 +54,25 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     private TextView en_sentence;
     private TextView ch_sentence;
 
+    private MusicService musicService;
+    private Intent musicIntent;
+
     @Inject
     Repository repository;
+
+    private ServiceConnection musicConnection = new ServiceConnection(){
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
+            //get service
+            musicService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +87,12 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
+
+        if(musicIntent==null){
+            musicIntent = new Intent(this.getContext(), MusicService.class);
+            getActivity().bindService(musicIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        }
+
     }
 
     @Nullable
@@ -146,6 +177,14 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 break;
             case R.id.british_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
+                if(word.getBritish_soundurl() != null){
+                    try {
+                        musicService.playUrl(word.getBritish_soundurl());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(WordDetailDialog.this.getContext(),"获取读音失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case R.id.american_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
