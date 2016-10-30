@@ -11,6 +11,7 @@ import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
@@ -313,6 +314,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Tractate> addTractate(File tractate) {
+        return null;
+    }
+
+    @Override
     public Observable<Tractate> addTractate(Tractate tractate) {
         return null;
     }
@@ -505,6 +511,31 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupCollectRxById(String tractateGroupCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupCollectRxByuserIdAndtractateGroupId(String userId, String sentencegroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserIdAndtractateGroupId(String userId, String tractategroupIdId) {
         return null;
     }
 
