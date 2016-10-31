@@ -41,6 +41,7 @@ public class TractateGroupsActivity extends AppCompatActivity {
         //初始Fragment
         list = new ArrayList<>();
         list.add(TractateTypesFragment.newInstance());
+        list.add(MyCreateTractateGroupFragment.newInstance());
         list.add(MyTractateGroupsFragment.newInstance());
 
 

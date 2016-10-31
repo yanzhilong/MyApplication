@@ -1,6 +1,5 @@
-package com.englishlearn.myapplication.tractategroup.tractates;
+package com.englishlearn.myapplication.tractategroup;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -25,10 +24,10 @@ import java.util.List;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCollectTractateFragment extends Fragment {
+public class MyCreateTractateGroupFragment extends Fragment {
 
     public static final String OBJECT = "object";
-    private static final String TAG = MyCollectTractateFragment.class.getSimpleName();
+    private static final String TAG = MyCreateTractateGroupFragment.class.getSimpleName();
     private final int PAGESIZE = 10;
     private Object object;
     private MyAdapter myAdapter;
@@ -39,8 +38,8 @@ public class MyCollectTractateFragment extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
 
-    public static MyCollectTractateFragment newInstance() {
-        return new MyCollectTractateFragment();
+    public static MyCreateTractateGroupFragment newInstance() {
+        return new MyCreateTractateGroupFragment();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class MyCollectTractateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.mycollecttractate_frag, container, false);
+        View root = inflater.inflate(R.layout.mycreatetractategroup_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -232,14 +231,14 @@ public class MyCollectTractateFragment extends Fragment {
         public int getItemViewType(int position) {
             if (position != strings.size()) {
                 Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mycollecttractate_frag_item;
+                return R.layout.mycreatetractategroup_frag_item;
             } else {
                 if (isGone) {
                     Log.d(TAG, "load_done_layout");
-                    return R.layout.mycollecttractate_frag_loaddone_item;
+                    return R.layout.mycreatetractategroup_frag_loaddone_item;
                 }
                 Log.d(TAG, "load_more_layout");
-                return R.layout.mycollecttractate_frag_loadmore_item;
+                return R.layout.mycreatetractategroup_frag_loadmore_item;
             }
         }
 
@@ -247,11 +246,11 @@ public class MyCollectTractateFragment extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.mycollecttractate_frag_item:
+                case R.layout.mycreatetractategroup_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mycollecttractate_frag_loadmore_item:
+                case R.layout.mycreatetractategroup_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.mycollecttractate_frag_loaddone_item:
+                case R.layout.mycreatetractategroup_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
