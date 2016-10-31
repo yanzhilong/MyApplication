@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.util;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,12 +12,15 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +33,7 @@ public class AndroidUtils {
     private static final String TAG = AndroidUtils.class.getSimpleName();
     private static Context context;
     static String SPLITTAG = "\\|";
+    private static BufferedWriter bufferedWriter;
 
     public static AndroidUtils newInstance(Context context) {
         return new AndroidUtils(context);
@@ -92,6 +97,77 @@ public class AndroidUtils {
         lOutputStream.flush();
         lOutputStream.close();
         lInputStream.close();
+    }
+
+    public static void appendString(String filePath,String string) throws IOException {
+
+        try {
+            String basePath = context.getFilesDir().getAbsolutePath();
+            File file = new File(basePath + "/" + filePath);
+
+            //写文件
+            FileOutputStream lOutputStream = new FileOutputStream(file,true);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(lOutputStream));
+            bufferedWriter.append(string);
+        }finally {
+            if(bufferedWriter != null){
+                bufferedWriter.close();
+            }
+        }
+    }
+
+    public static void appendString１(String filePath,String string) throws IOException {
+
+        try {
+
+            String basePath = Environment.getExternalStorageDirectory().getPath();
+            File file = new File(basePath + "/" + filePath);
+
+            if(!file.exists()){
+                file.createNewFile();
+            }
+
+            //写文件
+            FileOutputStream lOutputStream = new FileOutputStream(file,true);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(lOutputStream));
+            bufferedWriter.append(string);
+        }finally {
+            if(bufferedWriter != null){
+                bufferedWriter.close();
+            }
+        }
+    }
+
+    public static void deleFile(String filePath) throws IOException {
+
+        String basePath = context.getFilesDir().getAbsolutePath();
+        File file = new File(basePath + "/" + filePath);
+        file.delete();
+
+    }
+
+    public static String getString(String filePath) throws IOException {
+
+            String basePath = context.getFilesDir().getAbsolutePath();
+            File file = new File(basePath + "/" + filePath);
+
+        StringBuffer sb = new StringBuffer();
+        try {
+            InputStream inputStream = new FileInputStream(file);
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null){
+                sb.append(line + System.getProperty("line.separator"));
+            }
+            bufferedReader.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     /**
