@@ -289,14 +289,27 @@
 
     <string name="title_tractategroups">TractateGroups</string>
 
+    <string-array name="tractategroupsactivity1_tablayout">
+        <item>热门推荐</item>
+        <item>我的收藏</item>
+
+    </string-array>
+
     <string-array name="tractategroupsactivity_tablayout">
-        <item>热门短文</item>
-        <item>我的收藏</item>
-        <item>我的收藏</item>
+        <item>热门文章</item>
+        <item>热门系列</item>
+        <item>我的文章</item>
+        <item>收藏文章</item>
+        <item>收藏系列</item>
     </string-array>
 
     <string name="title_tractates">Tractates</string>
 
     <string name="title_tractatedetail">TractateDetail</string>
+
+    <string-array name="tractatesactivity_tablayout">
+        <item>Fragment1</item>
+        <item>Fragment2</item>
+    </string-array>
 
 </resources>

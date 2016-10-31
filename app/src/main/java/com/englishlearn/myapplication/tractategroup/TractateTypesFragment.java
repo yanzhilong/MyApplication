@@ -94,6 +94,12 @@ public class TractateTypesFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
+                /*TractateType tractateType = myAdapter.getTractateTypes().get(position);
+                Intent intent = new Intent(TractateTypesFragment.this.getContext(), Tractates1Activity.class);
+                intent.putExtra(Tractates1Activity.TRACTATETYPE,tractateType);
+                startActivity(intent);
+                Log.d(TAG, tractateType.toString());*/
+
                 TractateType tractateType = myAdapter.getTractateTypes().get(position);
                 Intent intent = new Intent(TractateTypesFragment.this.getContext(), TractatesActivity.class);
                 intent.putExtra(TractatesActivity.TRACTATETYPE,tractateType);

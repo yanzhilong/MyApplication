@@ -37,7 +37,7 @@ public class TractateGroupsActivity extends AppCompatActivity {
         //标题
         ab.setTitle(R.string.title_tractategroups);
 
-        titles = getResources().getStringArray(R.array.tractategroupsactivity_tablayout);
+        titles = getResources().getStringArray(R.array.tractategroupsactivity1_tablayout);
         //初始Fragment
         list = new ArrayList<>();
         list.add(TractateTypesFragment.newInstance());

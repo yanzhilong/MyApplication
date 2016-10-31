@@ -10,6 +10,7 @@ import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
@@ -448,6 +449,14 @@ public interface RemoteData extends DataSource{
      * @param tractate
      * @return
      */
+    Observable<Tractate> addTractate(File tractate);
+
+
+    /**
+     * 增加文章
+     * @param tractate
+     * @return
+     */
     Observable<Tractate> addTractate(Tractate tractate);
 
     /**
@@ -697,14 +706,14 @@ public interface RemoteData extends DataSource{
     //*****************************************************************************
 
     /**
-     * 增加单词分組收藏
+     * 增加句子分組收藏
      * @param sentenceGroupCollect
      * @return
      */
     Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect);
 
     /**
-     * 删除单词分組收藏
+     * 删除句子分組收藏
      * @param sentenceGroupCollectId
      * @return
      */
@@ -712,7 +721,7 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据userId获取单词分组收藏分页展示
+     * 根据userId和分组收藏Id删除句子分組收藏
      * @param userId
      * @param sentencegroupId
      * @return
@@ -721,7 +730,7 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据userId获取单词分组收藏分页展示
+     * 根据userId获取句子分组收藏分页展示
      * @param userId
      * @param page
      * @param pageSize
@@ -731,7 +740,7 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据userId获取单词分组收藏分页展示
+     * 根据userId和句子分组id获取句子分组收藏分页展示(一般是只返回一个的)
      * @param userId
      * @param sentencegroupId
      * @return
@@ -779,6 +788,53 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize);
+
+
+    //文章分組收藏模块
+    //*****************************************************************************
+
+    /**
+     * 增加文章分組收藏
+     * @param tractateGroupCollect
+     * @return
+     */
+    Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect);
+
+    /**
+     * 删除文章分組收藏
+     * @param tractateGroupCollectId
+     * @return
+     */
+    Observable<Boolean> deleteTractateGroupCollectRxById(String tractateGroupCollectId);
+
+
+    /**
+     * 根据userId和分组收藏Id删除文章分組收藏
+     * @param userId
+     * @param sentencegroupId
+     * @return
+     */
+    Observable<Boolean> deleteTractateGroupCollectRxByuserIdAndtractateGroupId(String userId, String sentencegroupId);
+
+
+    /**
+     * 根据userId获取文章分组收藏分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserId(String userId,int page,int pageSize);
+
+
+    /**
+     * 根据userId和句子分组id获取文章分组收藏分页展示(一般是只返回一个的)
+     * @param userId
+     * @param tractategroupIdId
+     * @return
+     */
+    Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserIdAndtractateGroupId(String userId, String tractategroupIdId);
+
 
 
     //单词收藏模块

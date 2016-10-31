@@ -26,6 +26,7 @@ import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateGroup;
+import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.Word;
@@ -380,6 +381,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Tractate> addTractate(File tractate) {
+        return mBmobDataSource.addTractate(tractate);
+    }
+
+    @Override
     public Observable<Tractate> addTractate(Tractate tractate) {
         return mBmobDataSource.addTractate(tractate);
     }
@@ -572,6 +578,31 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize) {
         return mBmobDataSource.getTractateGroupsRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
+        return mBmobDataSource.addTractateGroupCollect(tractateGroupCollect);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupCollectRxById(String tractateGroupCollectId) {
+        return mBmobDataSource.deleteTractateGroupCollectRxById(tractateGroupCollectId);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateGroupCollectRxByuserIdAndtractateGroupId(String userId, String sentencegroupId) {
+        return mBmobDataSource.deleteTractateGroupCollectRxByuserIdAndtractateGroupId(userId,sentencegroupId);
+    }
+
+    @Override
+    public Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getTractateGroupCollectRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<TractateGroupCollect>> getTractateGroupCollectRxByUserIdAndtractateGroupId(String userId, String tractategroupIdId) {
+        return mBmobDataSource.getTractateGroupCollectRxByUserIdAndtractateGroupId(userId,tractategroupIdId);
     }
 
     @Override

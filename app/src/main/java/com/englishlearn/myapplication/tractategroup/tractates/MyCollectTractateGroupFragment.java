@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.tractategroup;
+package com.englishlearn.myapplication.tractategroup.tractates;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,55 +16,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.TractateGroup;
-import com.englishlearn.myapplication.data.User;
-import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.tractategroup.tractates.Tractates1Activity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import rx.Subscriber;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyTractateGroupsFragment extends Fragment {
+public class MyCollectTractateGroupFragment extends Fragment {
 
     public static final String OBJECT = "object";
-    private static final String TAG = MyTractateGroupsFragment.class.getSimpleName();
+    private static final String TAG = MyCollectTractateGroupFragment.class.getSimpleName();
     private final int PAGESIZE = 10;
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<TractateGroup> mList;
-    private User user;
-    private LinearLayoutManager mgrlistview;
-    private CompositeSubscription mSubscriptions;
-    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
-    @Inject
-    Repository repository;
+    private List<String> mList;
 
-    public static MyTractateGroupsFragment newInstance() {
-        return new MyTractateGroupsFragment();
+    private LinearLayoutManager mgrlistview;
+
+    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
+
+    public static MyCollectTractateGroupFragment newInstance() {
+        return new MyCollectTractateGroupFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApplication.instance.getAppComponent().inject(this);
-        user = repository.getUserInfo();
+
         mList = new ArrayList();
-        if (mSubscriptions == null) {
-            mSubscriptions = new CompositeSubscription();
-        }
+
     }
 
     @Nullable
@@ -72,7 +56,7 @@ public class MyTractateGroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View root = inflater.inflate(R.layout.mycollecttractategroups_frag, container, false);
+        View root = inflater.inflate(R.layout.mycollecttractategroup_frag, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.recyclerview);
         //ListView效果的 LinearLayoutManager
@@ -91,12 +75,8 @@ public class MyTractateGroupsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                TractateGroup tractateGroup = myAdapter.getTractateGroups().get(position);
-                Log.d(TAG, tractateGroup.toString());
-
-                Intent intent = new Intent(MyTractateGroupsFragment.this.getContext(), Tractates1Activity.class);
-                intent.putExtra(Tractates1Activity.TRACTATEGROUP,tractateGroup);
-                startActivity(intent);
+                String string = myAdapter.getStrings().get(position);
+                Log.d(TAG, string.toString());
 
             }
 
@@ -157,32 +137,22 @@ public class MyTractateGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getTractateGroupsRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<TractateGroup>>() {
-            @Override
-            public void onCompleted() {
-                loadingComplete();
-            }
+        List<String> strings = new ArrayList<>();
+        for (int i = page * PAGESIZE; i < page * PAGESIZE + PAGESIZE; i++) {
+            strings.add("test" + i);
+        }
 
-            @Override
-            public void onError(Throwable e) {
-                loadingFail(e);
-            }
+        Log.d(TAG, "onNext size:" + strings.size());
 
-            @Override
-            public void onNext(List list) {
-                Log.d(TAG,"onNext size:" + list.size());
-
-                if(list == null || list.size() == 0){
-                    myAdapter.loadingGone();
-                    myAdapter.notifyDataSetChanged();
-                }else{
-                    page++;//页数增加
-                    mList.addAll(list);
-                    showList(mList);
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
+        if (strings == null || strings.size() == 0) {
+            myAdapter.loadingGone();
+            myAdapter.notifyDataSetChanged();
+        } else {
+            page++;//页数增加
+            mList.addAll(strings);
+            showList(mList);
+        }
+        loadingComplete();
     }
 
     //加载完成
@@ -221,11 +191,11 @@ public class MyTractateGroupsFragment extends Fragment {
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<TractateGroup> tractateGroups;
+        private List<String> strings;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            tractateGroups = new ArrayList<>();
+            strings = new ArrayList<>();
         }
 
         //已经加载完成了
@@ -242,34 +212,34 @@ public class MyTractateGroupsFragment extends Fragment {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<TractateGroup> getTractateGroups() {
-            return tractateGroups;
+        public List<String> getStrings() {
+            return strings;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<TractateGroup> tractateGroups) {
-            if (tractateGroups != null) {
-                this.tractateGroups.clear();
-                this.tractateGroups.addAll(tractateGroups);
+        public void replaceData(List<String> strings) {
+            if (strings != null) {
+                this.strings.clear();
+                this.strings.addAll(strings);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position != tractateGroups.size()) {
+            if (position != strings.size()) {
                 Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mycollecttractategroups_frag_item;
+                return R.layout.mycollecttractategroup_frag_item;
             } else {
                 if (isGone) {
                     Log.d(TAG, "load_done_layout");
-                    return R.layout.mycollecttractategroups_frag_loaddone_item;
+                    return R.layout.mycollecttractategroup_frag_loaddone_item;
                 }
                 Log.d(TAG, "load_more_layout");
-                return R.layout.mycollecttractategroups_frag_loadmore_item;
+                return R.layout.mycollecttractategroup_frag_loadmore_item;
             }
         }
 
@@ -277,11 +247,11 @@ public class MyTractateGroupsFragment extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.mycollecttractategroups_frag_item:
+                case R.layout.mycollecttractategroup_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mycollecttractategroups_frag_loadmore_item:
+                case R.layout.mycollecttractategroup_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.mycollecttractategroups_frag_loaddone_item:
+                case R.layout.mycollecttractategroup_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;
@@ -292,7 +262,7 @@ public class MyTractateGroupsFragment extends Fragment {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(tractateGroups.get(position).getName());
+                itemViewHolder.name.setText(strings.get(position));
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -305,7 +275,7 @@ public class MyTractateGroupsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return tractateGroups.size() + 1;
+            return strings.size() + 1;
         }
 
 
