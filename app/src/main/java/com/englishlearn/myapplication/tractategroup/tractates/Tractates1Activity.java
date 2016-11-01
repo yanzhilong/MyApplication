@@ -41,12 +41,12 @@ public class Tractates1Activity extends AppCompatActivity {
         ab.setTitle(R.string.title_tractates);
         Bundle bundle = new Bundle();
         if(tractateType != null){
-            bundle.putSerializable(Tractates1Fragment.TRACTATETYPE,tractateType);
+            bundle.putSerializable(TractateTopFragment.TRACTATETYPE,tractateType);
         }
         if(tractateGroup != null){
-            bundle.putSerializable(Tractates1Fragment.TRACTATEGROUP,tractateGroup);
+            bundle.putSerializable(TractateTopFragment.TRACTATEGROUP,tractateGroup);
         }
-        Fragment fragment = Tractates1Fragment.newInstance();
+        Fragment fragment = TractateTopFragment.newInstance();
         fragment.setArguments(bundle);
 
         if (savedInstanceState == null) {
