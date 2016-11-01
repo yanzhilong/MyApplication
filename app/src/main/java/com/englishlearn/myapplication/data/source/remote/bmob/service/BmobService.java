@@ -928,6 +928,13 @@ public interface BmobService{
     Observable<Response<TractateGroup>> getTractateGroupRxById(@Path("id") String id);
 
 
+    //获取所有公开的未收藏单词分组分页展示,按时间降序(从近到远)
+    @GET("/1/classes/TractateGroup?order=-createdAt")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<TractateGroupResult>> getTractateGroupsByOpenAndNotCollectRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //文章分組收藏模块****************************************************************************
 

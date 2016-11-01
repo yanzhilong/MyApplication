@@ -156,16 +156,16 @@
             android:name=".tractategroup.TractateGroupsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".tractategroup.tractates.Tractates1Activity"
+            android:name=".tractategroup.tractates.TractatesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".tractategroup.tractates.tractate.TractateDetailActivity"
+            android:name=".tractategroup.tractate.TractateDetailActivity"
             android:screenOrientation="portrait" />
 
         <service android:name=".service.MusicService" />
 
         <activity
-            android:name=".tractategroup.tractates.TractatesActivity"
+            android:name=".tractategroup.tractatestop.TractatesTopActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

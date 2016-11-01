@@ -3055,6 +3055,80 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<TractateGroup>> getCollectTractateGroupRxByUserId(String userId, int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getCollectTractateGroupRxByUserId(userId);
+
+        return bmobService.getTractateGroupsRxByUserId(regex,limit,skip)
+                .flatMap(new Func1<Response<TractateGroupResult>, Observable<List<TractateGroup>>>() {
+                    @Override
+                    public Observable<List<TractateGroup>> call(Response<TractateGroupResult> bmobTractateGroupResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobTractateGroupResultResponse.isSuccessful()){
+                            TractateGroupResult bmobSentenceGroupCollectResult = bmobTractateGroupResultResponse.body();
+
+                            List<TractateGroup> tractateGroups = bmobSentenceGroupCollectResult.getResults();
+
+                            return Observable.just(tractateGroups);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobTractateGroupResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<TractateGroup>>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<TractateGroup>> getTractateGroupsByOpenAndNotCollectRx(String userId, int page, int pageSize) {
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getTractatesOpenAndNotCollect(userId);
+
+        return bmobService.getTractateGroupsByOpenAndNotCollectRx(regex,limit,skip)
+                .flatMap(new Func1<Response<TractateGroupResult>, Observable<List<TractateGroup>>>() {
+                    @Override
+                    public Observable<List<TractateGroup>> call(Response<TractateGroupResult> tractateGroupResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(tractateGroupResultResponse.isSuccessful()){
+                            TractateGroupResult tractateGroupResult = tractateGroupResultResponse.body();
+
+                            List<TractateGroup> tractateGroups = tractateGroupResult.getResults();
+
+                            return Observable.just(tractateGroups);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  tractateGroupResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<TractateGroup>>applySchedulers());
+    }
+
+    @Override
     public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
 
         return bmobService.addTractateGroupCollect(tractateGroupCollect)

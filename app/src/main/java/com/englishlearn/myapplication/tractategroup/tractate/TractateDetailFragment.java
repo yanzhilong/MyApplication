@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.tractategroup.tractates.tractate;
+package com.englishlearn.myapplication.tractategroup.tractate;
 
 import android.content.Context;
 import android.graphics.Color;

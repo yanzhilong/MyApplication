@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.tractategroup;
+package com.englishlearn.myapplication.tractategroup.tractatestop;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,22 +10,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.TractateType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TractateGroupsActivity extends AppCompatActivity {
+/**
+ * 文章分类进来，显示
+ * 当前分类的热门文章
+ * 热门文章分组
+ * 我的文章分组，里面是我的文章
+ * 我收藏的文章
+ * 我收藏的文章分组
+ */
+public class TractatesTopActivity extends AppCompatActivity {
 
-    public static final String OBJECT = "object";
-    private static final String TAG = TractateGroupsActivity.class.getSimpleName();
+    public static final String TRACTATETYPE = "TractateType";
+    private static final String TAG = TractatesTopActivity.class.getSimpleName();
     String[] titles;
-    private Object object;
     private List<Fragment> list;
+    private TractateType tractateType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tractategroups_act);
+        setContentView(R.layout.tractatestop_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,15 +44,27 @@ public class TractateGroupsActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
         //标题
-        ab.setTitle(R.string.title_tractategroups);
+        ab.setTitle(R.string.title_tractates);
 
-        titles = getResources().getStringArray(R.array.tractategroupsactivity1_tablayout);
+        if (getIntent().hasExtra(TRACTATETYPE)) {
+            tractateType = (TractateType) getIntent().getSerializableExtra(TRACTATETYPE);
+        }
+
+        Bundle bundle = new Bundle();
+        if(tractateType != null){
+            bundle.putSerializable(TractateTopFragment.TRACTATETYPE,tractateType);
+        }
+        Fragment fragment = TractateTopFragment.newInstance();
+        fragment.setArguments(bundle);
+
+        Fragment fragment1 = TractatrGroupTopFragment.newInstance();
+        fragment1.setArguments(bundle);
+
+        titles = getResources().getStringArray(R.array.tractatestopactivity_tablayout);
         //初始Fragment
         list = new ArrayList<>();
-        list.add(TractateTypesFragment.newInstance());
-        list.add(MyCreateTractateGroupFragment.newInstance());
-        list.add(MyCollectTractateGroupsFragment.newInstance());
-
+        list.add(fragment);
+        list.add(fragment1);
 
         //ViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);

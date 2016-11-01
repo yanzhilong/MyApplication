@@ -515,6 +515,16 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<TractateGroup>> getCollectTractateGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateGroup>> getTractateGroupsByOpenAndNotCollectRx(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
         return null;
     }

@@ -22,9 +22,12 @@ import com.englishlearn.myapplication.sentencegroups.MyCollectSentenceGroupsFrag
 import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceGroupsFragment;
 import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFragment;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
-import com.englishlearn.myapplication.tractategroup.MyTractateGroupsFragment;
+import com.englishlearn.myapplication.tractategroup.MyCollectTractateGroupsFragment;
+import com.englishlearn.myapplication.tractategroup.MyCreateTractateGroupFragment;
 import com.englishlearn.myapplication.tractategroup.TractateTypesFragment;
-import com.englishlearn.myapplication.tractategroup.tractates.TractateTopFragment;
+import com.englishlearn.myapplication.tractategroup.tractatestop.TractateTopFragment;
+import com.englishlearn.myapplication.tractategroup.tractates.TractatesFragment;
+import com.englishlearn.myapplication.tractategroup.tractatestop.TractatrGroupTopFragment;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
 import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
@@ -98,9 +101,15 @@ public interface AppComponent {
 
     void inject(TractateTopFragment tractatesFragment);
 
-    void inject(MyTractateGroupsFragment myCollectTractateGroupsFragment);
+    void inject(MyCollectTractateGroupsFragment myCollectTractateGroupsFragment);
 
     void inject(WordDetailDialog wordDetailDialog);
+
+    void inject(TractatrGroupTopFragment tractatrGroupTopFragment);
+
+    void inject(MyCreateTractateGroupFragment myCreateTractateGroupFragment);
+
+    void inject(TractatesFragment tractatesFragment);
 
 
 

@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.tractategroup.tractates.tractate;
+package com.englishlearn.myapplication.tractategroup.tractate;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

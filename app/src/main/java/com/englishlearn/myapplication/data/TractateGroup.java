@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class TractateGroup implements Serializable,Cloneable{
 
     private String objectId;
+    private String open; //是否公开
     private String name; //分组名称
     private String userId; //用户Id
 
@@ -35,6 +36,14 @@ public class TractateGroup implements Serializable,Cloneable{
         this.userId = userId;
     }
 
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
+
     @Override
     public Object clone(){
 
@@ -51,6 +60,7 @@ public class TractateGroup implements Serializable,Cloneable{
     public String toString() {
         return "TractateGroup{" +
                 "objectId='" + objectId + '\'' +
+                ", open='" + open + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

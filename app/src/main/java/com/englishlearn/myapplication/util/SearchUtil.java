@@ -230,6 +230,36 @@ public class SearchUtil {
         //return where;
     }
 
+    /**
+     * 根据用户id获得搜索收藏的文章分组的json搜索语句
+     * @param userId
+     * @return
+     */
+    public String getCollectTractateGroupRxByUserId(String userId){
+
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","TractateGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","tractategroupId");
+        Map map8 = new HashMap();
+        map8.put("$select",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+
+        //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
+
+        String jsonStr = gson.toJson(map9);
+        return jsonStr;
+        //return where;
+    }
+
+
 
     //获得未收藏的单詞分組
     public String getWordgroupsOpenAndNotCollect(String userId){
@@ -244,6 +274,37 @@ public class SearchUtil {
         Map map7 = new HashMap();
         map7.put("query",map6);
         map7.put("key","wordgroupId");
+        Map map8 = new HashMap();
+        map8.put("$dontSelect",map7);
+        Map map9 = new HashMap();
+        map9.put("objectId",map8);
+
+        Map map10 = new HashMap();
+        map10.put("open","true");
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map10);
+        list.add(map9);
+        Map<String,List<Map<String,String>>> map11 = new HashMap();
+        map11.put("$and",list);
+
+        String jsonStr = gson.toJson(map11);
+        return jsonStr;
+    }
+
+    //获得未收藏的文章分組
+    public String getTractatesOpenAndNotCollect(String userId){
+
+        //排除查询用户收藏的单词分组Id
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","TractateGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","tractategroupId");
         Map map8 = new HashMap();
         map8.put("$dontSelect",map7);
         Map map9 = new HashMap();

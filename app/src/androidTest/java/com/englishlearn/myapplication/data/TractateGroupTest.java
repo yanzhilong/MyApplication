@@ -72,4 +72,31 @@ public class TractateGroupTest {
 
     }
 
+    @Test
+    public void updateTractateGroup(){
+
+        //根据Id获取信息来源　
+        Log.d(TAG,"testTractateGroup_byId");
+        TestSubscriber<TractateGroup> testSubscriber_getById = new TestSubscriber<>();
+        mBmobRemoteData.getTractateGroupRxById("8c754205c4").toBlocking().subscribe(testSubscriber_getById);
+        testSubscriber_getById.assertNoErrors();
+        List<TractateGroup> listbyid = testSubscriber_getById.getOnNextEvents();
+        TractateGroup tractateGroup1ById = null;
+        if(listbyid != null && listbyid.size() > 0){
+            tractateGroup1ById = listbyid.get(0);
+        }
+        Log.d(TAG,"testTractateGroup_byId_result:" + tractateGroup1ById);
+        //修改
+        tractateGroup1ById.setOpen("true");
+        Log.d(TAG,"testTractateGroup_update");
+        TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
+        mBmobRemoteData.updateTractateGroupRxById(tractateGroup1ById).toBlocking().subscribe(testSubscriber_update);
+        testSubscriber_update.assertNoErrors();
+        List<Boolean> listupdate = testSubscriber_update.getOnNextEvents();
+        if(listupdate != null && listupdate.size() > 0){
+            Log.d(TAG,"testTractateGroup_update"+"success");
+        }
+
+    }
+
 }

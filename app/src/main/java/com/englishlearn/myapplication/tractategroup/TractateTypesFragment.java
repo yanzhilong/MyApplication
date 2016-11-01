@@ -19,7 +19,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity;
+import com.englishlearn.myapplication.tractategroup.tractatestop.TractatesTopActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +101,8 @@ public class TractateTypesFragment extends Fragment {
                 Log.d(TAG, tractateType.toString());*/
 
                 TractateType tractateType = myAdapter.getTractateTypes().get(position);
-                Intent intent = new Intent(TractateTypesFragment.this.getContext(), TractatesActivity.class);
-                intent.putExtra(TractatesActivity.TRACTATETYPE,tractateType);
+                Intent intent = new Intent(TractateTypesFragment.this.getContext(), TractatesTopActivity.class);
+                intent.putExtra(TractatesTopActivity.TRACTATETYPE,tractateType);
                 startActivity(intent);
                 Log.d(TAG, tractateType.toString());
 
