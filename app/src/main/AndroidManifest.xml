@@ -166,6 +166,9 @@
 
         <activity
             android:name=".tractategroup.tractatestop.TractatesTopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.addtractate.AddTractateActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

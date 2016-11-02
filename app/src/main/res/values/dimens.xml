@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
 
     <!--  句子列表 -->
     <dimen name="sentences_item_padding_button">8dp</dimen>

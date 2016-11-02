@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.tractategroup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,13 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TractateGroupsActivity extends AppCompatActivity {
+public class TractateGroupsActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String OBJECT = "object";
     private static final String TAG = TractateGroupsActivity.class.getSimpleName();
@@ -44,6 +47,8 @@ public class TractateGroupsActivity extends AppCompatActivity {
         list.add(MyCreateTractateGroupFragment.newInstance());
         list.add(MyCollectTractateGroupsFragment.newInstance());
 
+        findViewById(R.id.fab_add_tractate).setOnClickListener(this);
+
 
         //ViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -57,6 +62,15 @@ public class TractateGroupsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fab_add_tractate:
+                startActivity(new Intent(this,AddTractateActivity.class));
+                break;
+        }
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

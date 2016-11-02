@@ -13,6 +13,7 @@ public class Sentence implements Serializable,Cloneable {
     private String translation; //译文
     private String userId; //用户Id
     private String tractateId; //来自的文章Id
+    private String soundurl;//声音
     private String remark; //备注
 
 
@@ -64,6 +65,14 @@ public class Sentence implements Serializable,Cloneable {
         this.remark = remark;
     }
 
+    public String getSoundurl() {
+        return soundurl;
+    }
+
+    public void setSoundurl(String soundurl) {
+        this.soundurl = soundurl;
+    }
+
     @Override
     public Object clone(){
 
@@ -84,6 +93,7 @@ public class Sentence implements Serializable,Cloneable {
                 ", translation='" + translation + '\'' +
                 ", userId='" + userId + '\'' +
                 ", tractateId='" + tractateId + '\'' +
+                ", soundurl='" + soundurl + '\'' +
                 ", remark='" + remark + '\'' +
                 '}';
     }

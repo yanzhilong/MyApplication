@@ -12,7 +12,6 @@ import com.englishlearn.myapplication.tractategroup.tractatestop.TractateTopFrag
 
 public class TractatesActivity extends AppCompatActivity {
 
-    public static final String TRACTATETYPE = "TractateType";
     public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractatesActivity.class.getSimpleName();
     private TractateGroup tractateGroup;

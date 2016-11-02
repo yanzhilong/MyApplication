@@ -25,8 +25,9 @@ import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment
 import com.englishlearn.myapplication.tractategroup.MyCollectTractateGroupsFragment;
 import com.englishlearn.myapplication.tractategroup.MyCreateTractateGroupFragment;
 import com.englishlearn.myapplication.tractategroup.TractateTypesFragment;
-import com.englishlearn.myapplication.tractategroup.tractatestop.TractateTopFragment;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateActivity;
 import com.englishlearn.myapplication.tractategroup.tractates.TractatesFragment;
+import com.englishlearn.myapplication.tractategroup.tractatestop.TractateTopFragment;
 import com.englishlearn.myapplication.tractategroup.tractatestop.TractatrGroupTopFragment;
 import com.englishlearn.myapplication.wordgroup.WordGroupsFragment;
 import com.englishlearn.myapplication.wordgroup.WordsActivity;
@@ -111,7 +112,7 @@ public interface AppComponent {
 
     void inject(TractatesFragment tractatesFragment);
 
-
+    void inject(AddTractateActivity addTractateActivity);
 
 
 
