@@ -169,6 +169,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".tractategroup.addtractate.AddTractateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tractategroup.preview.TractatePreviewActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

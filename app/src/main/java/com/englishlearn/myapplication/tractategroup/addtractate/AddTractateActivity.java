@@ -18,6 +18,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.dialog.TractateTypeFragment;
+import com.englishlearn.myapplication.tractategroup.preview.TractatePreviewActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -167,7 +168,10 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                 showFileChooser();
                 break;
             case R.id.preview:
-
+                String filepath = selectfile.getText().toString();
+                Intent intent = new Intent(this,TractatePreviewActivity.class);
+                intent.putExtra(TractatePreviewActivity.FILEPATH,filepath);
+                startActivity(intent);
                 break;
             case R.id.add:
 
