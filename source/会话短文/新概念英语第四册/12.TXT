@@ -2,46 +2,46 @@
                Unit 2
               Lesson 12
       Banks and their customers
-              ÒøĞĞºÍ¹Ë¿Í
+              é“¶è¡Œå’Œé¡¾å®¢
 
 First listen and then answer the following question.
-ÌıÂ¼Òô£¬È»ºó»Ø´ğÒÔÏÂÎÊÌâ¡£
+å¬å½•éŸ³ï¼Œç„¶åå›ç­”ä»¥ä¸‹é—®é¢˜ã€‚
 
 Why is there no risk to the customer when a bank prints the customer's name on his cheques?
     When anyone opens a current account at a bank, he is lending the bank money, repayment of which he may demand at any time, either in cash or by drawing a cheque in favour of another person. Primarily, the banker-customer relationship is that of debtor and creditor -- who is which depending on whether the customer's account is in credit or is overdrawn. But, in addition to that basically simple concept, the bank and its customer owe a large number of obligations to one another. Many of these obligations can give in to problems and complications but a bank customer, unlike, say, a buyer of goods, cannot complain that the law is loaded against him.
     The bank must obey its customer's instructions, and not those of anyone else. When, for example, a customer first opens an account, he instructs the bank to debit his account only in respect of cheques draw by himself. He gives the bank specimens of his signature, and there is a very firm rule that the bank has no right or authority to pay out a customer's money on a cheques on which its customer's signature has been forged. It makes no difference that the forgery may have been a very skilful one: the bank must recognize its customer's signature. For this reason there is no risk to the customer in the practice, adopted by banks, of printing the customer's name on his cheques. If this facilitates forgery, it is the bank which will lose, not the customer.
    GORDON BARRIE and AUBREY L. DLAMOND The Consumer Society and the Law
 
-New words and expressions Éú´ÊºÍ¶ÌÓï
+New words and expressions ç”Ÿè¯å’ŒçŸ­è¯­
     current
-adj. Í¨ÓÃµÄ£¬Á÷ĞĞµÄ
+adj. é€šç”¨çš„ï¼Œæµè¡Œçš„
     account
-n.  ÕË»§
+n.  è´¦æˆ·
     cash
-n.  ÏÖ½ğ
+n.  ç°é‡‘
     debtor
-n.  Ö§Æ±
+n.  æ”¯ç¥¨
     debtor
-n.  ½è·½
+n.  å€Ÿæ–¹
     creditor
-n.  ´û·½
+n.  è´·æ–¹
     obligation
-n.  ÒåÎñ
+n.  ä¹‰åŠ¡
     complication
-n.  ¾À·×
+n.  çº çº·
     debit
-v.  °Ñ...¼ÇÈë½è·½
+v.  æŠŠ...è®°å…¥å€Ÿæ–¹
     specimen
-n.  Ñù±¾
+n.  æ ·æœ¬
     forge
-v.  Î±Ôì
+v.  ä¼ªé€ 
     forgery
-n.  Î±Ôì£¨ÎÄ¼ş£¬Ç©ÃûµÈ£©
+n.  ä¼ªé€ ï¼ˆæ–‡ä»¶ï¼Œç­¾åç­‰ï¼‰
     adopt
-v.  ²ÉÓÃ
+v.  é‡‡ç”¨
     facilitate
-v.  Ê¹±ãÀû
+v.  ä½¿ä¾¿åˆ©
 
-²Î¿¼ÒëÎÄ
-    ÈÎºÎÈËÔÚÒøĞĞ¿ªÒ»¸ö»îÆÚÕË»§£¬¾ÍµÈÓÚ°ÑÇ®½è¸øÁËÒøĞĞ¡£Õâ±ÊÇ®Ëû¿ÉÒÔËæÊ±ÌáÈ¡£¬ÌáÈ¡µÄ·½Ê½¿ÉÒÔÊÇÈ¡ÏÖ½ğ£¬Ò²¿ÉÒÔÊÇ¿ªÒ»ÕÅÒÔËûÈËÎªÊÕ¿îÈËµÄÖ§Æ±¡£ÒøĞĞÓë´¢»§µÄ¹ØÏµÖ÷ÒªÊÇÕ®ÎñÈËºÍÕ®È¨ÈËµÄ¹ØÏµ¡£¾¿¾¹Ë­ÊÇÕ®ÎñÈËË­ÊÇÕ®È¨ÈË£¬Òª¿´´¢»§ÊÇÓĞ½áÓà»¹ÊÇÍ¸Ö§¡£³ıÁËÕâÒ»»ù±¾µÄ¼òµ¥µÄ¸ÅÄîÍâ£¬ÒøĞĞºÍ´¢»§±Ë´Ë»¹Ğè³Ğµ£´óÁ¿ÒåÎñ¡£ÆäÖĞĞí¶àÒåÎñÍùÍùÒıÆğÎÊÌâºÍ¾À·×¡£µ«ÊÇ´¢»§²»ÄÜÏñ»õÎïµÄÂòÖ÷ÄÇÑùÀ´±§Ô¹·¨ÂÉ¶Ô×Ô¼º²»Àû¡£
-    ÒøĞĞ±ØĞë×ñÕÕ´¢»§µÄÖöÍĞ°ìÊÂ£¬²»ÄÜÌı´ÓÆäËûÈËµÄÖ¸Áî¡£±ÈÈç£¬´¢»§Ê×´ÎÔÚÒøĞĞ¿ª»§Ê±£¬Öö¸ÀÒøĞĞËûµÄ´æ¿îÖ»ÄÜÆ¾±¾ÊÀÈËÇ©×ÖµÄÖ§Æ±À´ÌáÈ¡¡£Ëû°Ñ×Ô¼ºÇ©ÃûµÄÑù±¾½»¸øÒøĞĞ£¬¶Ô´ËÓĞÒ»Ìõ·Ç³£ÑÏ¸ñµÄ¹æ¶¨£ºÒøĞĞÃ»ÓĞÈÎºÎÈ¨Àû»òÀíÓÉ°Ñ´¢»§µÄÇ®ÈÃÎ±Ôì´¢»§µÄÖ§Æ±È¡×ß¡£¼´Ê¹Î±ÔìµÃºÜÇÉÃî£¬Ò²²»ÄÜ¸¶¿î£¬ÒòÎªÒøĞĞÓĞÔğÈÎ±æÈÏ³öÆä´¢»§µÄÇ©Ãû¡£Òò´Ë£¬Ä³Ğ©ÒøĞĞÒÑ²ÉÓÃ°Ñ´¢»§Ó¡ÔÚÖ§Æ±ÉÏµÄ×÷·¨¡£ÕâÖÖ×ö·¨¶Ô´¢»§ºÁÎŞ·çÏÕ¡£Èç¹ûÒòÕâÖÖ×÷·¨³öÏÖÁËÎ±ÔìµÄ»°£¬ÊÜËğÊ§µÄ½«²»ÊÇ´¢»§£¬¶øÊÇÒøĞĞ¡£
+å‚è€ƒè¯‘æ–‡
+    ä»»ä½•äººåœ¨é“¶è¡Œå¼€ä¸€ä¸ªæ´»æœŸè´¦æˆ·ï¼Œå°±ç­‰äºæŠŠé’±å€Ÿç»™äº†é“¶è¡Œã€‚è¿™ç¬”é’±ä»–å¯ä»¥éšæ—¶æå–ï¼Œæå–çš„æ–¹å¼å¯ä»¥æ˜¯å–ç°é‡‘ï¼Œä¹Ÿå¯ä»¥æ˜¯å¼€ä¸€å¼ ä»¥ä»–äººä¸ºæ”¶æ¬¾äººçš„æ”¯ç¥¨ã€‚é“¶è¡Œä¸å‚¨æˆ·çš„å…³ç³»ä¸»è¦æ˜¯å€ºåŠ¡äººå’Œå€ºæƒäººçš„å…³ç³»ã€‚ç©¶ç«Ÿè°æ˜¯å€ºåŠ¡äººè°æ˜¯å€ºæƒäººï¼Œè¦çœ‹å‚¨æˆ·æ˜¯æœ‰ç»“ä½™è¿˜æ˜¯é€æ”¯ã€‚é™¤äº†è¿™ä¸€åŸºæœ¬çš„ç®€å•çš„æ¦‚å¿µå¤–ï¼Œé“¶è¡Œå’Œå‚¨æˆ·å½¼æ­¤è¿˜éœ€æ‰¿æ‹…å¤§é‡ä¹‰åŠ¡ã€‚å…¶ä¸­è®¸å¤šä¹‰åŠ¡å¾€å¾€å¼•èµ·é—®é¢˜å’Œçº çº·ã€‚ä½†æ˜¯å‚¨æˆ·ä¸èƒ½åƒè´§ç‰©çš„ä¹°ä¸»é‚£æ ·æ¥æŠ±æ€¨æ³•å¾‹å¯¹è‡ªå·±ä¸åˆ©ã€‚
+    é“¶è¡Œå¿…é¡»éµç…§å‚¨æˆ·çš„å˜±æ‰˜åŠäº‹ï¼Œä¸èƒ½å¬ä»å…¶ä»–äººçš„æŒ‡ä»¤ã€‚æ¯”å¦‚ï¼Œå‚¨æˆ·é¦–æ¬¡åœ¨é“¶è¡Œå¼€æˆ·æ—¶ï¼Œå˜±å’é“¶è¡Œä»–çš„å­˜æ¬¾åªèƒ½å‡­æœ¬ä¸–äººç­¾å­—çš„æ”¯ç¥¨æ¥æå–ã€‚ä»–æŠŠè‡ªå·±ç­¾åçš„æ ·æœ¬äº¤ç»™é“¶è¡Œï¼Œå¯¹æ­¤æœ‰ä¸€æ¡éå¸¸ä¸¥æ ¼çš„è§„å®šï¼šé“¶è¡Œæ²¡æœ‰ä»»ä½•æƒåˆ©æˆ–ç†ç”±æŠŠå‚¨æˆ·çš„é’±è®©ä¼ªé€ å‚¨æˆ·çš„æ”¯ç¥¨å–èµ°ã€‚å³ä½¿ä¼ªé€ å¾—å¾ˆå·§å¦™ï¼Œä¹Ÿä¸èƒ½ä»˜æ¬¾ï¼Œå› ä¸ºé“¶è¡Œæœ‰è´£ä»»è¾¨è®¤å‡ºå…¶å‚¨æˆ·çš„ç­¾åã€‚å› æ­¤ï¼ŒæŸäº›é“¶è¡Œå·²é‡‡ç”¨æŠŠå‚¨æˆ·å°åœ¨æ”¯ç¥¨ä¸Šçš„ä½œæ³•ã€‚è¿™ç§åšæ³•å¯¹å‚¨æˆ·æ¯«æ— é£é™©ã€‚å¦‚æœå› è¿™ç§ä½œæ³•å‡ºç°äº†ä¼ªé€ çš„è¯ï¼Œå—æŸå¤±çš„å°†ä¸æ˜¯å‚¨æˆ·ï¼Œè€Œæ˜¯é“¶è¡Œã€‚
