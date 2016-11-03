@@ -269,6 +269,9 @@ public class AndroidUtils {
         return sb.toString();
     }
 
+
+
+
     /**
      * 检测文章合法性
      * @param resId
