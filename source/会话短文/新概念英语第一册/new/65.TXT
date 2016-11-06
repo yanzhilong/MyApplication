@@ -9,9 +9,9 @@ JILL: I'm going to meet some friends.Dad.
 
 吉尔：我打算去看几个朋友，爸爸。
 
-FATHER: You mustn't come home late.｜You must be home at half past ten.
+FATHER: You mustn't come home late.|You must be home at half past ten.
 
-父亲：你不准回家太晚，｜你必须在10点半到家。
+父亲：你不准回家太晚，|你必须在10点半到家。
 
 JILL: I can't get home so early, Dad!
 
@@ -25,18 +25,18 @@ FATHER: No, you can't.
 
 父亲：不行，你不能带。
 
-MOTHER: Jill's eighteen years old, Tom.｜She's not a baby.｜Give her the key.｜She always comes home early.
+MOTHER: Jill's eighteen years old, Tom.|She's not a baby.|Give her the key.|She always comes home early.
 
-母亲：吉尔都18岁了，汤姆。｜她不是小孩子了。｜把钥匙给她吧。｜她总早早回家的。
+母亲：吉尔都18岁了，汤姆。|她不是小孩子了。|把钥匙给她吧。|她总早早回家的。
 
 FATHER: Oh, all right!
 
 父亲：那么，好吧！
 
 
-FATHER: Here you are.｜But you mustn't come home after a quarter past eleven.｜Do you hear?
+FATHER: Here you are.|But you mustn't come home after a quarter past eleven.|Do you hear?
 
-父亲：拿去。｜但你不能超过11点1刻回家。｜听见了吗？
+父亲：拿去。|但你不能超过11点1刻回家。|听见了吗？
 
 JILL: Yes. Dad.
 
@@ -46,9 +46,9 @@ JILL: Thanks, Mum.
 
 吉尔：谢谢，妈妈。
 
-MOTHER: That's all right.Goodbye.｜Enjoy yourself!
+MOTHER: That's all right.Goodbye.|Enjoy yourself!
 
-母亲：不用谢。再见。｜好好玩吧！
+母亲：不用谢。再见。|好好玩吧！
 
 JILL: We always enjoy ourselves, Mum.Bye-bye.
 

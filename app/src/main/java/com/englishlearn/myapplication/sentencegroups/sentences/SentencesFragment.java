@@ -112,7 +112,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 Sentence sentence = myAdapter.getSentences().get(position);
                 Log.d(TAG, sentence.toString());
                 /*Intent intent = new Intent(SentencesFragment.this.getContext(),WordDetailActivity.class);
-                intent.putExtra(WordDetailActivity.OBJECT,sentence);
+                intent.putExtra(WordDetailActivity.TRACTATE,sentence);
                 startActivity(intent);*/
 
             }

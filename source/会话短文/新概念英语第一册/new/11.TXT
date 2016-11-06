@@ -42,7 +42,7 @@ TIM: Yes, sir.
 
 HEACHER：Here you are.|Catch!
 
-老师：给你。接着！
+老师：给你。|接着！
 
 TIM: Thank you, sir.
 

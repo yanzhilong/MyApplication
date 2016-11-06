@@ -97,7 +97,7 @@ public class TractatesFragment extends Fragment {
 
                 Tractate tractate = myAdapter.getTractates().get(position);
                 Intent intent = new Intent(TractatesFragment.this.getContext(), TractateDetailActivity.class);
-                intent.putExtra(TractateDetailActivity.OBJECT, tractate);
+                intent.putExtra(TractateDetailActivity.TRACTATE, tractate);
                 startActivity(intent);
                 Log.d(TAG, tractate.toString());
 

@@ -15,11 +15,14 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.dialog.TractateTypeFragment;
-import com.englishlearn.myapplication.tractategroup.preview.TractatePreviewActivity;
+import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
+import com.englishlearn.myapplication.util.AndroidUtils;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +35,8 @@ import rx.subscriptions.CompositeSubscription;
 
 public class AddTractateActivity extends AppCompatActivity implements View.OnClickListener, Serializable,TractateTypeFragment.onItemClickListener {
 
-    public static final String OBJECT = "object";
     private static final String TAG = AddTractateActivity.class.getSimpleName();
     private static final int FILE_SELECT_CODE = 10;
-    private Object object;
 
     private EditText tractatetype;
     private EditText selectfile;
@@ -58,6 +59,42 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                     Uri uri = data.getData();
                     String path = getPath(this, uri);
                     selectfile.setText(path);
+
+                    //得到
+                    File file = new File(path);
+                    File parentFile = file.getParentFile();
+                    File[] files = parentFile.listFiles();
+                    for(int i = 0; i < files.length; i++){
+                        String tractate = AndroidUtils.getRawResource(files[i].getAbsolutePath());
+
+                        int countchinese = 0;
+                        int tmpchineseindexof = 0;
+                        while((tmpchineseindexof = tractate.indexOf("｜",tmpchineseindexof)) != -1){
+                            countchinese ++;
+                            tmpchineseindexof++;
+                            if(tmpchineseindexof >= tractate.length()){
+                                break;
+                            }
+                        }
+
+                        int countenglish = 0;
+                        tmpchineseindexof = 0;
+                        while((tmpchineseindexof =tractate.indexOf("|",tmpchineseindexof)) != -1){
+                            countenglish ++;
+                            tmpchineseindexof++;
+                            if(tmpchineseindexof >= tractate.length()){
+                                break;
+                            }
+                        }
+                        if(countchinese > 0 || countenglish % 2 != 0){
+                            Log.e(TAG,i+files[i].getName() + "中文分割符" + countchinese + "英文分割符" + countenglish);
+                        }else{
+                            Log.d(TAG,i+files[i].getName() + "中文分割符" + countchinese + "英文分割符" + countenglish);
+                        }
+                    }
+
+
+
                 }
                 break;
         }
@@ -71,9 +108,6 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
         MyApplication.instance.getAppComponent().inject(this);
 
-        if (getIntent().hasExtra(OBJECT)) {
-            object = getIntent().getSerializableExtra(OBJECT);
-        }
         mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -169,8 +203,12 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.preview:
                 String filepath = selectfile.getText().toString();
-                Intent intent = new Intent(this,TractatePreviewActivity.class);
-                intent.putExtra(TractatePreviewActivity.FILEPATH,filepath);
+                Tractate tractate = AndroidUtils.getTractateByfilePath(filepath);
+
+
+                Intent intent = new Intent(this,TractateDetailActivity.class);
+                intent.putExtra(TractateDetailActivity.PREVIEW,true);
+                intent.putExtra(TractateDetailActivity.TRACTATE,tractate);
                 startActivity(intent);
                 break;
             case R.id.add:

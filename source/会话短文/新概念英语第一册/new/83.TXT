@@ -19,7 +19,7 @@ CAROL: Have a cup of coffee then.
 
 SAM: I've just had a cup, thank you.|I had one after my lunch.
 
-萨姆：我刚喝了一杯，谢谢。我是在饭后喝的。
+萨姆：我刚喝了一杯，谢谢。|我是在饭后喝的。
 
 TOM: Let's go into the living room,Carol.|We can have our coffee there.
 

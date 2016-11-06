@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
@@ -31,39 +30,36 @@ import java.util.regex.Pattern;
 
 public class TractateDetailFragment extends Fragment implements View.OnClickListener {
 
-    public static final String OBJECT = "object";
+    public static final String TRACTATE = "tractate";
+    public static final String PREVIEW = "preview";//是否是预览
 
     private Spannable spannable = null;
     private static final String TAG = TractateDetailFragment.class.getSimpleName();
     private Tractate tractate;
-    private TextView tractatetv;
+    private TextView tractatetv;//最终放文章的
     TractateHelper tractateHelper;
     private Context mContext;
     private String result;
     private MyClickableSpan clickableSpan;
     private List<List<String>> chinese;
     private List<List<String>> english;
-    private TextView contenttv;
+    private TextView tmptractatetv;//临时放文章的
     private TextView loading;
 
     public static TractateDetailFragment newInstance() {
         return new TractateDetailFragment();
     }
 
-
     private WordDetailDialog wordDetailDialog;
-
-
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this.getContext();
-        if (getArguments().containsKey(OBJECT)) {
-            tractate = (Tractate) getArguments().getSerializable(OBJECT);
-            Toast.makeText(this.getContext(),tractate.toString(),Toast.LENGTH_SHORT).show();
+
+        Bundle bundle = getArguments();
+        if(bundle != null && bundle.containsKey(TRACTATE)){
+            tractate = (Tractate) bundle.getSerializable(TRACTATE);
         }
         wordDetailDialog = new WordDetailDialog();
     }
@@ -75,9 +71,9 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         View root = inflater.inflate(R.layout.tractatedetail_frag, container, false);
 
         loading = (TextView) root.findViewById(R.id.loading);
-        contenttv = (TextView) root.findViewById(R.id.contenttv);
-        float newLineWidth = contenttv.getPaint().measureText(System.getProperty("line.separator")) + 1f;
-        contenttv.setPadding(0,0, (int) newLineWidth * 2,0);
+        tmptractatetv = (TextView) root.findViewById(R.id.tmptractatetv);
+        float newLineWidth = tmptractatetv.getPaint().measureText(System.getProperty("line.separator")) + 1f;
+        tmptractatetv.setPadding(0,0, (int) newLineWidth * 2,0);
 
         tractatetv = (TextView) root.findViewById(R.id.tractatetv);
 
@@ -85,17 +81,20 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         root.findViewById(R.id.byparagraph).setOnClickListener(this);
         root.findViewById(R.id.byenglish).setOnClickListener(this);
 
-        final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
+        //final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
+
+        //final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
+
 
         final Tractate tractate1 = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.newconcept_one_lesson1);
 
         //分别显示两个TextView
         String content = tractate.getContent().replace("|","");
-        contenttv.setText(content);
+        tmptractatetv.setText(content);
 
         //分别显示两个TextView
         String content1 = tractate1.getContent().replace("|","");
-        //contenttv.setText(content1);
+        //tmptractatetv.setText(content1);
 
         //获得英文和中文的段落和句子List
         final List<List<List<String>>> tractateList = AndroidUtils.newInstance(mContext).splitTractate(tractate);
@@ -125,7 +124,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     //只显示英文
     private void setJustEnglish(){
 
-        contenttv.setVisibility(View.GONE);
+        tmptractatetv.setVisibility(View.GONE);
         tractateHelper = new TractateHelper(english,chinese);
         String result = tractateHelper.getTractateByEnglishString();
         //获得句子下标
@@ -138,7 +137,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
     //一段英文一段中文
     private void setByparagraph(){
 
-        contenttv.setVisibility(View.GONE);
+        tmptractatetv.setVisibility(View.GONE);
         tractateHelper = new TractateHelper(english,chinese);
         String result = tractateHelper.getTractateByParagraphString();
         //获得句子下标
@@ -153,21 +152,22 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         loading.setVisibility(View.VISIBLE);
         tractatetv.setText("");
-        contenttv.setVisibility(View.VISIBLE);
-        contenttv.post(new Runnable() {
+        tmptractatetv.setVisibility(View.VISIBLE);
+        tmptractatetv.post(
+                new Runnable() {
 
             @Override
             public void run() {
 
-                List<String> textViewLine = AndroidUtils.newInstance(mContext).getTextViewStringByLine(contenttv);
-                contenttv.setVisibility(View.GONE);
-                tractateHelper = new TractateHelper(english,chinese,textViewLine,contenttv.getWidth(),contenttv.getPaint());
+                List<String> textViewLine = AndroidUtils.newInstance(mContext).getTextViewStringByLine(tmptractatetv);
+                tmptractatetv.setVisibility(View.GONE);
+                tractateHelper = new TractateHelper(english,chinese,textViewLine, tmptractatetv.getWidth(), tmptractatetv.getPaint());
 
                 result = tractateHelper.getTractateString();
 
                 if(result != null){
                     Log.d(TAG, result);
-                    contenttv.setVisibility(View.GONE);
+                    tmptractatetv.setVisibility(View.GONE);
 
 
                     //获得句子下标
