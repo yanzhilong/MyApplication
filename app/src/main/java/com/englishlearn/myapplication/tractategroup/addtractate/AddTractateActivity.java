@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.englishlearn.myapplication.dialog.TractateTypeFragment;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
 import com.englishlearn.myapplication.util.UriUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
     private EditText tractatetype;
     private EditText selectfile;
+    private EditText selectfiledirectory;
     private TextView error;
 
     private List<TractateType> mList;
@@ -50,6 +53,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     private AddTractateHelper addTractateHelper;
     @Inject
     Repository repository;
+    private boolean isdirectory; //是否是选择目录
 
 
     @Override
@@ -59,23 +63,15 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                 if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
-                    String path = getPath(this, uri);
-
 
                     String newPath = UriUtils.getPath(this,uri);
-                    selectfile.setText(newPath);
-                    try {
-                        Tractate tractate = addTractateHelper.getTractateByFilePath(newPath);
-                    } catch (TractateLegalException e) {
-                        showError(e.getMessage());
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        showError(TractateEnum.UNKNOW.getMessage());
-                        e.printStackTrace();
-                    } catch(Exception e){
-                        showError(TractateEnum.UNKNOW.getMessage());
-                        e.printStackTrace();
+                    if(isdirectory){
+                        selectDirectory(newPath);
+                    }else{
+                        selectFile(newPath);
+
                     }
+
                     /*//得到
                     File file = new File(path);
                     File parentFile = file.getParentFile();
@@ -88,6 +84,125 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void selectFile(String filePath){
+        selectfile.setText(filePath);
+        try {
+            Tractate tractate = addTractateHelper.getTractateByFilePath(filePath);
+        } catch (TractateLegalException e) {
+            showError(e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            showError(TractateEnum.UNKNOW.getMessage());
+            e.printStackTrace();
+        } catch(Exception e){
+            showError(TractateEnum.UNKNOW.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private TractateType getTractate(String name){
+        for(int i = 0; i < mList.size(); i++){
+            if(name.equals(mList.get(i).getName())){
+                return mList.get(i);
+            }
+        }
+        return null;
+    }
+
+    private void selectDirectory(String filePath){
+        File file = new File(filePath);
+
+        selectfile.setText(file.getParentFile().getPath());
+        File[] files = file.getParentFile().listFiles();
+
+        StringBuffer stringBuffer = new StringBuffer();
+        for(int i = 0; i < files.length; i++){
+            try {
+                Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
+            } catch (TractateLegalException e) {
+                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch (IOException e) {
+                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch(Exception e){
+                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            }
+        }
+        showError(stringBuffer.toString());
+    }
+
+    private void addTractate(String filePath){
+        File file = new File(filePath);
+        if(file.isDirectory()){
+            File[] files = file.getParentFile().listFiles();
+            StringBuffer stringBuffer = new StringBuffer();
+            for(int i = 0; i < files.length; i++){
+                try {
+                    Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
+                    addTractate(tractate);
+                } catch (TractateLegalException e) {
+                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                } catch(Exception e){
+                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                    e.printStackTrace();
+                }
+            }
+            showError(stringBuffer.toString());
+        }else{
+            StringBuffer stringBuffer = new StringBuffer();
+            try {
+                Tractate tractate = addTractateHelper.getTractateByFilePath(filePath);
+                addTractate(tractate);
+            } catch (TractateLegalException e) {
+                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch (IOException e) {
+                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch(Exception e){
+                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private StringBuffer addTractateResult = new StringBuffer();
+    /**
+     * 增加文章
+     * @param tractate
+     */
+    private void addTractate(final Tractate tractate) {
+        tractate.setUserId(repository.getUserInfo().getObjectId());
+        tractate.setTractatetypeId(getTractate(tractatetype.getText().toString()).getObjectId());
+        Subscription sub = repository.addTractate(tractate).subscribe(new Subscriber<Tractate>() {
+            @Override
+            public void onCompleted() {
+                Toast.makeText(AddTractateActivity.this,"添加结束",Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(AddTractateActivity.this,"添加失败",Toast.LENGTH_SHORT).show();
+                addTractateResult.append(tractate.getTitle() + "添加失败");
+            }
+
+            @Override
+            public void onNext(Tractate tractate) {
+                Toast.makeText(AddTractateActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
+                addTractateResult.append(tractate.getTitle() + "添加成功");
+            }
+        });
+        mSubscriptions.add(sub);
+    }
+
 
     private void showError(String message) {
         error.setText(message);
@@ -118,7 +233,10 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
         tractatetype = (EditText) findViewById(R.id.tractatetype);
         selectfile = (EditText) findViewById(R.id.selectfile);
+        selectfiledirectory = (EditText) findViewById(R.id.selectfiledirectory);
+        selectfiledirectory.setOnClickListener(this);
         error = (TextView) findViewById(R.id.error);
+        error.setMovementMethod(ScrollingMovementMethod.getInstance());
         tractatetype.setOnClickListener(this);
         selectfile.setOnClickListener(this);
         findViewById(R.id.preview).setOnClickListener(this);
@@ -193,7 +311,11 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.selectfile:
-                showFileChooser();
+
+                showFileChooser(false);
+                break;
+            case R.id.selectfiledirectory:
+                showFileChooser(true);
                 break;
             case R.id.preview:
                 String filepath = selectfile.getText().toString();
@@ -217,7 +339,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
                 break;
             case R.id.add:
-
+                addTractate(selectfile.getText().toString());
                 break;
         }
     }
@@ -228,7 +350,10 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     }
 
     //打开文件选择器
-    private void showFileChooser() {
+    private void showFileChooser(boolean directory) {
+
+        this.isdirectory = directory;
+
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
