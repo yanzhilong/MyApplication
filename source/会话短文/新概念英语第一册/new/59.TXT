@@ -41,7 +41,7 @@ LADY: And I want a large box of chalk, too.
 
 女士：我还要一大盒粉笔。
 
-SHOP ASSISTANT: I only have small boxes.|Do you want one?
+SHOP ASSISTANT: I only have small boxes. |Do you want one?
 
 售货员：我只有小盒的。|您要一盒吗？
 

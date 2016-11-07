@@ -1,11 +1,11 @@
 Lesson 49 At the butcher'
 在肉店
 新概念英语
-BUTCHER: Do you want any meat today.Mrs. Bird?
+BUTCHER: Do you want any meat today. Mrs. Bird?
 
 肉商：您今天要买点肉吗，伯德夫人？
 
-MRS.BIRD: Yes, please.
+MRS. BIRD: Yes, please.
 
 伯德夫人：是的，我买一点。
 
@@ -13,7 +13,7 @@ BUTCHER: Do you want beef or lamb?
 
 肉商：您要牛肉还是要羔羊肉？
 
-MRS.BIRD: Beef, please.
+MRS. BIRD: Beef, please.
 
 伯德夫人：请给我牛肉。
 
@@ -21,7 +21,7 @@ BUTCHER: This lamb's very good.
 
 肉商：这羔羊肉很好。
 
-MRS.BIRD: I like lamb,|but my husband doesn't.
+MRS. BIRD: I like lamb,|but my husband doesn't.
 
 伯德夫人：我喜欢羔羊肉，|可我丈夫不喜欢。
 
@@ -29,11 +29,11 @@ BUTCHER: What about some steak?|This is a nice piece.
 
 肉商：来点牛排吗？|这块很好。
 
-MRS.BIRD: Give me that piece, please.
+MRS. BIRD: Give me that piece, please.
 
 伯德夫人：就请给我那块吧。
 
-MRS.BIRD: And a pound of mince, too.
+MRS. BIRD: And a pound of mince, too.
 
 伯德夫人：再来一磅绞肉。
 
@@ -41,11 +41,11 @@ BUTCHER: Do you want a chicken,|Mrs. Bird?|They 're very nice.
 
 肉商：您要买只鸡吗，|伯德夫人？|这些鸡很好。
 
-MRS.BIRD: No, thank you.
+MRS. BIRD: No, thank you.
 
 伯德夫人：不要了，谢谢。
 
-MRS.BIRD: My husband likes steak,|but he doesn't like chicken.
+MRS. BIRD: My husband likes steak,|but he doesn't like chicken.
 
 伯德夫人：我丈夫喜欢牛排，|但他不喜欢鸡。
 

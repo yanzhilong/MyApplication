@@ -21,7 +21,7 @@ ANNA: Look!|Here it is!
 
 安娜：瞧，|就是这件。
 
-LOUISE: That's nice dress.|It's very smart.
+LOUISE: That's nice dress. |It's very smart.
 
 路易丝：这件连衣裙真好，|真漂亮。
 
@@ -33,7 +33,7 @@ LOUISE: What colour is it?
 
 路易丝：是什么颜色的？
 
-ANNA: It's the same colour.|It's green, too.
+ANNA: It's the same colour. |It's green, too.
 
 安娜：一样的颜色，|也是绿的。
 

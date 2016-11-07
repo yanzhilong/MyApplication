@@ -5,7 +5,7 @@ CATHERING: Has Ian sold his house yet?
 
 凯瑟琳：伊恩已指他的房子卖掉了吗？
 
-JENNY: Yes, he has.|He sold it last week.
+JENNY: Yes, he has. |He sold it last week.
 
 詹尼：是的，卖掉了。|他上星期卖掉的。
 
@@ -13,7 +13,7 @@ CATHERING: Has he moved to his new house yet?
 
 凯瑟琳：他已经迁进新居了吗？
 
-JENNY: No, not yet.|He's still here.|He's going to move tomorrow.
+JENNY: No, not yet. |He's still here. |He's going to move tomorrow.
 
 詹尼：不，还没有。|他仍在这里。|他打算明天搬家。
 
@@ -21,7 +21,7 @@ CATHERING: When? Tomorrow afternoon.
 
 凯瑟琳：什么时候？明天上午吗？
 
-JENNY: No. Tomorrow afternoon.|I'll miss him.
+JENNY: No. Tomorrow afternoon. |I'll miss him.
 
 詹尼：不，明天下午。|我会想念他的。
 
@@ -29,7 +29,7 @@ He has always been a good neighbour.
 
 他一直是个好邻居。
 
-LIDA: He's a very nice person.|We'll all miss him.
+LIDA: He's a very nice person. |We'll all miss him.
 
 琳达：他是个非常好的人，|我们大家都会想念他的。
 
@@ -57,6 +57,6 @@ CATHERING: Poor Ian!|He didn't want to leave this house.
 
 凯瑟琳：可怜的伊恩！|他本不想离开这幢房子。
 
-JENNY: No, he didn't want to leave.|but his wife did!
+JENNY: No, he didn't want to leave. |but his wife did!
 
 詹尼：是啊，他是不想离开，|可是他妻子要离开。

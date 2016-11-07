@@ -5,15 +5,15 @@ GARY: How was the exam, Richard?
 
 加里：考试考得怎样，理查德？
 
-RICHARD: Not too bad.|I think I passed in English and Mathematics.|The questions were very easy.|How about you, Gary?
+RICHARD: Not too bad. |I think I passed in English and Mathematics. |The questions were very easy. |How about you, Gary?
 
 理查德：不算太坏，|我想我的英语和数学及格了。|题目很容易。|加里，你怎么样？
 
-GARY: The English and Maths papers weren't easy enough for me.|I hope I haven't failed.
+GARY: The English and Maths papers weren't easy enough for me. |I hope I haven't failed.
 
 加里：英语和数学试题对我来说不很容易。|我希望别不及格。
 
-RICHARD: I think I failed the French paper.|I could answer sixteen of the question.|They were very easy.|But I couldn't answer the rest.|They were too difficult for me.
+RICHARD: I think I failed the French paper. |I could answer sixteen of the question. |They were very easy. |But I couldn't answer the rest. |They were too difficult for me.
 
 理查德：我想我的法语及不了格，|我能回答其中的16道题。|这些题很容易。|但我回答不出其作的题。|那些题对我来说太难了。
 
@@ -21,11 +21,11 @@ GARY: French test are awful, aren't they?
 
 加里：法语太可怕了，你说呢？
 
-RICHARD: I hate them.|I'm sure I've got a low mark.
+RICHARD: I hate them. |I'm sure I've got a low mark.
 
 理查德：我讨厌法语。|我的法语成绩肯定很低。
 
-GARY: Oh, cheer up!|perhaps we didn't to do badly.|The guy next to me Wrote his name at the top of the paper.
+GARY: Oh, cheer up!|perhaps we didn't to do badly. |The guy next to me Wrote his name at the top of the paper.
 
 加里：啊，别灰心！|或许我们考得还不太糟。|坐在我旁边的那个人只在试卷顶端写自己的名字。
 

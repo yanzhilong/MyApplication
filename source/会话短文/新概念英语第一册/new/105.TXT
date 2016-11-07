@@ -9,7 +9,7 @@ BOB: Do you want to speak to her?
 
 鲍勃：您要同她谈话吗？
 
-THE BOSS：Yes, I do.|I want her to come to my office,|Tell her to come at once.
+THE BOSS：Yes, I do. |I want her to come to my office,|Tell her to come at once.
 
 老板：是的，|我要她到我的办公室来。|叫她马上就来。
 
@@ -17,7 +17,7 @@ SANDRA: Did you want to see me?
 
 桑德拉：您找我吗？
 
-THE BOSS：Ah, yes, Sandra.|How do you spell "intelligent'?|Can you tell me?
+THE BOSS：Ah, yes, Sandra. |How do you spell "intelligent'?|Can you tell me?
 
 老板：啊，是的，桑德拉。|"intelligent"怎样拼写？|你能告诉我吗？
 
@@ -25,11 +25,11 @@ SANDRA: I-N-T-E-L-L-I-G-E-N-T.
 
 桑德拉：I-N-T-E-L-L-I-G-E-N-T。
 
-THE BOSS：That's right.You've typed it with only one 'L'. |This letter's full of mistakes. |I want you to type it again.
+THE BOSS：That's right. You've typed it with only one 'L'. |This letter's full of mistakes. |I want you to type it again.
 
 老板：对的。但你只打了1个“L”。|这封信里错误百出。|我要你重打一遍。
 
-SANDRA: Yes, I'll do that.|I'm sorry about that.
+SANDRA: Yes, I'll do that. |I'm sorry about that.
 
 桑德拉：是，我重打。|对此我感到很抱歉。
 
@@ -41,6 +41,6 @@ SANDRA: What's it?
 
 桑德拉：是什么？
 
-THE BOSS：It's a dictionary.|I hope it'll help you.
+THE BOSS：It's a dictionary. |I hope it'll help you.
 
 老板：是本词典。|我希望它能对你有所帮助。

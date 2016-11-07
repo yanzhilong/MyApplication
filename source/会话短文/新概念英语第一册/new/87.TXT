@@ -5,7 +5,7 @@ MR. WOOD: Is my car ready yet?
 
 伍德先生：我的汽车修好了吗？
 
-ATTENDANT: I don't know. sir.|What's the number of your car?
+ATTENDANT: I don't know. sir. |What's the number of your car?
 
 服务员：我不知道，先生。|您的汽车牌号是多少？
 
@@ -45,7 +45,7 @@ ATTENDANT: Didn't you have a crash?
 
 服务员：难说您没有出车祸吗？
 
-MR. WOOD: That's right.|I drove it into a lamp-post.|Can your mechanics repair it?
+MR. WOOD: That's right. |I drove it into a lamp-post. |Can your mechanics repair it?
 
 伍德先生：是啊。|我把汽车撞在电线杆上了。|你们的机械师能修好吗？
 
@@ -53,6 +53,6 @@ ATTENDANT: Well,|they're trying to repair it,sir.
 
 服务员：啊，|他们正设法修呢，先生。
 
-But to tell you the truth.|you need a new car!
+But to tell you the truth. |you need a new car!
 
 不过说实在的，|您需要一辆新车了。

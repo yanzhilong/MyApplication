@@ -5,7 +5,7 @@ CUSTOMS OFFICER: Are you Swedish?
 
 海关官员：你们是瑞典人吗？
 
-GIRLS: No, we are not.|We are Danish.
+GIRLS: No, we are not. |We are Danish.
 
 姑娘们：不，我们不是瑞典人。|我们是丹麦人。
 
@@ -13,7 +13,7 @@ CUSTOMS OFFICER: Are your friends Danish, too?
 
 海关官员：你们的朋友也是丹麦人吗？
 
-GIRLS: No, they aren't.|They are Norwegian.
+GIRLS: No, they aren't. |They are Norwegian.
 
 姑娘们：不，他们不是丹麦人。|他们是挪威人。
 
@@ -33,7 +33,7 @@ GIRLS: No, they aren't.
 
 姑娘们：不，不是。
 
-GIRLS: Our cases are brown.|Here they are.
+GIRLS: Our cases are brown. |Here they are.
 
 姑娘们：我们的箱子是棕色的。|在这儿呢。
 

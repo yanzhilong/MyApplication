@@ -1,7 +1,7 @@
 Lesson 123  A trip to Australia
 澳大利亚之行
 新概念英语
-MIKE: Look, Scott.This is a photograph I took during my trip to Australia.
+MIKE: Look, Scott. This is a photograph I took during my trip to Australia.
 
 迈克：看，这是我到澳大利来旅行时拍的一张照片。
 
@@ -9,7 +9,7 @@ SCOTT: Let me see it, Mike.
 
 斯科特：让我看看，迈克。
 
-SCOTT: This is a good photograph.|Who are these people?
+SCOTT: This is a good photograph. |Who are these people?
 
 斯科特：这是一张很好的照片。|这些人是谁。
 
@@ -29,11 +29,11 @@ SCOTT: Who's this?
 
 斯科特：这是谁？
 
-MIKE: That's the man I told you about.Remember?
+MIKE: That's the man I told you about. Remember?
 
 迈克：这就是我跟你说过的那个人。还记得吗？
 
-SCOTT: Ah yes.The one who offered you a job in Australia.
+SCOTT: Ah yes. The one who offered you a job in Australia.
 
 斯科特：啊，记得。就是在澳大利亚给你工作的那个人。
 
@@ -57,7 +57,7 @@ MIKE: That's right.
 
 迈克：不，是我。
 
-MIKE: I grew a beard during the trip.|but I shaved it off when I came home.
+MIKE: I grew a beard during the trip. |but I shaved it off when I came home.
 
 迈克：我在旅行时留了胡子，|但我回到家时就把它刮了。
 

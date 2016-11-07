@@ -6,7 +6,7 @@ NURSE: Good morning. Mr. Croft.
 
 护士：早上好，克罗夫特先生。
 
-MR. CROFT: Good morning, nurse.|I was to see the dentist,please.
+MR. CROFT: Good morning, nurse. |I was to see the dentist,please.
 
 克罗夫特先生：早上好，护士。|我想见牙科医生。
 
@@ -22,11 +22,11 @@ NURSE: Is it urgent?
 
 护士：急吗？
 
-MR. CROFT: Yes, it is.|It's very urgent.|I feel awful.|I have a terrible toothache.
+MR. CROFT: Yes, it is. |It's very urgent. |I feel awful. |I have a terrible toothache.
 
 克罗夫特先生：是的，|很急。|我难受极了，|牙痛得要命。
 
-NURSE: Can you come at 10 a.m.on Monday, April 24th?
+NURSE: Can you come at 10 a. m. on Monday, April 24th?
 
 护士：您在4月24日星期一上午10点钟来行吗？
 
@@ -34,15 +34,15 @@ MR. CROFT: I must see the dentist now,nurse.
 
 克罗夫特先生：我必须现在就见牙科医生，护士。
 
-NURSE: The dentist is very busy at the moment.Can you come at 2 p.m.?
+NURSE: The dentist is very busy at the moment. Can you come at 2 p. m. ?
 
 护士：牙科医生这会儿很忙。|您下午两点钟来行吗？
 
-MR. CROFT: That's very late.|Can the dentist see me now?
+MR. CROFT: That's very late. |Can the dentist see me now?
 
 克罗夫特先生：那就太晚了。|牙科医生现在就不能给我看一下吗？
 
-NURSE: I'm afraid that he can't,Mr. Croft.|Can't you wait till this afternoon?
+NURSE: I'm afraid that he can't,Mr. Croft. |Can't you wait till this afternoon?
 
 护士：恐怕不能，克罗夫特先生。|您就不能等到今天下午吗？
 

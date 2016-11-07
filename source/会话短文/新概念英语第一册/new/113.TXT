@@ -9,7 +9,7 @@ MAN: Trafalgar Square,please.
 
 男子：请买一张到特拉法加广场的票。
 
-CONDUCTOR: I'm sorry, sir.I can't change a ten-pound note.|Haven't you got any small change?
+CONDUCTOR: I'm sorry, sir. I can't change a ten-pound note. |Haven't you got any small change?
 
 售票员：对不起，我找不开10英镑的钞票。|您没有零钱吗？
 
@@ -25,7 +25,7 @@ CONDUCTOR: Have you any small change, sir?
 
 售票员：先生，您有零钱吗？
 
-1st PASSENGER: I'm sorry.I've got none.
+1st PASSENGER: I'm sorry. I've got none.
 
 乘客1：对不起，我没有。
 
@@ -45,7 +45,7 @@ CONDUCTOR: Can you change this ten-pound note,madam?
 
 乘客4：我也不能。
 
-CONDUCTOR: I'm very sorry, sir.|You must get off the bus.|None of our passengers can change this note.|They're all millionaires!
+CONDUCTOR: I'm very sorry, sir. |You must get off the bus. |None of our passengers can change this note. |They're all millionaires!
 
 售票员：非常抱歉，先生。|您必须下车。|我们的乘客中没人能换开这张钞票。|他们都是百万富翁！
 

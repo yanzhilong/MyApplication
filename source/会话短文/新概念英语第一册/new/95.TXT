@@ -17,7 +17,7 @@ GEORGE: Which platform?
 
 乔治：在哪个站台？
 
-ATTENDANT: Platform Two.Over the bridge.
+ATTENDANT: Platform Two. Over the bridge.
 
 服务员：2号站台。过天桥。
 
@@ -37,7 +37,7 @@ GEORGE: It's only three minutes to eight.
 
 乔治：现在才7点57分。
 
-KEN: Let's go and have a drink.|There's a bar next door to the station.
+KEN: Let's go and have a drink. |There's a bar next door to the station.
 
 肯：让我们去喝点东西吧，|车站旁有一个酒吧。
 
@@ -61,7 +61,7 @@ GEORGE: What!It's only eight fifteen.
 
 乔治：什么！现在只有8点15分。
 
-PORTER: I'm sorry, sir.That clock's ten minutes slow.
+PORTER: I'm sorry, sir. That clock's ten minutes slow.
 
 收票员：对不起，先生，那个钟慢了10分钟。
 

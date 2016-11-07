@@ -9,7 +9,7 @@ ATTENDANT: Can you describe it, sir?
 
 服务员：先生，您能描述一下它是什么样子的吗？
 
-MR. MALL: It's a small blue case and |it's got a zip.|There's a label on the handle with my name and address on it.
+MR. MALL: It's a small blue case and |it's got a zip. |There's a label on the handle with my name and address on it.
 
 霍尔先生：是只蓝色的小箱子，|上面有拉链。|箱把上有一标签，上面写着我的姓名和住址。
 
@@ -35,11 +35,11 @@ ATTENDANT: What's your name and address?
 
 MR. MALL: David Hall,83, Bridge Street.
 
-霍尔先生：大卫.霍尔，大桥街83号。
+霍尔先生：大卫. 霍尔，大桥街83号。
 
-ATTENDANT: That's right.D.N. Hall,83, Bridge Street.
+ATTENDANT: That's right. D. N. Hall,83, Bridge Street.
 
-服务员：那就对了。D.N.霍尔，大桥街83号。
+服务员：那就对了。D. N. 霍尔，大桥街83号。
 
 ATTENDANT: Three pounds fifty pence,please.
 

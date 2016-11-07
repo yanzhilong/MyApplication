@@ -5,7 +5,7 @@ MARTIN: Where are you going to spend your holidays this year,Gary?
 
 马丁：加里，今年你们打算去哪里度假？
 
-GARY: We may go abroad.|I'm not sure.|My wife wants go to Egypt.|I'd like to there, too.|We can't make up our minds.
+GARY: We may go abroad. |I'm not sure. |My wife wants go to Egypt. |I'd like to there, too. |We can't make up our minds.
 
 加里：我们可能到国外去，|但我不敢肯定。|我妻子想到埃及去，|我也想去那儿。|我们还拿不定主意。
 
@@ -21,7 +21,7 @@ MARTIN: It's cheaper, isn't it?
 
 马丁：这更便宜些，是吗？
 
-GARY: It may be cheaper.|but it takes a long time.
+GARY: It may be cheaper. |but it takes a long time.
 
 加里：可能是便宜些，|但花的时间长。
 
@@ -29,7 +29,7 @@ MARTIN: I'm sure you'll enjoy yourselves.
 
 马丁：我肯定你们一定会玩得很痛快。
 
-GART: Don't be so sure.|We might not go anywhere.|My wife always worries too much.|Who's going to look after the dog?|Who's going to look after the house?|Who's going to look after the garden?|We have this problem every year.|in the end, |we stay at home and look after everything!
+GART: Don't be so sure. |We might not go anywhere. |My wife always worries too much. |Who's going to look after the dog?|Who's going to look after the house?|Who's going to look after the garden?|We have this problem every year. |in the end, |we stay at home and look after everything!
 
 
 加里：别那么肯定。|我们可能哪里也去不成。|我妻子总是担心那的。|谁来照看狗啦，|谁来看管房子啦，|谁来照料花园啦，|我们每年都碰到这类问题。|末了，|我们呆在家里来照看一切。

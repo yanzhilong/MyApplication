@@ -14,15 +14,15 @@ DOCTOR: Can I see him please,Mrs. Williams?
 
 医生：我可以看看他吗，威廉斯夫人？
 
-MRS. WILLIAMAS: Certainly, doctor.|Come upstairs.
+MRS. WILLIAMAS: Certainly, doctor. |Come upstairs.
 
 威廉斯夫人：当然可以，医生。|上楼吧。
 
-DOCTOR: You look very well,Jimmy.|You are better now, |but you mustn't get up yet. |You must stay in bed for another two days.
+DOCTOR: You look very well,Jimmy. |You are better now, |but you mustn't get up yet. |You must stay in bed for another two days.
 
 医生：你看上去很好，吉米。|你现在好些了，|但你还不应该起床。|你必须再卧床两天。
 
-DOCTOR: The boy mustn't go to school yet,|Mr. Williams.|And he mustn't eat rich food.
+DOCTOR: The boy mustn't go to school yet,|Mr. Williams. |And he mustn't eat rich food.
 
 医生：这孩子还不能去上学，|威廉斯夫人，|而且不能吃油腻的食物。
 
@@ -38,7 +38,7 @@ MRS. WILLIAMAS: Must he stay in bed?
 
 威廉斯夫人：他还必须卧床吗？
 
-DOCTOR: Yes.He must remain in bed for another two days.
+DOCTOR: Yes. He must remain in bed for another two days.
 
 医生：是的，他还必须卧床两天。
 
@@ -50,6 +50,6 @@ DOCTOR: Where's Mr. Williams this evening?
 
 医生：威廉斯先生今晚去哪儿了？
 
-MRS. WILLIAMAS: He's in bed, doctor.|Can you see him please?|He has a bad cold, too!
+MRS. WILLIAMAS: He's in bed, doctor. |Can you see him please?|He has a bad cold, too!
 
 威廉斯夫人：他在床上呢，医生。|您能看看他吗？|他也得了重感冒！

@@ -25,7 +25,7 @@ MANAGER: Did you serve this gentleman half an hour ago, Caroline?|He says he's t
 
 经理：卡罗琳，半小时前你接待过这位先生吗？|他说他就是买这两本书的人。
 
-CUSTOMER: I can't remember.|The man who I served was wearing a hat.
+CUSTOMER: I can't remember. |The man who I served was wearing a hat.
 
 卡罗琳：我记不起来了。|我接待的那个人戴着一顶帽子。
 
@@ -49,6 +49,6 @@ MANAGER: Is this the man that you served, Caroline?
 
 经理：卡罗琳，这就是你接待过的那个人吗？
 
-CUSTOMER: Yes.I recognize him now.
+CUSTOMER: Yes. I recognize him now.
 
 卡罗琳：是他。我现在认出他来了。

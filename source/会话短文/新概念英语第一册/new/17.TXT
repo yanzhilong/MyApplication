@@ -1,7 +1,7 @@
 Lesson 17 How do you do?
 你 好！
 新概念英语
-MR. JACKSON: Come and meet our employees, Mr.Richards.
+MR. JACKSON: Come and meet our employees, Mr. Richards.
 
 杰克逊先生：来见见我们的雇员，理查兹先生。
 
@@ -11,11 +11,11 @@ MR. RICHARDS: Thank you, Mr. Jackson.
 
 MR. JACKSON: This is Nicola Grey,
 
-杰克逊先生：这位是尼克拉.格雷
+杰克逊先生：这位是尼克拉. 格雷
 
 and this is Claire Taylor.
 
-这位是克莱尔.泰勒。
+这位是克莱尔. 泰勒。
 
 MR. RICHARDS: How do you do?
 
@@ -35,11 +35,11 @@ MR. JACKSON: They're keyboard operators.
 
 MR. Jackson: This is Michael Baker,
 
-杰克逊先生：这位是迈克尔.贝克，
+杰克逊先生：这位是迈克尔. 贝克，
 
 and this is Jeremy Short.
 
-这位是杰里米.肖特。
+这位是杰里米. 肖特。
 
 MR. RICHARDS: How do you do?
 
@@ -53,7 +53,7 @@ What are their jobs?
 
 他们是做什么工作的？
 
-MR. JACKSON: They're sales reps.|They're very lazy.
+MR. JACKSON: They're sales reps. |They're very lazy.
 
 杰克逊先生：他们是推销员，|他们非常懒。
 

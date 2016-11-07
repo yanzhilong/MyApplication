@@ -21,7 +21,7 @@ LADY: Black.
 
 女士：黑的
 
-SHOP ASSISTANT: I'm sorry.|We don't have any.
+SHOP ASSISTANT: I'm sorry. |We don't have any.
 
 售货员：对不起，|我们没有。
 
@@ -33,7 +33,7 @@ SHOP ASSISTANT: Did she buy them here?
 
 售货员：她是在这儿买的吗？
 
-LADY: No, she bought them in the U.S.
+LADY: No, she bought them in the U. S.
 
 女士：不。她是在美国买的。
 
@@ -45,7 +45,7 @@ LADY: Can you get a pair for me, please?
 
 女士：您能为我找一双吗？
 
-SHOP ASSISTANT: I'm afraid that I can't.|They were in fashion last year and the year before last.|But they're not in fashion this year.
+SHOP ASSISTANT: I'm afraid that I can't. |They were in fashion last year and the year before last. |But they're not in fashion this year.
 
 售货员：恐怕不行。|这鞋在去年和前年时兴，|而今年已不流行了。
 

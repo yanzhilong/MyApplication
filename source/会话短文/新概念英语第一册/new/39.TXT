@@ -9,7 +9,7 @@ PENNY: I'm going to put it on this table, Sam.
 
 彭妮：我打算把它放在这张桌子上，萨姆。
 
-SAM: Don't do that.|Give it to me.
+SAM: Don't do that. |Give it to me.
 
 萨姆：不要放在那儿，|把它给我。
 
@@ -25,7 +25,7 @@ PENNY: Be careful!|Don't drop it!
 
 彭妮：小心点！|别摔了！
 
-PENNY: Don't put there, Sam.|Put it here,|on this shelf.
+PENNY: Don't put there, Sam. |Put it here,|on this shelf.
 
 彭妮：别放在那儿，萨姆。|放在这儿，|这个架子上。
 

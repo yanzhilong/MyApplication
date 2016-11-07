@@ -13,7 +13,7 @@ STEVEN: How are you today?
 
 史蒂文：你今天好吗？
 
-HELEN: I'm very well, thank you.And you?
+HELEN: I'm very well, thank you. And you?
 
 海伦：很好，谢谢你。你好吗？
 
@@ -25,7 +25,7 @@ STEVEN: How is Tony?
 
 史蒂文：托尼好吗？
 
-HELEN: He's fine, thanks.|How's Emma?
+HELEN: He's fine, thanks. |How's Emma?
 
 海伦：他很好，谢谢。|埃玛好吗？
 
@@ -33,10 +33,10 @@ STEVEN: She's very well, too, Helen.
 
 史蒂文：她也很好，海伦。
 
-STEVEN: Goodbye, Helen.|Nice to see you.
+STEVEN: Goodbye, Helen. |Nice to see you.
 
 史蒂文：再见，海伦。|见到你真高兴。
 
-HELEN: Nice to see you, too, Steven.Goodbye.
+HELEN: Nice to see you, too, Steven. Goodbye.
 
 海伦：我见到你也很高兴，史蒂文。再见。

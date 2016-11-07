@@ -5,11 +5,11 @@ HELEN: Isn't there anyone at home?
 
 海伦：家里没有人吗？
 
-JIM: I'll knock again, Helen.|Everything's very quiet.|I'm sure there's no one at home.
+JIM: I'll knock again, Helen. |Everything's very quiet. |I'm sure there's no one at home.
 
 吉姆：海伦，我再敲一次。|毫无动静，|肯定家里没有人。
 
-HELEN: But that's impossible.|Carol and Tom invited us to lunch.|Look through the window.
+HELEN: But that's impossible. |Carol and Tom invited us to lunch. |Look through the window.
 
 海伦：但这是不可能的。|卡罗尔和汤姆请我们来吃午饭。|从窗子往里看看。
 
@@ -33,7 +33,7 @@ CAROL: Hello, Helen. Hello, Jim.
 
 卡罗尔：你好，海伦。你好，吉姆。
 
-TOM: Everybody wants to have lunch in the garden.|It's nice and warm out here.
+TOM: Everybody wants to have lunch in the garden. |It's nice and warm out here.
 
 汤姆：大家都想在花园里吃午饭。|这外面挺暖和。
 
@@ -41,11 +41,11 @@ CAROL: Come and have something to drink.
 
 卡罗尔：来喝点什么。
 
-JIM: Thanks, Carol.May I have a glass of beer please?
+JIM: Thanks, Carol. May I have a glass of beer please?
 
 汤姆：谢谢，卡罗尔。给我一杯啤酒好吗？
 
-CAROL: Beer?|There's none left.|You can have some lemonade.
+CAROL: Beer?|There's none left. |You can have some lemonade.
 
 卡罗尔：啤酒？|一点都不剩了。|你可以喝点柠檬水。
 
@@ -53,6 +53,6 @@ JIM: Lemonade!
 
 吉姆：柠檬水！
 
-TOM: Don't believe her, Jim.|She's only joking.|Have some beer!
+TOM: Don't believe her, Jim. |She's only joking. |Have some beer!
 
 汤姆：吉姆，别信她的。|她只是在开玩笑。|喝点啤酒吧！
