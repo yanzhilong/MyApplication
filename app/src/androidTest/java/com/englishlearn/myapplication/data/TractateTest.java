@@ -9,7 +9,8 @@ import android.util.Log;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.util.AndroidUtils;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
+import com.englishlearn.myapplication.tractategroup.addtractate.TractateLegalException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -70,7 +71,14 @@ public class TractateTest {
 
     @Test
     public void getTractate(){
-        Tractate tractate = AndroidUtils.newInstance(context).getTractateByRaw(R.raw.abundleofsticks);
+
+        AddTractateHelper addTractateHelper = new AddTractateHelper(context);
+        Tractate tractate = null;
+        try {
+            tractate = addTractateHelper.getTractateByRaw(R.raw.abundleofsticks);
+        } catch (TractateLegalException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG,tractate.toString());
     }
 }

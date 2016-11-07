@@ -2,6 +2,9 @@ package com.englishlearn.myapplication.tractategroup.tractate;
 
 import android.text.TextPaint;
 
+import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +26,6 @@ public class TractateHelper {
     List<String> list;//当前显示的英文的每行
     int[] englishSents;//当前行的句首数
     float[] englishSentX;//当前行的句首位置
-
-    private List<List<List<String>>> tractateList;
 
     private List<List<String>> english;//英语段落列表
     private List<List<String>> chinese;//译文段落列表
@@ -55,6 +56,11 @@ public class TractateHelper {
     public List<List<int[]>> getSentenceIndexs() {
         return sentenceIndexs;
     }
+
+
+
+
+
 
 
     /**
@@ -616,5 +622,65 @@ public class TractateHelper {
         return res;
     }
 
+
+
+
+    /**
+     * 将Tractate分解成英文和中文各个段落的各个句子的List(英文在前面，中文在后面)
+     * @param tractate
+     * @return
+     */
+    public static List<List<List<String>>> splitTractate(Tractate tractate){
+
+        List<List<List<String>>> lists = new ArrayList<>();
+
+        //英文和中文組
+        String english = tractate.getContent();
+        String chinese = tractate.getTranslation();
+
+        String[] englishArray = cutSpanLine(english).split(System.getProperty("line.separator"));
+        String[] chineseArray = cutSpanLine(chinese).split(System.getProperty("line.separator"));
+        List<List<String>> englishList = new ArrayList<>();
+        List<List<String>> chineseList = new ArrayList<>();
+        //各个段落
+        for(String s: englishArray){
+
+            String[] sentenceArray = s.split(AddTractateHelper.SPLITTAG);
+            List<String> englishSentences = new ArrayList<>();
+
+            for(String s1:sentenceArray){
+                englishSentences.add(s1);
+            }
+            englishList.add(englishSentences);
+        }
+
+        //各个语句
+        for(String s: chineseArray){
+
+            String[] sentenceArray = s.split(AddTractateHelper.SPLITTAG);
+            List<String> chineseSentences = new ArrayList<>();
+
+            for(String s1:sentenceArray){
+                chineseSentences.add(s1);
+            }
+            chineseList.add(chineseSentences);
+        }
+        lists.add(englishList);
+        lists.add(chineseList);
+        return lists;
+    }
+
+    //去除空行
+    public static String cutSpanLine(String res){
+        String[] strings = res.split(System.getProperty("line.separator"));
+        StringBuffer stringBuffer = new StringBuffer();
+        for (String s:strings){
+            if(s.equals("")){
+                continue;
+            }
+            stringBuffer.append(s + System.getProperty("line.separator"));
+        }
+        return stringBuffer.toString();
+    }
 
 }

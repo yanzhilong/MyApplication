@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
@@ -20,9 +21,9 @@ import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.dialog.TractateTypeFragment;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
-import com.englishlearn.myapplication.util.AndroidUtils;
+import com.englishlearn.myapplication.util.UriUtils;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,13 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
     private EditText tractatetype;
     private EditText selectfile;
-
+    private TextView error;
 
     private List<TractateType> mList;
     private String[] tractates = null;
     private CompositeSubscription mSubscriptions;
 
+    private AddTractateHelper addTractateHelper;
     @Inject
     Repository repository;
 
@@ -58,47 +60,37 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                     // Get the Uri of the selected file
                     Uri uri = data.getData();
                     String path = getPath(this, uri);
-                    selectfile.setText(path);
 
-                    //得到
+
+                    String newPath = UriUtils.getPath(this,uri);
+                    selectfile.setText(newPath);
+                    try {
+                        Tractate tractate = addTractateHelper.getTractateByFilePath(newPath);
+                    } catch (TractateLegalException e) {
+                        showError(e.getMessage());
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        showError(TractateEnum.UNKNOW.getMessage());
+                        e.printStackTrace();
+                    } catch(Exception e){
+                        showError(TractateEnum.UNKNOW.getMessage());
+                        e.printStackTrace();
+                    }
+                    /*//得到
                     File file = new File(path);
                     File parentFile = file.getParentFile();
                     File[] files = parentFile.listFiles();
                     for(int i = 0; i < files.length; i++){
-                        String tractate = AndroidUtils.getRawResource(files[i].getAbsolutePath());
-
-                        int countchinese = 0;
-                        int tmpchineseindexof = 0;
-                        while((tmpchineseindexof = tractate.indexOf("｜",tmpchineseindexof)) != -1){
-                            countchinese ++;
-                            tmpchineseindexof++;
-                            if(tmpchineseindexof >= tractate.length()){
-                                break;
-                            }
-                        }
-
-                        int countenglish = 0;
-                        tmpchineseindexof = 0;
-                        while((tmpchineseindexof =tractate.indexOf("|",tmpchineseindexof)) != -1){
-                            countenglish ++;
-                            tmpchineseindexof++;
-                            if(tmpchineseindexof >= tractate.length()){
-                                break;
-                            }
-                        }
-                        if(countchinese > 0 || countenglish % 2 != 0){
-                            Log.e(TAG,i+files[i].getName() + "中文分割符" + countchinese + "英文分割符" + countenglish);
-                        }else{
-                            Log.d(TAG,i+files[i].getName() + "中文分割符" + countchinese + "英文分割符" + countenglish);
-                        }
-                    }
-
-
-
+                        String tractate = AndroidUtils.getStringByFilePath(files[i].getAbsolutePath());
+                    }*/
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showError(String message) {
+        error.setText(message);
     }
 
     @Override
@@ -108,6 +100,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
         MyApplication.instance.getAppComponent().inject(this);
 
+        addTractateHelper = new AddTractateHelper(this);
         mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -125,6 +118,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
         tractatetype = (EditText) findViewById(R.id.tractatetype);
         selectfile = (EditText) findViewById(R.id.selectfile);
+        error = (TextView) findViewById(R.id.error);
         tractatetype.setOnClickListener(this);
         selectfile.setOnClickListener(this);
         findViewById(R.id.preview).setOnClickListener(this);
@@ -203,13 +197,24 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.preview:
                 String filepath = selectfile.getText().toString();
-                Tractate tractate = AndroidUtils.getTractateByfilePath(filepath);
+                Tractate tractate = null;
+                try {
+                    tractate = addTractateHelper.getTractateByFilePath(filepath);
+                    Intent intent = new Intent(this,TractateDetailActivity.class);
+                    intent.putExtra(TractateDetailActivity.PREVIEW,true);
+                    intent.putExtra(TractateDetailActivity.TRACTATE,tractate);
+                    startActivity(intent);
+                } catch (TractateLegalException e) {
+                    showError(e.getMessage());
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showError(TractateEnum.UNKNOW.getMessage());
+                } catch (Exception e){
+                    showError(e.getMessage());
+                    showError(TractateEnum.UNKNOW.getMessage());
+                }
 
-
-                Intent intent = new Intent(this,TractateDetailActivity.class);
-                intent.putExtra(TractateDetailActivity.PREVIEW,true);
-                intent.putExtra(TractateDetailActivity.TRACTATE,tractate);
-                startActivity(intent);
                 break;
             case R.id.add:
 

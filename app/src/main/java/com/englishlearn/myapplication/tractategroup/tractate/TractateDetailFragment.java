@@ -81,35 +81,17 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         root.findViewById(R.id.byparagraph).setOnClickListener(this);
         root.findViewById(R.id.byenglish).setOnClickListener(this);
 
-        //final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
-
-        //final Tractate tractate = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.abundleofsticks);
-
-
-        final Tractate tractate1 = AndroidUtils.newInstance(this.getContext()).getTractateByRaw(R.raw.newconcept_one_lesson1);
-
         //分别显示两个TextView
         String content = tractate.getContent().replace("|","");
         tmptractatetv.setText(content);
 
-        //分别显示两个TextView
-        String content1 = tractate1.getContent().replace("|","");
-        //tmptractatetv.setText(content1);
-
         //获得英文和中文的段落和句子List
-        final List<List<List<String>>> tractateList = AndroidUtils.newInstance(mContext).splitTractate(tractate);
-
-        //获得英文和中文的段落和句子List
-        final List<List<List<String>>> tractateList1 = AndroidUtils.newInstance(mContext).splitTractate(tractate1);
-
+        final List<List<List<String>>> tractateList = TractateHelper.splitTractate(tractate);
 
         //英语段落列表
         english = tractateList.get(0);
         //译文段落列表
         chinese = tractateList.get(1);
-
-        final List<List<String>> english1 = tractateList1.get(0);//英语段落列表
-        final List<List<String>> chinese1 = tractateList1.get(1);//译文段落列表
 
         setByparagraph();
         //setBysentence();
@@ -131,7 +113,6 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
 
         setClickableSpan(sents,tractatetv,result);
-
     }
 
     //一段英文一段中文
@@ -144,7 +125,6 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         List<List<int[]>> sents = tractateHelper.getSentenceIndexs();
 
         setClickableSpan(sents,tractatetv,result);
-
     }
 
     //一行英文一行中文
