@@ -1,0 +1,9 @@
+How to install user apps as Android system apps
+用户App怎么安装成系统App
+Android开发知识
+Part of the benefits of having an Android device is being able to install an app on it. Installing is as simple as one, two, three; just search for your desired app on the Google Play Store and hit the Install button. Though installing apps is easy, they can be installed as either user apps or system apps.
+有部分好处就是有一个Android设备能句安装一个App,安装非常简单，只有一、二、三。只要在Google Play软件站搜索App并按安装按钮，就可以了。
+
+er apps are installed in the typical way via the Google Play Store, Amazon Appstore, third-party markets, or sideloading. In contrast, system apps are apps pre-installed in the phone’s system partition with your ROM and typically, Android device users don’t have the access to the system partition. This means that, ordinarily, users cannot directly install apps to or uninstall from the system partition.
+
+You can install user apps as system apps by using such apps as Titanium Backup, but you have to go for the paid version of the app to be able to enjoy such feature. However, there are other methods to install user apps as system apps without paying fees.  Check out this guide for methods of installing ordinary user apps as system apps.

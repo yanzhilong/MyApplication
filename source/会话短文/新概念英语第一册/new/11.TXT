@@ -22,6 +22,7 @@ TEACHER: Is this shirt Tim's?
 老师：这件衬衫是蒂姆的吗？
 
 DAVE: Perhaps it is, sir. |Tim's shirt's white.
+
 戴夫：也许是，先生。|蒂姆的衬衫是白色的。
 
 HEACHER：Tim!

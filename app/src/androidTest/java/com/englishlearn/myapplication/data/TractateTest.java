@@ -73,7 +73,7 @@ public class TractateTest {
 
         AddTractateHelper addTractateHelper = new AddTractateHelper(context);
 
-        File file = new File("");
+        File file = new File("/storage/emulated/0/AAA/new/");
         File[] files = file.listFiles();
         List<Tractate> tractates = new ArrayList<>();
         StringBuffer stringBuffer = new StringBuffer();
@@ -92,7 +92,7 @@ public class TractateTest {
                 e.printStackTrace();
             }
         }
-        if(!stringBuffer.toString().equals("")){
+        if(stringBuffer.toString().equals("")){
             addTractate(tractates);
         }else{
             Log.d(TAG,stringBuffer.toString());
@@ -130,7 +130,8 @@ public class TractateTest {
 
         for(int i = 0; i < tractates.size(); i++){
 
-            Tractate addtractate = new Tractate();
+            Tractate addtractate = tractates.get(i);
+            addtractate.setUserId("943a8a40ed");
             TestSubscriber<Tractate> tractateTestSubscriber = new TestSubscriber<>();
             mBmobRemoteData.addTractate(addtractate).toBlocking().subscribe(tractateTestSubscriber);
             List<Tractate> list = tractateTestSubscriber.getOnNextEvents();
@@ -141,9 +142,9 @@ public class TractateTest {
 
                 //添加分组
                 TractateCollect addtractateCollect = new TractateCollect();
-                addtractateCollect.setUserId("");
+                addtractateCollect.setUserId("943a8a40ed");
                 addtractateCollect.setTractateId(tractate.getObjectId());
-                addtractateCollect.setTractategroupId("");
+                addtractateCollect.setTractategroupId("8c754205c4");
 
                 TestSubscriber<TractateCollect> tractateCollectTestSubscriber = new TestSubscriber<>();
                 mBmobRemoteData.addTractateCollect(addtractateCollect).toBlocking().subscribe(tractateCollectTestSubscriber);

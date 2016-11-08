@@ -17,39 +17,9 @@ What's in it?
 
 里面是什么东西？
 
-PENNY: A piece of cheese.
+PENNY: A piece of cheese. |a loaf of bread. |a bar of soap. |a bar of Chocolate. |a bottle of milk. |a pound of sugar. |Half a pound of coffee. |a quarter of pound of tea. |and a tin of tobacco.
 
-彭妮：一块乳酪、
-
-A loaf of bread.
-
-一块面包、
-
-A bar of soap.
-
-一块肥皂、
-
-A bar of Chocolate.
-
-一块巧克力、
-
-A bottle of milk.
-
-一瓶牛奶、
-
-A pound of sugar.
-
-一磅糖、
-
-Half a pound of coffee.
-
-半磅咖啡、
-
-A quarter of pound of tea. And a tin of tobacco.
-
-1/4磅茶叶和一听烟丝。
-
-半磅咖啡、1/4磅茶叶和一听烟丝。
+彭妮：一块乳酪、　|一块面包、　|一块肥皂、　|一块巧克力、　|一瓶牛奶、　|一磅糖、　|半磅咖啡、　|1/4磅茶叶和|一听烟丝。
 
 SAN: Is that tin of tobacco for me?
 
@@ -58,10 +28,3 @@ SAN: Is that tin of tobacco for me?
 PENNY: Well, it's certainly not for me!
 
 彭妮：噢，当然不会给我的！
-
-
-
-
-
-
-

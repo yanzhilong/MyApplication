@@ -30,6 +30,7 @@ JOHN SMITH: I don't know what you're talking about.
 约翰. 史密斯：我不知道您在说些什么。
 
 GRAHAM TURNER: That is John Smith,|isn't it?
+
 格雷厄姆. 特纳：你是约翰. 史密斯，|对吗？
 
 JOHN SMITH: Yes, I'm John Smith.
