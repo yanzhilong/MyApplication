@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
 
 import java.util.ArrayList;
@@ -295,7 +296,10 @@ public class TractatesFragment extends Fragment {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(tractates.get(position).getTitle());
+
+                String title = tractates.get(position).getTitle().replace(AddTractateHelper.MARK,"");
+
+                itemViewHolder.name.setText(title);
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override

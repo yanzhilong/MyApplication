@@ -3055,6 +3055,37 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId) {
+        String regex = searchUtil.getBmobEquals("userId",userId);
+
+        return bmobService.getTractateGroupsRxByUserId(regex)
+                .flatMap(new Func1<Response<TractateGroupResult>, Observable<List<TractateGroup>>>() {
+                    @Override
+                    public Observable<List<TractateGroup>> call(Response<TractateGroupResult> bmobTractateGroupResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobTractateGroupResultResponse.isSuccessful()){
+                            TractateGroupResult bmobSentenceGroupCollectResult = bmobTractateGroupResultResponse.body();
+
+                            List<TractateGroup> tractateGroups = bmobSentenceGroupCollectResult.getResults();
+
+                            return Observable.just(tractateGroups);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobTractateGroupResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<TractateGroup>>applySchedulers());
+    }
+
+    @Override
     public Observable<List<TractateGroup>> getCollectTractateGroupRxByUserId(String userId, int page, int pageSize) {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");

@@ -55,6 +55,11 @@ public class StringTest {
         String[] result = "Hello World!".split("\\|");
         System.out.println(result[0]);
         assertEquals(result.length,1);
+
+        String[] result1 = "Hello |World!".split("\\|");
+        System.out.println(result1[0]);
+        System.out.println(result1[1]);
+        assertEquals(result1.length,2);
     }
 
     @Test

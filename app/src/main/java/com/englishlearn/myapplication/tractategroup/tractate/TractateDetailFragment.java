@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
+import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
 import java.text.BreakIterator;
@@ -82,7 +83,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         root.findViewById(R.id.byenglish).setOnClickListener(this);
 
         //分别显示两个TextView
-        String content = tractate.getContent().replace("|","");
+        String content = tractate.getContent().replace(AddTractateHelper.MARK,"");
         tmptractatetv.setText(content);
 
         //获得英文和中文的段落和句子List

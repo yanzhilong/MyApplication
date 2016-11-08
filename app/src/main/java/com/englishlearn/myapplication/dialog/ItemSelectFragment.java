@@ -18,14 +18,16 @@ import java.io.Serializable;
 /**
  * Created by yanzl on 16-11-2.
  */
-public class TractateTypeFragment extends DialogFragment implements AdapterView.OnItemClickListener {
+public class ItemSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener {
 
-    public static final String TRACTATETYPES = "tractatetype";
+    public static final String ITEMS = "tractatetype";
     public static final String ITEMCLICKLISTENER = "ItemClickListener";
+    public static final String FLAG = "flag";//用于一个界面区分不同的点击事件
 
 
     String[] tractatetype = null;
     ListView mylist;
+    private int flag = 0;
     private onItemClickListener onItemClickListener;
 
     @Override
@@ -34,8 +36,9 @@ public class TractateTypeFragment extends DialogFragment implements AdapterView.
 
         Bundle bundle = getArguments();
         if(bundle != null){
-            onItemClickListener = (TractateTypeFragment.onItemClickListener) bundle.getSerializable(ITEMCLICKLISTENER);
-            tractatetype = bundle.getStringArray(TRACTATETYPES);
+            onItemClickListener = (ItemSelectFragment.onItemClickListener) bundle.getSerializable(ITEMCLICKLISTENER);
+            tractatetype = bundle.getStringArray(ITEMS);
+            flag = bundle.getInt(FLAG);
         }
     }
 
@@ -43,7 +46,7 @@ public class TractateTypeFragment extends DialogFragment implements AdapterView.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.tractatetype_dia, null, false);
+        View view = inflater.inflate(R.layout.itemselect_dia, null, false);
         mylist = (ListView) view.findViewById(R.id.listview);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
@@ -61,12 +64,12 @@ public class TractateTypeFragment extends DialogFragment implements AdapterView.
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
         if(onItemClickListener != null){
-            onItemClickListener.onItemClick(position);
+            onItemClickListener.onItemClick(flag,position);
         }
         dismiss();
     }
 
     public interface onItemClickListener extends Serializable{
-        void onItemClick(int posion);
+        void onItemClick(int flag,int posion);
     }
 }

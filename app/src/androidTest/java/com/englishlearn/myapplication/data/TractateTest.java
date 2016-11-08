@@ -17,7 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -66,6 +71,38 @@ public class TractateTest {
     @Test
     public void addTractate() throws IOException {
 
+        AddTractateHelper addTractateHelper = new AddTractateHelper(context);
+
+        File file = new File("");
+        File[] files = file.listFiles();
+        List<Tractate> tractates = new ArrayList<>();
+        StringBuffer stringBuffer = new StringBuffer();
+        for(int i = 0; i < files.length; i++){
+            try {
+                Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
+                tractates.add(tractate);
+            } catch (TractateLegalException e) {
+                stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch (IOException e) {
+                stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                e.printStackTrace();
+            } catch(Exception e){
+                stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
+                e.printStackTrace();
+            }
+        }
+        if(!stringBuffer.toString().equals("")){
+            addTractate(tractates);
+        }else{
+            Log.d(TAG,stringBuffer.toString());
+        }
+    }
+
+    @Test
+    public void addTractates() throws IOException {
+
+
 
     }
 
@@ -80,5 +117,48 @@ public class TractateTest {
             e.printStackTrace();
         }
         Log.d(TAG,tractate.toString());
+    }
+
+    /*
+   * 增加文章
+   * @param tractate
+   */
+    private void addTractate(final List<Tractate> tractates) {
+
+        final StringBuffer stringBufferupdateerror = new StringBuffer();
+        final StringBuffer stringBuffergrouperror = new StringBuffer();
+
+        for(int i = 0; i < tractates.size(); i++){
+
+            Tractate addtractate = new Tractate();
+            TestSubscriber<Tractate> tractateTestSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.addTractate(addtractate).toBlocking().subscribe(tractateTestSubscriber);
+            List<Tractate> list = tractateTestSubscriber.getOnNextEvents();
+            if(list != null || list.size() >= 0){
+
+                Tractate tractate = list.get(0);
+                Log.d(TAG,"addtractate:" + tractate.toString());
+
+                //添加分组
+                TractateCollect addtractateCollect = new TractateCollect();
+                addtractateCollect.setUserId("");
+                addtractateCollect.setTractateId(tractate.getObjectId());
+                addtractateCollect.setTractategroupId("");
+
+                TestSubscriber<TractateCollect> tractateCollectTestSubscriber = new TestSubscriber<>();
+                mBmobRemoteData.addTractateCollect(addtractateCollect).toBlocking().subscribe(tractateCollectTestSubscriber);
+                List<TractateCollect> tractateCollects = tractateCollectTestSubscriber.getOnNextEvents();
+                if(tractateCollects != null || tractateCollects.size() >= 0){
+                    TractateCollect tractateCollect = tractateCollects.get(0);
+                    Log.d(TAG,"addtractatecollect:" + tractateCollect.toString());
+                }else{
+                    stringBuffergrouperror.append(addtractate.getTitle() + "上传失败" + System.getProperty("line.separator"));
+                }
+            }else {
+                stringBufferupdateerror.append(addtractate.getTitle() + "上传失败" + System.getProperty("line.separator"));
+            }
+        }
+        Log.d(TAG,"addtractate:" + stringBufferupdateerror.toString());
+        Log.d(TAG,"addtractate:" + stringBuffergrouperror.toString());
     }
 }

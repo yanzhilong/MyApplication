@@ -311,6 +311,8 @@
     </string-array>
 
     <string name="title_addtractate">添加文章</string>
+    <string name="nameunique">名称不能重复</string>
+    <string name="createsuccess">创建成功</string>
 
     <string name="title_tractatepreview">TractatePreview</string>
 

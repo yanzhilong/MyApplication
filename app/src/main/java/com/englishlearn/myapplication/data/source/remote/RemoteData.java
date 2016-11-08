@@ -789,6 +789,13 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId, int page, int pageSize);
 
+    /**
+     * 根据userId获取文章收藏分组
+     * @param userId
+     * @return
+     */
+    Observable<List<TractateGroup>> getTractateGroupsRxByUserId(String userId);
+
 
     /**
      * 根据userId获取所收藏的文章分组分页展示

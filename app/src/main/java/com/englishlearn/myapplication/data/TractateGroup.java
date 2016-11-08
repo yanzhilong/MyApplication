@@ -9,6 +9,7 @@ public class TractateGroup implements Serializable,Cloneable{
 
     private String objectId;
     private String open; //是否公开
+    private String create;//是否是保存自己创建的文章
     private String name; //分组名称
     private String userId; //用户Id
 
@@ -44,6 +45,14 @@ public class TractateGroup implements Serializable,Cloneable{
         this.open = open;
     }
 
+    public String getCreate() {
+        return create;
+    }
+
+    public void setCreate(String create) {
+        this.create = create;
+    }
+
     @Override
     public Object clone(){
 
@@ -61,6 +70,7 @@ public class TractateGroup implements Serializable,Cloneable{
         return "TractateGroup{" +
                 "objectId='" + objectId + '\'' +
                 ", open='" + open + '\'' +
+                ", create='" + create + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

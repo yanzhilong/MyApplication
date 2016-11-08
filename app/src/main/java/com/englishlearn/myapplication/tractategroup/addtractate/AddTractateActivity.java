@@ -18,9 +18,13 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.dialog.TractateTypeFragment;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
+import com.englishlearn.myapplication.dialog.CreateTractateGroupFragment;
+import com.englishlearn.myapplication.dialog.ItemSelectFragment;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
 import com.englishlearn.myapplication.util.UriUtils;
 
@@ -32,22 +36,29 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
-public class AddTractateActivity extends AppCompatActivity implements View.OnClickListener, Serializable,TractateTypeFragment.onItemClickListener {
+public class AddTractateActivity extends AppCompatActivity implements View.OnClickListener, Serializable,ItemSelectFragment.onItemClickListener {
 
     private static final String TAG = AddTractateActivity.class.getSimpleName();
     private static final int FILE_SELECT_CODE = 10;
 
     private EditText tractatetype;
     private EditText selectfile;
-    private EditText selectfiledirectory;
+    private EditText selecttractategroup;
     private TextView error;
 
     private List<TractateType> mList;
+    private List<TractateGroup> tractateGroups;
     private String[] tractates = null;
+    private String[] tractategroups = null;
+    private int currenttypeposition = 0;//当前选择的类型
+    private int currentgroupposition = 0;//当前选择的主文章分组
+    private TractateGroup tractateGroup;//当前选择的分级
     private CompositeSubscription mSubscriptions;
 
     private AddTractateHelper addTractateHelper;
@@ -65,20 +76,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
                     Uri uri = data.getData();
 
                     String newPath = UriUtils.getPath(this,uri);
-                    if(isdirectory){
-                        selectDirectory(newPath);
-                    }else{
-                        selectFile(newPath);
-
-                    }
-
-                    /*//得到
-                    File file = new File(path);
-                    File parentFile = file.getParentFile();
-                    File[] files = parentFile.listFiles();
-                    for(int i = 0; i < files.length; i++){
-                        String tractate = AndroidUtils.getStringByFilePath(files[i].getAbsolutePath());
-                    }*/
+                    selectFile(newPath);
                 }
                 break;
         }
@@ -101,106 +99,154 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private TractateType getTractate(String name){
-        for(int i = 0; i < mList.size(); i++){
-            if(name.equals(mList.get(i).getName())){
-                return mList.get(i);
-            }
-        }
-        return null;
-    }
 
-    private void selectDirectory(String filePath){
+    private void addTractate(String filePath){
         File file = new File(filePath);
 
-        selectfile.setText(file.getParentFile().getPath());
-        File[] files = file.getParentFile().listFiles();
-
         StringBuffer stringBuffer = new StringBuffer();
-        for(int i = 0; i < files.length; i++){
-            try {
-                Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
-            } catch (TractateLegalException e) {
-                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            } catch (IOException e) {
-                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            } catch(Exception e){
-                stringBuffer.append(files[i].getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            }
+        try {
+            Tractate tractate = addTractateHelper.getTractateByFilePath(filePath);
+            addTractate(tractate);
+        } catch (TractateLegalException e) {
+            stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+            e.printStackTrace();
+        } catch (IOException e) {
+            stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+            e.printStackTrace();
+        } catch(Exception e){
+            stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
+            e.printStackTrace();
         }
         showError(stringBuffer.toString());
     }
 
-    private void addTractate(String filePath){
-        File file = new File(filePath);
-        if(file.isDirectory()){
-            File[] files = file.getParentFile().listFiles();
-            StringBuffer stringBuffer = new StringBuffer();
-            for(int i = 0; i < files.length; i++){
-                try {
-                    Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
-                    addTractate(tractate);
-                } catch (TractateLegalException e) {
-                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
-                    e.printStackTrace();
-                } catch(Exception e){
-                    stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));
-                    e.printStackTrace();
-                }
-            }
-            showError(stringBuffer.toString());
-        }else{
-            StringBuffer stringBuffer = new StringBuffer();
-            try {
-                Tractate tractate = addTractateHelper.getTractateByFilePath(filePath);
-                addTractate(tractate);
-            } catch (TractateLegalException e) {
-                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            } catch (IOException e) {
-                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            } catch(Exception e){
-                stringBuffer.append(file.getName() + e.getMessage() + System.getProperty("line.separator"));
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private StringBuffer addTractateResult = new StringBuffer();
     /**
      * 增加文章
      * @param tractate
      */
     private void addTractate(final Tractate tractate) {
+        error.setText("");
         tractate.setUserId(repository.getUserInfo().getObjectId());
-        tractate.setTractatetypeId(getTractate(tractatetype.getText().toString()).getObjectId());
-        Subscription sub = repository.addTractate(tractate).subscribe(new Subscriber<Tractate>() {
+        tractate.setTractatetypeId(mList.get(currenttypeposition).getObjectId());
+        Subscription sub = repository.addTractate(tractate).onErrorReturn(new Func1<Throwable, Tractate>() {
+            @Override
+            public Tractate call(Throwable throwable) {
+                Toast.makeText(AddTractateActivity.this,"添加文章失败",Toast.LENGTH_SHORT).show();
+                error.append(tractate.getTitle() + "添加文章失败" + System.getProperty("line.separator"));
+                return null;
+            }
+        }).flatMap(new Func1<Tractate, Observable<TractateCollect>>() {
+            @Override
+            public Observable<TractateCollect> call(Tractate tractate) {
+
+                TractateCollect tractateCollect = new TractateCollect();
+                tractateCollect.setUserId(repository.getUserInfo().getObjectId());
+                tractateCollect.setTractateId(tractate.getObjectId());
+                tractateCollect.setTractategroupId(tractateGroups.get(currentgroupposition).getObjectId());
+                return repository.addTractateCollect(tractateCollect);
+            }
+        }).subscribe(new Subscriber<TractateCollect>() {
             @Override
             public void onCompleted() {
-                Toast.makeText(AddTractateActivity.this,"添加结束",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AddTractateActivity.this,"添加结束",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(AddTractateActivity.this,"添加文章到分组失败",Toast.LENGTH_SHORT).show();
+                error.append(tractate.getTitle() + "添加文章到分组失败" + System.getProperty("line.separator"));
+            }
+
+            @Override
+            public void onNext(TractateCollect tractateCollect) {
+                Toast.makeText(AddTractateActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
+                error.append(tractate.getTitle() + "添加成功" + System.getProperty("line.separator"));
+            }
+        });
+        mSubscriptions.add(sub);
+    }
+
+    /**
+     * 显示对话框
+     */
+    private void showCreateTractateGroupDialog(){
+        CreateTractateGroupFragment createTractateGroupFragment = new CreateTractateGroupFragment();
+        createTractateGroupFragment.setCreateListener(new CreateTractateGroupFragment.CreateListener() {
+            @Override
+            public void onClick(String name) {
+                createTractateGroup(name);
+            }
+        });
+        createTractateGroupFragment.show(getSupportFragmentManager(),"create");
+    }
+
+
+    /**
+     * 创建词单
+     */
+    private void createTractateGroup(String name){
+
+        TractateGroup tractateGroup = new TractateGroup();
+        tractateGroup.setUserId(repository.getUserInfo().getObjectId());
+        tractateGroup.setName(name);
+        tractateGroup.setOpen("false");
+        tractateGroup.setCreate("true");
+        Subscription subscription = repository.addTractateGroup(tractateGroup)
+                .onErrorReturn(new Func1<Throwable, TractateGroup>() {
+                    @Override
+                    public TractateGroup call(Throwable throwable) {
+                        return null;
+                    }
+                }).flatMap(new Func1<TractateGroup, Observable<TractateGroup>>() {
+                    @Override
+                    public Observable<TractateGroup> call(TractateGroup tractateGroup) {
+
+                        if(tractateGroup == null){
+                            return Observable.error(new NullPointerException());
+                        }
+                        return repository.getTractateGroupRxById(tractateGroup.getObjectId());
+                    }
+                }).subscribe(new Subscriber<TractateGroup>() {
+            @Override
+            public void onCompleted() {
 
             }
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(AddTractateActivity.this,"添加失败",Toast.LENGTH_SHORT).show();
-                addTractateResult.append(tractate.getTitle() + "添加失败");
+                if(e instanceof BmobRequestException){
+                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
+                        createWGFail(getString(R.string.nameunique));
+                }else{
+                    Toast.makeText(AddTractateActivity.this,R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onNext(Tractate tractate) {
-                Toast.makeText(AddTractateActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
-                addTractateResult.append(tractate.getTitle() + "添加成功");
+            public void onNext(TractateGroup tractateGroup) {
+
+                if(tractateGroup != null) {
+                    AddTractateActivity.this.tractateGroup = tractateGroup;
+                    selecttractategroup.setText(tractateGroup.getName());
+                    createWGSuccess();
+                }
             }
         });
-        mSubscriptions.add(sub);
+        mSubscriptions.add(subscription);
+    }
+
+
+    //创建失败
+    private void createWGFail(String message){
+
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    //创建成功
+    private void createWGSuccess(){
+
+        Toast.makeText(this,R.string.createwordgroupsuccess,Toast.LENGTH_SHORT).show();
+
     }
 
 
@@ -217,6 +263,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
         addTractateHelper = new AddTractateHelper(this);
         mList = new ArrayList();
+        tractateGroups = new ArrayList<>();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
@@ -231,10 +278,11 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
         //标题
         ab.setTitle(R.string.title_addtractate);
 
+        findViewById(R.id.createtractategroup).setOnClickListener(this);
         tractatetype = (EditText) findViewById(R.id.tractatetype);
         selectfile = (EditText) findViewById(R.id.selectfile);
-        selectfiledirectory = (EditText) findViewById(R.id.selectfiledirectory);
-        selectfiledirectory.setOnClickListener(this);
+        selecttractategroup = (EditText) findViewById(R.id.selecttractategroup);
+        selecttractategroup.setOnClickListener(this);
         error = (TextView) findViewById(R.id.error);
         error.setMovementMethod(ScrollingMovementMethod.getInstance());
         tractatetype.setOnClickListener(this);
@@ -279,6 +327,32 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
             }
         });
         mSubscriptions.add(subscription);
+
+        Subscription subscription1 = repository.getTractateGroupsRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<TractateGroup>>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(List list) {
+                if(list != null && list.size() > 0){
+                    Log.d(TAG,"onNext size:" + list.size());
+                    tractateGroups.clear();
+                    tractateGroups.addAll(list);
+
+                    tractategroups = new String[tractateGroups.size()];
+                    for (int i = 0; i < tractateGroups.size(); i++){
+                        tractategroups[i] = tractateGroups.get(i).getName();
+                    }
+                }
+            }
+        });
+        mSubscriptions.add(subscription1);
     }
 
 
@@ -300,22 +374,38 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
             case R.id.tractatetype:
 
                 if(tractates != null && tractates.length > 0){
-                    TractateTypeFragment tractateTypeFragment = new TractateTypeFragment();
+                    ItemSelectFragment tractateTypeFragment = new ItemSelectFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(TractateTypeFragment.ITEMCLICKLISTENER,this);
-                    bundle.putSerializable(TractateTypeFragment.TRACTATETYPES,tractates);
+                    bundle.putSerializable(ItemSelectFragment.ITEMCLICKLISTENER,this);
+                    bundle.putSerializable(ItemSelectFragment.ITEMS,tractates);
+                    bundle.putInt(ItemSelectFragment.FLAG,R.id.tractatetype);
                     tractateTypeFragment.setArguments(bundle);
                     tractateTypeFragment.show(getSupportFragmentManager(),"tractatetype");
                 }else{
                     Toast.makeText(this,"获取文章类型失败",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.selectfile:
+            case R.id.selecttractategroup:
 
-                showFileChooser(false);
+                if(tractategroups != null && tractategroups.length > 0){
+                    ItemSelectFragment tractateTypeFragment = new ItemSelectFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(ItemSelectFragment.ITEMCLICKLISTENER,this);
+                    bundle.putSerializable(ItemSelectFragment.ITEMS,tractategroups);
+                    bundle.putInt(ItemSelectFragment.FLAG,R.id.selecttractategroup);
+                    tractateTypeFragment.setArguments(bundle);
+                    tractateTypeFragment.show(getSupportFragmentManager(),"tractategroup");
+                }else{
+                    Toast.makeText(this,"获取文章类型失败",Toast.LENGTH_SHORT).show();
+                }
+
+
                 break;
-            case R.id.selectfiledirectory:
-                showFileChooser(true);
+            case R.id.selectfile:
+                showFileChooser();
+                break;
+            case R.id.createtractategroup:
+                showCreateTractateGroupDialog();
                 break;
             case R.id.preview:
                 String filepath = selectfile.getText().toString();
@@ -345,14 +435,23 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onItemClick(int posion) {
-        tractatetype.setText(tractates[posion]);
+    public void onItemClick(int flag,int posion) {
+        switch (flag){
+            case R.id.tractatetype:
+                currenttypeposition = posion;
+                tractatetype.setText(tractates[posion]);
+                break;
+            case R.id.selecttractategroup:
+                currentgroupposition = posion;
+                AddTractateActivity.this.tractateGroup = tractateGroups.get(posion);
+                selecttractategroup.setText(tractategroups[posion]);
+                break;
+        }
+
     }
 
     //打开文件选择器
-    private void showFileChooser(boolean directory) {
-
-        this.isdirectory = directory;
+    private void showFileChooser() {
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");

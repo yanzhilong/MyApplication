@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class AddTractateHelper {
 
     public static String SPLITTAG = "\\|";
+    public static String MARK = "|";
     private Context context;
 
     public AddTractateHelper(Context context) {
@@ -130,7 +131,7 @@ public class AddTractateHelper {
             throw new TractateLegalException(exceptionmessage.toString());
         }
 
-        tractate.setTitle(englishtitle + SPLITTAG + chinesetitle);
+        tractate.setTitle(englishtitle + MARK + chinesetitle);
         tractate.setRemark(remark);
         tractate.setContent(english_stringBuffer.toString());
         tractate.setTranslation(chinese_stringBuffer.toString());

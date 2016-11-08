@@ -919,6 +919,16 @@ public interface BmobService{
     })
     Observable<Response<TractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+
+    //根据userId获取文章收藏分组
+    @GET("/1/classes/TractateGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<TractateGroupResult>> getTractateGroupsRxByUserId(@Query("where")String userIdjson);
+
+
     //根据id获取文章收藏分组
     @GET("/1/classes/TractateGroup/{id}/")
     @Headers({
