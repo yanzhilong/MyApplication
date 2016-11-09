@@ -76,6 +76,23 @@ public class RegexBaseTest {
         }
     }
 
+
+    //查找.后面不是跟空格的，并加上空格
+    @Test
+    public void regexBase(){
+
+        String resouse = " Leston 123";
+        //中文标题
+        String cntitleRegex = "\\d+";
+        Pattern cntitlepattern = Pattern.compile(cntitleRegex);
+        Matcher cntitlematcher = cntitlepattern.matcher(resouse);
+        if(cntitlematcher.find()){
+            String reresult = cntitlematcher.group();
+            System.out.println(reresult );
+        }
+    }
+
+
     //查找.后面不是跟空格的，并加上空格
     @Test
     public void regexDotTest(){

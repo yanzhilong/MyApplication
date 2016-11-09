@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class TractateDetailFragment extends Fragment implements View.OnClickListener {
+public class TractateDetailFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     public static final String TRACTATE = "tractate";
     public static final String PREVIEW = "preview";//是否是预览
@@ -78,9 +80,9 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
 
         tractatetv = (TextView) root.findViewById(R.id.tractatetv);
 
-        root.findViewById(R.id.byline).setOnClickListener(this);
-        root.findViewById(R.id.byparagraph).setOnClickListener(this);
-        root.findViewById(R.id.byenglish).setOnClickListener(this);
+        ((RadioButton)root.findViewById(R.id.byenglish)).setChecked(true);
+
+        ((RadioGroup)root.findViewById(R.id.showtype)).setOnCheckedChangeListener(this);
 
         //分别显示两个TextView
         String content = tractate.getContent().replace(AddTractateHelper.MARK,"");
@@ -94,9 +96,7 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         //译文段落列表
         chinese = tractateList.get(1);
 
-        setByparagraph();
-        //setBysentence();
-        //setJustEnglish();
+        setJustEnglish();
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -220,6 +220,21 @@ public class TractateDetailFragment extends Fragment implements View.OnClickList
         }
 
         return ints;
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.byline:
+                setBysentence();
+                break;
+            case R.id.byparagraph:
+                setByparagraph();
+                break;
+            case R.id.byenglish:
+                setJustEnglish();
+                break;
+        }
     }
 
     private class MyClickableSpan extends ClickableSpan{
@@ -358,28 +373,4 @@ public class MovementMethod extends LinkMovementMethod {
         super.onPause();
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.byline:
-                loading.setVisibility(View.VISIBLE);
-                setBysentence();
-
-                break;
-            case R.id.byparagraph:
-                loading.setVisibility(View.VISIBLE);
-                setByparagraph();
-                loading.setVisibility(View.GONE);
-                break;
-            case R.id.byenglish:
-                loading.setVisibility(View.VISIBLE);
-                setJustEnglish();
-                loading.setVisibility(View.GONE);
-                break;
-
-            default:
-                break;
-        }
-    }
 }

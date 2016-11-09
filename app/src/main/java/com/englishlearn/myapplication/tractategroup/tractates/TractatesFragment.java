@@ -41,7 +41,7 @@ public class TractatesFragment extends Fragment {
 
     public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractatesFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 100;
     private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
     private int page = 0;
@@ -281,11 +281,11 @@ public class TractatesFragment extends Fragment {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
             switch (viewType) {
-                case R.layout.tractatetop_frag_item:
+                case R.layout.tractates_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.tractatetop_frag_loadmore_item:
+                case R.layout.tractates_frag_loadmore_item:
                     return new LoadingMoreViewHolder(v);
-                case R.layout.tractatetop_frag_loaddone_item:
+                case R.layout.tractates_frag_loaddone_item:
                     return new LoadingGoneViewHolder(v);
             }
             return null;

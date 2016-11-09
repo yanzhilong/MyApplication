@@ -36,9 +36,9 @@ public class TractatesActivity extends AppCompatActivity {
         ab.setTitle(R.string.title_tractates);
         Bundle bundle = new Bundle();
         if(tractateGroup != null){
-            bundle.putSerializable(TractateTopFragment.TRACTATEGROUP,tractateGroup);
+            bundle.putSerializable(TractatesFragment.TRACTATEGROUP,tractateGroup);
         }
-        Fragment fragment = TractateTopFragment.newInstance();
+        Fragment fragment = TractatesFragment.newInstance();
         fragment.setArguments(bundle);
 
         if (savedInstanceState == null) {

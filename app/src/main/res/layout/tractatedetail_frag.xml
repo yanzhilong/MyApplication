@@ -4,30 +4,53 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/showtype"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:background="@color/text_color_grey"
             android:orientation="horizontal">
 
-            <Button
+            <RadioButton
                 android:id="@+id/byline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.AppCompat.Button"
+                android:text="按行显示"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/byparagraph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="分段显示"
+                android:layout_weight="1"/>
+
+            <RadioButton
+                android:id="@+id/byenglish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="仅英文"
+                android:layout_weight="1"/>
+
+            <!--<RadioButton
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Line"/>
 
-            <Button
-                android:id="@+id/byparagraph"
+            <RadioButton
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Paragraph"/>
 
-            <Button
-                android:id="@+id/byenglish"
+            <RadioButton
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English"/>
-        </LinearLayout>
+                android:text="English"/>-->
+        </RadioGroup>
 
         <TextView
             android:id="@+id/loading"

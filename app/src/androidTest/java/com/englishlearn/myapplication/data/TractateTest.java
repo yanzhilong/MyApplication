@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.observers.TestSubscriber;
 
@@ -80,6 +82,16 @@ public class TractateTest {
         for(int i = 0; i < files.length; i++){
             try {
                 Tractate tractate = addTractateHelper.getTractateByFilePath(files[i].getPath());
+                //设置排序
+                String title = tractate.getTitle();
+                String sortregex = "\\d+";//查找连续的数字
+                Pattern cntitlepattern = Pattern.compile(sortregex);
+                Matcher cntitlematcher = cntitlepattern.matcher(title);
+                int sort = Integer.MAX_VALUE;
+                if(cntitlematcher.find()){
+                    sort = Integer.valueOf(cntitlematcher.group());
+                }
+                tractate.setSort(sort);
                 tractates.add(tractate);
             } catch (TractateLegalException e) {
                 stringBuffer.append(files[i].getName() + e.getMessage() + "上传失败" + System.getProperty("line.separator"));

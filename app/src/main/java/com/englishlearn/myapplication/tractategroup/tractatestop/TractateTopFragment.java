@@ -42,7 +42,7 @@ public class TractateTopFragment extends Fragment {
     public static final String TRACTATETYPE = "TractateType";
     public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractateTopFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 100;
     private TractateType tractateType;
     private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
