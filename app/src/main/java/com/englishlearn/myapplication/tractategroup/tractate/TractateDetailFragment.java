@@ -1,9 +1,11 @@
 package com.englishlearn.myapplication.tractategroup.tractate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
+import com.englishlearn.myapplication.testmain.TestMainActivity;
 import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
@@ -248,6 +251,11 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
         }
     }
 
+    private void addWords(){
+        Intent intent = new Intent(this.getContext(),TestMainActivity.class);
+        startActivity(intent);
+    }
+
     private WordDetailDialog.WordDialogListener wordDialogListener = new WordDetailDialog.WordDialogListener() {
         @Override
         public void close() {
@@ -256,6 +264,13 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
 
         @Override
         public void addWord() {
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    addWords();
+                }
+            },0);
 
         }
 
@@ -271,6 +286,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
 
         @Override
         public void addSentence() {
+
 
         }
 

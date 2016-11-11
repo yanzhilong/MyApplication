@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentencecollect;
+package com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -6,16 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.util.ActivityUtils;
 
 public class SentenceCollectActivity extends AppCompatActivity {
 
-    private SentenceCollectContract.Presenter presenter;
+    public static final String OBJECT = "object";
+    private static final String TAG = SentenceCollectActivity.class.getSimpleName();
+    private Object object;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sentencecollect_act);
 
+        if (getIntent().hasExtra(OBJECT)) {
+            object = getIntent().getSerializableExtra(OBJECT);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -25,14 +30,15 @@ public class SentenceCollectActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
         //标题
-        ab.setTitle(R.string.sentencecollect_title);
+        ab.setTitle(R.string.title_sentencecollect);
 
-        SentenceCollectFragment fragment = (SentenceCollectFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (fragment == null) {
-            fragment = SentenceCollectFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
-        }
-        presenter = new SentenceCollectPresenter(fragment);
+        /*Fragment fragment = null;
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.contentFrame, fragment)
+                    .commit();
+        }*/
     }
 
     @Override
@@ -41,3 +47,4 @@ public class SentenceCollectActivity extends AppCompatActivity {
         return true;
     }
 }
+

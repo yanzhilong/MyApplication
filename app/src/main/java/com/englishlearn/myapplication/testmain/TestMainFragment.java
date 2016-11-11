@@ -19,18 +19,18 @@ import com.englishlearn.myapplication.loginuser.LoginUserActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
 import com.englishlearn.myapplication.search.SearchActivity;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
-import com.englishlearn.myapplication.sentencecollect.SentenceCollectActivity;
+import com.englishlearn.myapplication.sentence.SentencessActivity;
 import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
 import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
-import com.englishlearn.myapplication.sentence.SentencessActivity;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
 import com.englishlearn.myapplication.word.WordActivity;
-import com.englishlearn.myapplication.wordcollect.WordCollectActivity;
 import com.englishlearn.myapplication.worddetail.WordDetail;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
+import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
 
 /**
  * Created by yanzl on 16-7-20.

@@ -316,4 +316,8 @@
 
     <string name="title_tractatepreview">TractatePreview</string>
 
+    <string name="title_wordcollect">WordCollect</string>
+
+    <string name="title_sentencecollect">SentenceCollect</string>
+
 </resources>

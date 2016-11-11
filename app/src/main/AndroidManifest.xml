@@ -88,12 +88,6 @@
             android:name=".tractategroup.TractateGroupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".wordcollect.WordCollectActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".sentencecollect.SentenceCollectActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".tractatecollect.TractateCollectActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -171,7 +165,10 @@
             android:name=".tractategroup.addtractate.AddTractateActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".tractategroup.preview.TractatePreviewActivity"
+            android:name=".wordgroups.words.wordcollect.WordCollectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".sentencegroups.sentences.sentencecollect.SentenceCollectActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

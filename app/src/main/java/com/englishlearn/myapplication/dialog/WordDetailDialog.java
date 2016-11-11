@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.service.MusicService;
 
 import java.io.IOException;
@@ -213,7 +214,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_sentence:
-                wordDialogListener.addSentence();
+                startActivity(new Intent(this.getContext(),SentenceCollectActivity.class));
                 break;
             case R.id.moresentence:
                 wordDialogListener.moreSentence();
