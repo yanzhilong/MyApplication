@@ -88,7 +88,7 @@ public class TractateHelper {
                 currentSentenceArray[0] = start;
 
                 //一个句子的下标结束
-                currentSentenceArray[1] = stringBuffer.toString().indexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
+                currentSentenceArray[1] = stringBuffer.toString().lastIndexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
 
                 currentSentenceIndex.add(currentSentenceArray);
             }
@@ -134,7 +134,7 @@ public class TractateHelper {
                 currentSentenceArray[0] = start;
 
                 //一个句子的下标结束
-                currentSentenceArray[1] = stringBuffer.toString().indexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
+                currentSentenceArray[1] = stringBuffer.toString().lastIndexOf(paragraphenglish.get(j)) + paragraphenglish.get(j).length();
 
                 currentSentenceIndex.add(currentSentenceArray);
             }

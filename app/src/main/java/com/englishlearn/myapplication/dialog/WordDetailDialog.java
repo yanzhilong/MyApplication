@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.service.MusicService;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -39,6 +41,8 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     public static final String WORDTAG = "word";
     public static final String ENSENTENCE = "ensentence";
     public static final String CHSENTENCE = "chsentence";
+    public static final String DIALOGLISTENER = "dialoglistener";
+    private static final String TAG = WordDetailDialog.class.getSimpleName();
     private CompositeSubscription mSubscriptions;
     private String wordstring;
     private String ensentence;
@@ -59,6 +63,16 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
 
     @Inject
     Repository repository;
+
+    private WordDialogListener wordDialogListener;
+
+    public WordDialogListener getWordDialogListener() {
+        return wordDialogListener;
+    }
+
+    public void setWordDialogListener(WordDialogListener wordDialogListener) {
+        this.wordDialogListener = wordDialogListener;
+    }
 
     private ServiceConnection musicConnection = new ServiceConnection(){
 
@@ -82,12 +96,13 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             wordstring = (String) bundle.get(WORDTAG);
             ensentence = (String) bundle.get(ENSENTENCE);
             chsentence = (String) bundle.get(CHSENTENCE);
+            wordDialogListener = (WordDialogListener) bundle.getSerializable(DIALOGLISTENER);
         }
         MyApplication.instance.getAppComponent().inject(this);
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
-
+        setCancelable(false);//不能取消
         if(musicIntent==null){
             musicIntent = new Intent(this.getContext(), MusicService.class);
             getActivity().bindService(musicIntent, musicConnection, Context.BIND_AUTO_CREATE);
@@ -167,15 +182,22 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        Log.d(TAG,"onClick");
+        if(wordDialogListener == null){
+            return;
+        }
 
         switch (v.getId()){
             case R.id.close:
+                Log.d(TAG,"onClose");
+                wordDialogListener.close();
                 this.dismiss();
                 break;
             case R.id.add_word:
-
+                wordDialogListener.addWord();
                 break;
             case R.id.british_soundurl:
+                wordDialogListener.britishSound();
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word.getBritish_soundurl() != null){
                     try {
@@ -187,17 +209,28 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 }
                 break;
             case R.id.american_soundurl:
+                wordDialogListener.americanSound();
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_sentence:
-
+                wordDialogListener.addSentence();
                 break;
             case R.id.moresentence:
-
+                wordDialogListener.moreSentence();
                 break;
             default:
                 break;
         }
+    }
+
+    public interface WordDialogListener extends Serializable{
+
+        void close();//关闭
+        void addWord();//添加单词
+        void britishSound();//英式读音
+        void americanSound();//美式发音
+        void addSentence();//添加句子
+        void moreSentence();//查看更多句子
     }
 
 }

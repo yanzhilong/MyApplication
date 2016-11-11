@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.tractategroup.tractate;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -147,7 +148,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
                 result = tractateHelper.getTractateString();
 
                 if(result != null){
-                    Log.d(TAG, result);
+                    //Log.d(TAG, result);
                     tmptractatetv.setVisibility(View.GONE);
 
 
@@ -173,12 +174,20 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
         iterator.setText(textString);
         int start = iterator.first();
 
-        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Pattern p = Pattern.compile("([\u4e00-\u9fa5]|\\d+)");
 
         for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator
                 .next()) {
 
             String possibleWord = textString.substring(start, end);
+            int indextmp = 0;
+            Pattern ptmp = Pattern.compile("\\w+'");
+            if(ptmp.matcher(possibleWord).find()){
+                if((indextmp = possibleWord.indexOf("'")) != -1){
+                    possibleWord = possibleWord.substring(0,indextmp);
+                    end = start + indextmp;
+                }
+            }
             //是字符数字，排除中文
             if (Character.isLetterOrDigit(possibleWord.charAt(0)) && !p.matcher(String.valueOf(possibleWord.charAt(0))).find()) {
                 int[] ints = getSentenceIndex(sents,possibleWord,start,end);
@@ -200,7 +209,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
 
 
     private int[] getSentenceIndex(List<List<int[]>> sents,String word,int start,int end){
-        int[] ints = new int[2];
+        int[] ints = {Integer.MAX_VALUE,Integer.MAX_VALUE};
 
         //循环每一句，设置可点击
         for(int i = 0; i < sents.size(); i++){
@@ -215,8 +224,10 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
                 }
             }
         }
-        if(ints[0] == 0 && ints[1] == 0){
+        if(ints[0] == Integer.MAX_VALUE && ints[1] == Integer.MAX_VALUE){
             Log.d(TAG,"单词" + word + "未找到" + start + ":" + end);
+            ints[0] = 0;
+            ints[1] = 0;
         }
 
         return ints;
@@ -236,6 +247,38 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
                 break;
         }
     }
+
+    private WordDetailDialog.WordDialogListener wordDialogListener = new WordDetailDialog.WordDialogListener() {
+        @Override
+        public void close() {
+            cancelBackGround();
+        }
+
+        @Override
+        public void addWord() {
+
+        }
+
+        @Override
+        public void britishSound() {
+
+        }
+
+        @Override
+        public void americanSound() {
+
+        }
+
+        @Override
+        public void addSentence() {
+
+        }
+
+        @Override
+        public void moreSentence() {
+
+        }
+    };
 
     private class MyClickableSpan extends ClickableSpan{
 
@@ -266,6 +309,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
             bundle.putString(WordDetailDialog.WORDTAG,mWord);
             bundle.putString(WordDetailDialog.ENSENTENCE,englishSentence);
             bundle.putString(WordDetailDialog.CHSENTENCE,chineseSentence);
+            bundle.putSerializable(WordDetailDialog.DIALOGLISTENER,wordDialogListener);
             wordDetailDialog.setArguments(bundle);
             wordDetailDialog.show(TractateDetailFragment.this.getFragmentManager(),"dialog");
             //显示单词
@@ -304,7 +348,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
 
         @Override
         public void onClick(View widget) {
-
+            MediaScannerConnection mediaScanner;
         }
 
         @Override
@@ -313,6 +357,16 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
             ds.setColor(getResources().getColor(R.color.text_color_grey1));
         }
     }
+
+    private void cancelBackGround(){
+        if (spannable != null) {
+            Selection.removeSelection(spannable);
+            if(clickableSpan != null){
+                clickableSpan.cancelBackGroundColor();
+            }
+        }
+    }
+
 
 /**
  *
@@ -353,10 +407,8 @@ public class MovementMethod extends LinkMovementMethod {
                 spannable = buffer;
             }
         }
-
         return super.onTouchEvent(widget, buffer, event);
     }
-
 }
 
 

@@ -29,7 +29,6 @@ LADY: Could you show me another blue dress? |I want a dress like that one, |but 
 
 女士：您能再给我看一件蓝色的吗？|我想一件和那件一样的，|但必须是我的尺寸。
 
-
 ASSISTANT: I'm afraid I haven't got a larger dress. |This is the largest dress in the shop.
 
 店员：恐怕没有更大的了。|这是店里最大一件。

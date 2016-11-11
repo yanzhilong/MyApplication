@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateGroup;
-import com.englishlearn.myapplication.tractategroup.tractatestop.TractateTopFragment;
 
 public class TractatesActivity extends AppCompatActivity {
 
@@ -21,6 +21,7 @@ public class TractatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tractatess_act);
 
+        Log.d(TAG,"onCreate" + "savedInstanceState" + savedInstanceState);
         if (getIntent().hasExtra(TRACTATEGROUP)) {
             tractateGroup = (TractateGroup) getIntent().getSerializableExtra(TRACTATEGROUP);
         }

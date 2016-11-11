@@ -11,8 +11,8 @@
 
         <ImageButton
             android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/close"
             android:background="@null"
             android:layout_alignParentRight="true"/>
@@ -33,8 +33,8 @@
 
         <ImageButton
             android:id="@+id/add_word"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/worddetail_add"
             android:background="@null"
             android:layout_alignParentRight="true"
@@ -197,8 +197,8 @@
 
         <ImageButton
             android:id="@+id/add_sentence"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/worddetail_add"
             android:background="@null"
             android:layout_alignParentRight="true"

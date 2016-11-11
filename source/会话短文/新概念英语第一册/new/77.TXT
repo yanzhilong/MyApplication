@@ -1,14 +1,13 @@
 Lesson 77 Terrible toothache
 要命的牙痛
 新概念英语
-
 NURSE: Good morning. Mr. Croft.
 
 护士：早上好，克罗夫特先生。
 
 MR. CROFT: Good morning, nurse. |I was to see the dentist,please.
 
-克罗夫特先生：早上好，护士。|我想见牙科医生。
+克罗夫特先生：早上好，护士。 |我想见牙科医生。
 
 NURSE: Do you have an appointment?
 
@@ -34,7 +33,7 @@ MR. CROFT: I must see the dentist now,nurse.
 
 克罗夫特先生：我必须现在就见牙科医生，护士。
 
-NURSE: The dentist is very busy at the moment. Can you come at 2 p. m. ?
+NURSE: The dentist is very busy at the moment. |Can you come at 2 p. m. ?
 
 护士：牙科医生这会儿很忙。|您下午两点钟来行吗？
 
@@ -46,6 +45,6 @@ NURSE: I'm afraid that he can't,Mr. Croft. |Can't you wait till this afternoon?
 
 护士：恐怕不能，克罗夫特先生。|您就不能等到今天下午吗？
 
-MR. CROFT: I can wait, but my toothache can't!
+MR. CROFT: I can wait, |but my toothache can't!
 
 克罗夫特先生：我倒是可以等。|可是我的牙痛等不了啊！

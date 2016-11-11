@@ -23,7 +23,7 @@ JEAN: Is Tim in the garden, too?
 
 JACK: Yes, he is. |He's climbing the tree.
 
-杰克：是的，他也在花园里。他正在爬树。
+杰克：是的，他也在花园里。|他正在爬树。
 
 JEAN: I beg your pardon?|Who's climbing the tree?
 
@@ -39,7 +39,7 @@ JEAN: What about the dog?
 
 JACK: The dog's in the garden, too. |It's running across the grass.
 
-杰克：狗也在花园里。它正在草地上跑，
+杰克：狗也在花园里。 |它正在草地上跑，
 
 It's running after a cat.
 

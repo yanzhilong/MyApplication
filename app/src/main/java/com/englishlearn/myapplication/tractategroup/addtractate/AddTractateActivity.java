@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -56,8 +58,8 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     private List<TractateGroup> tractateGroups;
     private String[] tractates = null;
     private String[] tractategroups = null;
-    private int currenttypeposition = 0;//当前选择的类型
-    private int currentgroupposition = 0;//当前选择的主文章分组
+    private int currenttypeposition = Integer.MAX_VALUE;//当前选择的类型
+    private int currentgroupposition = Integer.MAX_VALUE;//当前选择的主文章分组
     private TractateGroup tractateGroup;//当前选择的分级
     private CompositeSubscription mSubscriptions;
 
@@ -127,7 +129,28 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     private void addTractate(final Tractate tractate) {
         error.setText("");
         tractate.setUserId(repository.getUserInfo().getObjectId());
+        if(currenttypeposition == Integer.MAX_VALUE){
+            Toast.makeText(this,"请选择分类",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(currentgroupposition == Integer.MAX_VALUE){
+            Toast.makeText(this,"请选择分组",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         tractate.setTractatetypeId(mList.get(currenttypeposition).getObjectId());
+
+        //设置排序
+        String title = tractate.getTitle();
+        String sortregex = "\\d+";//查找连续的数字
+        Pattern cntitlepattern = Pattern.compile(sortregex);
+        Matcher cntitlematcher = cntitlepattern.matcher(title);
+        int sort = Integer.MAX_VALUE;
+        if(cntitlematcher.find()){
+            sort = Integer.valueOf(cntitlematcher.group());
+        }
+        tractate.setSort(sort);
+
         Subscription sub = repository.addTractate(tractate).onErrorReturn(new Func1<Throwable, Tractate>() {
             @Override
             public Tractate call(Throwable throwable) {
@@ -259,6 +282,13 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addtractate_act);
 
+        Log.d(TAG,"onCreage" + "savedInstanceState" + savedInstanceState);
+
+        if(savedInstanceState != null){
+            currenttypeposition = savedInstanceState.getInt("currenttype",Integer.MAX_VALUE);
+            currentgroupposition = savedInstanceState.getInt("currentgroup",Integer.MAX_VALUE);
+        }
+
         MyApplication.instance.getAppComponent().inject(this);
 
         addTractateHelper = new AddTractateHelper(this);
@@ -298,6 +328,13 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
         }*/
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currenttype",currenttypeposition);
+        outState.putInt("currentgroup",currentgroupposition);
+        Log.d(TAG,"onSaveInstanceState");
+    }
 
     @Override
     protected void onResume() {

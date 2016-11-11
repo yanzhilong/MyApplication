@@ -10,6 +10,7 @@ public enum TractateEnum {
     SPLITENUMERROR("分割符|数量为奇数"),//分割符数量为单数
     ENGLISHTITLEERROR("英文标题包含中文"),//
     PUNCTUATIONNOSPAN("标点符号后面没有空格"),//
+    ENGLISHCONTENTCN("英文中包含中文"),//
     PARAGRAPHEERROR("段落数不一样");//
 
     private String message;

@@ -41,11 +41,11 @@ public class TractatesFragment extends Fragment {
 
     public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractatesFragment.class.getSimpleName();
-    private final int PAGESIZE = 100;
+    private final int PAGESIZE = 10;
     private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<Tractate> mList;
+    private ArrayList<Tractate> mList;
 
     private LinearLayoutManager mgrlistview;
     private CompositeSubscription mSubscriptions;
@@ -62,11 +62,17 @@ public class TractatesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG,"onCreate" + "savedInstanceState" + savedInstanceState);
         MyApplication.instance.getAppComponent().inject(this);
         if (getArguments() != null && getArguments().containsKey(TRACTATEGROUP)) {
             tractateGroup = (TractateGroup) getArguments().getSerializable(TRACTATEGROUP);
         }
-        mList = new ArrayList();
+        if(savedInstanceState != null){
+            mList = (ArrayList<Tractate>) savedInstanceState.getSerializable("list");
+            page = savedInstanceState.getInt("page");
+        }else{
+            mList = new ArrayList();
+        }
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
@@ -115,7 +121,6 @@ public class TractatesFragment extends Fragment {
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
-
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -131,14 +136,26 @@ public class TractatesFragment extends Fragment {
             }
         });
 
-        refershList();//刷新列表
-
         return root;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState");
+        outState.putSerializable("list",mList);
+        outState.putInt("page",page);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showList(mList);
     }
 
     @Override
@@ -156,7 +173,6 @@ public class TractatesFragment extends Fragment {
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPageByTractateGroupId();
-
     }
 
     //获取下一页

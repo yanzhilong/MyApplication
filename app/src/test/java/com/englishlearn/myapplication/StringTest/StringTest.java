@@ -66,5 +66,15 @@ public class StringTest {
     public void spanTest(){
         String result = " ";
         assertEquals(result.length(),1);
+
+        String englishSpan = "开始" + "\u0020\u0020";
+        String chineseSpan = "开始" + "\u3000\u3000";
+        System.out.println(englishSpan+"hello");
+        System.out.println("hellohello");
+        System.out.println(chineseSpan+"你好");
+        System.out.println("你好你好");
+
     }
+
+
 }

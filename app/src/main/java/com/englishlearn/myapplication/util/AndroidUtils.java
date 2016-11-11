@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.Layout;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
 
@@ -199,7 +198,7 @@ public class AndroidUtils {
         Layout layout = textView.getLayout();
         //总行数
         int line = textView.getLayout().getLineCount();
-        Log.d(TAG,"总行数：" + line);
+        //Log.d(TAG,"总行数：" + line);
         String result = "";
         String text = layout.getText().toString();
         for(int i = 0; i < line-1; i++){
@@ -207,13 +206,13 @@ public class AndroidUtils {
             int end = layout.getLineEnd(i);
             String sub = text.substring(start, end);
             list.add(sub);
-            Log.d(TAG,"has " + System.getProperty("line.separator") +sub.contains(System.getProperty("line.separator")));
-            Log.d(TAG,"SUB:"+sub);
+            //Log.d(TAG,"has " + System.getProperty("line.separator") +sub.contains(System.getProperty("line.separator")));
+            //Log.d(TAG,"SUB:"+sub);
             result += sub + System.getProperty("line.separator");
         }
 
-        Log.d(TAG,"result" + result);
-        System.out.print(result);
+        //Log.d(TAG,"result" + result);
+        //System.out.print(result);
         return list;
     }
 
