@@ -23,9 +23,10 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.service.MusicService;
+import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailFragment;
+import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import javax.inject.Inject;
 
@@ -65,15 +66,6 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     @Inject
     Repository repository;
 
-    private WordDialogListener wordDialogListener;
-
-    public WordDialogListener getWordDialogListener() {
-        return wordDialogListener;
-    }
-
-    public void setWordDialogListener(WordDialogListener wordDialogListener) {
-        this.wordDialogListener = wordDialogListener;
-    }
 
     private ServiceConnection musicConnection = new ServiceConnection(){
 
@@ -89,15 +81,29 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         }
     };
 
+    public static WordDetailDialog newInstance(String word,String englishSentence,String chineseSentence){
+
+        WordDetailDialog wordDetailDialog = new WordDetailDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(WORDTAG, word);
+        bundle.putString(ENSENTENCE, englishSentence);
+        bundle.putString(CHSENTENCE, chineseSentence);
+        wordDetailDialog.setArguments(bundle);
+
+        return wordDetailDialog;
+
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
+        getActivity();
         if(bundle != null){
             wordstring = (String) bundle.get(WORDTAG);
             ensentence = (String) bundle.get(ENSENTENCE);
             chsentence = (String) bundle.get(CHSENTENCE);
-            wordDialogListener = (WordDialogListener) bundle.getSerializable(DIALOGLISTENER);
         }
         MyApplication.instance.getAppComponent().inject(this);
         if (mSubscriptions == null) {
@@ -184,21 +190,18 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         Log.d(TAG,"onClick");
-        if(wordDialogListener == null){
-            return;
-        }
-
-        switch (v.getId()){
+                switch (v.getId()){
             case R.id.close:
                 Log.d(TAG,"onClose");
-                wordDialogListener.close();
+                getTargetFragment().onActivityResult(getTargetRequestCode(), TractateDetailFragment.CLOSE, getActivity().getIntent());
+
                 this.dismiss();
                 break;
             case R.id.add_word:
-                wordDialogListener.addWord();
+                Intent intent = new Intent(this.getContext(),WordCollectActivity.class);
+                startActivity(intent);
                 break;
             case R.id.british_soundurl:
-                wordDialogListener.britishSound();
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word.getBritish_soundurl() != null){
                     try {
@@ -210,28 +213,16 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 }
                 break;
             case R.id.american_soundurl:
-                wordDialogListener.americanSound();
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_sentence:
+
                 startActivity(new Intent(this.getContext(),SentenceCollectActivity.class));
                 break;
             case R.id.moresentence:
-                wordDialogListener.moreSentence();
                 break;
             default:
                 break;
         }
     }
-
-    public interface WordDialogListener extends Serializable{
-
-        void close();//关闭
-        void addWord();//添加单词
-        void britishSound();//英式读音
-        void americanSound();//美式发音
-        void addSentence();//添加句子
-        void moreSentence();//查看更多句子
-    }
-
 }

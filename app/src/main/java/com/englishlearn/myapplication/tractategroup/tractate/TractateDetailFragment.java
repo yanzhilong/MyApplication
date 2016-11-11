@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
-import com.englishlearn.myapplication.testmain.TestMainActivity;
 import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.util.AndroidUtils;
 
@@ -37,8 +35,16 @@ import java.util.regex.Pattern;
 
 public class TractateDetailFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
+    public static final int DIALOG_FRAGMENT = 1;
     public static final String TRACTATE = "tractate";
     public static final String PREVIEW = "preview";//是否是预览
+
+    public static final int CLOSE = 2;
+    public static final int ADDWORD = 4;
+    public static final int BRITHSOUND = 5;
+    public static final int AMERICANSOUND = 6;
+    public static final int ADDSENTENCE = 7;
+    public static final int MORESENTENCE = 8;
 
     private Spannable spannable = null;
     private static final String TAG = TractateDetailFragment.class.getSimpleName();
@@ -167,6 +173,38 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
         });
     }
 
+    void showDialog(String word,String englishSentence,String chineseSentence) {
+
+
+        android.support.v4.app.FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        WordDetailDialog wordDetailDialog = WordDetailDialog.newInstance(word,englishSentence,chineseSentence);
+        wordDetailDialog.setTargetFragment(this,DIALOG_FRAGMENT);
+        wordDetailDialog.show(getFragmentManager().beginTransaction(), "dialog");
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case DIALOG_FRAGMENT:
+
+                switch (resultCode){
+
+                    case CLOSE:
+                        cancelBackGround();
+                        break;
+                }
+
+                break;
+        }
+    }
+
     private void setClickableSpan(List<List<int[]>> sents,TextView textview,String textString){
 
         textview.setMovementMethod(new MovementMethod());
@@ -251,50 +289,6 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
         }
     }
 
-    private void addWords(){
-        Intent intent = new Intent(this.getContext(),TestMainActivity.class);
-        startActivity(intent);
-    }
-
-    private WordDetailDialog.WordDialogListener wordDialogListener = new WordDetailDialog.WordDialogListener() {
-        @Override
-        public void close() {
-            cancelBackGround();
-        }
-
-        @Override
-        public void addWord() {
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    addWords();
-                }
-            },0);
-
-        }
-
-        @Override
-        public void britishSound() {
-
-        }
-
-        @Override
-        public void americanSound() {
-
-        }
-
-        @Override
-        public void addSentence() {
-
-
-        }
-
-        @Override
-        public void moreSentence() {
-
-        }
-    };
 
     private class MyClickableSpan extends ClickableSpan{
 
@@ -321,13 +315,15 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
             }
             addBackgroundColor(widget);
 
-            Bundle bundle = new Bundle();
+            showDialog(mWord,englishSentence,chineseSentence);
+            /*Bundle bundle = new Bundle();
             bundle.putString(WordDetailDialog.WORDTAG,mWord);
             bundle.putString(WordDetailDialog.ENSENTENCE,englishSentence);
             bundle.putString(WordDetailDialog.CHSENTENCE,chineseSentence);
-            bundle.putSerializable(WordDetailDialog.DIALOGLISTENER,wordDialogListener);
+            //bundle.putSerializable(WordDetailDialog.DIALOGLISTENER,wordDialogListener);
             wordDetailDialog.setArguments(bundle);
-            wordDetailDialog.show(TractateDetailFragment.this.getFragmentManager(),"dialog");
+            wordDetailDialog.setWordDialogListener(wordDialogListener);
+            wordDetailDialog.show(TractateDetailFragment.this.getFragmentManager(),"dialog");*/
             //显示单词
             /*Toast.makeText(widget.getContext(), mWord, Toast.LENGTH_SHORT)
                     .show();*/
