@@ -47,7 +47,7 @@ public class CreateWordGroupFragment extends android.support.v4.app.DialogFragme
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(createWordGroupListener != null){
-                                    createWordGroupListener.onClick(editName.getText().toString());
+                                    createWordGroupListener.onClick(editName.getText().toString().trim());
                                 }
                             }
                         }

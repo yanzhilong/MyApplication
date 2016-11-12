@@ -406,8 +406,8 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page, int pageSize) {
-        return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,page,pageSize);
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, String userId, int page, int pageSize) {
+        return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,userId,page,pageSize);
     }
 
     @Override
@@ -508,6 +508,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<SentenceGroup> getSentenceGroupRxById(String sentenceGroupId) {
         return mBmobDataSource.getSentenceGroupRxById(sentenceGroupId);
+    }
+
+    @Override
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId);
     }
 
     @Override

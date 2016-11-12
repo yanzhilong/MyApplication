@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
-import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
@@ -40,11 +38,9 @@ import rx.subscriptions.CompositeSubscription;
 public class TractateTopFragment extends Fragment {
 
     public static final String TRACTATETYPE = "TractateType";
-    public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractateTopFragment.class.getSimpleName();
     private final int PAGESIZE = 100;
     private TractateType tractateType;
-    private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
     private int page = 0;
     private List<Tractate> mList;
@@ -66,9 +62,6 @@ public class TractateTopFragment extends Fragment {
         if (getArguments() != null && getArguments().containsKey(TRACTATETYPE)) {
             tractateType = (TractateType) getArguments().getSerializable(TRACTATETYPE);
         }
-        if (getArguments() != null && getArguments().containsKey(TRACTATEGROUP)) {
-            tractateGroup = (TractateGroup) getArguments().getSerializable(TRACTATEGROUP);
-        }
         mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -87,12 +80,7 @@ public class TractateTopFragment extends Fragment {
         mgrlistview = new LinearLayoutManager(this.getContext());
         mgrlistview.setOrientation(LinearLayoutManager.VERTICAL);
 
-        //GridLayout 3列
-        GridLayoutManager mgrgridview = new GridLayoutManager(this.getContext(), 3);
-
         recyclerView.setLayoutManager(mgrlistview);
-
-        //recyclerView.setLayoutManager(mgrgridview);
         myAdapter = new MyAdapter();
         myAdapter.setOnItemClickListener(new OnItemClickListener() {
 
@@ -112,11 +100,7 @@ public class TractateTopFragment extends Fragment {
         myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                if(tractateType != null){
-                    getNextPageByTractateTypeId();
-                }else{
-                    getNextPageByTractateGroupId();
-                }
+                getNextPageByTractateTypeId();
             }
         });
         //设置适配器
@@ -162,49 +146,13 @@ public class TractateTopFragment extends Fragment {
         mList.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
-        if(tractateType != null){
-            getNextPageByTractateTypeId();
-        }else{
-            getNextPageByTractateGroupId();
-        }
-
+        getNextPageByTractateTypeId();
     }
 
     //获取下一页
     public void getNextPageByTractateTypeId() {
 
-        Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
-            @Override
-            public void onCompleted() {
-                loadingComplete();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                loadingFail(e);
-            }
-
-            @Override
-            public void onNext(List list) {
-                Log.d(TAG,"onNext size:" + list.size());
-
-                if(list == null || list.size() == 0){
-                    myAdapter.loadingGone();
-                    myAdapter.notifyDataSetChanged();
-                }else{
-                    page++;//页数增加
-                    mList.addAll(list);
-                    showList(mList);
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    //获取下一页
-    public void getNextPageByTractateGroupId() {
-
-        Subscription subscription = repository.getTractateRxByTractateGroupId(tractateGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
+        Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),repository.getUserInfo().getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

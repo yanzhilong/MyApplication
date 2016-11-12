@@ -41,7 +41,7 @@ public class TractatesFragment extends Fragment {
 
     public static final String TRACTATEGROUP = "TractateGroup";
     private static final String TAG = TractatesFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 100;
     private TractateGroup tractateGroup;
     private MyAdapter myAdapter;
     private int page = 0;

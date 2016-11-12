@@ -22,6 +22,7 @@ import com.englishlearn.myapplication.sentencegroups.MyCollectSentenceGroupsFrag
 import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceGroupsFragment;
 import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFragment;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
 import com.englishlearn.myapplication.tractategroup.MyCollectTractateGroupsFragment;
 import com.englishlearn.myapplication.tractategroup.MyCreateTractateGroupFragment;
 import com.englishlearn.myapplication.tractategroup.TractateTypesFragment;
@@ -35,6 +36,7 @@ import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.MyCreateWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.WordGroupsTopFragment;
 import com.englishlearn.myapplication.wordgroups.words.WordsFragment;
+import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
 
 import dagger.Component;
 
@@ -113,6 +115,10 @@ public interface AppComponent {
     void inject(TractatesFragment tractatesFragment);
 
     void inject(AddTractateActivity addTractateActivity);
+
+    void inject(WordCollectActivity wordCollectActivity);
+
+    void inject(SentenceCollectActivity sentenceCollectActivity);
 
 
 

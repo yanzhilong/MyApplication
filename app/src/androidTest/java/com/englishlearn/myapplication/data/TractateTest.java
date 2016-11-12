@@ -144,6 +144,8 @@ public class TractateTest {
 
             Tractate addtractate = tractates.get(i);
             addtractate.setUserId("943a8a40ed");
+            addtractate.setTractatetypeId("880d538e1d");
+            addtractate.setOpen("true");
             TestSubscriber<Tractate> tractateTestSubscriber = new TestSubscriber<>();
             mBmobRemoteData.addTractate(addtractate).toBlocking().subscribe(tractateTestSubscriber);
             List<Tractate> list = tractateTestSubscriber.getOnNextEvents();
@@ -173,5 +175,19 @@ public class TractateTest {
         }
         Log.d(TAG,"addtractate:" + stringBufferupdateerror.toString());
         Log.d(TAG,"addtractate:" + stringBuffergrouperror.toString());
+    }
+
+    @Test
+    public void getTractateRxByTractateTypeIdTest(){
+        TestSubscriber<List<Tractate>> tractateCollectTestSubscriber = new TestSubscriber<>();
+        mBmobRemoteData.getTractateRxByTractateTypeId("880d538e1d","468c3f629d",0,100).toBlocking().subscribe(tractateCollectTestSubscriber);
+        List<List<Tractate>> tractateCollects = tractateCollectTestSubscriber.getOnNextEvents();
+        if(tractateCollects != null || tractateCollects.size() >= 0){
+            List<Tractate> tractates = tractateCollects.get(0);
+            Log.d(TAG,"getTractateRxByTractateTypeIdTest:" + tractates.toString());
+        }else{
+            Log.d(TAG,"getTractateRxByTractateTypeIdTest:null");
+        }
+
     }
 }

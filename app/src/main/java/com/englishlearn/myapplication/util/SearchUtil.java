@@ -533,6 +533,62 @@ public class SearchUtil {
     }
 
     /**
+     * 搜索指定分类下面的文章，按收藏人数排序
+     * @param tractateTypeId
+     * @return
+     */
+    public String getTractateRxByTractateTypeId(String tractateTypeId,String userId){
+
+        //排除查询用户收藏的文章分组Id
+        Gson gson = new Gson();
+        Map map5 = new HashMap();
+        map5.put("userId",userId);
+        Map map6 = new HashMap();
+        map6.put("className","TractateGroupCollect");
+        map6.put("where",map5);
+        Map map7 = new HashMap();
+        map7.put("query",map6);
+        map7.put("key","tractategroupId");
+        Map map8 = new HashMap();
+        map8.put("select",map7);
+        Map map9 = new HashMap();
+        map9.put("tractategroupId",map8);
+        Map map10 = new HashMap();
+        map10.put("className","TractateCollect");
+        map10.put("where",map9);
+        Map map11 = new HashMap();
+        map11.put("query",map10);
+        map11.put("key","tractateId");
+        Map map12 = new HashMap();
+        map12.put("$dontSelect",map11);
+
+        Map map13 = new HashMap();
+        map13.put("tractatetypeId",tractateTypeId);
+        Map map14 = new HashMap();
+        map14.put("className","Tractate");
+        map14.put("where",map13);
+        Map map15 = new HashMap();
+        map15.put("query",map14);
+        map15.put("key","objectId");
+        Map map16 = new HashMap();
+        map16.put("select",map15);
+        Map map17 = new HashMap();
+        map17.put("objectId",map16);
+        Map map18 = new HashMap();
+        map18.put("open","true");
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map17);
+        list.add(map18);
+        Map<String,List<Map<String,String>>> map19 = new HashMap();
+        map19.put("$and",list);
+
+        String jsonStr = gson.toJson(map11);
+        return jsonStr;
+
+    }
+
+    /**
      * 根据名称和值返回搜索的匹配字条串
      * @param regexName
      * @param regexValue

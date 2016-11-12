@@ -814,6 +814,14 @@ public interface BmobService{
     })
     Observable<Response<SentenceGroup>> getSentenceGroupRxById(@Path("id") String id);
 
+    //根据userId获取句子收藏分组，分页展示
+    @GET("/1/classes/SentenceGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<SentenceGroupResult>> getSentenceGroupRxByUserId(@Query("where")String userIdjson);
+
 
     //根据userId获取句子收藏分组，分页展示
     @GET("/1/classes/SentenceGroup")

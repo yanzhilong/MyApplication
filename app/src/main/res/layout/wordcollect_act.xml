@@ -21,11 +21,34 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentFrame"
+    <EditText
+        android:id="@+id/word"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" />
 
-    </FrameLayout>
+    <TextView
+        android:id="@+id/wordgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/wordgroupselect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择单词分组"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/createwordgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="新建单词分组"
+        android:onClick="onClick"/>
+    <Button
+        android:id="@+id/affirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加"
+        android:onClick="onClick"/>
 
 </LinearLayout>

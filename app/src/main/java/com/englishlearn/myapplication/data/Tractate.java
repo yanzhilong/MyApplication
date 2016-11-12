@@ -14,6 +14,7 @@ public class Tractate implements Serializable,Cloneable{
     private String content; //内容
     private String translation; //译文
     private String tractatetypeId; //分类Id
+    private String open; //是否公开
     private String remark; //备注
     private int sort;//排序字段
 
@@ -81,6 +82,14 @@ public class Tractate implements Serializable,Cloneable{
         this.remark = remark;
     }
 
+    public String getOpen() {
+        return open;
+    }
+
+    public void setOpen(String open) {
+        this.open = open;
+    }
+
     @Override
     public Object clone(){
 
@@ -102,6 +111,7 @@ public class Tractate implements Serializable,Cloneable{
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
                 ", tractatetypeId='" + tractatetypeId + '\'' +
+                ", open='" + open + '\'' +
                 ", remark='" + remark + '\'' +
                 ", sort=" + sort +
                 '}';

@@ -290,7 +290,7 @@
     <string name="title_tractategroups">TractateGroups</string>
 
     <string-array name="tractategroupsactivity1_tablayout">
-        <item>热门推荐</item>
+        <item>文章中心</item>
         <item>我的文章</item>
         <item>我的收藏</item>
 

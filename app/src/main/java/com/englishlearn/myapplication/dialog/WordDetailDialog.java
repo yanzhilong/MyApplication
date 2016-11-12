@@ -194,12 +194,16 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             case R.id.close:
                 Log.d(TAG,"onClose");
                 getTargetFragment().onActivityResult(getTargetRequestCode(), TractateDetailFragment.CLOSE, getActivity().getIntent());
-
                 this.dismiss();
                 break;
             case R.id.add_word:
-                Intent intent = new Intent(this.getContext(),WordCollectActivity.class);
-                startActivity(intent);
+                if(word != null){
+                    Intent intent = new Intent(this.getContext(),WordCollectActivity.class);
+                    intent.putExtra(WordCollectActivity.WORD,word);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(WordDetailDialog.this.getContext(),"未获取到单词信息",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.british_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
@@ -216,8 +220,10 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_sentence:
-
-                startActivity(new Intent(this.getContext(),SentenceCollectActivity.class));
+                Intent intentsentence = new Intent(this.getContext(),SentenceCollectActivity.class);
+                intentsentence.putExtra(ENSENTENCE,ensentence);
+                intentsentence.putExtra(CHSENTENCE,chsentence);
+                startActivity(intentsentence);
                 break;
             case R.id.moresentence:
                 break;
