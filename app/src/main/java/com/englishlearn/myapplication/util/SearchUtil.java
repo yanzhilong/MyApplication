@@ -339,6 +339,7 @@ public class SearchUtil {
         map7.put("key","sentencegroupId");
         Map map8 = new HashMap();
         map8.put("$dontSelect",map7);
+
         Map map9 = new HashMap();
         map9.put("objectId",map8);
 
@@ -533,13 +534,15 @@ public class SearchUtil {
     }
 
     /**
-     * 搜索指定分类下面的文章，按收藏人数排序
+     * 搜索指定分类下面的文章
      * @param tractateTypeId
      * @return
      */
-    public String getTractateRxByTractateTypeId(String tractateTypeId,String userId){
+    public String getTractateRxByTractateTypeId(String userId, String tractateTypeId){
 
         //排除查询用户收藏的文章分组Id
+
+
         Gson gson = new Gson();
         Map map5 = new HashMap();
         map5.put("userId",userId);
@@ -550,7 +553,7 @@ public class SearchUtil {
         map7.put("query",map6);
         map7.put("key","tractategroupId");
         Map map8 = new HashMap();
-        map8.put("select",map7);
+        map8.put("$select",map7);
         Map map9 = new HashMap();
         map9.put("tractategroupId",map8);
         Map map10 = new HashMap();
@@ -562,29 +565,52 @@ public class SearchUtil {
         Map map12 = new HashMap();
         map12.put("$dontSelect",map11);
 
+
         Map map13 = new HashMap();
-        map13.put("tractatetypeId",tractateTypeId);
-        Map map14 = new HashMap();
-        map14.put("className","Tractate");
-        map14.put("where",map13);
-        Map map15 = new HashMap();
-        map15.put("query",map14);
-        map15.put("key","objectId");
-        Map map16 = new HashMap();
-        map16.put("select",map15);
+        map13.put("objectId",map12);
         Map map17 = new HashMap();
-        map17.put("objectId",map16);
+        map17.put("tractatetypeId",tractateTypeId);
         Map map18 = new HashMap();
         map18.put("open","true");
 
         List<Map<String,String>> list = new ArrayList<>();
+        list.add(map13);
         list.add(map17);
         list.add(map18);
         Map<String,List<Map<String,String>>> map19 = new HashMap();
         map19.put("$and",list);
 
-        String jsonStr = gson.toJson(map11);
+        String jsonStr = gson.toJson(map19);
         return jsonStr;
+
+
+        /*Map map50 = new HashMap();
+        map50.put("open","false");
+        Map map60 = new HashMap();
+        map60.put("className","TractateGroup");
+        map60.put("where",map50);
+        Map map70 = new HashMap();
+        map70.put("query",map60);
+        map70.put("key","objectId");
+        Map map80 = new HashMap();
+        map80.put("$select",map70);
+        Map map90 = new HashMap();
+        map90.put("tractategroupId",map80);
+        Map map100 = new HashMap();
+        map100.put("className","TractateCollect");
+        map100.put("where",map90);
+        Map map110 = new HashMap();
+        map110.put("query",map100);
+        map110.put("key","tractateId");
+        Map map120 = new HashMap();
+        map120.put("$select",map110);
+
+        Map map14 = new HashMap();
+        map14.put("objectId",map120);*/
+
+
+       /* Map map13 = new HashMap();
+        map13.put("objectId",map12);*/
 
     }
 

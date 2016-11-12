@@ -482,14 +482,14 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据分类id获取文章列表分页展示
+     * 根据分类id获取文章列表分页展示,已经收藏的不展示，分级是开放的不展示
      * 按收藏人数排序
      * @param tractateTypeId
      * @param page
      * @param pageSize
      * @return
      */
-    Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, String userId, int page,int pageSize);
+    Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page,int pageSize);
 
 
 

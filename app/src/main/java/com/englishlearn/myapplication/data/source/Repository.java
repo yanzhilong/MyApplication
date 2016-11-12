@@ -406,7 +406,7 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, String userId, int page, int pageSize) {
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page, int pageSize) {
         return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,userId,page,pageSize);
     }
 

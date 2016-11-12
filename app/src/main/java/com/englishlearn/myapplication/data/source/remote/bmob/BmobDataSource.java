@@ -1975,14 +1975,14 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, String userId, int page, int pageSize) {
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page, int pageSize) {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");
         }
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getTractateRxByTractateTypeId(tractateTypeId,userId);
+        String regex = searchUtil.getTractateRxByTractateTypeId(userId,tractateTypeId);
 
         return bmobService.getTractatesRx(regex,limit,skip)
                 .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {

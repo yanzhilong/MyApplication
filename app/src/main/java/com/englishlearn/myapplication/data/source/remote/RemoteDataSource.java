@@ -339,7 +339,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, String userId, int page, int pageSize) {
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page, int pageSize) {
         return null;
     }
 
