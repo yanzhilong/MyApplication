@@ -22,7 +22,7 @@ import com.englishlearn.myapplication.searchsentences.SearchSentencesActivity;
 import com.englishlearn.myapplication.sentence.SentencessActivity;
 import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
 import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
-import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
 import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
@@ -186,7 +186,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 this.startActivity(wordcollectintent);
                 break;
             case R.id.sentencecollect:
-                Intent sentencecollectintent = new Intent(this.getContext(),SentenceCollectActivity.class);
+                Intent sentencecollectintent = new Intent(this.getContext(),CreateSentenceActivity.class);
                 this.startActivity(sentencecollectintent);
                 break;
             case R.id.tractatecollect:

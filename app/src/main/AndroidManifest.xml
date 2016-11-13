@@ -168,7 +168,7 @@
             android:name=".wordgroups.words.wordcollect.WordCollectActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".sentencegroups.sentences.sentencecollect.SentenceCollectActivity"
+            android:name=".sentencegroups.sentences.sentencecollect.CreateSentenceActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

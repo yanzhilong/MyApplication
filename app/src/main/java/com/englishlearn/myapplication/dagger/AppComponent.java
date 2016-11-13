@@ -22,7 +22,7 @@ import com.englishlearn.myapplication.sentencegroups.MyCollectSentenceGroupsFrag
 import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceGroupsFragment;
 import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFragment;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
-import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
 import com.englishlearn.myapplication.tractategroup.MyCollectTractateGroupsFragment;
 import com.englishlearn.myapplication.tractategroup.MyCreateTractateGroupFragment;
 import com.englishlearn.myapplication.tractategroup.TractateTypesFragment;
@@ -118,7 +118,7 @@ public interface AppComponent {
 
     void inject(WordCollectActivity wordCollectActivity);
 
-    void inject(SentenceCollectActivity sentenceCollectActivity);
+    void inject(CreateSentenceActivity sentenceCollectActivity);
 
 
 

@@ -21,7 +21,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity;
+import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
 import com.englishlearn.myapplication.service.MusicService;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailFragment;
 import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
@@ -220,10 +220,10 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.add_sentence:
-                Intent intentsentence = new Intent(this.getContext(),SentenceCollectActivity.class);
-                intentsentence.putExtra(SentenceCollectActivity.ENSENTENCE,ensentence);
-                intentsentence.putExtra(SentenceCollectActivity.CHSENTENCE,chsentence);
-                intentsentence.putExtra(SentenceCollectActivity.CREATESENTENCE,true);
+                Intent intentsentence = new Intent(this.getContext(),CreateSentenceActivity.class);
+                intentsentence.putExtra(CreateSentenceActivity.ENSENTENCE,ensentence);
+                intentsentence.putExtra(CreateSentenceActivity.CHSENTENCE,chsentence);
+                intentsentence.putExtra(CreateSentenceActivity.CREATESENTENCE,true);
                 startActivity(intentsentence);
                 break;
             case R.id.moresentence:

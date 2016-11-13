@@ -32,13 +32,13 @@ import rx.Subscription;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
-public class SentenceCollectActivity extends AppCompatActivity implements View.OnClickListener,Serializable,ItemSelectFragment.onItemClickListener {
+public class CreateSentenceActivity extends AppCompatActivity implements View.OnClickListener,Serializable,ItemSelectFragment.onItemClickListener {
 
     public static final String ENSENTENCE = "ensentence";
     public static final String CHSENTENCE = "chsentence";
     public static final String SENTENCE = "sentence";
     public static final String CREATESENTENCE = "createsentence";//创建句子
-    private static final String TAG = SentenceCollectActivity.class.getSimpleName();
+    private static final String TAG = CreateSentenceActivity.class.getSimpleName();
     private String ensentence;
     private String chsentence;
 
@@ -60,7 +60,7 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentencecollect_act);
+        setContentView(R.layout.createsentence_act);
 
         sentenceGroups = new ArrayList<>();
 
@@ -160,12 +160,12 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(SentenceCollectActivity.this,SentenceCollectActivity.this.getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateSentenceActivity.this,CreateSentenceActivity.this.getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNext(SentenceCollect sentenceCollect) {
-                Toast.makeText(SentenceCollectActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateSentenceActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
             }
         });
         mSubscriptions.add(subscription);
@@ -235,7 +235,7 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
         Subscription subscription = repository.addSentence(sentence).onErrorReturn(new Func1<Throwable, Sentence>() {
                     @Override
                     public Sentence call(Throwable throwable) {
-                        Toast.makeText(SentenceCollectActivity.this,"添加句子失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateSentenceActivity.this,"添加句子失败",Toast.LENGTH_SHORT).show();
                         return null;
                     }
                 }).flatMap(new Func1<Sentence, Observable<SentenceCollect>>() {
@@ -256,12 +256,12 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(SentenceCollectActivity.this,SentenceCollectActivity.this.getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateSentenceActivity.this,CreateSentenceActivity.this.getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNext(SentenceCollect sentenceCollect) {
-                Toast.makeText(SentenceCollectActivity.this,"创建并收藏成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateSentenceActivity.this,"创建并收藏成功",Toast.LENGTH_SHORT).show();
             }
         });
         mSubscriptions.add(subscription);
@@ -305,7 +305,7 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
                     if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
                         createWGFail(getString(R.string.wordgroups_nameunique));
                 }else{
-                    Toast.makeText(SentenceCollectActivity.this,R.string.networkerror,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateSentenceActivity.this,R.string.networkerror,Toast.LENGTH_SHORT).show();
                 }
 
             }

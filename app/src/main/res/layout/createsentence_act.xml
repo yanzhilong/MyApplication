@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.SentenceCollectActivity">
+    tools:context="com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -38,14 +38,14 @@
 
     <Button
         android:id="@+id/sentencegroupselect"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="选择句子分组"
         android:onClick="onClick"/>
 
     <Button
         android:id="@+id/createsentencegroup"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="新建句子分组"
         android:onClick="onClick"/>
@@ -54,11 +54,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="添加"
+        android:visibility="gone"
         android:onClick="onClick"/>
 
     <Button
         android:id="@+id/create"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="创建"
         android:onClick="onClick"/>
