@@ -9,7 +9,7 @@ public class SentenceGroup implements Serializable,Cloneable {
 
     private String objectId;;
     private String open; //是否公开
-    private String create;//是否是保存自己创建的文章
+    private boolean create;//是:保存自己创建的句子,否：保存收藏的句子
     private String name; //分组名称
     private String userId; //用户Id
 
@@ -46,11 +46,11 @@ public class SentenceGroup implements Serializable,Cloneable {
         this.userId = userId;
     }
 
-    public String getCreate() {
+    public boolean isCreate() {
         return create;
     }
 
-    public void setCreate(String create) {
+    public void setCreate(boolean create) {
         this.create = create;
     }
 
@@ -71,7 +71,7 @@ public class SentenceGroup implements Serializable,Cloneable {
         return "SentenceGroup{" +
                 "objectId='" + objectId + '\'' +
                 ", open='" + open + '\'' +
-                ", create='" + create + '\'' +
+                ", create=" + create +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

@@ -406,8 +406,8 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page, int pageSize) {
-        return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,userId,page,pageSize);
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page, int pageSize) {
+        return mBmobDataSource.getTractateRxByTractateTypeId(tractateTypeId,page,pageSize);
     }
 
     @Override
@@ -511,13 +511,13 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
-        return mBmobDataSource.getSentenceGroupRxByUserId(userId);
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId,create);
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize) {
-        return mBmobDataSource.getSentenceGroupRxByUserId(userId,page,pageSize);
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create, int page, int pageSize) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId,create,page,pageSize);
     }
 
     @Override

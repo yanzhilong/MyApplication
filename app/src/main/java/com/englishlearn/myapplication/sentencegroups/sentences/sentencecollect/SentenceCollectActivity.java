@@ -119,19 +119,19 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
-        Subscription subscription = repository.getSentenceGroupRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<SentenceGroup>>() {
+        Subscription subscription = repository.getSentenceGroupRxByUserId(repository.getUserInfo().getObjectId(),isCreateSentence).subscribe(new Subscriber<List<SentenceGroup>>() {
             @Override
             public void onCompleted() {
             }
 
             @Override
             public void onError(Throwable e) {
-
+                Log.d(TAG,e.toString());
             }
 
             @Override
             public void onNext(List<SentenceGroup> list) {
-                if(list != null && list.size() > 0){
+                if(list != null){
                     Log.d(TAG,"onNext size:" + list.size());
                     sentenceGroups.clear();
                     sentenceGroups.addAll(list);
@@ -175,7 +175,7 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.sentencegroupselect:
-                if(sentenceGroups != null && sentencegroupss.length > 0){
+                if(sentencegroupss != null && sentencegroupss.length > 0){
                     ItemSelectFragment tractateTypeFragment = new ItemSelectFragment();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(ItemSelectFragment.ITEMCLICKLISTENER,this);
@@ -275,7 +275,7 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
         createWordGroupFragment.setCreateWordGroupListener(new CreateWordGroupFragment.CreateWordGroupListener() {
             @Override
             public void onClick(String name) {
-                createWordGroup(name);
+                createWordGroup(name,isCreateSentence);
             }
         });
         createWordGroupFragment.show(getSupportFragmentManager(),"create");
@@ -285,12 +285,13 @@ public class SentenceCollectActivity extends AppCompatActivity implements View.O
     /**
      * 创建词单
      */
-    private void createWordGroup(String name){
+    private void createWordGroup(String name,boolean create){
 
         this.sentencegroupname = name;
         SentenceGroup createwg = new SentenceGroup();
         createwg.setUserId(repository.getUserInfo().getObjectId());
         createwg.setName(name);
+        createwg.setCreate(create);
         createwg.setOpen("false");
         Subscription subscription = repository.addSentenceGroup(createwg).subscribe(new Subscriber<SentenceGroup>() {
             @Override

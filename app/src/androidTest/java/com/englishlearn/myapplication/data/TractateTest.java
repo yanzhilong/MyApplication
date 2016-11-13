@@ -180,7 +180,7 @@ public class TractateTest {
     @Test
     public void getTractateRxByTractateTypeIdTest(){
         TestSubscriber<List<Tractate>> tractateCollectTestSubscriber = new TestSubscriber<>();
-        mBmobRemoteData.getTractateRxByTractateTypeId("943a8a40ed","880d538e1d",0,100).toBlocking().subscribe(tractateCollectTestSubscriber);
+        mBmobRemoteData.getTractateRxByTractateTypeId("880d538e1d",0,100).toBlocking().subscribe(tractateCollectTestSubscriber);
         List<List<Tractate>> tractateCollects = tractateCollectTestSubscriber.getOnNextEvents();
         if(tractateCollects != null || tractateCollects.size() >= 0){
             List<Tractate> tractates = tractateCollects.get(0);

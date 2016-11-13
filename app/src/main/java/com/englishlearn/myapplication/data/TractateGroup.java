@@ -9,7 +9,7 @@ public class TractateGroup implements Serializable,Cloneable{
 
     private String objectId;
     private String open; //是否公开
-    private String create;//是否是保存自己创建的文章
+    private String create;//是:保存自己创建的文章,否：保存收藏的文章
     private String name; //分组名称
     private String userId; //用户Id
 

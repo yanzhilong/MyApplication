@@ -221,8 +221,9 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 break;
             case R.id.add_sentence:
                 Intent intentsentence = new Intent(this.getContext(),SentenceCollectActivity.class);
-                intentsentence.putExtra(ENSENTENCE,ensentence);
-                intentsentence.putExtra(CHSENTENCE,chsentence);
+                intentsentence.putExtra(SentenceCollectActivity.ENSENTENCE,ensentence);
+                intentsentence.putExtra(SentenceCollectActivity.CHSENTENCE,chsentence);
+                intentsentence.putExtra(SentenceCollectActivity.CREATESENTENCE,true);
                 startActivity(intentsentence);
                 break;
             case R.id.moresentence:

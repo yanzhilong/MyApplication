@@ -489,7 +489,7 @@ public interface RemoteData extends DataSource{
      * @param pageSize
      * @return
      */
-    Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page,int pageSize);
+    Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page,int pageSize);
 
 
 
@@ -670,7 +670,7 @@ public interface RemoteData extends DataSource{
      * @param userId
      * @return
      */
-    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId);
+    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create);
 
     /**
      * 根据userId获取句子收藏分组分页展示
@@ -679,7 +679,7 @@ public interface RemoteData extends DataSource{
      * @param pageSize
      * @return
      */
-    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize);
+    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create, int page, int pageSize);
 
 
 

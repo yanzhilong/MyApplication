@@ -152,7 +152,7 @@ public class TractateTopFragment extends Fragment {
     //获取下一页
     public void getNextPageByTractateTypeId() {
 
-        Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),repository.getUserInfo().getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
+        Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

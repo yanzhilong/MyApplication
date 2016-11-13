@@ -538,13 +538,13 @@ public class SearchUtil {
      * @param tractateTypeId
      * @return
      */
-    public String getTractateRxByTractateTypeId(String userId, String tractateTypeId){
+    public String getTractateRxByTractateTypeId(String tractateTypeId){
 
         //排除查询用户收藏的文章分组Id
 
 
         Gson gson = new Gson();
-        Map map5 = new HashMap();
+        /*Map map5 = new HashMap();
         map5.put("userId",userId);
         Map map6 = new HashMap();
         map6.put("className","TractateGroupCollect");
@@ -567,14 +567,14 @@ public class SearchUtil {
 
 
         Map map13 = new HashMap();
-        map13.put("objectId",map12);
+        map13.put("objectId",map12);*/
         Map map17 = new HashMap();
         map17.put("tractatetypeId",tractateTypeId);
         Map map18 = new HashMap();
         map18.put("open","true");
 
         List<Map<String,String>> list = new ArrayList<>();
-        list.add(map13);
+        //list.add(map13);
         list.add(map17);
         list.add(map18);
         Map<String,List<Map<String,String>>> map19 = new HashMap();
@@ -591,13 +591,13 @@ public class SearchUtil {
      * @param tractateTypeId
      * @return
      */
-    public String getTractateRxByTractateTypeIdAndNotCollect(String userId, String tractateTypeId){
+    public String getTractateRxByTractateTypeIdAndTractateGroupNotOpen(String userId, String tractateTypeId){
 
-        //排除查询用户收藏的文章分组Id
+        //排除查询文章分级已经未开放的文章Id
 
 
         Gson gson = new Gson();
-        Map map5 = new HashMap();
+        /*Map map5 = new HashMap();
         map5.put("userId",userId);
         Map map6 = new HashMap();
         map6.put("className","TractateGroupCollect");
@@ -616,29 +616,10 @@ public class SearchUtil {
         map11.put("query",map10);
         map11.put("key","tractateId");
         Map map12 = new HashMap();
-        map12.put("$dontSelect",map11);
+        map12.put("$dontSelect",map11);*/
 
-
-        Map map13 = new HashMap();
-        map13.put("objectId",map12);
-        Map map17 = new HashMap();
-        map17.put("tractatetypeId",tractateTypeId);
-        Map map18 = new HashMap();
-        map18.put("open","true");
-
-        List<Map<String,String>> list = new ArrayList<>();
-        list.add(map13);
-        list.add(map17);
-        list.add(map18);
-        Map<String,List<Map<String,String>>> map19 = new HashMap();
-        map19.put("$and",list);
-
-        String jsonStr = gson.toJson(map19);
-        return jsonStr;
-
-
-        /*Map map50 = new HashMap();
-        map50.put("open","false");
+        Map map50 = new HashMap();
+        map50.put("open","true");
         Map map60 = new HashMap();
         map60.put("className","TractateGroup");
         map60.put("where",map50);
@@ -659,12 +640,58 @@ public class SearchUtil {
         map120.put("$select",map110);
 
         Map map14 = new HashMap();
-        map14.put("objectId",map120);*/
+        map14.put("objectId",map120);
+
+
+        Map map17 = new HashMap();
+        map17.put("tractatetypeId",tractateTypeId);
+        Map map18 = new HashMap();
+        map18.put("open","true");
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map14);
+        list.add(map17);
+        list.add(map18);
+        Map<String,List<Map<String,String>>> map19 = new HashMap();
+        map19.put("$and",list);
+
+        String jsonStr = gson.toJson(map19);
+        return jsonStr;
+
+
+
+
+
 
 
        /* Map map13 = new HashMap();
         map13.put("objectId",map12);*/
 
+    }
+
+    /**
+     * 获得句子分组
+     * @param userId
+     * @param create 是否是保存创建的句子
+     * @return
+     */
+    public String getSentenceGroupRxByUserId(String userId,boolean create){
+        Gson gson = new Gson();
+
+        Map map14 = new HashMap();
+        map14.put("userId",userId);
+
+        Map map17 = new HashMap();
+        map17.put("create",create);
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map14);
+        list.add(map17);
+        Map<String,List<Map<String,String>>> map19 = new HashMap();
+        map19.put("$and",list);
+
+        String jsonStr = gson.toJson(map19);
+        return jsonStr;
     }
 
     /**

@@ -164,7 +164,7 @@ public class MyCreateSentenceGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getSentenceGroupRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
+        Subscription subscription = repository.getSentenceGroupRxByUserId(user.getObjectId(),true,page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

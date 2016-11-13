@@ -1975,14 +1975,14 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String userId, String tractateTypeId, int page, int pageSize) {
+    public Observable<List<Tractate>> getTractateRxByTractateTypeId(String tractateTypeId, int page, int pageSize) {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");
         }
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getTractateRxByTractateTypeId(userId,tractateTypeId);
+        String regex = searchUtil.getTractateRxByTractateTypeId(tractateTypeId);
 
         return bmobService.getTractatesRx(regex,limit,skip)
                 .flatMap(new Func1<Response<TractateResult>, Observable<List<Tractate>>>() {
@@ -2621,8 +2621,8 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
-        String regex = searchUtil.getBmobEquals("userId",userId);
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create) {
+        String regex = searchUtil.getSentenceGroupRxByUserId(userId,create);
 
         return bmobService.getSentenceGroupRxByUserId(regex)
                 .flatMap(new Func1<Response<SentenceGroupResult>, Observable<List<SentenceGroup>>>() {
@@ -2652,14 +2652,14 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId, int page, int pageSize) {
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create, int page, int pageSize) {
         if(page < 0){
             throw new RuntimeException("The page shoule don't be above 0");
         }
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getBmobEquals("userId",userId);
+        String regex = searchUtil.getSentenceGroupRxByUserId(userId,create);
 
         return bmobService.getSentenceGroupRxByUserId(regex,limit,skip)
                 .flatMap(new Func1<Response<SentenceGroupResult>, Observable<List<SentenceGroup>>>() {

@@ -630,7 +630,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testTractate_getAll");
         TestSubscriber<List<Tractate>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getTractateRxByTractateTypeId(tractate1ById.getObjectId(),"943a8a40ed",0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getTractateRxByTractateTypeId(tractate1ById.getObjectId(),0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<Tractate>> listall = testSubscriber_getall.getOnNextEvents();
         List<Tractate> sentences = null;
