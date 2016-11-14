@@ -14,6 +14,9 @@ public class RemoteCode {
         Common_NOTFOUND(101,"未查询到相关信息"),
         Common_RESERVED(105,"存在保留字段"),
         Common_UNIQUE(401,"唯一鍵不能重复"),
+        Common_KEYERRO(111,"没有找到数据键"),
+        Common_COLLECTSENTENCEGROUPNOTSELF(800,"不能收藏自己创建的句单"),
+        Common_COLLECTSENTENCENOTSELF(800,"不能收藏自己创建的句子"),
         MOBILE_ERROR(301,"参数不合法（字段名不能大于20...）");
 
         private int code;

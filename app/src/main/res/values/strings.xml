@@ -72,7 +72,7 @@
     <string name="grammardetail_empty_grammar">do not found grammar</string>
 
     <!-- SentenceDetailActivity -->
-    <string name="sentencedetail_title">Sentence Detail</string>
+    <string name="sentencedetail1_title">Sentence Detail</string>
     <string name="sentencedetail_empty_sentence">do not found sentence</string>
 
     <!-- DetailDialog -->
@@ -281,8 +281,9 @@
 
     <string-array name="sentenceactivity_tablayout">
         <item>热门推荐</item>
-        <item>我的句组</item>
-        <item>我的收藏</item>
+        <item>我的句子</item>
+        <item>收藏的句子</item>
+        <item>收藏的句单</item>
     </string-array>
 
     <string name="title_sentences">Sentences</string>

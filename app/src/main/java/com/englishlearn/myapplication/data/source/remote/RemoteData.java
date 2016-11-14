@@ -5,6 +5,7 @@ import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
@@ -634,46 +635,46 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<WordGroupCollect>> getWordGroupCollectRxByUserIdAndwordGroupId(String userId,String wordGroupId);
 
-    //句子收藏分组模块
+    //句子分组模块
     //*****************************************************************************
 
     /**
-     * 增加句子收藏分组
+     * 增加句子分组
      * @param sentenceGroup
      * @return
      */
     Observable<SentenceGroup> addSentenceGroup(SentenceGroup sentenceGroup);
 
     /**
-     * 删除句子收藏分组
+     * 删除句子分组
      * @param sentenceGroupId
      * @return
      */
     Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId);
 
     /**
-     * 修改句子收藏分组
+     * 修改句子分组
      * @param sentenceGroup
      * @return
      */
     Observable<Boolean> updateSentenceGroupRxById(SentenceGroup sentenceGroup);
 
     /**
-     * 根据id获取句子收藏分组
+     * 根据id获取句子分组
      * @param sentenceGroupId
      * @return
      */
     Observable<SentenceGroup> getSentenceGroupRxById(String sentenceGroupId);
 
     /**
-     * 根据userId获取句子收藏分组分页展示
+     * 根据userId获取句子分组分页展示
      * @param userId
      * @return
      */
-    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create);
+    Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId);
 
     /**
-     * 根据userId获取句子收藏分组分页展示
+     * 根据userId获取句子分组分页展示
      * @param userId
      * @param page
      * @param pageSize
@@ -684,7 +685,7 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据userId获取所收藏的句子分组分页展示
+     * 获取userId的句子分组分页展示
      * @param userId
      * @param page
      * @param pageSize
@@ -694,7 +695,7 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 获取所有公开的句子收藏分组分页展示,按时间降序
+     * 获取所有公开的句子分组分页展示,按时间降序
      * @param page
      * @param pageSize
      * @return
@@ -703,12 +704,61 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 获取所有公开的未收藏的句子短语分组分页展示,按时间降序
+     * 获取所有公开的未收藏的短语分组分页展示,按时间降序
      * @param page
      * @param pageSize
      * @return
      */
     Observable<List<SentenceGroup>> getSentenceGroupsByOpenAndNotCollectRx(String userId,int page,int pageSize);
+
+
+    //句子收藏分组模块
+    //*****************************************************************************
+
+    /**
+     * 增加句子收藏分组
+     * @param sentenceCollectGroup
+     * @return
+     */
+    Observable<SentenceCollectGroup> addSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup);
+
+    /**
+     * 删除句子收藏分组
+     * @param sentencecollectGroupId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceCollectGroupRxById(String sentencecollectGroupId);
+
+    /**
+     * 修改句子收藏分组
+     * @param sentenceCollectGroup
+     * @return
+     */
+    Observable<Boolean> updateSentenceCollectGroupRxById(SentenceCollectGroup sentenceCollectGroup);
+
+    /**
+     * 根据id获取句子收藏分组
+     * @param sentencecollectgroupId
+     * @return
+     */
+    Observable<SentenceCollectGroup> getSentenceCollectGroupRxById(String sentencecollectgroupId);
+
+    /**
+     * 根据userId获取句子收藏分组
+     * @param userId
+     * @return
+     */
+    Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId);
+
+    /**
+     * 根据userId获取句子收藏分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId, int page, int pageSize);
+
 
     //句子分組收藏模块
     //*****************************************************************************
@@ -719,6 +769,13 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect);
+
+    /**
+     * 增加句子分組收藏,这个句子不是
+     * @param sentenceGroupCollect
+     * @return
+     */
+    Observable<SentenceGroupCollect> addSentenceGroupCollectByNotSelf(SentenceGroupCollect sentenceGroupCollect);
 
     /**
      * 删除句子分組收藏
@@ -918,6 +975,15 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect);
+
+
+    /**
+     * 增加句子收藏
+     * @param sentenceCollect
+     * @return
+     */
+    Observable<SentenceCollect> addSentenceCollectByNotSelf(SentenceCollect sentenceCollect);
+
 
     /**
      * 删除句子收藏

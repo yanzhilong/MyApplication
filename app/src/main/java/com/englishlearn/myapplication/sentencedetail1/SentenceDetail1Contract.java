@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentencedetail;
+package com.englishlearn.myapplication.sentencedetail1;
 
 
 import com.englishlearn.myapplication.BasePresenter;
@@ -9,7 +9,7 @@ import com.englishlearn.myapplication.data.Sentence;
  * Created by yanzl on 16-7-20.
  * 用于约定view 和 presenter的实现接口
  */
-public class SentenceDetailContract {
+public class SentenceDetail1Contract {
 
     public interface View extends BaseView<Presenter> {
 

@@ -9,7 +9,7 @@ public class SentenceCollect implements Serializable,Cloneable{
 
     private String objectId;
     private String userId; //用户Id
-    private String sentencegroupId; //分组Id
+    private String scollectgroupId; //句子收藏分组Id
     private String sentenceId; //(句子，单词，文章)
 
 
@@ -29,12 +29,12 @@ public class SentenceCollect implements Serializable,Cloneable{
         this.userId = userId;
     }
 
-    public String getSentencegroupId() {
-        return sentencegroupId;
+    public String getScollectgroupId() {
+        return scollectgroupId;
     }
 
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
+    public void setScollectgroupId(String scollectgroupId) {
+        this.scollectgroupId = scollectgroupId;
     }
 
     public String getSentenceId() {
@@ -62,7 +62,7 @@ public class SentenceCollect implements Serializable,Cloneable{
         return "SentenceCollect{" +
                 "objectId='" + objectId + '\'' +
                 ", userId='" + userId + '\'' +
-                ", sentencegroupId='" + sentencegroupId + '\'' +
+                ", scollectgroupId='" + scollectgroupId + '\'' +
                 ", sentenceId='" + sentenceId + '\'' +
                 '}';
     }

@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
@@ -511,8 +512,8 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create) {
-        return mBmobDataSource.getSentenceGroupRxByUserId(userId,create);
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId);
     }
 
     @Override
@@ -536,8 +537,43 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<SentenceCollectGroup> addSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup) {
+        return mBmobDataSource.addSentenceCollectGroup(sentenceCollectGroup);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceCollectGroupRxById(String sentencecollectGroupId) {
+        return mBmobDataSource.deleteSentenceCollectGroupRxById(sentencecollectGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceCollectGroupRxById(SentenceCollectGroup sentenceCollectGroup) {
+        return mBmobDataSource.updateSentenceCollectGroupRxById(sentenceCollectGroup);
+    }
+
+    @Override
+    public Observable<SentenceCollectGroup> getSentenceCollectGroupRxById(String sentencecollectgroupId) {
+        return mBmobDataSource.getSentenceCollectGroupRxById(sentencecollectgroupId);
+    }
+
+    @Override
+    public Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId) {
+        return mBmobDataSource.getSentenceCollectGroupRxByUserId(userId);
+    }
+
+    @Override
+    public Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceCollectGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
         return mBmobDataSource.addSentenceGroupCollect(sentenceGroupCollect);
+    }
+
+    @Override
+    public Observable<SentenceGroupCollect> addSentenceGroupCollectByNotSelf(SentenceGroupCollect sentenceGroupCollect) {
+        return mBmobDataSource.addSentenceGroupCollectByNotSelf(sentenceGroupCollect);
     }
 
     @Override
@@ -648,6 +684,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
         return mBmobDataSource.addSentenceCollect(sentenceCollect);
+    }
+
+    @Override
+    public Observable<SentenceCollect> addSentenceCollectByNotSelf(SentenceCollect sentenceCollect) {
+        return mBmobDataSource.addSentenceCollectByNotSelf(sentenceCollect);
     }
 
     @Override

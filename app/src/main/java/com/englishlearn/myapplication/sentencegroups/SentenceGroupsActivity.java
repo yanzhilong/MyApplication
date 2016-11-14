@@ -42,6 +42,7 @@ public class SentenceGroupsActivity extends AppCompatActivity {
         list = new ArrayList<>();
         list.add(SentenceGroupsTopFragmentFragment.newInstance());
         list.add(MyCreateSentenceGroupsFragment.newInstance());
+        list.add(MyCreateSentenceCollectGroupsFragment.newInstance());
         list.add(MyCollectSentenceGroupsFragment.newInstance());
 
         //ViewPager

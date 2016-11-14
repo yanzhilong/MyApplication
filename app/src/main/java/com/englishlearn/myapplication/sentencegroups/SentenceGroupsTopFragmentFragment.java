@@ -162,7 +162,7 @@ public class SentenceGroupsTopFragmentFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getSentenceGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
+        Subscription subscription = repository.getSentenceGroupsByOpenRx(page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

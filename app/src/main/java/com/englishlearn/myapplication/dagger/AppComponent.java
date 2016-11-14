@@ -2,6 +2,8 @@ package com.englishlearn.myapplication.dagger;
 
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
+import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
+import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
 import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
@@ -17,8 +19,9 @@ import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsPresenter
 import com.englishlearn.myapplication.registeruser.RegisterUserPresenter;
 import com.englishlearn.myapplication.searchsentences.SearchSentencesPresenter;
 import com.englishlearn.myapplication.sentence.SentencesPresenter;
-import com.englishlearn.myapplication.sentencedetail.SentenceDetailPresenter;
+import com.englishlearn.myapplication.sentencedetail1.SentenceDetail1Presenter;
 import com.englishlearn.myapplication.sentencegroups.MyCollectSentenceGroupsFragment;
+import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceCollectGroupsFragment;
 import com.englishlearn.myapplication.sentencegroups.MyCreateSentenceGroupsFragment;
 import com.englishlearn.myapplication.sentencegroups.SentenceGroupsTopFragmentFragment;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
@@ -50,7 +53,7 @@ public interface AppComponent {
 
     void inject(DeleteGrammars deleteGrammars);
 
-    void inject(SentenceDetailPresenter sentenceDetailPresenter);
+    void inject(SentenceDetail1Presenter sentenceDetailPresenter);
 
     void inject(GrammarDetailPresenter grammarDetailPresenter);
 
@@ -119,6 +122,12 @@ public interface AppComponent {
     void inject(WordCollectActivity wordCollectActivity);
 
     void inject(CreateSentenceActivity sentenceCollectActivity);
+
+    void inject(MyCreateSentenceCollectGroupsFragment myCreateSentenceCollectGroupsFragment);
+
+    void inject(SentenceDetailFragment sentenceDetailFragment);
+
+    void inject(SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment);
 
 
 

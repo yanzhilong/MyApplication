@@ -11,8 +11,9 @@ public class Sentence implements Serializable,Cloneable {
     private String objectId;
     private String content; //内容
     private String translation; //译文
+    private boolean open;//是否公开
     private String userId; //用户Id
-    private String tractateId; //来自的文章Id
+    private String sentencegroupId; //分组Id
     private String soundurl;//声音
     private String remark; //备注
 
@@ -49,14 +50,6 @@ public class Sentence implements Serializable,Cloneable {
         this.userId = userId;
     }
 
-    public String getTractateId() {
-        return tractateId;
-    }
-
-    public void setTractateId(String tractateId) {
-        this.tractateId = tractateId;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -71,6 +64,22 @@ public class Sentence implements Serializable,Cloneable {
 
     public void setSoundurl(String soundurl) {
         this.soundurl = soundurl;
+    }
+
+    public String getSentencegroupId() {
+        return sentencegroupId;
+    }
+
+    public void setSentencegroupId(String sentencegroupId) {
+        this.sentencegroupId = sentencegroupId;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     @Override
@@ -91,8 +100,9 @@ public class Sentence implements Serializable,Cloneable {
                 "objectId='" + objectId + '\'' +
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
+                ", open=" + open +
                 ", userId='" + userId + '\'' +
-                ", tractateId='" + tractateId + '\'' +
+                ", sentencegroupId='" + sentencegroupId + '\'' +
                 ", soundurl='" + soundurl + '\'' +
                 ", remark='" + remark + '\'' +
                 '}';

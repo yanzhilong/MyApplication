@@ -45,7 +45,8 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<SentenceGroup> mList;
+    private List<SentenceGroup> mCollectSentenceGroupList;
+
     private User user;
     private CompositeSubscription mSubscriptions;
     @Inject
@@ -66,7 +67,8 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
 
         user = repository.getUserInfo();
 
-        mList = new ArrayList();
+        mCollectSentenceGroupList = new ArrayList();
+
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
@@ -152,11 +154,16 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
      */
     public void refershList() {
         page = 0;
-        mList.clear();
+        mCollectSentenceGroupList.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
     }
+
+
+
+
+
 
     //获取下一页
     public void getNextPage() {
@@ -181,8 +188,8 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
                     myAdapter.notifyDataSetChanged();
                 }else{
                     page++;//页数增加
-                    mList.addAll(list);
-                    showList(mList);
+                    mCollectSentenceGroupList.addAll(list);
+                    showList(mCollectSentenceGroupList);
                 }
             }
         });

@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentencedetail;
+package com.englishlearn.myapplication.sentencedetail1;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,26 +24,26 @@ import com.englishlearn.myapplication.data.Sentence;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentenceDetailFragment extends Fragment implements SentenceDetailContract.View {
+public class SentenceDetail1Fragment extends Fragment implements SentenceDetail1Contract.View {
 
-    private static final String TAG = SentenceDetailFragment.class.getSimpleName();
+    private static final String TAG = SentenceDetail1Fragment.class.getSimpleName();
     private TextView content;
     private TextView translation;
     private Sentence sentence;
 
-    private SentenceDetailContract.Presenter mPresenter;
+    private SentenceDetail1Contract.Presenter mPresenter;
     private DialogInterface.OnClickListener deleteAffirmListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             mPresenter.deleteSentence(sentence);
         }
     };
-    public static SentenceDetailFragment newInstance() {
-        return new SentenceDetailFragment();
+    public static SentenceDetail1Fragment newInstance() {
+        return new SentenceDetail1Fragment();
     }
 
     @Override
-    public void setPresenter(SentenceDetailContract.Presenter presenter) {
+    public void setPresenter(SentenceDetail1Contract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -56,7 +56,7 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.sentencedetail_frag, container, false);
+        View root = inflater.inflate(R.layout.sentencedetail1_frag, container, false);
 
         content = (TextView) root.findViewById(R.id.content);
         translation = (TextView) root.findViewById(R.id.translation);
@@ -120,7 +120,7 @@ public class SentenceDetailFragment extends Fragment implements SentenceDetailCo
             showEmptySentence();
             return;
         }
-        Intent edit = new Intent(SentenceDetailFragment.this.getContext(), AddEditSentenceActivity.class);
+        Intent edit = new Intent(SentenceDetail1Fragment.this.getContext(), AddEditSentenceActivity.class);
         edit.putExtra(AddEditSentenceActivity.ID,sentence.getObjectId());
         startActivity(edit);
     }

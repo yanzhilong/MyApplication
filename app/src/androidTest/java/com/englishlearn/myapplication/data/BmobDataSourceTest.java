@@ -880,7 +880,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testSentenceGroup_getAll");
         TestSubscriber<List<SentenceGroup>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getSentenceGroupRxByUserId(wordGroup1ById.getUserId(),0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getSentenceGroupRxByUserId(wordGroup1ById.getUserId(),true,0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<SentenceGroup>> listall = testSubscriber_getall.getOnNextEvents();
         List<SentenceGroup> sentences = null;

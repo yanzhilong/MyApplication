@@ -182,7 +182,7 @@ public class TractateDetailFragment extends Fragment implements RadioGroup.OnChe
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        WordDetailDialog wordDetailDialog = WordDetailDialog.newInstance(word,englishSentence,chineseSentence);
+        WordDetailDialog wordDetailDialog = WordDetailDialog.newInstance(word,englishSentence,chineseSentence,tractate);
         wordDetailDialog.setTargetFragment(this,DIALOG_FRAGMENT);
         wordDetailDialog.show(getFragmentManager().beginTransaction(), "dialog");
 

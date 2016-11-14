@@ -58,7 +58,7 @@
             android:name=".grammardetail.GrammarsDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".sentencedetail.SentenceDetailActivity"
+            android:name=".sentencedetail1.SentenceDetail1Activity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".registeruser.RegisterUserActivity"

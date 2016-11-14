@@ -121,21 +121,10 @@ public class SearchUtil {
         Gson gson = new Gson();
         Map map5 = new HashMap();
         map5.put("sentencegroupId",sentencegroupId);
-        Map map6 = new HashMap();
-        map6.put("className","SentenceCollect");
-        map6.put("where",map5);
-        Map map7 = new HashMap();
-        map7.put("query",map6);
-        map7.put("key","sentenceId");
-        Map map8 = new HashMap();
-        map8.put("$select",map7);
-        Map map9 = new HashMap();
-        map9.put("objectId",map8);
-
 
         //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
 
-        String jsonStr = gson.toJson(map9);
+        String jsonStr = gson.toJson(map5);
         return jsonStr;
         //return where;
     }
@@ -191,6 +180,9 @@ public class SearchUtil {
         map8.put("$select",map7);
         Map map9 = new HashMap();
         map9.put("objectId",map8);
+
+
+
 
 
         //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
@@ -672,27 +664,34 @@ public class SearchUtil {
     /**
      * 获得句子分组
      * @param userId
-     * @param create 是否是保存创建的句子
      * @return
      */
-    public String getSentenceGroupRxByUserId(String userId,boolean create){
+    public String getSentenceGroupRxByUserId(String userId){
         Gson gson = new Gson();
 
         Map map14 = new HashMap();
         map14.put("userId",userId);
 
-        Map map17 = new HashMap();
-        map17.put("create",create);
-
-        List<Map<String,String>> list = new ArrayList<>();
-        list.add(map14);
-        list.add(map17);
-        Map<String,List<Map<String,String>>> map19 = new HashMap();
-        map19.put("$and",list);
-
-        String jsonStr = gson.toJson(map19);
+        String jsonStr = gson.toJson(map14);
         return jsonStr;
     }
+
+    /**
+     * 获得句子收藏分组
+     * @param userId
+     * @return
+     */
+    public String getSentenceCollectGroupRxByUserId(String userId){
+        Gson gson = new Gson();
+
+        Map map14 = new HashMap();
+        map14.put("userId",userId);
+
+        String jsonStr = gson.toJson(map14);
+        return jsonStr;
+    }
+
+
 
     /**
      * 根据名称和值返回搜索的匹配字条串
@@ -704,6 +703,22 @@ public class SearchUtil {
         String where = "{\""+regexName+"\":\""+ regexValue +"\"}";
         return where;
     }
+
+
+    public String getSentenceGroupsByOpenRx(){
+
+        Gson gson = new Gson();
+
+        Map map14 = new HashMap();
+        map14.put("open",true);
+
+        String jsonStr = gson.toJson(map14);
+        return jsonStr;
+
+
+    }
+
+
 
     /**
      * 根据名称和值返回搜索的匹配字条串

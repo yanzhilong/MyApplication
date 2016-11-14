@@ -31,7 +31,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentenceActivity;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.provide.SuggestionsProvider;
-import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
+import com.englishlearn.myapplication.sentencedetail1.SentenceDetail1Activity;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
 
 import java.util.ArrayList;
@@ -102,8 +102,8 @@ public class SentencesFragment extends Fragment implements SentencesContract.Vie
                     selectPresenter.onClick(sentencesAdapter.getSentences().get(position));
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
-                    Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.ID,sentence.getObjectId());
+                    Intent detail = new Intent(SentencesFragment.this.getContext(), SentenceDetail1Activity.class);
+                    detail.putExtra(SentenceDetail1Activity.ID,sentence.getObjectId());
                     startActivity(detail);
                 }
             }

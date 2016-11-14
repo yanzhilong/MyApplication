@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Sentence;
@@ -28,6 +27,7 @@ import com.englishlearn.myapplication.data.source.remote.RemoteCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
+import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
 
 import java.util.ArrayList;
@@ -111,6 +111,11 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
                 Sentence sentence = myAdapter.getSentences().get(position);
                 Log.d(TAG, sentence.toString());
+
+                SentenceDetailFragment sentenceDetailFragment = SentenceDetailFragment.newInstance(sentence);
+                sentenceDetailFragment.show(getFragmentManager().beginTransaction(), "dialog");
+
+
                 /*Intent intent = new Intent(SentencesFragment.this.getContext(),WordDetailActivity.class);
                 intent.putExtra(WordDetailActivity.TRACTATE,sentence);
                 startActivity(intent);*/
@@ -320,9 +325,9 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
         SentenceGroup createsg = new SentenceGroup();
         createsg.setObjectId(sentenceGroup.getObjectId());
-        createsg.setUserId(Constant.userId0703);
+        createsg.setUserId(repository.getUserInfo().getObjectId());
         createsg.setName(name);
-        createsg.setOpen("false");
+        createsg.setOpen(false);
         Subscription subscription = repository.updateSentenceGroupRxById(createsg).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
@@ -379,7 +384,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
      */
     private void unFavorite(){
         fab_deleteorfavorite_wordgroup.setEnabled(false);
-        Subscription subscription = repository.deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(Constant.userId0703,sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = repository.deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(repository.getUserInfo().getObjectId(),sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
                 fab_deleteorfavorite_wordgroup.setEnabled(true);
@@ -407,9 +412,9 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
         fab_deleteorfavorite_wordgroup.setEnabled(false);
         SentenceGroupCollect sentenceGroupCollect = new SentenceGroupCollect();
-        sentenceGroupCollect.setUserId(Constant.userId0703);
+        sentenceGroupCollect.setUserId(repository.getUserInfo().getObjectId());
         sentenceGroupCollect.setSentencegroupId(sentenceGroup.getObjectId());
-        repository.addSentenceGroupCollect(sentenceGroupCollect).subscribe(new Subscriber<SentenceGroupCollect>() {
+        repository.addSentenceGroupCollectByNotSelf(sentenceGroupCollect).subscribe(new Subscriber<SentenceGroupCollect>() {
             @Override
             public void onCompleted() {
                 fab_deleteorfavorite_wordgroup.setEnabled(true);
@@ -418,32 +423,34 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             @Override
             public void onError(Throwable e) {
                 fab_deleteorfavorite_wordgroup.setEnabled(true);
-                favoriteResult(false);
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    favoriteFail(bmobRequestException.getMessage());
+                }else{
+                    favoriteFail(getString(R.string.unfavoritefail));
+                }
+
             }
 
             @Override
             public void onNext(SentenceGroupCollect sentenceGroupCollect1) {
 
                 if(sentenceGroupCollect1 != null){
-                    favoriteResult(true);
+                    favoriteSuccess();
                 }else {
-                    favoriteResult(false);
+                    favoriteFail(getString(R.string.unfavoritefail));
                 }
             }
         });
     }
 
-    /**
-     * 收藏结果
-     * @param isSuccess 成功或失败
-     */
-    private void favoriteResult(boolean isSuccess){
-        if(isSuccess){
-            Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
-            fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
-        }else {
-            Toast.makeText(this.getContext(),R.string.favoritefail,Toast.LENGTH_SHORT).show();
-        }
+    private void favoriteSuccess(){
+        Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
+        fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+    }
+
+    private void favoriteFail(String message){
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
     /**

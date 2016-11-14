@@ -6,6 +6,7 @@ import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
@@ -444,7 +445,7 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId,boolean create) {
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
         return null;
     }
 
@@ -469,7 +470,42 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<SentenceCollectGroup> addSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceCollectGroupRxById(String sentencecollectGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateSentenceCollectGroupRxById(SentenceCollectGroup sentenceCollectGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceCollectGroup> getSentenceCollectGroupRxById(String sentencecollectgroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceCollectGroup>> getSentenceCollectGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceGroupCollect> addSentenceGroupCollectByNotSelf(SentenceGroupCollect sentenceGroupCollect) {
         return null;
     }
 
@@ -581,6 +617,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect) {
+        return null;
+    }
+
+    @Override
+    public Observable<SentenceCollect> addSentenceCollectByNotSelf(SentenceCollect sentenceCollect) {
         return null;
     }
 

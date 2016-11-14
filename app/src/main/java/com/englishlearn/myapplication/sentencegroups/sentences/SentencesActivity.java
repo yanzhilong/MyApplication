@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 
 public class SentencesActivity extends AppCompatActivity {
@@ -15,6 +16,7 @@ public class SentencesActivity extends AppCompatActivity {
     public static final String TYPE = "sentencegrouptype";
     private static final String TAG = SentencesActivity.class.getSimpleName();
     private SentenceGroup sentenceGroup;
+    private SentenceCollectGroup sentenceCollectGroup;//句子收藏分组
     private SentenceGroupType sentenceGroupType;
 
     @Override

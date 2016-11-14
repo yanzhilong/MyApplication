@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentencedetail;
+package com.englishlearn.myapplication.sentencedetail1;
 
 
 import com.englishlearn.myapplication.MyApplication;
@@ -13,13 +13,13 @@ import rx.Subscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class SentenceDetailPresenter extends SentenceDetailContract.Presenter{
+public class SentenceDetail1Presenter extends SentenceDetail1Contract.Presenter{
 
-    private SentenceDetailContract.View mView;
+    private SentenceDetail1Contract.View mView;
     private String id;
     @Inject
     Repository repository;
-    public SentenceDetailPresenter(SentenceDetailContract.View vew,String id){
+    public SentenceDetail1Presenter(SentenceDetail1Contract.View vew, String id){
         mView = vew;
         this.id = id;
         MyApplication.instance.getAppComponent().inject(this);

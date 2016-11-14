@@ -5,10 +5,9 @@ import java.io.Serializable;
 /**
  * Created by yanzl on 16-9-3.
  */
-public class SentenceGroup implements Serializable,Cloneable {
+public class SentenceCollectGroup implements Serializable,Cloneable {
 
-    private String objectId;;
-    private boolean open; //是否公开
+    private String objectId;
     private String name; //分组名称
     private String userId; //用户Id
 
@@ -36,14 +35,6 @@ public class SentenceGroup implements Serializable,Cloneable {
         this.userId = userId;
     }
 
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-
     @Override
     public Object clone(){
 
@@ -58,9 +49,8 @@ public class SentenceGroup implements Serializable,Cloneable {
 
     @Override
     public String toString() {
-        return "SentenceGroup{" +
+        return "SentenceCollectGroup{" +
                 "objectId='" + objectId + '\'' +
-                ", open='" + open + '\'' +
                 ", name='" + name + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

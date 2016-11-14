@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
@@ -44,6 +45,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     public static final String ENSENTENCE = "ensentence";
     public static final String CHSENTENCE = "chsentence";
     public static final String DIALOGLISTENER = "dialoglistener";
+    public static final String TRACTATE = "tractate";//文章
     private static final String TAG = WordDetailDialog.class.getSimpleName();
     private CompositeSubscription mSubscriptions;
     private String wordstring;
@@ -51,7 +53,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     private String chsentence;
 
     private Word word;
-
+    private Tractate tractate;
     private TextView wordname;
     private TextView british_phonogram;
     private TextView american_phonogram;
@@ -81,13 +83,14 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         }
     };
 
-    public static WordDetailDialog newInstance(String word,String englishSentence,String chineseSentence){
+    public static WordDetailDialog newInstance(String word,String englishSentence,String chineseSentence,Tractate tractate){
 
         WordDetailDialog wordDetailDialog = new WordDetailDialog();
         Bundle bundle = new Bundle();
         bundle.putString(WORDTAG, word);
         bundle.putString(ENSENTENCE, englishSentence);
         bundle.putString(CHSENTENCE, chineseSentence);
+        bundle.putSerializable(TRACTATE, tractate);
         wordDetailDialog.setArguments(bundle);
 
         return wordDetailDialog;
@@ -104,6 +107,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             wordstring = (String) bundle.get(WORDTAG);
             ensentence = (String) bundle.get(ENSENTENCE);
             chsentence = (String) bundle.get(CHSENTENCE);
+            tractate = (Tractate) bundle.getSerializable(TRACTATE);
         }
         MyApplication.instance.getAppComponent().inject(this);
         if (mSubscriptions == null) {
@@ -223,6 +227,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 Intent intentsentence = new Intent(this.getContext(),CreateSentenceActivity.class);
                 intentsentence.putExtra(CreateSentenceActivity.ENSENTENCE,ensentence);
                 intentsentence.putExtra(CreateSentenceActivity.CHSENTENCE,chsentence);
+                intentsentence.putExtra(CreateSentenceActivity.TRACTATE,tractate);
                 intentsentence.putExtra(CreateSentenceActivity.CREATESENTENCE,true);
                 startActivity(intentsentence);
                 break;

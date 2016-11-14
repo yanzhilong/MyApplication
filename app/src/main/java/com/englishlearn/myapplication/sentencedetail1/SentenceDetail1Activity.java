@@ -1,4 +1,4 @@
-package com.englishlearn.myapplication.sentencedetail;
+package com.englishlearn.myapplication.sentencedetail1;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,15 +9,15 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.util.ActivityUtils;
 
 
-public class SentenceDetailActivity extends AppCompatActivity {
+public class SentenceDetail1Activity extends AppCompatActivity {
 
     public static final String ID = "id";
 
-    private SentenceDetailContract.Presenter presenter;
+    private SentenceDetail1Contract.Presenter presenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sentencedetail_act);
+        setContentView(R.layout.sentencedetail1_act);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -26,16 +26,16 @@ public class SentenceDetailActivity extends AppCompatActivity {
         //返回按钮
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
-        ab.setTitle(R.string.sentencedetail_title);
+        ab.setTitle(R.string.sentencedetail1_title);
 
         String id = getIntent().getStringExtra(ID);
 
-        SentenceDetailFragment fragment = (SentenceDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        SentenceDetail1Fragment fragment = (SentenceDetail1Fragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {
-            fragment = SentenceDetailFragment.newInstance();
+            fragment = SentenceDetail1Fragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        presenter = new SentenceDetailPresenter(fragment,id);
+        presenter = new SentenceDetail1Presenter(fragment,id);
     }
 
     @Override

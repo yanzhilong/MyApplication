@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.sentencedetail.SentenceDetailActivity;
+import com.englishlearn.myapplication.sentencedetail1.SentenceDetail1Activity;
 import com.englishlearn.myapplication.sentence.ScrollChildSwipeRefreshLayout;
 import com.englishlearn.myapplication.ui.LoadMoreListView;
 import com.englishlearn.myapplication.util.SearchUtil;
@@ -89,8 +89,8 @@ public class SearchSentencesFragment extends Fragment implements SearchSentences
                     return;
                 }else{
                     Sentence sentence = sentencesAdapter.getSentences().get(position);
-                    Intent detail = new Intent(SearchSentencesFragment.this.getContext(), SentenceDetailActivity.class);
-                    detail.putExtra(SentenceDetailActivity.ID,sentence.getObjectId());
+                    Intent detail = new Intent(SearchSentencesFragment.this.getContext(), SentenceDetail1Activity.class);
+                    detail.putExtra(SentenceDetail1Activity.ID,sentence.getObjectId());
                     startActivity(detail);
                 }
             }
