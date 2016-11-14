@@ -55,6 +55,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     private int page = 0;
     private List<Sentence> mList;
 
+    private boolean isShowFavorite = false;
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
@@ -113,6 +114,9 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 Log.d(TAG, sentence.toString());
 
                 SentenceDetailFragment sentenceDetailFragment = SentenceDetailFragment.newInstance(sentence);
+                Bundle bundler = sentenceDetailFragment.getArguments();
+                bundler.putBoolean(SentenceDetailFragment.SHOWFAVORITE,isShowFavorite);
+                sentenceDetailFragment.setArguments(bundler);
                 sentenceDetailFragment.show(getFragmentManager().beginTransaction(), "dialog");
 
 
@@ -144,17 +148,20 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                isShowFavorite = true;
                 break;
             case CREATE:
                 fab_edit_wordgroup.setVisibility(View.VISIBLE);
                 fab_edit_wordgroup.setBackgroundResource(R.drawable.ic_edit);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_delete);
+                isShowFavorite = false;
                 break;
             case FAVORITE:
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+                isShowFavorite = false;
                 break;
             default:
                 break;
