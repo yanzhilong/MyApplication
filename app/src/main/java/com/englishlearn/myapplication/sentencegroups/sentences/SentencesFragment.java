@@ -322,7 +322,16 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    Toast.makeText(SentencesFragment.this.getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+
+                }
+
             }
 
             @Override

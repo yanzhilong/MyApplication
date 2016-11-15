@@ -3006,8 +3006,15 @@ public class BmobDataSource implements RemoteData {
                                 String errjson =  bmobSentenceGroupCollectResponse.errorBody().string();
                                 Log.d(TAG,"addSentenceGroupCollect:" + errjson);
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                                if(createuser == RemoteCode.COMMON.Common_UNIQUE){
+                                    bmobRequestException = new BmobRequestException("已经收藏过当前句单了");
+
+                                }else{
+                                    bmobRequestException = new BmobRequestException(createuser.getMessage());
+
+                                }
                             }catch (IOException e){
                                 e.printStackTrace();
                             }
