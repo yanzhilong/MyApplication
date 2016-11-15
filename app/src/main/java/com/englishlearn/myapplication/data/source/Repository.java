@@ -322,6 +322,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> deleteSentences(List<Sentence> sentences) {
+        return mBmobDataSource.deleteSentences(sentences);
+    }
+
+    @Override
     public Observable<Boolean> updateSentenceById(Sentence sentence) {
         return mBmobDataSource.updateSentenceById(sentence);
     }
@@ -344,6 +349,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId, int page, int pageSize) {
         return mBmobDataSource.getSentencesRxBySentenceGroupId(sentencegroupId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRxBySentenceCollectGroupId(String sentencecollectgroupId, int page, int pageSize) {
+        return mBmobDataSource.getSentencesRxBySentenceCollectGroupId(sentencecollectgroupId,page,pageSize);
     }
 
     @Override
@@ -499,6 +509,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId) {
         return mBmobDataSource.deleteSentenceGroupRxById(sentenceGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupAndSentences(String sentenceGroupId, List<Sentence> sentences) {
+        return mBmobDataSource.deleteSentenceGroupAndSentences(sentenceGroupId,sentences);
     }
 
     @Override

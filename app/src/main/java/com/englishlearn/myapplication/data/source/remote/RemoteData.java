@@ -359,6 +359,14 @@ public interface RemoteData extends DataSource{
      */
     Observable<Boolean> deleteSentenceById(String sentenceId);
 
+
+    /**
+     * 删除多条句子
+     * @param sentences
+     * @return
+     */
+    Observable<Boolean> deleteSentences(List<Sentence> sentences);
+
     /**
      * 修改句子
      * @param sentence
@@ -387,11 +395,18 @@ public interface RemoteData extends DataSource{
 
 
     /**
-     * 根据句子收藏分组id获取句子列表
+     * 根据句子分组id获取句子列表
      * @param sentencegroupId
      * @return
      */
     Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId,int page,int pageSize);
+
+    /**
+     * 根据句子收藏分组id获取句子列表
+     * @param sentencecollectgroupId
+     * @return
+     */
+    Observable<List<Sentence>> getSentencesRxBySentenceCollectGroupId(String sentencecollectgroupId,int page,int pageSize);
     //语法模块
     //*****************************************************************************
 
@@ -651,6 +666,13 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId);
+
+    /**
+     * 删除句子分组,及分组下面的句子组
+     * @param sentenceGroupId
+     * @return
+     */
+    Observable<Boolean> deleteSentenceGroupAndSentences(String sentenceGroupId,List<Sentence> sentences);
 
     /**
      * 修改句子分组

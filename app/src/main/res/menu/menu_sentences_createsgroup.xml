@@ -6,6 +6,10 @@
         android:title="修改名称"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/delete_sgroup"
+        android:title="删除句单"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/delete_sentences"
         android:title="删除句子"
         app:showAsAction="never"/>

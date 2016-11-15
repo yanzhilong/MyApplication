@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.sentencegroups;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,8 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.sentencegroups.sentences.SentenceGroupType;
+import com.englishlearn.myapplication.sentencegroups.sentences.SentencesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +92,10 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
 
                 SentenceCollectGroup string = myAdapter.getStrings().get(position);
                 Log.d(TAG, string.toString());
+                Intent intent = new Intent(MyCreateSentenceCollectGroupsFragment.this.getContext(),SentencesActivity.class);
+                intent.putExtra(SentencesActivity.SENTENCECOLLECTGROUP,string);
+                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.CREATEFSGROUP);
+                startActivity(intent);
 
             }
 

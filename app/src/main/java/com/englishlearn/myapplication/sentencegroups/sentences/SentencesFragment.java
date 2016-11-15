@@ -27,6 +27,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.activityforresult.multiple.MultipleActivity;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
+import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -57,10 +58,12 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     private static final int SENTENCEFAVORITE = 1;//收藏句子
     public static final int REQUESTCODE = 0;//多选请求码
     public static final String OBJECT = "object";
+    public static final String SENTENCECOLLECTGROUP = "sentencecollectgroup";
     public static final String TYPE = "sentencegrouptype";
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private final int PAGESIZE = 100;
     private SentenceGroup sentenceGroup;
+    private SentenceCollectGroup sentenceCollectGroup;//句子收藏分组
     private SentenceGroupType sentenceGroupType;
     private MyAdapter myAdapter;
     private int page = 0;
@@ -89,6 +92,12 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             sentenceGroup = (SentenceGroup) getArguments().getSerializable(OBJECT);
             sentenceGroupType = (SentenceGroupType) getArguments().getSerializable(TYPE);
         }
+
+        if(getArguments() !=null && getArguments().containsKey(SENTENCECOLLECTGROUP)){
+            sentenceCollectGroup = (SentenceCollectGroup) getArguments().getSerializable(SENTENCECOLLECTGROUP);
+            sentenceGroupType = (SentenceGroupType) getArguments().getSerializable(TYPE);
+        }
+
 
         switch (sentenceGroupType){
 
@@ -184,7 +193,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                getNextPage();
+                getNext();
             }
         });
         //设置适配器
@@ -295,6 +304,8 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 showSentenceCollectGroups();//显示分组信息
                 break;
             case CREATESGROUP:
+                //删除句子
+                showDeleteSentencesConfirm();
             case CREATEFSGROUP:
             case FAVORITESGROUP:
                 break;
@@ -441,6 +452,11 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.rename_sgroup:
                 Log.d(TAG, "修改名称");
+                showUpdateWordGroupDialog();
+                break;
+            case R.id.delete_sgroup:
+                Log.d(TAG, "删除句组");
+                showDeleteSentenceGroupConfirm();
                 break;
             case R.id.delete_sentences:
                 Log.d(TAG, "删除句子");
@@ -490,8 +506,21 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         mList.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
-        getNextPage();
+        getNext();
+
     }
+
+    private void getNext(){
+        switch (sentenceGroupType){
+            case CREATESGROUP:
+                getNextPage();
+                break;
+            case CREATEFSGROUP:
+                getNextCollectPage();
+                break;
+        }
+    }
+
 
     //获取下一页
     public void getNextPage() {
@@ -525,6 +554,39 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
     }
 
+    //获取下一页
+    public void getNextCollectPage() {
+
+        Subscription subscription = repository.getSentencesRxBySentenceCollectGroupId(sentenceCollectGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Sentence>>() {
+            @Override
+            public void onCompleted() {
+                loadingComplete();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                loadingFail(e);
+            }
+
+            @Override
+            public void onNext(List list) {
+                Log.d(TAG,"onNext size:" + list.size());
+
+                if(list == null || list.size() == 0){
+                    myAdapter.loadingGone();
+                    myAdapter.notifyDataSetChanged();
+                }else{
+                    page++;//页数增加
+                    mList.addAll(list);
+                    showList(mList);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+
+    }
+
+
     //加载完成
     public void loadingComplete() {
         Log.d(TAG, "loadingComplete");
@@ -548,19 +610,39 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
 
     /**
-     * 显示确认删除对话框
+     * 显示确认删除创建的句组对话框
      */
-    private void showDeleteWordGroupConfirm() {
+    private void showDeleteSentenceGroupConfirm() {
         DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除句组及里面的所有句子?");
+        delete.setArguments(bundle);
         delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
             @Override
             public void onDelete() {
-                deleteWordGroup();
+                deleteSentenceGroup();
             }
         });
         delete.show(getFragmentManager(),"delete");
     }
 
+
+    /**
+     * 显示确认删除对话框
+     */
+    private void showDeleteSentencesConfirm() {
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentences();
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
 
     /**
      * 显示对话框
@@ -579,8 +661,8 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     }
 
     //删除詞单
-    private void deleteWordGroup(){
-        Subscription subscription = repository.deleteSentenceGroupRxById(sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+    private void deleteSentenceGroup(){
+        Subscription subscription = repository.deleteSentenceGroupAndSentences(sentenceGroup.getObjectId(),mList).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -599,6 +681,47 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                     Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
                 }
 
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                if(b){
+                    deleteSuccess();
+                }else{
+                    deleteFail("句子删除失败，请稍后再试.");
+                }
+
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //删除詞单
+    private void deleteSentences(){
+        Subscription subscription = repository.deleteSentences(checkedsentences).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                BmobRequestException bmobRequestException = (BmobRequestException) e;
+                List<BatchResult> list = (List<BatchResult>) bmobRequestException.getObject();
+                StringBuffer stringBuffer = new StringBuffer();
+                if(list.size() == checkedsentences.size()){
+                    for(int i = 0; i < checkedsentences.size(); i++){
+                        BatchResult batchResult = list.get(i);
+                        BmobDefaultError bmobDefaultError = batchResult.getError();
+                        if(bmobDefaultError != null){
+                            String content = checkedsentences.get(i).getContent();
+                            stringBuffer.append(content + "删除失败" + System.getProperty("line.separator"));
+                        }
+                    }
+                }
+                if(stringBuffer.toString().length() > 0){
+                    Toast.makeText(SentencesFragment.this.getContext(),stringBuffer.toString(),Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -769,7 +892,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                         favorite();
                         break;
                     case CREATESGROUP:
-                        showDeleteWordGroupConfirm();
+                        showDeleteSentenceGroupConfirm();
                         break;
                     case FAVORITESGROUP:
                         unFavorite();

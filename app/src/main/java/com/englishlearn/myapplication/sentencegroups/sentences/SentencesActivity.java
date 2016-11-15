@@ -14,6 +14,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 public class SentencesActivity extends AppCompatActivity {
 
     public static final String OBJECT = "object";
+    public static final String SENTENCECOLLECTGROUP = "sentencecollectgroup";
     public static final String TYPE = "sentencegrouptype";
     private static final String TAG = SentencesActivity.class.getSimpleName();
     private SentenceGroup sentenceGroup;
@@ -27,6 +28,11 @@ public class SentencesActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(OBJECT)) {
             sentenceGroup = (SentenceGroup) getIntent().getSerializableExtra(OBJECT);
+            sentenceGroupType = (SentenceGroupType) getIntent().getSerializableExtra(TYPE);
+        }
+
+        if(getIntent().hasExtra(SENTENCECOLLECTGROUP)){
+            sentenceCollectGroup = (SentenceCollectGroup) getIntent().getSerializableExtra(SENTENCECOLLECTGROUP);
             sentenceGroupType = (SentenceGroupType) getIntent().getSerializableExtra(TYPE);
         }
 
@@ -44,6 +50,7 @@ public class SentencesActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SentencesFragment.OBJECT,sentenceGroup);
         bundle.putSerializable(SentencesFragment.TYPE,sentenceGroupType);
+        bundle.putSerializable(SentencesFragment.SENTENCECOLLECTGROUP,sentenceCollectGroup);
         fragment.setArguments(bundle);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

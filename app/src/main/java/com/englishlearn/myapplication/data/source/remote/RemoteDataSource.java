@@ -255,6 +255,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteSentences(List<Sentence> sentences) {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> updateSentenceById(Sentence sentence) {
         return null;
     }
@@ -276,6 +281,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<Sentence>> getSentencesRxBySentenceGroupId(String sentencegroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Sentence>> getSentencesRxBySentenceCollectGroupId(String sentencecollectgroupId, int page, int pageSize) {
         return null;
     }
 
@@ -431,6 +441,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteSentenceGroupAndSentences(String sentenceGroupId, List<Sentence> sentences) {
         return null;
     }
 
