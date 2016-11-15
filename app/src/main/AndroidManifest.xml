@@ -169,6 +169,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".sentencegroups.sentences.sentencecollect.CreateSentenceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activityforresult.multiple.MultipleActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

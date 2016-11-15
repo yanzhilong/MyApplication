@@ -26,7 +26,6 @@ import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.service.MusicService;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +39,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by yanzl on 16-10-23.
  */
 
-public class SentenceDetailFragment extends DialogFragment implements View.OnClickListener, Serializable,SentenceCollectGroupsSelectFragment.onItemClickListener{
+public class SentenceDetailFragment extends DialogFragment implements View.OnClickListener{
 
     public static final String SENTENCE = "sentence";
     private static final int SENTENCEFAVORITE = 0;//收藏句子
@@ -179,7 +178,7 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
     }
 
     private void showSentenceCollectGroups(){
-        if(sentencegroupss != null){
+        /*if(sentencegroupss != null){
             SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable(SentenceCollectGroupsSelectFragment.ITEMCLICKLISTENER,this);
@@ -191,7 +190,7 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
             sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencegroup");
         }else{
             Toast.makeText(this.getContext(),"获取分组信息失败",Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 
@@ -255,8 +254,4 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
         Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onItemClick(int flag, int posion) {
-
-    }
 }

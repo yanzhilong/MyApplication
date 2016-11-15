@@ -1,5 +1,7 @@
 package com.englishlearn.myapplication.sentencegroups.sentences;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -12,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,14 +24,18 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.activityforresult.multiple.MultipleActivity;
 import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.RemoteCode;
+import com.englishlearn.myapplication.data.source.remote.bmob.BatchResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
+import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
 
@@ -45,10 +54,12 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SentencesFragment extends Fragment implements View.OnClickListener {
 
+    private static final int SENTENCEFAVORITE = 1;//收藏句子
+    public static final int REQUESTCODE = 0;//多选请求码
     public static final String OBJECT = "object";
     public static final String TYPE = "sentencegrouptype";
     private static final String TAG = SentencesFragment.class.getSimpleName();
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 100;
     private SentenceGroup sentenceGroup;
     private SentenceGroupType sentenceGroupType;
     private MyAdapter myAdapter;
@@ -64,6 +75,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
     private FloatingActionButton fab_deleteorfavorite_wordgroup;
     private FloatingActionButton fab_edit_wordgroup;
+    private List<Sentence> checkedsentences;
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -78,11 +90,52 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             sentenceGroupType = (SentenceGroupType) getArguments().getSerializable(TYPE);
         }
 
+        switch (sentenceGroupType){
+
+            case OTHERSGROUP:
+                //普通句组
+                break;
+            case CREATESGROUP:
+                break;
+            case CREATEFSGROUP:
+                break;
+            case FAVORITESGROUP:
+                break;
+        }
+
         MyApplication.instance.getAppComponent().inject(this);
 
         mList = new ArrayList();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+
+            case REQUESTCODE:
+                if(resultCode == Activity.RESULT_OK){
+                    List<Integer> checkedlist = data.getIntegerArrayListExtra(MultipleActivity.CHECKEDARRAY);
+                    checkedsentences = new ArrayList<>();
+                    for(int i = 0; i < mList.size(); i++){
+                        if(checkedlist.contains(i)){
+                            checkedsentences.add(mList.get(i));
+                        }
+                    }
+                    if(checkedsentences.size() > 0){
+                        onSentencesSelected();
+                    }
+                }
+                break;
+            case SENTENCEFAVORITE:
+
+                String sentencecollectgroupId = data.getStringExtra(SentenceCollectGroupsSelectFragment.SENTENCEGCOLLECTGROUPID);
+                favoriteSentences(sentencecollectgroupId);
+                break;
         }
     }
 
@@ -144,20 +197,20 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         fab_deleteorfavorite_wordgroup.setOnClickListener(this);
 
         switch (sentenceGroupType){
-            case TOP:
+            case OTHERSGROUP:
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                 isShowFavorite = true;
                 break;
-            case CREATE:
+            case CREATESGROUP:
                 fab_edit_wordgroup.setVisibility(View.VISIBLE);
                 fab_edit_wordgroup.setBackgroundResource(R.drawable.ic_edit);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_delete);
                 isShowFavorite = false;
                 break;
-            case FAVORITE:
+            case FAVORITESGROUP:
                 fab_edit_wordgroup.setVisibility(View.GONE);
                 fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
                 fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
@@ -181,17 +234,239 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 refershList();
             }
         });
-
         refershList();//刷新列表
+        //如果有设置菜单，需要加这个
+        setHasOptionsMenu(true);
 
         return root;
     }
+
+
 
     @Override
     public void onResume() {
         super.onResume();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        switch (sentenceGroupType){
+
+            case OTHERSGROUP:
+                //普通句组
+                inflater.inflate(R.menu.menu_sentences_othersgroup, menu);
+                break;
+            case CREATESGROUP:
+                inflater.inflate(R.menu.menu_sentences_createsgroup, menu);
+                break;
+            case CREATEFSGROUP:
+                inflater.inflate(R.menu.menu_sentences_createfsgroup, menu);
+                break;
+            case FAVORITESGROUP:
+                inflater.inflate(R.menu.menu_sentences_favoritesgroup, menu);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (sentenceGroupType){
+
+            case OTHERSGROUP:
+                //普通句组
+                return othersgroup(item);
+            case CREATESGROUP:
+                return createsgroup(item);
+            case CREATEFSGROUP:
+                return createfsgroup(item);
+            case FAVORITESGROUP:
+                return favoritesgroup(item);
+        }
+        return true;
+    }
+
+    private void onSentencesSelected(){
+        switch (sentenceGroupType){
+
+            case OTHERSGROUP:
+                //普通句组
+                showSentenceCollectGroups();//显示分组信息
+                break;
+            case CREATESGROUP:
+            case CREATEFSGROUP:
+            case FAVORITESGROUP:
+                break;
+        }
+    }
+
+    private void showSentenceCollectGroups(){
+        SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
+        Bundle bundle = new Bundle();
+        sentenceCollectGroupsSelectFragment.setTargetFragment(this,SENTENCEFAVORITE);
+        sentenceCollectGroupsSelectFragment.setArguments(bundle);
+        sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencegroup");
+    }
+
+    private void favoriteSentenGroup(SentenceGroup sentenceGroup){
+
+        SentenceGroupCollect sentenceGroupCollect = new SentenceGroupCollect();
+        sentenceGroupCollect.setUserId(repository.getUserInfo().getObjectId());
+        sentenceGroupCollect.setSentencegroupId(sentenceGroup.getObjectId());
+        Subscription subscription = repository.addSentenceGroupCollect(sentenceGroupCollect).subscribe(new Subscriber<SentenceGroupCollect>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(SentenceGroupCollect sentenceGroupCollect1) {
+
+                if(sentenceGroupCollect1 != null){
+                    Toast.makeText(SentencesFragment.this.getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(SentencesFragment.this.getContext(),"收藏失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    private void favoriteSentences(String groupId){
+
+        final List<SentenceCollect> sentenceCollects = new ArrayList<>();
+        for(int i = 0; i < checkedsentences.size(); i++){
+            SentenceCollect sentenceCollect = new SentenceCollect();
+            sentenceCollect.setUserId(repository.getUserInfo().getObjectId());
+            sentenceCollect.setSentenceId(checkedsentences.get(i).getObjectId());
+            sentenceCollect.setScollectgroupId(groupId);
+            sentenceCollects.add(sentenceCollect);
+        }
+
+        Subscription subscription = repository.addSentenceCollects(sentenceCollects).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    List<BatchResult> list = (List<BatchResult>) bmobRequestException.getObject();
+                    StringBuffer stringBuffer = new StringBuffer();
+                    if(list.size() == checkedsentences.size()){
+                        for(int i = 0; i < checkedsentences.size(); i++){
+                            BatchResult batchResult = list.get(i);
+                            BmobDefaultError bmobDefaultError = batchResult.getError();
+                            if(bmobDefaultError != null){
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                if(createuser == RemoteCode.COMMON.Common_UNIQUE){
+                                    String content = checkedsentences.get(i).getContent();
+                                    stringBuffer.append(content + "已经收藏在当前分组了" + System.getProperty("line.separator"));
+                                }
+                            }
+                        }
+                    }
+                    if(stringBuffer.toString().length() > 0){
+                        Toast.makeText(SentencesFragment.this.getContext(),stringBuffer.toString(),Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                Toast.makeText(SentencesFragment.this.getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    private void showMultipleSelect(){
+
+        String[] sentences = new String[mList.size()];
+        for(int i = 0; i < mList.size(); i++){
+            sentences[i] = mList.get(i).getContent();
+        }
+        Intent intent = new Intent(this.getContext(),MultipleActivity.class);
+        intent.putExtra(MultipleActivity.STRINGARRAY,sentences);
+        startActivityForResult(intent,REQUESTCODE);
+    }
+
+
+    //其它人的句组
+    private boolean othersgroup(MenuItem item){
+
+        switch (item.getItemId()) {
+            case R.id.favorite_sgroup:
+                Log.d(TAG, "收藏句单");
+                if(sentenceGroup.getUserId().equals(repository.getUserInfo().getObjectId())){
+                    Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句单",Toast.LENGTH_SHORT).show();
+                }else{
+                    favoriteSentenGroup(sentenceGroup);
+                }
+                break;
+            case R.id.favorite_sentences:
+                Log.d(TAG, "收藏句子");
+                if(sentenceGroup.getUserId().equals(repository.getUserInfo().getObjectId())){
+                    Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
+                }else{
+                    showMultipleSelect();
+                }
+                break;
+        }
+        return true;
+    }
+
+    //我创建的句组
+    private boolean createsgroup(MenuItem item){
+
+        switch (item.getItemId()) {
+            case R.id.rename_sgroup:
+                Log.d(TAG, "修改名称");
+                break;
+            case R.id.delete_sentences:
+                Log.d(TAG, "删除句子");
+                showMultipleSelect();
+                break;
+        }
+        return true;
+    }
+
+    //我创建的收藏句组
+    private boolean createfsgroup(MenuItem item){
+
+        switch (item.getItemId()) {
+            case R.id.delete_fsgroup:
+                Log.d(TAG, "删除句单");
+                break;
+            case R.id.delete_sentences:
+                Log.d(TAG, "删除句子");
+                showMultipleSelect();
+                break;
+        }
+        return true;
+    }
+
+    //我收藏的句组
+    private boolean favoritesgroup(MenuItem item){
+
+        switch (item.getItemId()) {
+            case R.id.cancel_fsgroup:
+                Log.d(TAG, "取消收藏");
+                showMultipleSelect();
+                break;
+        }
+        return true;
+    }
     @Override
     public void onPause() {
         super.onPause();
@@ -481,13 +756,13 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.fab_deleteorfavorite_wordgroup:
                 switch (sentenceGroupType){
-                    case TOP:
+                    case OTHERSGROUP:
                         favorite();
                         break;
-                    case CREATE:
+                    case CREATESGROUP:
                         showDeleteWordGroupConfirm();
                         break;
-                    case FAVORITE:
+                    case FAVORITESGROUP:
                         unFavorite();
                         break;
                     default:

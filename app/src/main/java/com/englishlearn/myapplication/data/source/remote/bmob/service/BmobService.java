@@ -18,6 +18,7 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
+import com.englishlearn.myapplication.data.source.remote.bmob.BatchRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.GrammarResult;
@@ -71,6 +72,16 @@ import rx.Observable;
 public interface BmobService{
 
     String BMOBAPI = "https://api.bmob.cn";
+
+    //指操作数据
+
+    @POST("/1/batch")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> batchPost(@Body BatchRequest batchRequest);
 
 
     //用户模块****************************************************************************

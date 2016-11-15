@@ -103,7 +103,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
                 Log.d(TAG, sentenceGroup.toString());
                 Intent intent = new Intent(MyCollectSentenceGroupsFragment.this.getContext(),SentencesActivity.class);
                 intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.FAVORITE);
+                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.FAVORITESGROUP);
                 startActivity(intent);
             }
         });

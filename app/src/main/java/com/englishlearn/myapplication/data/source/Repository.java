@@ -687,6 +687,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> addSentenceCollects(List<SentenceCollect> sentenceCollects) {
+        return mBmobDataSource.addSentenceCollects(sentenceCollects);
+    }
+
+    @Override
     public Observable<SentenceCollect> addSentenceCollectByNotSelf(SentenceCollect sentenceCollect) {
         return mBmobDataSource.addSentenceCollectByNotSelf(sentenceCollect);
     }

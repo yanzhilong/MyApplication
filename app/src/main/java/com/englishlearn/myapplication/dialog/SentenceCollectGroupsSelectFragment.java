@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,12 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,37 +35,24 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SentenceCollectGroupsSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-    public static final String ITEMS = "tractatetype";
-    public static final String SENTENCELIST = "sentencegrouplist";
-    public static final String SENTENCE = "sentence";
-    public static final String ITEMCLICKLISTENER = "ItemClickListener";
-    public static final String FLAG = "flag";//用于一个界面区分不同的点击事件
+    public static final String SENTENCEGCOLLECTGROUPID = "sentencecollectgroupid";
+    private static final String TAG = SentenceCollectGroupsSelectFragment.class.getSimpleName();
 
-    private Sentence sentence;
     TextView createGroup;
-    String[] tractatetype = null;
     private ArrayList<SentenceCollectGroup> sentenceGroups;
-    ListView mylist;
-    private int flag = 0;
-    private onItemClickListener onItemClickListener;
+    private String[] sentencegrouparray;
+    private ListView listView;
     @Inject
     Repository repository;
     private CompositeSubscription mSubscriptions;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            onItemClickListener = (SentenceCollectGroupsSelectFragment.onItemClickListener) bundle.getSerializable(ITEMCLICKLISTENER);
-            tractatetype = bundle.getStringArray(ITEMS);
-            sentenceGroups = (ArrayList<SentenceCollectGroup>) bundle.getSerializable(SENTENCELIST);
-            sentence = (Sentence) bundle.getSerializable(SENTENCE);
-            flag = bundle.getInt(FLAG);
-        }
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
+        sentenceGroups = new ArrayList<>();
+        sentencegrouparray = new String[0];
         MyApplication.instance.getAppComponent().inject(this);
     }
 
@@ -77,32 +63,39 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
         View view = inflater.inflate(R.layout.sentencecollectgroupsselect_frag, null, false);
         createGroup = (TextView) view.findViewById(R.id.createGroup);
         createGroup.setOnClickListener(this);
-        mylist = (ListView) view.findViewById(R.id.listview);
+        listView = (ListView) view.findViewById(R.id.listview);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getSentenceCollectGroups();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayAdapter< String > adapter = new ArrayAdapter< String >(getActivity(),
-                android.R.layout.simple_list_item_1, tractatetype);
-        mylist.setAdapter(adapter);
-        mylist.setOnItemClickListener(this);
+        setAdapter(sentencegrouparray);
     }
+
+    private void setAdapter(String[] valuse){
+        ArrayAdapter< String > adapter = new ArrayAdapter< String >(getActivity(),
+                android.R.layout.simple_list_item_1, valuse);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        listView.setOnItemClickListener(this);
+    }
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
-        /*if(onItemClickListener != null){
-            onItemClickListener.onItemClick(flag,position);
-        }*/
         Intent intent = getActivity().getIntent();
-        intent.putExtra(SentenceDetailFragment.SENTENCEGCOLLECTGROUPID,sentenceGroups.get(position).getObjectId());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), SentenceDetailFragment.ITEMSELECT,intent);
+        intent.putExtra(SENTENCEGCOLLECTGROUPID,sentenceGroups.get(position).getObjectId());
+        getTargetFragment().onActivityResult(getTargetRequestCode(),0,intent);
         this.dismiss();
-
-        //addSentenceCollect(sentenceGroups.get(position).getObjectId());
-        //dismiss();
     }
 
     @Override
@@ -118,7 +111,6 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
         switch (v.getId()){
             case R.id.createGroup:
                 showCreageGroup();
-                //this.dismiss();
                 break;
         }
     }
@@ -141,6 +133,10 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
      */
     private void createSentenceCollectGroup(String name){
 
+        if(name.isEmpty()){
+            Toast.makeText(this.getContext(),"名称不能为空",Toast.LENGTH_SHORT).show();
+            return;
+        }
         SentenceCollectGroup sentenceCollectGroup = new SentenceCollectGroup();
         sentenceCollectGroup.setUserId(repository.getUserInfo().getObjectId());
         sentenceCollectGroup.setName(name);
@@ -173,6 +169,38 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
     }
 
 
+    private void getSentenceCollectGroups(){
+
+
+        Subscription subscription = repository.getSentenceCollectGroupRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<SentenceCollectGroup>>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,e.toString());
+                Toast.makeText(SentenceCollectGroupsSelectFragment.this.getContext(),"获取分组信息失败",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(List<SentenceCollectGroup> list) {
+                if(list != null){
+                    Log.d(TAG,"onNext size:" + list.size());
+                    sentenceGroups.clear();
+                    sentenceGroups.addAll(list);
+                    sentencegrouparray = new String[sentenceGroups.size()];
+                    for (int i = 0; i < sentenceGroups.size(); i++){
+                        sentencegrouparray[i] = sentenceGroups.get(i).getName();
+                    }
+                    setAdapter(sentencegrouparray);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
     //创建失败
     private void createWGFail(String message){
 
@@ -193,40 +221,6 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
         intent.putExtra(SentenceDetailFragment.SENTENCEGCOLLECTGROUPID,sentencecollectgroupId);
         getTargetFragment().onActivityResult(getTargetRequestCode(), SentenceDetailFragment.ITEMSELECT,intent);
         this.dismiss();
-
-        if(1 > 0){
-            return;
-        }
-        SentenceCollect sentenceCollect = new SentenceCollect();
-        sentenceCollect.setUserId(repository.getUserInfo().getObjectId());
-        sentenceCollect.setSentenceId(sentence.getObjectId());
-        sentenceCollect.setScollectgroupId(sentencecollectgroupId);
-        Subscription subscription = repository.addSentenceCollectByNotSelf(sentenceCollect).subscribe(new Subscriber<SentenceCollect>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    favoriteFail(bmobRequestException.getMessage());
-                }else{
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-            }
-
-            @Override
-            public void onNext(SentenceCollect sentenceCollect) {
-                if(sentenceCollect != null){
-                    favoriteSuccess();
-                }else {
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
     }
 
     private void favoriteSuccess(){
@@ -235,9 +229,5 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
 
     private void favoriteFail(String message){
         Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    public interface onItemClickListener extends Serializable{
-        void onItemClick(int flag, int posion);
     }
 }

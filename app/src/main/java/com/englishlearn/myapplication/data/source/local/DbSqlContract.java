@@ -54,7 +54,7 @@ public class DbSqlContract {
     public static final List<String> V2;
 
     public static final String V1_CreateSentence =
-            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.SentenceEntry.TABLE_NAME + " (" +
+            "CREATESGROUP TABLE IF NOT EXISTS " + PersistenceContract.SentenceEntry.TABLE_NAME + " (" +
                     PersistenceContract.SentenceEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.SentenceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_SEP +
@@ -62,7 +62,7 @@ public class DbSqlContract {
                     " )";
 
     public static final String V1_CreateGrammar =
-            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.GrammarEntry.TABLE_NAME + " (" +
+            "CREATESGROUP TABLE IF NOT EXISTS " + PersistenceContract.GrammarEntry.TABLE_NAME + " (" +
                     PersistenceContract.GrammarEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.GrammarEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.GrammarEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
@@ -70,7 +70,7 @@ public class DbSqlContract {
                     " )";
 
     public static final String V1_CreateSentenceGrammar =
-            "CREATE TABLE IF NOT EXISTS " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
+            "CREATESGROUP TABLE IF NOT EXISTS " + PersistenceContract.SentenceGrammarContactsEntry.TABLE_NAME + " (" +
                     PersistenceContract.SentenceGrammarContactsEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
                     PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_SENTENCE_ID + TEXT_TYPE + COMMA_SEP +
                     PersistenceContract.SentenceGrammarContactsEntry.COLUMN_NAME_GRAMMAR_ID + TEXT_TYPE + COMMA_SEP +

@@ -621,6 +621,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> addSentenceCollects(List<SentenceCollect> sentenceCollects) {
+        return null;
+    }
+
+    @Override
     public Observable<SentenceCollect> addSentenceCollectByNotSelf(SentenceCollect sentenceCollect) {
         return null;
     }

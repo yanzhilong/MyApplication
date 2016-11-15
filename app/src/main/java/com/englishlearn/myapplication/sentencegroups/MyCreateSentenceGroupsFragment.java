@@ -102,7 +102,7 @@ public class MyCreateSentenceGroupsFragment extends Fragment {
                 Log.d(TAG, sentenceGroup.toString());
                 Intent intent = new Intent(MyCreateSentenceGroupsFragment.this.getContext(),SentencesActivity.class);
                 intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.CREATE);
+                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.CREATESGROUP);
                 startActivity(intent);
 
             }

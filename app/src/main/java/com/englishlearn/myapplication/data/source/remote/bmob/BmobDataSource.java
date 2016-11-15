@@ -28,9 +28,11 @@ import com.englishlearn.myapplication.util.RxUtil;
 import com.englishlearn.myapplication.util.SearchUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -3689,6 +3691,75 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> addSentenceCollects(List<SentenceCollect> sentenceCollects) {
+
+        BatchRequest batchRequest = new BatchRequest();
+
+        List<BatchRequest.BatchRequestChild> batchRequestChildren = new ArrayList<>();
+        for(int i = 0; i < sentenceCollects.size(); i ++){
+            BatchRequest.BatchRequestChild<SentenceCollect> batchRequestChild = new BatchRequest.BatchRequestChild();
+            batchRequestChild.setMethod("POST");
+            batchRequestChild.setPath("/1/classes/SentenceCollect");
+            batchRequestChild.setBody(sentenceCollects.get(i));
+            batchRequestChildren.add(batchRequestChild);
+        }
+        batchRequest.setRequests(batchRequestChildren);
+
+        return bmobService.batchPost(batchRequest)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        Gson gson = new GsonBuilder().create();
+                        if(responseBodyResponse.isSuccessful()){
+                            try {
+                                getBatchResult(responseBodyResponse);
+                            } catch (BmobRequestException e) {
+                                return Observable.error(e);
+                            }
+                            return Observable.just(true);
+                        }else{
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    private List<BatchResult> getBatchResult(Response<ResponseBody> responseBodyResponse) throws BmobRequestException {
+
+        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+        Gson gson = new GsonBuilder().create();
+        String successmessage = null;
+        List<BatchResult> list = null;
+        try {
+            successmessage = responseBodyResponse.body().string();
+            list = gson.fromJson(successmessage,new TypeToken<List<BatchResult>>(){}.getType());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<BatchResult> error = new ArrayList<BatchResult>();
+        for(int i = 0; i < list.size(); i ++){
+            if(list.get(i).getError() != null){
+                error.add(list.get(i));
+            }
+        }
+        if(error.size() > 0){
+            bmobRequestException.setObject(list);
+            throw bmobRequestException;
+        }
+        Log.d(TAG,successmessage);
+        return list;
+    }
+
+    @Override
     public Observable<SentenceCollect> addSentenceCollectByNotSelf(final SentenceCollect sentenceCollect) {
 
         //查询这个句子是不是自己创建的
@@ -3706,7 +3777,7 @@ public class BmobDataSource implements RemoteData {
                         }
 
                     }
-                });
+                }).compose(RxUtil.<SentenceCollect>applySchedulers());
     }
 
     @Override

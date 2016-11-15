@@ -101,7 +101,7 @@ public class SentenceGroupsTopFragmentFragment extends Fragment {
                 Log.d(TAG, sentenceGroup.toString());
                 Intent intent = new Intent(SentenceGroupsTopFragmentFragment.this.getContext(),SentencesActivity.class);
                 intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.TOP);
+                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.OTHERSGROUP);
                 startActivity(intent);
             }
 

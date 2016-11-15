@@ -976,6 +976,12 @@ public interface RemoteData extends DataSource{
      */
     Observable<SentenceCollect> addSentenceCollect(SentenceCollect sentenceCollect);
 
+    /**
+     * 增加句子收藏(多条)
+     * @param sentenceCollects
+     * @return
+     */
+    Observable<Boolean> addSentenceCollects(List<SentenceCollect> sentenceCollects);
 
     /**
      * 增加句子收藏

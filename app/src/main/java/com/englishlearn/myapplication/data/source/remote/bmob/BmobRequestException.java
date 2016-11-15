@@ -5,6 +5,7 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
  */
 public class BmobRequestException extends Throwable {
 
+    private Object object;
     private BmobDefaultError bmobDefaultError;
     public BmobRequestException() {
         super();
@@ -20,5 +21,13 @@ public class BmobRequestException extends Throwable {
 
     public BmobRequestException(BmobDefaultError bmobDefaultError) {
         this.bmobDefaultError = bmobDefaultError;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
     }
 }
