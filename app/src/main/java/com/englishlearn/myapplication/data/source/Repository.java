@@ -717,8 +717,18 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId, String sentenceGroupId, int page, int pageSize) {
-        return mBmobDataSource.getSentenceCollectRxByUserIdAndSentenceGroupId(userId,sentenceGroupId,page,pageSize);
+    public Observable<Boolean> deleteSentenceCollects(List<SentenceCollect> sentenceCollects) {
+        return mBmobDataSource.deleteSentenceCollects(sentenceCollects);
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceCollectGroupId(String userId, String sentenceCollectGroupId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceCollectRxByUserIdAndSentenceCollectGroupId(userId,sentenceCollectGroupId,page,pageSize);
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxBySentenceCollectGroupId(String sentenceCollectGroupId, int page, int pageSize) {
+        return mBmobDataSource.getSentenceCollectRxBySentenceCollectGroupId(sentenceCollectGroupId,page,pageSize);
     }
 
     @Override

@@ -120,7 +120,7 @@ public class SearchUtil {
 
         Gson gson = new Gson();
         Map map5 = new HashMap();
-        map5.put("sentencegroupId",sentencegroupId);
+        map5.put("sentenceGroup",sentencegroupId);
 
         //String where = getWhereSubquery("objectId",getWhereSubquery("$select",getSelect("WordCollect",getWhereSubquery("wordgroupId",getSelect("PhoneticsWords",getWhere("phoneticsSymbolsId",phoneticsId),"wordgroupId")),"wordId")));
 
@@ -198,7 +198,7 @@ public class SearchUtil {
 
         Gson gson = new Gson();
         Map map5 = new HashMap();
-        map5.put("userId",userId);
+        map5.put("user",userId);
         Map map6 = new HashMap();
         map6.put("className","SentenceGroupCollect");
         map6.put("where",map5);
@@ -607,6 +607,27 @@ public class SearchUtil {
     }
 
 
+    public String deleteSentenceCollects(String collectgroupId,String sentenceId){
+
+        Gson gson = new Gson();
+        Map map14 = new HashMap();
+        map14.put("sentenceId",sentenceId);
+
+        Map map17 = new HashMap();
+        map17.put("scollectgroupId",collectgroupId);
+
+        List<Map<String,String>> list = new ArrayList<>();
+        list.add(map14);
+        list.add(map17);
+        Map<String,List<Map<String,String>>> map19 = new HashMap();
+        map19.put("$and",list);
+
+        String jsonStr = gson.toJson(map19);
+        return jsonStr;
+    }
+
+
+
     /**
      * 搜索指定分类下面的文章,筛选未收藏的
      * @param tractateTypeId
@@ -699,7 +720,7 @@ public class SearchUtil {
         Gson gson = new Gson();
 
         Map map14 = new HashMap();
-        map14.put("userId",userId);
+        map14.put("user",userId);
 
         String jsonStr = gson.toJson(map14);
         return jsonStr;
@@ -714,7 +735,7 @@ public class SearchUtil {
         Gson gson = new Gson();
 
         Map map14 = new HashMap();
-        map14.put("userId",userId);
+        map14.put("user",userId);
 
         String jsonStr = gson.toJson(map14);
         return jsonStr;

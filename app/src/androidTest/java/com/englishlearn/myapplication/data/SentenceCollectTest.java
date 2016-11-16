@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -58,8 +57,8 @@ public class SentenceCollectTest {
         //添加　
         Log.d(TAG,"testSentenceCollect_add");
         SentenceCollect addSentenceCollect = new SentenceCollect();
-        addSentenceCollect.setUserId(Constant.userId0703);
-        addSentenceCollect.setSentencegroupId("5325311d62");
+        addSentenceCollect.setUserId("0703");
+        addSentenceCollect.setScollectgroupId("5325311d62");
         addSentenceCollect.setSentenceId("aa53588477");
 
         TestSubscriber<SentenceCollect> testSubscriber_add = new TestSubscriber<>();

@@ -20,10 +20,8 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.service.MusicService;
 
 import java.util.ArrayList;
@@ -46,7 +44,6 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
     public static final int ITEMSELECT = 1;//选择了句子分组
     public static final String SHOWFAVORITE = "showfavorite";// 是否显示收藏按钮
     private static final String TAG = SentenceDetailFragment.class.getSimpleName();
-    public static final String SENTENCEGCOLLECTGROUPID = "sentencecollectgroupid";
     private CompositeSubscription mSubscriptions;
 
     private boolean showfavorite;
@@ -204,8 +201,8 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
                 switch (resultCode){
 
                     case ITEMSELECT:
-                        String sentencecollectgroupId = data.getStringExtra(SENTENCEGCOLLECTGROUPID);
-                        addSentenceCollect(sentencecollectgroupId);
+                       // String sentencecollectgroupId = data.getStringExtra(SENTENCEGCOLLECTGROUPID);
+                       // addSentenceGroup(sentencecollectgroupId);
                         break;
                 }
 
@@ -213,11 +210,11 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
         }
     }
 
-    public void addSentenceCollect(String sentencecollectgroupId){
+    /*public void addSentenceGroup(String sentencecollectgroupId){
         SentenceCollect sentenceCollect = new SentenceCollect();
         sentenceCollect.setUserId(repository.getUserInfo().getObjectId());
-        sentenceCollect.setSentenceId(sentence.getObjectId());
-        sentenceCollect.setScollectgroupId(sentencecollectgroupId);
+        sentenceCollect.setSentence(sentence);
+        sentenceCollect.setSentenceCollectGroup(sentencecollectgroupId);
         Subscription subscription = repository.addSentenceCollectByNotSelf(sentenceCollect).subscribe(new Subscriber<SentenceCollect>() {
             @Override
             public void onCompleted() {
@@ -244,7 +241,7 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
             }
         });
         mSubscriptions.add(subscription);
-    }
+    }*/
 
     private void favoriteSuccess(){
         Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();

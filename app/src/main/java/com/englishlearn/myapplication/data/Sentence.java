@@ -8,15 +8,24 @@ import java.io.Serializable;
  */
 public class Sentence implements Serializable,Cloneable {
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
     private String content; //内容
     private String translation; //译文
     private boolean open;//是否公开
-    private String userId; //用户Id
-    private String sentencegroupId; //分组Id
+    private User user; //用户Id
+    private SentenceGroup sentenceGroup; //分组Id
     private String soundurl;//声音
     private String remark; //备注
 
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "Sentence";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -42,12 +51,12 @@ public class Sentence implements Serializable,Cloneable {
         this.translation = translation;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getRemark() {
@@ -66,12 +75,12 @@ public class Sentence implements Serializable,Cloneable {
         this.soundurl = soundurl;
     }
 
-    public String getSentencegroupId() {
-        return sentencegroupId;
+    public SentenceGroup getSentenceGroup() {
+        return sentenceGroup;
     }
 
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
+    public void setSentenceGroup(SentenceGroup sentenceGroup) {
+        this.sentenceGroup = sentenceGroup;
     }
 
     public boolean isOpen() {
@@ -97,12 +106,12 @@ public class Sentence implements Serializable,Cloneable {
     @Override
     public String toString() {
         return "Sentence{" +
-                "objectId='" + objectId + '\'' +
+                ", objectId='" + objectId + '\'' +
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
                 ", open=" + open +
-                ", userId='" + userId + '\'' +
-                ", sentencegroupId='" + sentencegroupId + '\'' +
+                ", user=" + user +
+                ", sentenceGroup=" + sentenceGroup +
                 ", soundurl='" + soundurl + '\'' +
                 ", remark='" + remark + '\'' +
                 '}';

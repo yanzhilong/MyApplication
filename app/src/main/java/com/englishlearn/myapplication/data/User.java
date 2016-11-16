@@ -1,11 +1,17 @@
 package com.englishlearn.myapplication.data;
 
 
+import java.io.Serializable;
+
 /**
  * Created by yanzl on 16-9-3.
  * 用户表
  */
-public class User{
+public class User implements Serializable,Cloneable{
+
+    //标记一对多关系
+    private String __type;
+    private String className;
 
     private String objectId;//数据庫唯一id
     private String username;
@@ -20,6 +26,10 @@ public class User{
     private String iconurl;
     private String birthday;
 
+    public void setPointer(){
+        __type = "Pointer";
+        className = "_User";
+    }
 
     public String getObjectId() {
         return objectId;

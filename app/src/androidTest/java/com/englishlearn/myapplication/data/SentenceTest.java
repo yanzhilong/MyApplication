@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -61,7 +60,7 @@ public class SentenceTest {
             Sentence addsentence = new Sentence();
             addsentence.setContent("Hello World " + i);
             addsentence.setTranslation("你好，世界 " + i);
-            addsentence.setUserId(Constant.userId0703);
+            addsentence.setUserId("0703");
             addsentence.setRemark("测试");
 
             TestSubscriber<Sentence> testSubscriber_add = new TestSubscriber<>();

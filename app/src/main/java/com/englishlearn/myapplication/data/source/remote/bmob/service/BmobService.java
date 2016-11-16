@@ -1138,12 +1138,30 @@ public interface BmobService{
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/SentenceCollect")
+    @GET("/1/classes/SentenceCollect?include=sentence")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<SentenceCollectResult>> getSentenceCollectRxByUserIdAndSentenceGroupId(@Query("where")String userIdsentencegroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
+
+    /**
+     * 根据userId和句子分組Id获取句子收藏，分页
+     * @param userIdsentencegroupIdjson userId和句子分組Id
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/SentenceCollect?include=sentence")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<SentenceCollectResult>> getSentenceCollectRxBySentenceCollectGroupId(@Query("where")String userIdsentencegroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
 
 
     //文章收藏模块****************************************************************************

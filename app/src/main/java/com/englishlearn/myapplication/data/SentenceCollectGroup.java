@@ -7,9 +7,18 @@ import java.io.Serializable;
  */
 public class SentenceCollectGroup implements Serializable,Cloneable {
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
     private String name; //分组名称
-    private String userId; //用户Id
+    private User user; //用户Id
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "SentenceCollectGroup";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -27,12 +36,12 @@ public class SentenceCollectGroup implements Serializable,Cloneable {
         this.name = name;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -52,7 +61,7 @@ public class SentenceCollectGroup implements Serializable,Cloneable {
         return "SentenceCollectGroup{" +
                 "objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
-                ", userId='" + userId + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

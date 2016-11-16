@@ -823,7 +823,7 @@ public class BmobDataSourceTest {
         Log.d(TAG,"testSentenceGroup_add");
         SentenceGroup addSentenceGroup = new SentenceGroup();
         addSentenceGroup.setName("Defaule");
-        addSentenceGroup.setOpen("true");
+        addSentenceGroup.setOpen(true);
         addSentenceGroup.setUserId("Userid0000");
 
         TestSubscriber<SentenceGroup> testSubscriber_add = new TestSubscriber<>();
@@ -841,7 +841,7 @@ public class BmobDataSourceTest {
         Log.d(TAG,"testSentenceGroup_add");
         SentenceGroup addSentenceGroup1 = new SentenceGroup();
         addSentenceGroup1.setName("Defaule");
-        addSentenceGroup1.setOpen("false");
+        addSentenceGroup1.setOpen(false);
         addSentenceGroup1.setUserId("Userid0000");
 
         TestSubscriber<SentenceGroup> testSubscriber_add1 = new TestSubscriber<>();
@@ -1088,8 +1088,11 @@ public class BmobDataSourceTest {
         Log.d(TAG,"testSentenceCollect_add");
         SentenceCollect addSentenceCollect = new SentenceCollect();
         addSentenceCollect.setUserId("UserId0000");
-        addSentenceCollect.setSentencegroupId("SentenceGroupId0000");
-        addSentenceCollect.setSentenceId("SentenceId0000");
+        addSentenceCollect.setScollectgroupId("SentenceGroupId0000");
+        Sentence sentence = new Sentence();
+        sentence.setObjectId("SentenceId0000");
+        sentence.setPointer();
+        addSentenceCollect.setSentence(sentence);
 
         TestSubscriber<SentenceCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addSentenceCollect(addSentenceCollect).toBlocking().subscribe(testSubscriber_add);
@@ -1106,7 +1109,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testSentenceCollect_getAll");
         TestSubscriber<List<SentenceCollect>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getSentenceCollectRxByUserIdAndSentenceGroupId("UserId0000","SentenceGroupId0000",0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getSentenceCollectRxByUserIdAndSentenceCollectGroupId("UserId0000","SentenceGroupId0000",0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<SentenceCollect>> listall = testSubscriber_getall.getOnNextEvents();
         List<SentenceCollect> wordCollects = null;

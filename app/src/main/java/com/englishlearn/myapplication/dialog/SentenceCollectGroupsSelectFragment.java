@@ -35,7 +35,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SentenceCollectGroupsSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
-    public static final String SENTENCEGCOLLECTGROUPID = "sentencecollectgroupid";
+    public static final String SENTENCEGCOLLECTGROUP = "sentencecollectgroup";
     private static final String TAG = SentenceCollectGroupsSelectFragment.class.getSimpleName();
 
     TextView createGroup;
@@ -92,11 +92,16 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
+        setOnActivityResult(sentenceGroups.get(position));
+    }
+
+    private void setOnActivityResult(SentenceCollectGroup sentenceCollectGroup){
         Intent intent = getActivity().getIntent();
-        intent.putExtra(SENTENCEGCOLLECTGROUPID,sentenceGroups.get(position).getObjectId());
+        intent.putExtra(SENTENCEGCOLLECTGROUP,sentenceCollectGroup);
         getTargetFragment().onActivityResult(getTargetRequestCode(),0,intent);
         this.dismiss();
     }
+
 
     @Override
     public void onPause() {
@@ -138,7 +143,7 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
             return;
         }
         SentenceCollectGroup sentenceCollectGroup = new SentenceCollectGroup();
-        sentenceCollectGroup.setUserId(repository.getUserInfo().getObjectId());
+        sentenceCollectGroup.setUser(repository.getUserInfo());
         sentenceCollectGroup.setName(name);
         Subscription subscription = repository.addSentenceCollectGroup(sentenceCollectGroup)
                 .subscribe(new Subscriber<SentenceCollectGroup>() {
@@ -161,7 +166,8 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
                     public void onNext(SentenceCollectGroup sentenceCollectGroup) {
 
                         if(sentenceCollectGroup != null) {
-                            addSentenceCollect(sentenceCollectGroup.getObjectId());
+                            //addSentenceCollect(sentenceCollectGroup.getObjectId());
+                            setOnActivityResult(sentenceCollectGroup);
                         }
                     }
                 });
@@ -211,14 +217,12 @@ public class SentenceCollectGroupsSelectFragment extends DialogFragment implemen
     private void createWGSuccess(){
 
         Toast.makeText(this.getContext(),R.string.createwordgroupsuccess,Toast.LENGTH_SHORT).show();
-
     }
-
 
     public void addSentenceCollect(String sentencecollectgroupId){
 
         Intent intent = getActivity().getIntent();
-        intent.putExtra(SentenceDetailFragment.SENTENCEGCOLLECTGROUPID,sentencecollectgroupId);
+        //intent.putExtra(SentenceDetailFragment.SENTENCEGCOLLECTGROUPID,sentencecollectgroupId);
         getTargetFragment().onActivityResult(getTargetRequestCode(), SentenceDetailFragment.ITEMSELECT,intent);
         this.dismiss();
     }

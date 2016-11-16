@@ -8,10 +8,9 @@ import java.io.Serializable;
 public class SentenceCollect implements Serializable,Cloneable{
 
     private String objectId;
-    private String userId; //用户Id
-    private String scollectgroupId; //句子收藏分组Id
-    private String sentenceId; //(句子，单词，文章)
-
+    private User user; //用户Id
+    private SentenceCollectGroup sentenceCollectGroup; //句子收藏分组Id
+    private Sentence sentence; //(句子，单词，文章)
 
     public String getObjectId() {
         return objectId;
@@ -21,28 +20,28 @@ public class SentenceCollect implements Serializable,Cloneable{
         this.objectId = objectId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getScollectgroupId() {
-        return scollectgroupId;
+    public SentenceCollectGroup getSentenceCollectGroup() {
+        return sentenceCollectGroup;
     }
 
-    public void setScollectgroupId(String scollectgroupId) {
-        this.scollectgroupId = scollectgroupId;
+    public void setSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup) {
+        this.sentenceCollectGroup = sentenceCollectGroup;
     }
 
-    public String getSentenceId() {
-        return sentenceId;
+    public Sentence getSentence() {
+        return sentence;
     }
 
-    public void setSentenceId(String sentenceId) {
-        this.sentenceId = sentenceId;
+    public void setSentence(Sentence sentence) {
+        this.sentence = sentence;
     }
 
     @Override
@@ -61,9 +60,9 @@ public class SentenceCollect implements Serializable,Cloneable{
     public String toString() {
         return "SentenceCollect{" +
                 "objectId='" + objectId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", scollectgroupId='" + scollectgroupId + '\'' +
-                ", sentenceId='" + sentenceId + '\'' +
+                ", user=" + user +
+                ", sentenceCollectGroup=" + sentenceCollectGroup +
+                ", sentence=" + sentence +
                 '}';
     }
 }

@@ -1020,17 +1020,32 @@ public interface RemoteData extends DataSource{
      */
     Observable<Boolean> deleteSentenceCollectRxById(String sentenceCollectId);
 
+    /**
+     * 删除多条句子收藏
+     * @param sentenceCollects
+     * @return
+     */
+    Observable<Boolean> deleteSentenceCollects(List<SentenceCollect> sentenceCollects);
+
 
     /**
      * 根据userId和句子分組Id获取句子收藏，分页
      * @param userId
-     * @param sentenceGroupId
+     * @param sentenceCollectGroupId
      * @param page
      * @param pageSize
      * @return
      */
-    Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId,String sentenceGroupId, int page, int pageSize);
+    Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceCollectGroupId(String userId, String sentenceCollectGroupId, int page, int pageSize);
 
+    /**
+     * 根据userId和句子分組Id获取句子收藏，分页
+     * @param sentenceCollectGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<SentenceCollect>> getSentenceCollectRxBySentenceCollectGroupId(String sentenceCollectGroupId, int page, int pageSize);
 
 
     //文章收藏模块

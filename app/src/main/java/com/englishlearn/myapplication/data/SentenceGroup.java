@@ -7,10 +7,19 @@ import java.io.Serializable;
  */
 public class SentenceGroup implements Serializable,Cloneable {
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;;
     private boolean open; //是否公开
     private String name; //分组名称
-    private String userId; //用户Id
+    private User user; //用户Id
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "SentenceGroup";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -28,12 +37,12 @@ public class SentenceGroup implements Serializable,Cloneable {
         this.name = name;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean isOpen() {
@@ -60,9 +69,9 @@ public class SentenceGroup implements Serializable,Cloneable {
     public String toString() {
         return "SentenceGroup{" +
                 "objectId='" + objectId + '\'' +
-                ", open='" + open + '\'' +
+                ", open=" + open +
                 ", name='" + name + '\'' +
-                ", userId='" + userId + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

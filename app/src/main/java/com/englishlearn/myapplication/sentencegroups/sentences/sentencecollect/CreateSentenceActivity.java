@@ -13,10 +13,12 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.Tractate;
+import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.RemoteCode;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.CreateWordGroupFragment;
 import com.englishlearn.myapplication.dialog.ItemSelectFragment;
@@ -128,6 +130,14 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
 
             @Override
             public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    BmobDefaultError bmobDefaultError = (BmobDefaultError) bmobRequestException.getObject();
+                    RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                    if(createuser == RemoteCode.COMMON.Common_NOTFOUND){
+                        sentencegroupss = new String[0];
+                    }
+                }
                 Log.d(TAG,e.toString());
             }
 
@@ -148,12 +158,13 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
         mSubscriptions.add(subscription);
     }
 
-    public void addSentenceCollect(Sentence Sentence,String sentencecollectGroupId){
+    /*public void addSentenceGroup(Sentence Sentence, SentenceGroup sentenceGroup){
 
         SentenceCollect sentenceCollect = new SentenceCollect();
-        sentenceCollect.setUserId(repository.getUserInfo().getObjectId());
-        sentenceCollect.setScollectgroupId(sentencecollectGroupId);
-        sentenceCollect.setSentenceId(Sentence.getObjectId());
+        sentenceCollect.setUser(repository.getUserInfo());
+        sentenceCollect.setSentenceCollectGroup(sentenceGroup);
+        Sentence.setPointer();
+        sentenceCollect.setSentence(Sentence);
         Subscription subscription = repository.addSentenceCollect(sentenceCollect).subscribe(new Subscriber<SentenceCollect>() {
             @Override
             public void onCompleted() {
@@ -171,8 +182,7 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
             }
         });
         mSubscriptions.add(subscription);
-    }
-
+    }*/
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -191,19 +201,19 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
                     Toast.makeText(this,"获取分组信息失败",Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.affirm:
+            /*case R.id.affirm:
                 if((currentgroupposition == Integer.MAX_VALUE && sentenceGroup == null) || sentence == null){
                     Toast.makeText(this,"请选择分组",Toast.LENGTH_SHORT).show();
                 }else{
-                    String wordGroupId = "";
+                    SentenceGroup sentenceGroup1 = null;
                     if(sentenceGroup != null){
-                        wordGroupId = sentenceGroup.getObjectId();
+                        sentenceGroup1 = sentenceGroup;
                     }else {
-                        wordGroupId = sentenceGroups.get(currentgroupposition).getObjectId();
+                        sentenceGroup1 = sentenceGroups.get(currentgroupposition);
                     }
-                    addSentenceCollect(sentence,wordGroupId);
+                    addSentenceGroup(sentence, sentenceGroup1);
                 }
-                break;
+                break;*/
 
             case R.id.createsentencegroup:
                 //新建单词分组
@@ -215,25 +225,28 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
                     Toast.makeText(this,"请选择分组",Toast.LENGTH_SHORT).show();
                 }else{
 
-                    String wordGroupId = "";
-                    if(sentenceGroup != null){
-                        wordGroupId = sentenceGroup.getObjectId();
+                    SentenceGroup sentenceGroup = null;
+                    if(this.sentenceGroup != null){
+                        sentenceGroup = this.sentenceGroup;
                     }else {
-                        wordGroupId = sentenceGroups.get(currentgroupposition).getObjectId();
+                        sentenceGroup = sentenceGroups.get(currentgroupposition);
                     }
-                    //addSentenceCollect(sentence,wordGroupId);
-                    createSentence(wordGroupId);
+                    //addSentenceGroup(sentence,wordGroupId);
+                    createSentence(sentenceGroup);
                 }
                 break;
         }
     }
 
-    private void createSentence(final String sentenceGroupId){
+    private void createSentence(final SentenceGroup sentenceGroup){
 
         Sentence sentence = new Sentence();
-        sentence.setUserId(repository.getUserInfo().getObjectId());
+        User user = repository.getUserInfo();
+        user.setPointer();
+        sentence.setUser(user);
         sentence.setContent(ensentence);
-        sentence.setSentencegroupId(sentenceGroupId);
+        sentenceGroup.setPointer();
+        sentence.setSentenceGroup(sentenceGroup);
         sentence.setTranslation(chsentence);
         sentence.setRemark(tractate != null ? tractate.getTitle() : "");
         Subscription subscription = repository.addSentence(sentence).subscribe(new Subscriber<Sentence>() {
@@ -278,7 +291,9 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
 
         this.sentencegroupname = name;
         SentenceGroup createwg = new SentenceGroup();
-        createwg.setUserId(repository.getUserInfo().getObjectId());
+        User user = repository.getUserInfo();
+        user.setPointer();
+        createwg.setUser(user);
         createwg.setName(name);
         createwg.setOpen(false);
         Subscription subscription = repository.addSentenceGroup(createwg).subscribe(new Subscriber<SentenceGroup>() {
@@ -318,8 +333,8 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
     }
 
     //创建成功
-    private void createWGSuccess(SentenceGroup wordGroup){
-        this.sentenceGroup = wordGroup;
+    private void createWGSuccess(SentenceGroup sentenceGroup){
+        this.sentenceGroup = sentenceGroup;
         sentencegroup.setText(sentencegroupname);
         Toast.makeText(this,R.string.createwordgroupsuccess,Toast.LENGTH_SHORT).show();
     }

@@ -651,7 +651,17 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceGroupId(String userId, String sentenceGroupId, int page, int pageSize) {
+    public Observable<Boolean> deleteSentenceCollects(List<SentenceCollect> sentenceCollects) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxByUserIdAndSentenceCollectGroupId(String userId, String sentenceGroupId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<SentenceCollect>> getSentenceCollectRxBySentenceCollectGroupId(String sentenceCollectGroupId, int page, int pageSize) {
         return null;
     }
 

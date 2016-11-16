@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -57,7 +56,7 @@ public class TractateCollectTest {
         //添加　
         Log.d(TAG,"testTractateCollect_add");
         TractateCollect addTractateCollect = new TractateCollect();
-        addTractateCollect.setUserId(Constant.userId0703);
+        addTractateCollect.setUserId("0703");
         addTractateCollect.setTractategroupId("8c754205c4");
         addTractateCollect.setTractateId("af8916879a");
 

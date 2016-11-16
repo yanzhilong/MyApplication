@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -58,7 +57,7 @@ public class TractateGroupTest {
         Log.d(TAG,"testTractateGroup_add");
         TractateGroup addTractateGroup = new TractateGroup();
         addTractateGroup.setName("新概念英语第一册");
-        addTractateGroup.setUserId(Constant.userId0703);
+        addTractateGroup.setUserId("0703");
 
         TestSubscriber<TractateGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateGroup(addTractateGroup).toBlocking().subscribe(testSubscriber_add);

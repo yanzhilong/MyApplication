@@ -6,7 +6,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.englishlearn.myapplication.Constant;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -60,8 +59,8 @@ public class SentenceGroupTest {
             Log.d(TAG,"testSentenceGroup_add");
             SentenceGroup addSentenceGroup = new SentenceGroup();
             addSentenceGroup.setName("测试" + i);
-            addSentenceGroup.setOpen(i % 2 == 0 ? "true" : "false");
-            addSentenceGroup.setUserId(Constant.userId0703);
+            addSentenceGroup.setOpen(i % 2 == 0 ? true : false);
+            addSentenceGroup.setUserId("0703");
 
             TestSubscriber<SentenceGroup> testSubscriber_add = new TestSubscriber<>();
             mBmobRemoteData.addSentenceGroup(addSentenceGroup).toBlocking().subscribe(testSubscriber_add);

@@ -8,8 +8,8 @@ import java.io.Serializable;
 public class SentenceGroupCollect implements Serializable,Cloneable {
 
     private String objectId;
-    private String userId; //用户Id
-    private String sentencegroupId; //句子分组Id
+    private User user; //用户Id
+    private SentenceGroup sentenceGroup; //句子分组Id
 
 
     public String getObjectId() {
@@ -20,20 +20,20 @@ public class SentenceGroupCollect implements Serializable,Cloneable {
         this.objectId = objectId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getSentencegroupId() {
-        return sentencegroupId;
+    public SentenceGroup getSentenceGroup() {
+        return sentenceGroup;
     }
 
-    public void setSentencegroupId(String sentencegroupId) {
-        this.sentencegroupId = sentencegroupId;
+    public void setSentenceGroup(SentenceGroup sentenceGroup) {
+        this.sentenceGroup = sentenceGroup;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class SentenceGroupCollect implements Serializable,Cloneable {
     public String toString() {
         return "SentenceGroupCollect{" +
                 "objectId='" + objectId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", sentencegroupId='" + sentencegroupId + '\'' +
+                ", user=" + user +
+                ", sentenceGroup=" + sentenceGroup +
                 '}';
     }
 }
