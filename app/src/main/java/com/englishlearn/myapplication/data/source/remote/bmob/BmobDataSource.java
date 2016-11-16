@@ -3235,7 +3235,7 @@ public class BmobDataSource implements RemoteData {
 
         final int limit = pageSize;
         final int skip = (page) * pageSize;
-        String regex = searchUtil.getBmobEquals("userId",userId);
+        String regex = searchUtil.getBmobEquals("user",userId);
 
         return bmobService.getSentenceGroupCollectRxByUserId(regex,limit,skip)
                 .flatMap(new Func1<Response<SentenceGroupCollectResult>, Observable<List<SentenceGroupCollect>>>() {

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.SentenceGroup;
+import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentenceGroupType;
@@ -168,7 +169,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getCollectSentenceGroupRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroup>>() {
+        Subscription subscription = repository.getSentenceGroupCollectRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroupCollect>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -180,15 +181,19 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
             }
 
             @Override
-            public void onNext(List list) {
+            public void onNext(List<SentenceGroupCollect> list) {
                 Log.d(TAG,"onNext size:" + list.size());
 
                 if(list == null || list.size() == 0){
                     myAdapter.loadingGone();
                     myAdapter.notifyDataSetChanged();
                 }else{
+                    for(int i = 0; i < list.size(); i++){
+                        mCollectSentenceGroupList.add(list.get(i).getSentenceGroup());
+                    }
+
                     page++;//页数增加
-                    mCollectSentenceGroupList.addAll(list);
+                    //mCollectSentenceGroupList.addAll(list);
                     showList(mCollectSentenceGroupList);
                 }
             }

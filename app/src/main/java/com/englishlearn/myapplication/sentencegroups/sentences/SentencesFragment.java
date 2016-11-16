@@ -313,6 +313,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 showDeleteCollectSentencesConfirm();
                 break;
             case FAVORITESGROUP:
+                showUnFavoriteSentenceGroupCollectConfirm();
                 break;
         }
     }
@@ -676,18 +677,22 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     /**
      * 显示确认删除对话框
      */
-    private void showDeleteSentencesCollectConfirm() {
+    private void showUnFavoriteSentenceGroupCollectConfirm() {
         DeleteConfirmFragment delete = new DeleteConfirmFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
+        bundle.putString(DeleteConfirmFragment.TITLE,"取水收藏选中的句组?");
         delete.setArguments(bundle);
         delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
             @Override
             public void onDelete() {
-                unFavoriteSentences();
+                unFavoriteSentenceGroupCollect();
             }
         });
         delete.show(getFragmentManager(),"delete");
+    }
+
+    private void unFavoriteSentenceGroupCollect() {
+        
     }
 
     /**

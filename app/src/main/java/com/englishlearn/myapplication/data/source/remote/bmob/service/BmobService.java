@@ -945,7 +945,7 @@ public interface BmobService{
     Observable<Response<ResponseBody>> deleteSentenceGroupCollectRxById(@Path("id") String id);
 
     //根据userId获取句子分組收藏
-    @GET("/1/classes/SentenceGroupCollect")
+    @GET("/1/classes/SentenceGroupCollect?include=sentenceGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
