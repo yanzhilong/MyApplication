@@ -8,6 +8,10 @@ import java.io.Serializable;
  */
 public class TractateType implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
     private String name;
 
@@ -25,6 +29,11 @@ public class TractateType implements Serializable,Cloneable{
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "TractateType";
     }
 
     @Override

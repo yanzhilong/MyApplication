@@ -60,7 +60,7 @@ public class SentenceGroupTest {
             SentenceGroup addSentenceGroup = new SentenceGroup();
             addSentenceGroup.setName("测试" + i);
             addSentenceGroup.setOpen(i % 2 == 0 ? true : false);
-            addSentenceGroup.setUserId("0703");
+            addSentenceGroup.setUser(null);
 
             TestSubscriber<SentenceGroup> testSubscriber_add = new TestSubscriber<>();
             mBmobRemoteData.addSentenceGroup(addSentenceGroup).toBlocking().subscribe(testSubscriber_add);

@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
-import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -38,10 +37,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 public class AddTractateActivity extends AppCompatActivity implements View.OnClickListener, Serializable,ItemSelectFragment.onItemClickListener {
@@ -128,7 +125,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
      */
     private void addTractate(final Tractate tractate) {
         error.setText("");
-        tractate.setUserId(repository.getUserInfo().getObjectId());
+        tractate.setUserId(repository.getUserInfo());
         if(currenttypeposition == Integer.MAX_VALUE){
             Toast.makeText(this,"请选择分类",Toast.LENGTH_SHORT).show();
             return;
@@ -138,7 +135,7 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
             return;
         }
 
-        tractate.setTractatetypeId(mList.get(currenttypeposition).getObjectId());
+        tractate.setTractatetypeId(mList.get(currenttypeposition));
 
         //设置排序
         String title = tractate.getTitle();
@@ -150,25 +147,9 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
             sort = Integer.valueOf(cntitlematcher.group());
         }
         tractate.setSort(sort);
-
-        Subscription sub = repository.addTractate(tractate).onErrorReturn(new Func1<Throwable, Tractate>() {
-            @Override
-            public Tractate call(Throwable throwable) {
-                Toast.makeText(AddTractateActivity.this,"添加文章失败",Toast.LENGTH_SHORT).show();
-                error.append(tractate.getTitle() + "添加文章失败" + System.getProperty("line.separator"));
-                return null;
-            }
-        }).flatMap(new Func1<Tractate, Observable<TractateCollect>>() {
-            @Override
-            public Observable<TractateCollect> call(Tractate tractate) {
-
-                TractateCollect tractateCollect = new TractateCollect();
-                tractateCollect.setUserId(repository.getUserInfo().getObjectId());
-                tractateCollect.setTractateId(tractate.getObjectId());
-                tractateCollect.setTractategroupId(tractateGroups.get(currentgroupposition).getObjectId());
-                return repository.addTractateCollect(tractateCollect);
-            }
-        }).subscribe(new Subscriber<TractateCollect>() {
+        tractate.setTractateGroupId(tractateGroup);
+        Subscription sub = repository.addTractate(tractate)
+                .subscribe(new Subscriber<Tractate>() {
             @Override
             public void onCompleted() {
                 //Toast.makeText(AddTractateActivity.this,"添加结束",Toast.LENGTH_SHORT).show();
@@ -176,12 +157,16 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(AddTractateActivity.this,"添加文章到分组失败",Toast.LENGTH_SHORT).show();
-                error.append(tractate.getTitle() + "添加文章到分组失败" + System.getProperty("line.separator"));
+                if(e instanceof BmobRequestException){
+                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
+                        Toast.makeText(AddTractateActivity.this,"添加文章失败",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(AddTractateActivity.this,R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onNext(TractateCollect tractateCollect) {
+            public void onNext(Tractate tractate) {
                 Toast.makeText(AddTractateActivity.this,"添加成功",Toast.LENGTH_SHORT).show();
                 error.append(tractate.getTitle() + "添加成功" + System.getProperty("line.separator"));
             }
@@ -210,26 +195,11 @@ public class AddTractateActivity extends AppCompatActivity implements View.OnCli
     private void createTractateGroup(String name){
 
         TractateGroup tractateGroup = new TractateGroup();
-        tractateGroup.setUserId(repository.getUserInfo().getObjectId());
+        tractateGroup.setUserId(repository.getUserInfo());
         tractateGroup.setName(name);
-        tractateGroup.setOpen("false");
-        tractateGroup.setCreate("true");
+        tractateGroup.setOpen(false);
         Subscription subscription = repository.addTractateGroup(tractateGroup)
-                .onErrorReturn(new Func1<Throwable, TractateGroup>() {
-                    @Override
-                    public TractateGroup call(Throwable throwable) {
-                        return null;
-                    }
-                }).flatMap(new Func1<TractateGroup, Observable<TractateGroup>>() {
-                    @Override
-                    public Observable<TractateGroup> call(TractateGroup tractateGroup) {
-
-                        if(tractateGroup == null){
-                            return Observable.error(new NullPointerException());
-                        }
-                        return repository.getTractateGroupRxById(tractateGroup.getObjectId());
-                    }
-                }).subscribe(new Subscriber<TractateGroup>() {
+                .subscribe(new Subscriber<TractateGroup>() {
             @Override
             public void onCompleted() {
 

@@ -57,9 +57,9 @@ public class SentenceCollectTest {
         //添加　
         Log.d(TAG,"testSentenceCollect_add");
         SentenceCollect addSentenceCollect = new SentenceCollect();
-        addSentenceCollect.setUserId("0703");
-        addSentenceCollect.setScollectgroupId("5325311d62");
-        addSentenceCollect.setSentenceId("aa53588477");
+        addSentenceCollect.setUser(null);
+        addSentenceCollect.setSentenceCollectGroup(null);
+        addSentenceCollect.setSentence(null);
 
         TestSubscriber<SentenceCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addSentenceCollect(addSentenceCollect).toBlocking().subscribe(testSubscriber_add);

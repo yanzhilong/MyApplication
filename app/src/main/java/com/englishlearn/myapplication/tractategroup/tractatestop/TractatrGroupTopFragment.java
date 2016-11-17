@@ -161,7 +161,7 @@ public class TractatrGroupTopFragment extends Fragment {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getTractateGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<TractateGroup>>() {
+        Subscription subscription = repository.getTractateGroupsByOpenRx(page,PAGESIZE).subscribe(new Subscriber<List<TractateGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

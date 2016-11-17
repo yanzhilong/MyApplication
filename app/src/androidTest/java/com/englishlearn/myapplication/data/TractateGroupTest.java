@@ -57,7 +57,7 @@ public class TractateGroupTest {
         Log.d(TAG,"testTractateGroup_add");
         TractateGroup addTractateGroup = new TractateGroup();
         addTractateGroup.setName("新概念英语第一册");
-        addTractateGroup.setUserId("0703");
+        addTractateGroup.setUserId(null);
 
         TestSubscriber<TractateGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateGroup(addTractateGroup).toBlocking().subscribe(testSubscriber_add);
@@ -86,7 +86,7 @@ public class TractateGroupTest {
         }
         Log.d(TAG,"testTractateGroup_byId_result:" + tractateGroup1ById);
         //修改
-        tractateGroup1ById.setOpen("true");
+        tractateGroup1ById.setOpen(true);
         Log.d(TAG,"testTractateGroup_update");
         TestSubscriber<Boolean> testSubscriber_update = new TestSubscriber<>();
         mBmobRemoteData.updateTractateGroupRxById(tractateGroup1ById).toBlocking().subscribe(testSubscriber_update);

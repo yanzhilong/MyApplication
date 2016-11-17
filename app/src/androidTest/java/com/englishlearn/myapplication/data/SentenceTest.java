@@ -60,7 +60,7 @@ public class SentenceTest {
             Sentence addsentence = new Sentence();
             addsentence.setContent("Hello World " + i);
             addsentence.setTranslation("你好，世界 " + i);
-            addsentence.setUserId("0703");
+            addsentence.setUser(null);
             addsentence.setRemark("测试");
 
             TestSubscriber<Sentence> testSubscriber_add = new TestSubscriber<>();

@@ -590,7 +590,7 @@ public class BmobDataSourceTest {
         //添加　
         Log.d(TAG,"testTractate_add");
         Tractate addtractate = new Tractate();
-        addtractate.setTractatetypeId("tractateTypeId000");
+        addtractate.setTractatetypeId(null);
         addtractate.setContent("Hello World!");
         addtractate.setTranslation("你好 世界!");
 
@@ -824,7 +824,7 @@ public class BmobDataSourceTest {
         SentenceGroup addSentenceGroup = new SentenceGroup();
         addSentenceGroup.setName("Defaule");
         addSentenceGroup.setOpen(true);
-        addSentenceGroup.setUserId("Userid0000");
+        addSentenceGroup.setUser(null);
 
         TestSubscriber<SentenceGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addSentenceGroup(addSentenceGroup).toBlocking().subscribe(testSubscriber_add);
@@ -842,7 +842,7 @@ public class BmobDataSourceTest {
         SentenceGroup addSentenceGroup1 = new SentenceGroup();
         addSentenceGroup1.setName("Defaule");
         addSentenceGroup1.setOpen(false);
-        addSentenceGroup1.setUserId("Userid0000");
+        addSentenceGroup1.setUser(null);
 
         TestSubscriber<SentenceGroup> testSubscriber_add1 = new TestSubscriber<>();
         mBmobRemoteData.addSentenceGroup(addSentenceGroup1).toBlocking().subscribe(testSubscriber_add1);
@@ -880,7 +880,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testSentenceGroup_getAll");
         TestSubscriber<List<SentenceGroup>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getSentenceGroupRxByUserId(wordGroup1ById.getUserId(),true,0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getSentenceGroupRxByUserId(wordGroup1ById.getUser().getObjectId(),true,0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<SentenceGroup>> listall = testSubscriber_getall.getOnNextEvents();
         List<SentenceGroup> sentences = null;
@@ -930,8 +930,8 @@ public class BmobDataSourceTest {
         //添加　
         Log.d(TAG,"testSentenceGroupCollect_add");
         SentenceGroupCollect addSentenceGroupCollect = new SentenceGroupCollect();
-        addSentenceGroupCollect.setUserId("UserId0000");
-        addSentenceGroupCollect.setSentencegroupId("SentencegroupId0000");
+        addSentenceGroupCollect.setUser(null);
+        addSentenceGroupCollect.setSentenceGroup(null);
 
         TestSubscriber<SentenceGroupCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addSentenceGroupCollect(addSentenceGroupCollect).toBlocking().subscribe(testSubscriber_add);
@@ -976,7 +976,7 @@ public class BmobDataSourceTest {
         Log.d(TAG,"testTractateGroup_add");
         TractateGroup addTractateGroup = new TractateGroup();
         addTractateGroup.setName("Defaule");
-        addTractateGroup.setUserId("Userid0000");
+        addTractateGroup.setUserId(null);
 
         TestSubscriber<TractateGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateGroup(addTractateGroup).toBlocking().subscribe(testSubscriber_add);
@@ -1014,7 +1014,7 @@ public class BmobDataSourceTest {
         //获取所有信息来源　
         Log.d(TAG,"testTractateGroup_getAll");
         TestSubscriber<List<TractateGroup>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getTractateGroupsRxByUserId(tractateGroup1ById.getUserId(),0,10).toBlocking().subscribe(testSubscriber_getall);
+        mBmobRemoteData.getTractateGroupsRxByUserId(tractateGroup1ById.getUserId().getObjectId(),0,10).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
         List<List<TractateGroup>> listall = testSubscriber_getall.getOnNextEvents();
         List<TractateGroup> tractateGroups = null;
@@ -1087,8 +1087,8 @@ public class BmobDataSourceTest {
         //添加　
         Log.d(TAG,"testSentenceCollect_add");
         SentenceCollect addSentenceCollect = new SentenceCollect();
-        addSentenceCollect.setUserId("UserId0000");
-        addSentenceCollect.setScollectgroupId("SentenceGroupId0000");
+        addSentenceCollect.setUser(null);
+        addSentenceCollect.setSentenceCollectGroup(null);
         Sentence sentence = new Sentence();
         sentence.setObjectId("SentenceId0000");
         sentence.setPointer();
@@ -1137,9 +1137,9 @@ public class BmobDataSourceTest {
         //添加　
         Log.d(TAG,"testTractateCollect_add");
         TractateCollect addTractateCollect = new TractateCollect();
-        addTractateCollect.setUserId("UserId0000");
-        addTractateCollect.setTractategroupId("TractateGroupId0000");
-        addTractateCollect.setTractateId("TractateId0000");
+        addTractateCollect.setUserId(null);
+        addTractateCollect.setTractateCollectGroupId(null);
+        addTractateCollect.setTractateId(null);
 
         TestSubscriber<TractateCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateCollect(addTractateCollect).toBlocking().subscribe(testSubscriber_add);

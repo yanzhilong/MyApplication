@@ -902,6 +902,16 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<TractateGroup>> getTractateGroupsByOpenAndNotCollectRx(String userId,int page,int pageSize);
 
+
+    /**
+     * 获取所有公开的未收藏的文章分组分页展示,按时间降序
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateGroup>> getTractateGroupsByOpenRx(int page,int pageSize);
+
+
     //文章分組收藏模块
     //*****************************************************************************
 

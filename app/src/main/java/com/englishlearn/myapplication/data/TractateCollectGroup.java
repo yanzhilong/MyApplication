@@ -3,22 +3,22 @@ package com.englishlearn.myapplication.data;
 import java.io.Serializable;
 
 /**
- * Created by yanzl on 16-9-3.
+ * Created by yanzl on 16-9-12.
  */
-public class TractateCollect implements Serializable,Cloneable{
+public class TractateCollectGroup implements Serializable,Cloneable {
 
     //标记一对多关系
     private String __type;
     private String className;
 
     private String objectId;
+    private String name;
     private User userId; //用户Id
-    private TractateCollectGroup tractateCollectGroupId; //分组Id
-    private Tractate tractateId; //(句子，单词，文章)
+
 
     public void setPointer(){
         __type = "Pointer";
-        className = "TractateCollect";
+        className = "TractateCollectGroup";
     }
 
     public String getObjectId() {
@@ -37,20 +37,12 @@ public class TractateCollect implements Serializable,Cloneable{
         this.userId = userId;
     }
 
-    public TractateCollectGroup getTractateCollectGroupId() {
-        return tractateCollectGroupId;
+    public String getName() {
+        return name;
     }
 
-    public void setTractateCollectGroupId(TractateCollectGroup tractateCollectGroupId) {
-        this.tractateCollectGroupId = tractateCollectGroupId;
-    }
-
-    public Tractate getTractateId() {
-        return tractateId;
-    }
-
-    public void setTractateId(Tractate tractateId) {
-        this.tractateId = tractateId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -67,11 +59,10 @@ public class TractateCollect implements Serializable,Cloneable{
 
     @Override
     public String toString() {
-        return "TractateCollect{" +
+        return "TractateCollectGroup{" +
                 "objectId='" + objectId + '\'' +
+                ", name='" + name + '\'' +
                 ", userId=" + userId +
-                ", tractateCollectGroupId=" + tractateCollectGroupId +
-                ", tractateId=" + tractateId +
                 '}';
     }
 }

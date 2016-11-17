@@ -592,7 +592,7 @@ public class SearchUtil {
         Map map17 = new HashMap();
         map17.put("tractatetypeId",tractateTypeId);
         Map map18 = new HashMap();
-        map18.put("open","true");
+        map18.put("open",true);
 
         List<Map<String,String>> list = new ArrayList<>();
         //list.add(map13);
@@ -754,6 +754,20 @@ public class SearchUtil {
         return where;
     }
 
+
+
+    public String getTractateGroupsByOpenRx(){
+
+        Gson gson = new Gson();
+
+        Map map14 = new HashMap();
+        map14.put("open",true);
+
+        String jsonStr = gson.toJson(map14);
+        return jsonStr;
+
+
+    }
 
     public String getSentenceGroupsByOpenRx(){
 

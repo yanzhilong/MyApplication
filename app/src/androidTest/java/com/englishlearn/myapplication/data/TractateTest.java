@@ -75,7 +75,8 @@ public class TractateTest {
 
         AddTractateHelper addTractateHelper = new AddTractateHelper(context);
 
-        File file = new File("/storage/emulated/0/AAA/new/");
+        //File file = new File("/storage/emulated/0/AAA/new/");
+        File file = new File("/storage/sdcard1/new/");
         File[] files = file.listFiles();
         List<Tractate> tractates = new ArrayList<>();
         StringBuffer stringBuffer = new StringBuffer();
@@ -138,43 +139,36 @@ public class TractateTest {
     private void addTractate(final List<Tractate> tractates) {
 
         final StringBuffer stringBufferupdateerror = new StringBuffer();
-        final StringBuffer stringBuffergrouperror = new StringBuffer();
 
         for(int i = 0; i < tractates.size(); i++){
 
             Tractate addtractate = tractates.get(i);
-            addtractate.setUserId("943a8a40ed");
-            addtractate.setTractatetypeId("880d538e1d");
-            addtractate.setOpen("true");
+            User user = new User();
+            user.setObjectId("9d7707245a");
+            user.setPointer();
+            addtractate.setUserId(user);
+
+            TractateType tractateType = new TractateType();
+            tractateType.setObjectId("d30c714fd0");
+            tractateType.setPointer();
+            addtractate.setTractatetypeId(tractateType);
+
+            TractateGroup tractateGroup = new TractateGroup();
+            tractateGroup.setObjectId("a34e8da68d");
+            tractateGroup.setPointer();
+            addtractate.setTractateGroupId(tractateGroup);
+            addtractate.setOpen(true);
             TestSubscriber<Tractate> tractateTestSubscriber = new TestSubscriber<>();
             mBmobRemoteData.addTractate(addtractate).toBlocking().subscribe(tractateTestSubscriber);
             List<Tractate> list = tractateTestSubscriber.getOnNextEvents();
-            if(list != null || list.size() >= 0){
+            if(list != null && list.size() > 0){
 
                 Tractate tractate = list.get(0);
-                Log.d(TAG,"addtractate:" + tractate.toString());
-
-                //添加分组
-                TractateCollect addtractateCollect = new TractateCollect();
-                addtractateCollect.setUserId("943a8a40ed");
-                addtractateCollect.setTractateId(tractate.getObjectId());
-                addtractateCollect.setTractategroupId("8c754205c4");
-
-                TestSubscriber<TractateCollect> tractateCollectTestSubscriber = new TestSubscriber<>();
-                mBmobRemoteData.addTractateCollect(addtractateCollect).toBlocking().subscribe(tractateCollectTestSubscriber);
-                List<TractateCollect> tractateCollects = tractateCollectTestSubscriber.getOnNextEvents();
-                if(tractateCollects != null || tractateCollects.size() >= 0){
-                    TractateCollect tractateCollect = tractateCollects.get(0);
-                    Log.d(TAG,"addtractatecollect:" + tractateCollect.toString());
-                }else{
-                    stringBuffergrouperror.append(addtractate.getTitle() + "上传失败" + System.getProperty("line.separator"));
-                }
             }else {
                 stringBufferupdateerror.append(addtractate.getTitle() + "上传失败" + System.getProperty("line.separator"));
             }
         }
         Log.d(TAG,"addtractate:" + stringBufferupdateerror.toString());
-        Log.d(TAG,"addtractate:" + stringBuffergrouperror.toString());
     }
 
     @Test
@@ -182,7 +176,7 @@ public class TractateTest {
         TestSubscriber<List<Tractate>> tractateCollectTestSubscriber = new TestSubscriber<>();
         mBmobRemoteData.getTractateRxByTractateTypeId("880d538e1d",0,100).toBlocking().subscribe(tractateCollectTestSubscriber);
         List<List<Tractate>> tractateCollects = tractateCollectTestSubscriber.getOnNextEvents();
-        if(tractateCollects != null || tractateCollects.size() >= 0){
+        if(tractateCollects != null || tractateCollects.size() > 0){
             List<Tractate> tractates = tractateCollects.get(0);
             Log.d(TAG,"getTractateRxByTractateTypeIdTest:" + tractates.size());
         }else{

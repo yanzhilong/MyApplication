@@ -58,8 +58,8 @@ public class SentenceGroupCollectTest {
 
         Log.d(TAG,"testSentenceGroupCollect_add");
         SentenceGroupCollect addSentenceGroupCollect = new SentenceGroupCollect();
-        addSentenceGroupCollect.setUserId("0703");
-        addSentenceGroupCollect.setSentencegroupId("5d0881d114");
+        addSentenceGroupCollect.setUser(null);
+        addSentenceGroupCollect.setSentenceGroup(null);
 
         TestSubscriber<SentenceGroupCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addSentenceGroupCollect(addSentenceGroupCollect).toBlocking().subscribe(testSubscriber_add);

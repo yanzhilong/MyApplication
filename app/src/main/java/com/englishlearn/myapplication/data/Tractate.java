@@ -8,15 +8,25 @@ import java.io.Serializable;
  */
 public class Tractate implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
-    private String userId; //用户Id
+    private User userId; //用户Id
     private String title; //标题
     private String content; //内容
     private String translation; //译文
-    private String tractatetypeId; //分类Id
-    private String open; //是否公开
+    private TractateType tractatetypeId; //分类Id
+    private TractateGroup tractateGroupId;//分组Id
+    private boolean open; //是否公开
     private String remark; //备注
     private int sort;//排序字段
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "Tractate";
+    }
 
     public int getSort() {
         return sort;
@@ -34,13 +44,6 @@ public class Tractate implements Serializable,Cloneable{
         this.objectId = objectId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;
@@ -66,14 +69,6 @@ public class Tractate implements Serializable,Cloneable{
         this.translation = translation;
     }
 
-    public String getTractatetypeId() {
-        return tractatetypeId;
-    }
-
-    public void setTractatetypeId(String tractatetypeId) {
-        this.tractatetypeId = tractatetypeId;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -82,11 +77,35 @@ public class Tractate implements Serializable,Cloneable{
         this.remark = remark;
     }
 
-    public String getOpen() {
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public TractateType getTractatetypeId() {
+        return tractatetypeId;
+    }
+
+    public void setTractatetypeId(TractateType tractatetypeId) {
+        this.tractatetypeId = tractatetypeId;
+    }
+
+    public TractateGroup getTractateGroupId() {
+        return tractateGroupId;
+    }
+
+    public void setTractateGroupId(TractateGroup tractateGroupId) {
+        this.tractateGroupId = tractateGroupId;
+    }
+
+    public boolean isOpen() {
         return open;
     }
 
-    public void setOpen(String open) {
+    public void setOpen(boolean open) {
         this.open = open;
     }
 
@@ -106,12 +125,12 @@ public class Tractate implements Serializable,Cloneable{
     public String toString() {
         return "Tractate{" +
                 "objectId='" + objectId + '\'' +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", translation='" + translation + '\'' +
-                ", tractatetypeId='" + tractatetypeId + '\'' +
-                ", open='" + open + '\'' +
+                ", tractatetypeId=" + tractatetypeId +
+                ", open=" + open +
                 ", remark='" + remark + '\'' +
                 ", sort=" + sort +
                 '}';

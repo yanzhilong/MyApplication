@@ -7,11 +7,19 @@ import java.io.Serializable;
  */
 public class TractateGroup implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
-    private String open; //是否公开
-    private String create;//是:保存自己创建的文章,否：保存收藏的文章
+    private boolean open; //是否公开
     private String name; //分组名称
-    private String userId; //用户Id
+    private User userId; //用户Id
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "TractateGroup";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -29,28 +37,20 @@ public class TractateGroup implements Serializable,Cloneable{
         this.name = name;
     }
 
-    public String getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 
-    public String getOpen() {
+    public boolean isOpen() {
         return open;
     }
 
-    public void setOpen(String open) {
+    public void setOpen(boolean open) {
         this.open = open;
-    }
-
-    public String getCreate() {
-        return create;
-    }
-
-    public void setCreate(String create) {
-        this.create = create;
     }
 
     @Override
@@ -69,10 +69,9 @@ public class TractateGroup implements Serializable,Cloneable{
     public String toString() {
         return "TractateGroup{" +
                 "objectId='" + objectId + '\'' +
-                ", open='" + open + '\'' +
-                ", create='" + create + '\'' +
+                ", open=" + open +
                 ", name='" + name + '\'' +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId +
                 '}';
     }
 }
