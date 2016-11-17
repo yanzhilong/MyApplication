@@ -38,7 +38,7 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
     private static final String TAG = MyCreateSentenceCollectGroupsFragment.class.getSimpleName();
     private Object object;
     private MyAdapter myAdapter;
-    private List<SentenceCollectGroup> mSentenceCollectGroupList;
+    private List<SentenceCollectGroup> sentenceCollectGroup;
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
@@ -59,7 +59,7 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
         }
 
         MyApplication.instance.getAppComponent().inject(this);
-        mSentenceCollectGroupList = new ArrayList<>();
+        sentenceCollectGroup = new ArrayList<>();
 
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -90,11 +90,15 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                SentenceCollectGroup string = myAdapter.getStrings().get(position);
-                Log.d(TAG, string.toString());
+                SentenceCollectGroup sentenceCollectGroup = myAdapter.getStrings().get(position);
+                Log.d(TAG, sentenceCollectGroup.toString());
                 Intent intent = new Intent(MyCreateSentenceCollectGroupsFragment.this.getContext(),SentencesActivity.class);
-                intent.putExtra(SentencesActivity.SENTENCECOLLECTGROUP,string);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.CREATEFSGROUP);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable(SentencesActivity.SENTENCECOLLECTGROUP,sentenceCollectGroup);
+                bundle.putSerializable(SentencesActivity.TYPE, SentenceGroupType.CREATEFSGROUP);
+                intent.putExtras(bundle);
                 startActivity(intent);
 
             }
@@ -138,7 +142,7 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
     //获取我创建的收藏分组
     private void getSentenceCollectGroups(){
 
-        mSentenceCollectGroupList.clear();
+        sentenceCollectGroup.clear();
         swipeRefreshLayout.setRefreshing(true);
         Subscription subscription = repository.getSentenceCollectGroupRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<SentenceCollectGroup>>() {
             @Override
@@ -156,8 +160,8 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
                 Log.d(TAG,"onNext size:" + list.size());
 
                 if(list != null){
-                    mSentenceCollectGroupList.addAll(list);
-                    showList(mSentenceCollectGroupList);
+                    sentenceCollectGroup.addAll(list);
+                    showList(sentenceCollectGroup);
                 }
             }
         });

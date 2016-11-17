@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -46,7 +45,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<SentenceGroup> mCollectSentenceGroupList;
+    private List<SentenceGroupCollect> sentenceGroupCollects;
 
     private User user;
     private CompositeSubscription mSubscriptions;
@@ -67,8 +66,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
         MyApplication.instance.getAppComponent().inject(this);
 
         user = repository.getUserInfo();
-
-        mCollectSentenceGroupList = new ArrayList();
+        sentenceGroupCollects = new ArrayList<>();
 
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -100,12 +98,18 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
 
-                SentenceGroup sentenceGroup = myAdapter.getSentenceGroups().get(position);
-                Log.d(TAG, sentenceGroup.toString());
+                SentenceGroupCollect sentenceGroupCollect = myAdapter.getSentenceGroupCollects().get(position);
+                Log.d(TAG, sentenceGroupCollect.toString());
                 Intent intent = new Intent(MyCollectSentenceGroupsFragment.this.getContext(),SentencesActivity.class);
-                intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.FAVORITESGROUP);
+
+
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable(SentencesActivity.SENTENCEGROUPCOLLECT,sentenceGroupCollect);
+                bundle.putSerializable(SentencesActivity.TYPE, SentenceGroupType.FAVORITESGROUP);
+                intent.putExtras(bundle);
                 startActivity(intent);
+
             }
         });
 
@@ -155,7 +159,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
      */
     public void refershList() {
         page = 0;
-        mCollectSentenceGroupList.clear();
+        sentenceGroupCollects.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -188,13 +192,10 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
                     myAdapter.loadingGone();
                     myAdapter.notifyDataSetChanged();
                 }else{
-                    for(int i = 0; i < list.size(); i++){
-                        mCollectSentenceGroupList.add(list.get(i).getSentenceGroup());
-                    }
-
+                    sentenceGroupCollects.addAll(list);
                     page++;//页数增加
                     //mCollectSentenceGroupList.addAll(list);
-                    showList(mCollectSentenceGroupList);
+                    showList(sentenceGroupCollects);
                 }
             }
         });
@@ -218,7 +219,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     }
 
     //显示列表
-    private void showList(List list) {
+    private void showList(List<SentenceGroupCollect> list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
     }
@@ -238,11 +239,11 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<SentenceGroup> sentenceGroups;
+        private List<SentenceGroupCollect> sentenceGroupCollects;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            sentenceGroups = new ArrayList<>();
+            sentenceGroupCollects = new ArrayList<>();
         }
 
         //已经加载完成了
@@ -259,25 +260,25 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<SentenceGroup> getSentenceGroups() {
-            return sentenceGroups;
+        public List<SentenceGroupCollect> getSentenceGroupCollects() {
+            return sentenceGroupCollects;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<SentenceGroup> sentenceGroups) {
-            if (sentenceGroups != null) {
-                this.sentenceGroups.clear();
-                this.sentenceGroups.addAll(sentenceGroups);
+        public void replaceData(List<SentenceGroupCollect> sentenceGroupCollects) {
+            if (sentenceGroupCollects != null) {
+                this.sentenceGroupCollects.clear();
+                this.sentenceGroupCollects.addAll(sentenceGroupCollects);
                 notifyDataSetChanged();
             }
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position != sentenceGroups.size()) {
+            if (position != sentenceGroupCollects.size()) {
                 Log.d(TAG, "wordgroupstop_item");
                 return R.layout.sentencegroupstopfragment_frag_item;
             } else {
@@ -309,7 +310,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(sentenceGroups.get(position).getName());
+                itemViewHolder.name.setText(sentenceGroupCollects.get(position).getSentenceGroup().getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -322,7 +323,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return sentenceGroups.size() + 1;
+            return sentenceGroupCollects.size() + 1;
         }
 
 

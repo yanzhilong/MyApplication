@@ -30,15 +30,14 @@ import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
+import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
-import com.englishlearn.myapplication.data.source.remote.RemoteCode;
-import com.englishlearn.myapplication.data.source.remote.bmob.BatchResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
 import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
+import com.englishlearn.myapplication.sentencegroups.SentenceGroupsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,15 +54,17 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class SentencesFragment extends Fragment implements View.OnClickListener {
 
-    private static final int SENTENCEFAVORITE = 1;//收藏句子
+    private static final int SENTENCESFAVORITE = 1;//收藏多条句子
     public static final int REQUESTCODE = 0;//多选请求码
     public static final String OBJECT = "object";
     public static final String SENTENCECOLLECTGROUP = "sentencecollectgroup";
+    public static final String SENTENCEGROUPCOLLECT = "sentencegroupcollect";//收藏的单词分组
     public static final String TYPE = "sentencegrouptype";
     private static final String TAG = SentencesFragment.class.getSimpleName();
     private final int PAGESIZE = 100;
     private SentenceGroup sentenceGroup;
     private SentenceCollectGroup sentenceCollectGroup;//句子收藏分组
+    private SentenceGroupCollect sentenceGroupCollect;
     private SentenceGroupType sentenceGroupType;
     private MyAdapter myAdapter;
     private int page = 0;
@@ -77,9 +78,11 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
-    private FloatingActionButton fab_deleteorfavorite_wordgroup;
-    private FloatingActionButton fab_edit_wordgroup;
-    private List<Sentence> checkedsentences;
+    private FloatingActionButton fab_edit;
+    private FloatingActionButton fab_favorite;
+    private FloatingActionButton fab_delete;
+
+    private List<Sentence> favoritesentences;//待收藏句子列表
 
     public static SentencesFragment newInstance() {
         return new SentencesFragment();
@@ -89,17 +92,18 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments() !=null && getArguments().containsKey(OBJECT)){
-            sentenceGroup = (SentenceGroup) getArguments().getSerializable(OBJECT);
-            sentenceGroupType = (SentenceGroupType) getArguments().getSerializable(TYPE);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            sentenceGroup = (SentenceGroup) bundle.getSerializable(SentencesActivity.SENTENCEGROUP);
+            sentenceGroupType = (SentenceGroupType) bundle.getSerializable(SentencesActivity.TYPE);
+            sentenceCollectGroup = (SentenceCollectGroup) bundle.getSerializable(SentencesActivity.SENTENCECOLLECTGROUP);
+            sentenceGroupCollect = (SentenceGroupCollect) bundle.getSerializable(SentencesActivity.SENTENCEGROUPCOLLECT);
+            if(sentenceGroupCollect != null){
+                sentenceGroup = sentenceGroupCollect.getSentenceGroup();
+            }
         }
 
         sentenceCollects = new ArrayList<>();
-        if(getArguments() !=null && getArguments().containsKey(SENTENCECOLLECTGROUP)){
-            sentenceCollectGroup = (SentenceCollectGroup) getArguments().getSerializable(SENTENCECOLLECTGROUP);
-            sentenceGroupType = (SentenceGroupType) getArguments().getSerializable(TYPE);
-        }
-
 
         switch (sentenceGroupType){
 
@@ -131,20 +135,20 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             case REQUESTCODE:
                 if(resultCode == Activity.RESULT_OK){
                     List<Integer> checkedlist = data.getIntegerArrayListExtra(MultipleActivity.CHECKEDARRAY);
-                    checkedsentences = new ArrayList<>();
+                    List<Sentence> checkedsentences = new ArrayList<>();
                     for(int i = 0; i < mList.size(); i++){
                         if(checkedlist.contains(i)){
                             checkedsentences.add(mList.get(i));
                         }
                     }
                     if(checkedsentences.size() > 0){
-                        onSentencesSelected();
+                        onSentencesSelected(checkedsentences);
                     }
                 }
                 break;
-            case SENTENCEFAVORITE:
-
-                favoriteSentences((SentenceCollectGroup) data.getSerializableExtra(SentenceCollectGroupsSelectFragment.SENTENCEGCOLLECTGROUP));
+            case SENTENCESFAVORITE:
+                SentenceCollectGroup sentenceCollectGroup = (SentenceCollectGroup) data.getSerializableExtra(SentenceCollectGroupsSelectFragment.SENTENCEGCOLLECTGROUP);
+                favoriteTopSentences(sentenceCollectGroup);
                 break;
         }
     }
@@ -178,17 +182,9 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
 
                 SentenceDetailFragment sentenceDetailFragment = SentenceDetailFragment.newInstance(sentence);
                 Bundle bundler = sentenceDetailFragment.getArguments();
-                bundler.putBoolean(SentenceDetailFragment.SHOWFAVORITE,isShowFavorite);
                 sentenceDetailFragment.setArguments(bundler);
                 sentenceDetailFragment.show(getFragmentManager().beginTransaction(), "dialog");
-
-
-                /*Intent intent = new Intent(SentencesFragment.this.getContext(),WordDetailActivity.class);
-                intent.putExtra(WordDetailActivity.TRACTATE,sentence);
-                startActivity(intent);*/
-
             }
-
         });
 
         myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -200,31 +196,35 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
-        fab_edit_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_wordgroup);
-        fab_edit_wordgroup.setOnClickListener(this);
+        fab_edit = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit);
+        fab_edit.setOnClickListener(this);
 
-        fab_deleteorfavorite_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_deleteorfavorite_wordgroup);
-        fab_deleteorfavorite_wordgroup.setOnClickListener(this);
+        fab_favorite = (FloatingActionButton) getActivity().findViewById(R.id.fab_favorite);
+        fab_favorite.setOnClickListener(this);
+
+        fab_delete = (FloatingActionButton) getActivity().findViewById(R.id.fab_delete);
+        fab_delete.setOnClickListener(this);
 
         switch (sentenceGroupType){
             case OTHERSGROUP:
-                fab_edit_wordgroup.setVisibility(View.GONE);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                isShowFavorite = true;
+                fab_edit.setVisibility(View.GONE);
+                fab_delete.setVisibility(View.GONE);
+                fab_favorite.setVisibility(View.VISIBLE);
                 break;
             case CREATESGROUP:
-                fab_edit_wordgroup.setVisibility(View.VISIBLE);
-                fab_edit_wordgroup.setBackgroundResource(R.drawable.ic_edit);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_delete);
-                isShowFavorite = false;
+                fab_edit.setVisibility(View.VISIBLE);
+                fab_delete.setVisibility(View.VISIBLE);
+                fab_favorite.setVisibility(View.GONE);
+                break;
+            case CREATEFSGROUP:
+                fab_edit.setVisibility(View.VISIBLE);
+                fab_delete.setVisibility(View.VISIBLE);
+                fab_favorite.setVisibility(View.GONE);
                 break;
             case FAVORITESGROUP:
-                fab_edit_wordgroup.setVisibility(View.GONE);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
-                isShowFavorite = false;
+                fab_edit.setVisibility(View.GONE);
+                fab_delete.setVisibility(View.VISIBLE);
+                fab_favorite.setVisibility(View.GONE);
                 break;
             default:
                 break;
@@ -273,9 +273,6 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             case CREATEFSGROUP:
                 inflater.inflate(R.menu.menu_sentences_createfsgroup, menu);
                 break;
-            case FAVORITESGROUP:
-                inflater.inflate(R.menu.menu_sentences_favoritesgroup, menu);
-                break;
         }
     }
 
@@ -291,45 +288,65 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                 return createsgroup(item);
             case CREATEFSGROUP:
                 return createfsgroup(item);
-            case FAVORITESGROUP:
-                return favoritesgroup(item);
         }
         return true;
     }
 
-    private void onSentencesSelected(){
+
+
+    //统一方法***************************************************************************************
+    //显示多选界面
+    private void showMultipleSelect(){
+
+        String[] sentences = new String[mList.size()];
+        for(int i = 0; i < mList.size(); i++){
+            sentences[i] = mList.get(i).getContent();
+        }
+        Intent intent = new Intent(this.getContext(),MultipleActivity.class);
+        intent.putExtra(MultipleActivity.STRINGARRAY,sentences);
+        startActivityForResult(intent,REQUESTCODE);
+    }
+
+    //选择多个句子返回
+    private void onSentencesSelected(List<Sentence> sentences){
         switch (sentenceGroupType){
 
             case OTHERSGROUP:
                 //普通句组
-                showSentenceCollectGroups();//显示分组信息
+                favoriteTopSentences(sentences);//显示分组信息
                 break;
             case CREATESGROUP:
                 //删除句子
-                showDeleteSentencesConfirm();
+                deleteSetnencesAffirm(sentences);
                 break;
             case CREATEFSGROUP:
                 //删除句子
-                showDeleteCollectSentencesConfirm();
+                deleteSentenceCollectsAffirm(sentences);
                 break;
             case FAVORITESGROUP:
-                showUnFavoriteSentenceGroupCollectConfirm();
+                //
                 break;
         }
     }
 
-    private void showSentenceCollectGroups(){
-        SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
-        Bundle bundle = new Bundle();
-        sentenceCollectGroupsSelectFragment.setTargetFragment(this,SENTENCEFAVORITE);
-        sentenceCollectGroupsSelectFragment.setArguments(bundle);
-        sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencegroup");
-    }
 
-    private void favoriteSentenGroup(SentenceGroup sentenceGroup){
+    //热门分组列表进来的******************************************************************************
+
+    /**
+     * 收藏句单
+     */
+    private void favoriteSentenGroup(){
+
+        if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
+            Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句单",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         SentenceGroupCollect sentenceGroupCollect = new SentenceGroupCollect();
-        sentenceGroupCollect.setUser(repository.getUserInfo());
+        User user = repository.getUserInfo();
+        user.setPointer();
+        sentenceGroupCollect.setUser(user);
+        sentenceGroup.setPointer();
         sentenceGroupCollect.setSentenceGroup(sentenceGroup);
         Subscription subscription = repository.addSentenceGroupCollect(sentenceGroupCollect).subscribe(new Subscriber<SentenceGroupCollect>() {
             @Override
@@ -348,13 +365,12 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
                     Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
 
                 }
-
             }
 
             @Override
-            public void onNext(SentenceGroupCollect sentenceGroupCollect1) {
+            public void onNext(SentenceGroupCollect sentenceGroupCollect) {
 
-                if(sentenceGroupCollect1 != null){
+                if(sentenceGroupCollect != null){
                     Toast.makeText(SentencesFragment.this.getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(SentencesFragment.this.getContext(),"收藏失败",Toast.LENGTH_SHORT).show();
@@ -364,13 +380,47 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         mSubscriptions.add(subscription);
     }
 
-    private void favoriteSentences(SentenceCollectGroup sentenceCollectGroup){
+    /**
+     * 收藏热门句单里的多个句子
+     */
+    private void favoriteTopSentences() {
+        if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
+            Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
+        }else{
+            showMultipleSelect();
+        }
+    }
+
+    /**
+     * 收藏热门句单里的多个句子
+     */
+    private void favoriteTopSentences(List<Sentence> sentences) {
+        this.favoritesentences = sentences;
+        if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
+            Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
+        }else{
+            SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
+            Bundle bundle = new Bundle();
+            sentenceCollectGroupsSelectFragment.setTargetFragment(this, SENTENCESFAVORITE);
+            sentenceCollectGroupsSelectFragment.setArguments(bundle);
+            sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencecollectgroup");
+        }
+    }
+
+    /**
+     * 批量收藏句子到指定句子收藏分组
+     * @param sentenceCollectGroup
+     */
+    private void favoriteTopSentences(SentenceCollectGroup sentenceCollectGroup){
 
         final List<SentenceCollect> sentenceCollects = new ArrayList<>();
-        for(int i = 0; i < checkedsentences.size(); i++){
+        for(int i = 0; i < favoritesentences.size(); i++){
             SentenceCollect sentenceCollect = new SentenceCollect();
-            sentenceCollect.setUser(repository.getUserInfo());
-            sentenceCollect.setSentence(checkedsentences.get(i));
+            User user = repository.getUserInfo();
+            sentenceCollect.setUser(user);
+            Sentence sentence = favoritesentences.get(i);
+            sentenceCollect.setSentence(sentence);
+            sentenceCollectGroup.setPointer();
             sentenceCollect.setSentenceCollectGroup(sentenceCollectGroup);
             sentenceCollects.add(sentenceCollect);
         }
@@ -385,24 +435,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             public void onError(Throwable e) {
                 if(e instanceof BmobRequestException){
                     BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    List<BatchResult> list = (List<BatchResult>) bmobRequestException.getObject();
-                    StringBuffer stringBuffer = new StringBuffer();
-                    if(list.size() == checkedsentences.size()){
-                        for(int i = 0; i < checkedsentences.size(); i++){
-                            BatchResult batchResult = list.get(i);
-                            BmobDefaultError bmobDefaultError = batchResult.getError();
-                            if(bmobDefaultError != null){
-                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                                if(createuser == RemoteCode.COMMON.Common_UNIQUE){
-                                    String content = checkedsentences.get(i).getContent();
-                                    stringBuffer.append(content + "已经收藏在当前分组了" + System.getProperty("line.separator"));
-                                }
-                            }
-                        }
-                    }
-                    if(stringBuffer.toString().length() > 0){
-                        Toast.makeText(SentencesFragment.this.getContext(),stringBuffer.toString(),Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(SentencesFragment.this.getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(SentencesFragment.this.getContext(),SentencesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
                 }
@@ -416,57 +449,380 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         mSubscriptions.add(subscription);
     }
 
-    private void showMultipleSelect(){
 
-        String[] sentences = new String[mList.size()];
-        for(int i = 0; i < mList.size(); i++){
-            sentences[i] = mList.get(i).getContent();
-        }
-        Intent intent = new Intent(this.getContext(),MultipleActivity.class);
-        intent.putExtra(MultipleActivity.STRINGARRAY,sentences);
-        startActivityForResult(intent,REQUESTCODE);
+    //我创建的分组列表进来的******************************************************************************
+
+    /**
+     * 修改句组名称
+     */
+    private void updateSentenceGroup(){
+        Bundle bundle = new Bundle();
+        bundle.putString(UpdateWordGroupFragment.TITLE,"修改句组名称");
+        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
+        updateWordGroupFragment.setArguments(bundle);
+        updateWordGroupFragment.setOldName(sentenceGroup.getName());
+        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
+        {
+            @Override
+            public void onUpdate(String name) {
+                updateSentenceGroup(name);
+            }
+        });
+        updateWordGroupFragment.show(getFragmentManager(),"update");
+    }
+
+    /**
+     * 更新句子分组
+     */
+    private void updateSentenceGroup(final String name){
+
+        SentenceGroup updatesentenceGroup = new SentenceGroup();
+        updatesentenceGroup.setObjectId(sentenceGroup.getObjectId());
+        updatesentenceGroup.setName(name);
+        Subscription subscription = repository.updateSentenceGroupRxById(updatesentenceGroup).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    updateWGFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                sentenceGroup.setName(name);
+                Toast.makeText(SentencesFragment.this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 删除创建的句组
+     */
+    private void deleteSentenceGroup() {
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentenceGroup(sentenceGroup);
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
     }
 
 
+    //删除句子分组
+    private void deleteSentenceGroup(SentenceGroup sentenceGroup){
+        Subscription subscription = repository.deleteSentenceGroupRxById(sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteGroupSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //批量删除句子
+    private void deleteSetnences(){
+        showMultipleSelect();
+    }
+
+    //批量删除句子确认
+    private void deleteSetnencesAffirm(final List<Sentence> sentences){
+
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentences(sentences);
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
+
+    //批量删除句子
+    private void deleteSentences(List<Sentence> sentences){
+
+        Subscription subscription = repository.deleteSentences(sentences).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
+    //我创建的收藏句组******************************************************************************
+
+    /**
+     * 修改句组名称
+     */
+    private void updateSentenceCollectGroup(){
+        Bundle bundle = new Bundle();
+        bundle.putString(UpdateWordGroupFragment.TITLE,"修改句组名称");
+        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
+        updateWordGroupFragment.setArguments(bundle);
+        updateWordGroupFragment.setOldName(sentenceCollectGroup.getName());
+        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
+        {
+            @Override
+            public void onUpdate(String name) {
+                updateSentenceCollectGroup(name);
+            }
+        });
+        updateWordGroupFragment.show(getFragmentManager(),"update");
+    }
+
+    /**
+     * 更新句子分组
+     */
+    private void updateSentenceCollectGroup(final String name){
+
+        SentenceCollectGroup updatesentenceCollectGroup = new SentenceCollectGroup();
+        updatesentenceCollectGroup.setObjectId(sentenceCollectGroup.getObjectId());
+        updatesentenceCollectGroup.setName(name);
+        Subscription subscription = repository.updateSentenceCollectGroupRxById(updatesentenceCollectGroup).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    updateWGFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                sentenceCollectGroup.setName(name);
+                Toast.makeText(SentencesFragment.this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
+
+
+    //删除收藏句组确认
+    private void deleteSentenceCollectGroupAffirm(){
+
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentenceCollectGroup(sentenceCollectGroup);
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
+
+    //删除收藏的句子分组
+    private void deleteSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup){
+
+        Subscription subscription = repository.deleteSentenceCollectGroupRxById(sentenceCollectGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    deleteFail(getContext().getString(R.string.networkerror));
+                }
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                deleteGroupSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //批量删除收藏的句子
+    private void deleteSentenceCollects(){
+
+        showMultipleSelect();
+    }
+
+    //批量删除收藏句子确认
+    private void deleteSentenceCollectsAffirm(final List<Sentence> sentenceCollects){
+
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentenceCollects(sentenceCollects);
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
+
+    //批量删除句子
+    private void deleteSentenceCollects(List<Sentence> sentences){
+
+        List<SentenceCollect> list = new ArrayList<>();
+        for(int i = 0; i < sentenceCollects.size(); i++){
+            for(int j = 0; j < sentences.size(); j++){
+                if(sentenceCollects.get(i).getSentence().getObjectId().equals(sentences.get(j).getObjectId())){
+                    list.add(sentenceCollects.get(i));
+                }
+            }
+        }
+        Subscription subscription = repository.deleteSentenceCollects(list).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
+
+    //我收藏的句组***********************************************************************************
+
+    //取消收藏当前句组确认
+    private void deleteSentenceGroupCollectAffirm(){
+
+        DeleteConfirmFragment delete = new DeleteConfirmFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DeleteConfirmFragment.TITLE,"取消收藏当前句组?");
+        delete.setArguments(bundle);
+        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
+            @Override
+            public void onDelete() {
+                deleteSentenceGroupCollect();
+            }
+        });
+        delete.show(getFragmentManager(),"delete");
+    }
+
+    //取消收藏当前句组
+    private void deleteSentenceGroupCollect(){
+
+        Subscription subscription = repository.deleteSentenceGroupCollectRxById(sentenceGroupCollect.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
+    //菜单事件****************************************************************************************************
     //其它人的句组
     private boolean othersgroup(MenuItem item){
 
         switch (item.getItemId()) {
-            case R.id.favorite_sgroup:
-                Log.d(TAG, "收藏句单");
-                if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
-                    Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句单",Toast.LENGTH_SHORT).show();
-                }else{
-                    favoriteSentenGroup(sentenceGroup);
-                }
-                break;
             case R.id.favorite_sentences:
                 Log.d(TAG, "收藏句子");
-                if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
-                    Toast.makeText(SentencesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
-                }else{
-                    showMultipleSelect();
-                }
+                favoriteTopSentences();
                 break;
         }
         return true;
     }
 
+
     //我创建的句组
     private boolean createsgroup(MenuItem item){
 
         switch (item.getItemId()) {
-            case R.id.rename_sgroup:
-                Log.d(TAG, "修改名称");
-                showUpdateWordGroupDialog();
-                break;
-            case R.id.delete_sgroup:
-                Log.d(TAG, "删除句组");
-                showDeleteSentenceGroupConfirm();
-                break;
             case R.id.delete_sentences:
                 Log.d(TAG, "删除句子");
-                showMultipleSelect();
+                deleteSetnences();
                 break;
         }
         return true;
@@ -476,29 +832,14 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     private boolean createfsgroup(MenuItem item){
 
         switch (item.getItemId()) {
-            case R.id.delete_fsgroup:
-                Log.d(TAG, "删除句单");
-                showDeleteSentenceCollectGroupConfirm();
-                break;
             case R.id.delete_sentences:
                 Log.d(TAG, "删除句子");
-                showMultipleSelect();
+                deleteSentenceCollects();
                 break;
         }
         return true;
     }
 
-    //我收藏的句组
-    private boolean favoritesgroup(MenuItem item){
-
-        switch (item.getItemId()) {
-            case R.id.cancel_fsgroup:
-                Log.d(TAG, "取消收藏");
-                showMultipleSelect();
-                break;
-        }
-        return true;
-    }
     @Override
     public void onPause() {
         super.onPause();
@@ -511,6 +852,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         sentenceCollects.clear();
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
@@ -596,7 +938,6 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             }
         });
         mSubscriptions.add(subscription);
-
     }
 
 
@@ -622,348 +963,19 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     }
 
 
-    /**
-     * 显示确认删除创建的句组对话框
-     */
-    private void showDeleteSentenceGroupConfirm() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除句组及里面的所有句子?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteSentenceGroup();
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    /**
-     * 显示确认删除创建的句组对话框
-     */
-    private void showDeleteSentenceCollectGroupConfirm() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteSentenceCollectGroup();
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-
-    /**
-     * 显示确认删除对话框
-     */
-    private void showDeleteSentencesConfirm() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteSentences();
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    /**
-     * 显示确认删除对话框
-     */
-    private void showUnFavoriteSentenceGroupCollectConfirm() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"取水收藏选中的句组?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                unFavoriteSentenceGroupCollect();
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    private void unFavoriteSentenceGroupCollect() {
-        
-    }
-
-    /**
-     * 显示确认删除收藏的句子对话框
-     */
-    private void showDeleteCollectSentencesConfirm() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"取消收藏选中的句子?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                unFavoriteSentences();
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    /**
-     * 显示对话框
-     */
-    private void showUpdateWordGroupDialog(){
-        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
-        updateWordGroupFragment.setOldName(sentenceGroup.getName());
-        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
-        {
-            @Override
-            public void onUpdate(String name) {
-                updateWordGroup(name);
-            }
-        });
-        updateWordGroupFragment.show(getFragmentManager(),"update");
-    }
-
-    //取消收藏词单
-    private void unFavoriteSentences(){
-
-        List<SentenceCollect> list = new ArrayList<>();
-        for(int i = 0; i < sentenceCollects.size(); i++){
-            for(int j = 0; j < checkedsentences.size(); j++){
-                if(sentenceCollects.get(i).getSentence().getObjectId().equals(checkedsentences.get(j).getObjectId())){
-                    list.add(sentenceCollects.get(i));
-                }
-            }
-        }
-        Subscription subscription = repository.deleteSentenceCollects(list).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobDefaultError bm = ((BmobRequestException) e).getBmobDefaultError();
-                    if(bm != null){
-                        deleteFail(bm.getError());
-                    }else{
-                        deleteFail(RemoteCode.COMMON.getDefauleError().getMessage());
-                    }
-                }else{
-                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                if(b){
-                    deleteSuccess();
-                }else{
-                    deleteFail("句子删除失败，请稍后再试.");
-                }
-
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-
-    private void deleteSentenceCollectGroup(){
-        Subscription subscription = repository.deleteSentenceCollectGroupRxById(sentenceCollectGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    deleteFail(((BmobRequestException)e).getMessage());
-                }else{
-                    deleteFail(getContext().getString(R.string.networkerror));
-                }
-
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-                if(aBoolean){
-                    deleteSuccess();
-                }else{
-                    deleteFail("删除失败，请确定当前组里面没有收藏的句子");
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
-
-    }
-
-    //删除詞单
-    private void deleteSentenceGroup(){
-        Subscription subscription = repository.deleteSentenceGroupAndSentences(sentenceGroup.getObjectId(),mList).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobDefaultError bm = ((BmobRequestException) e).getBmobDefaultError();
-                    if(bm != null){
-                        deleteFail(bm.getError());
-                    }else{
-                        deleteFail(RemoteCode.COMMON.getDefauleError().getMessage());
-                    }
-                }else{
-                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                if(b){
-                    deleteSuccess();
-                }else{
-                    deleteFail("句子删除失败，请稍后再试.");
-                }
-
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    //删除自己创建的句子
-    private void deleteSentences(){
-        Subscription subscription = repository.deleteSentences(checkedsentences).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                BmobRequestException bmobRequestException = (BmobRequestException) e;
-                List<BatchResult> list = (List<BatchResult>) bmobRequestException.getObject();
-                StringBuffer stringBuffer = new StringBuffer();
-                if(list.size() == checkedsentences.size()){
-                    for(int i = 0; i < checkedsentences.size(); i++){
-                        BatchResult batchResult = list.get(i);
-                        BmobDefaultError bmobDefaultError = batchResult.getError();
-                        if(bmobDefaultError != null){
-                            String content = checkedsentences.get(i).getContent();
-                            stringBuffer.append(content + "删除失败" + System.getProperty("line.separator"));
-                        }
-                    }
-                }
-                if(stringBuffer.toString().length() > 0){
-                    Toast.makeText(SentencesFragment.this.getContext(),stringBuffer.toString(),Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                deleteSuccess();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    //删除自己收藏的句子
-    private void deleteCollectSentences(SentenceCollectGroup sentenceCollectGroup){
-
-        final List<SentenceCollect> sentenceCollects = new ArrayList<>();
-        for(int i = 0; i < checkedsentences.size(); i++){
-            SentenceCollect sentenceCollect = new SentenceCollect();
-            sentenceCollect.setUser(repository.getUserInfo());
-            sentenceCollect.setSentence(checkedsentences.get(i));
-            sentenceCollect.setSentenceCollectGroup(sentenceCollectGroup);
-            sentenceCollects.add(sentenceCollect);
-        }
-
-        Subscription subscription = repository.deleteSentenceCollects(sentenceCollects).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                BmobRequestException bmobRequestException = (BmobRequestException) e;
-                List<BatchResult> list = (List<BatchResult>) bmobRequestException.getObject();
-                StringBuffer stringBuffer = new StringBuffer();
-                if(list.size() == checkedsentences.size()){
-                    for(int i = 0; i < checkedsentences.size(); i++){
-                        BatchResult batchResult = list.get(i);
-                        BmobDefaultError bmobDefaultError = batchResult.getError();
-                        if(bmobDefaultError != null){
-                            String content = checkedsentences.get(i).getContent();
-                            stringBuffer.append(content + "取消失败" + System.getProperty("line.separator"));
-                        }
-                    }
-                }
-                if(stringBuffer.toString().length() > 0){
-                    Toast.makeText(SentencesFragment.this.getContext(),stringBuffer.toString(),Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                deleteSuccess();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    /**
-     * 更新词单
-     */
-    private void updateWordGroup(String name){
-
-        SentenceGroup createsg = new SentenceGroup();
-        createsg.setObjectId(sentenceGroup.getObjectId());
-        createsg.setUser(repository.getUserInfo());
-        createsg.setName(name);
-        createsg.setOpen(false);
-        Subscription subscription = repository.updateSentenceGroupRxById(createsg).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401){
-                        updateWGFail(getString(R.string.words_nameunique));
-                    }else{
-                        updateWGFail(RemoteCode.COMMON.DEFAULT.getMessage());
-                    }
-                }else{
-                    Toast.makeText(SentencesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                    updateWGSuccess();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
     //删除失败
     private void deleteFail(String message){
         Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
     }
+
+    //删除分组成功
+    private void deleteGroupSuccess(){
+        deleteSuccess();
+        Intent intent = new Intent(this.getContext(),SentenceGroupsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     //删除成功
     private void deleteSuccess(){
         Toast.makeText(this.getContext(),R.string.deletesuccess,Toast.LENGTH_SHORT).show();
@@ -975,119 +987,38 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
         Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
     }
 
-    //创建成功
-    private void updateWGSuccess(){
-
-        Toast.makeText(this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
-    }
-
-
-
-    /**
-     * 取消收藏
-     */
-    private void unFavorite(){
-        fab_deleteorfavorite_wordgroup.setEnabled(false);
-        Subscription subscription = repository.deleteSentenceGroupCollectRxByuserIdAndsentenceGroupId(repository.getUserInfo().getObjectId(),sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-                fab_deleteorfavorite_wordgroup.setEnabled(true);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                fab_deleteorfavorite_wordgroup.setEnabled(true);
-                unFavoriteResult(false);
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-
-                unFavoriteResult(true);
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    /**
-     * 收藏
-     */
-    private void favorite(){
-
-        fab_deleteorfavorite_wordgroup.setEnabled(false);
-        SentenceGroupCollect sentenceGroupCollect = new SentenceGroupCollect();
-        sentenceGroupCollect.setUser(repository.getUserInfo());
-        sentenceGroupCollect.setSentenceGroup(sentenceGroup);
-        repository.addSentenceGroupCollectByNotSelf(sentenceGroupCollect).subscribe(new Subscriber<SentenceGroupCollect>() {
-            @Override
-            public void onCompleted() {
-                fab_deleteorfavorite_wordgroup.setEnabled(true);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                fab_deleteorfavorite_wordgroup.setEnabled(true);
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    favoriteFail(bmobRequestException.getMessage());
-                }else{
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-
-            }
-
-            @Override
-            public void onNext(SentenceGroupCollect sentenceGroupCollect1) {
-
-                if(sentenceGroupCollect1 != null){
-                    favoriteSuccess();
-                }else {
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-            }
-        });
-    }
-
-    private void favoriteSuccess(){
-        Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
-        fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
-    }
-
-    private void favoriteFail(String message){
-        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 取消收藏结果
-     * @param isSuccess 成功或失败
-     */
-    private void unFavoriteResult(boolean isSuccess){
-        if(isSuccess){
-            Toast.makeText(this.getContext(),R.string.unfavoritesuccess,Toast.LENGTH_SHORT).show();
-            fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-        }else {
-            Toast.makeText(this.getContext(),R.string.unfavoritefail,Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.fab_edit_wordgroup:
-                showUpdateWordGroupDialog();
-                break;
-            case R.id.fab_deleteorfavorite_wordgroup:
+            case R.id.fab_edit:
+                //showUpdateWordGroupDialog();
                 switch (sentenceGroupType){
-                    case OTHERSGROUP:
-                        favorite();
-                        break;
                     case CREATESGROUP:
-                        showDeleteSentenceGroupConfirm();
+                        updateSentenceGroup();
+                        break;
+                    case CREATEFSGROUP:
+                        updateSentenceCollectGroup();
+                        break;
+                }
+                break;
+            case R.id.fab_delete:
+                switch (sentenceGroupType){
+                    case CREATESGROUP:
+                        deleteSentenceGroup();
+                        break;
+                    case CREATEFSGROUP:
+                        deleteSentenceCollectGroupAffirm();
                         break;
                     case FAVORITESGROUP:
-                        unFavorite();
+                        deleteSentenceGroupCollectAffirm();
                         break;
-                    default:
+                }
+
+                break;
+            case R.id.fab_favorite:
+                switch (sentenceGroupType){
+                    case OTHERSGROUP:
+                        favoriteSentenGroup();
                         break;
                 }
                 break;

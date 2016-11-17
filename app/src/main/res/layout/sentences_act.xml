@@ -33,7 +33,7 @@
 
         </FrameLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -41,25 +41,32 @@
             android:layout_margin="@dimen/fab_margin"
             app:layout_anchorGravity="bottom|right|end">
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_edit_wordgroup"
+                android:id="@+id/fab_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:layout_marginBottom="0dp"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_edit"
                 app:fabSize="normal"/>
+
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_deleteorfavorite_wordgroup"
+                android:id="@+id/fab_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
+                android:src="@drawable/ic_favorite_border_black_24dp"
+                app:fabSize="normal"
+                android:layout_below="@+id/fab_edit"
+                app:layout_anchor="@id/fab_edit"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_delete"
                 app:fabSize="normal"
-                app:layout_anchor="@id/fab_edit_grammar"
-                app:layout_anchorGravity="bottom|right|end"/>
+                android:layout_below="@+id/fab_edit"
+                app:layout_anchor="@id/fab_edit"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

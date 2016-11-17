@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,8 @@ import com.englishlearn.myapplication.R;
  */
 public class UpdateWordGroupFragment extends android.support.v4.app.DialogFragment {
 
+    public static String TITLE = "title";//次标题
+    private String title;
     private UpdateWordGroupListener updateWordGroupListener;
 
     private String oldName;
@@ -33,6 +36,14 @@ public class UpdateWordGroupFragment extends android.support.v4.app.DialogFragme
         void onUpdate(String name);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null && bundle.containsKey(TITLE)){
+            title = bundle.getString(TITLE);
+        }
+    }
 
     @NonNull
     @Override
@@ -48,7 +59,7 @@ public class UpdateWordGroupFragment extends android.support.v4.app.DialogFragme
         }
         return new AlertDialog.Builder(getActivity())
                 .setView(passwordErrorLayout)
-                .setTitle("修改名称")
+                .setTitle(title != null ? title : "修改名称")
                 .setPositiveButton("确定",
                         new DialogInterface.OnClickListener() {
                             @Override

@@ -41,7 +41,7 @@
             android:layout_margin="@dimen/fab_margin"
             app:layout_anchorGravity="bottom|right|end">
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_edit_wordgroup"
+                android:id="@+id/fab_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -50,7 +50,7 @@
                 android:src="@drawable/ic_edit"
                 app:fabSize="normal"/>
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_deleteorfavorite_wordgroup"
+                android:id="@+id/fab_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"

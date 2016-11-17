@@ -2,11 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/favorite_sgroup"
-        android:title="收藏句单"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/favorite_sentences"
         android:title="收藏句子"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 </menu>

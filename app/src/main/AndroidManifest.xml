@@ -142,6 +142,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".sentencegroups.SentenceGroupsActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".sentencegroups.sentences.SentencesActivity"

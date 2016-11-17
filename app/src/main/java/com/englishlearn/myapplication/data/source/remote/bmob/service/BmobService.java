@@ -534,10 +534,11 @@ public interface BmobService{
 
 
     //查询句子分组的所有句子
-    @GET("/1/classes/Sentence")
+    @GET("/1/classes/Sentence?include=sentenceGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
-            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
     })
     Observable<Response<SentenceResult>> getSentencesRxBySentenceGroupId( @Query("where") String sentencegroupidJson, @Query("limit")int limit, @Query("skip")int skip);
 
@@ -828,7 +829,7 @@ public interface BmobService{
     Observable<Response<SentenceGroup>> getSentenceGroupRxById(@Path("id") String id);
 
     //根据userId获取句子分组，分页展示
-    @GET("/1/classes/SentenceGroup")
+    @GET("/1/classes/SentenceGroup?include=user")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
@@ -837,7 +838,7 @@ public interface BmobService{
 
 
     //根据userId获取句子分组，分页展示
-    @GET("/1/classes/SentenceGroup")
+    @GET("/1/classes/SentenceGroup?include=user")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
@@ -908,7 +909,7 @@ public interface BmobService{
     Observable<Response<SentenceCollectGroup>> getSentenceCollectGroupRxById(@Path("id") String id);
 
     //根据userId获取句子收藏分组，分页展示
-    @GET("/1/classes/SentenceCollectGroup")
+    @GET("/1/classes/SentenceCollectGroup?include=user")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
@@ -945,7 +946,7 @@ public interface BmobService{
     Observable<Response<ResponseBody>> deleteSentenceGroupCollectRxById(@Path("id") String id);
 
     //根据userId获取句子分組收藏
-    @GET("/1/classes/SentenceGroupCollect?include=sentenceGroup")
+    @GET("/1/classes/SentenceGroupCollect?include=sentenceGroup,user")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"

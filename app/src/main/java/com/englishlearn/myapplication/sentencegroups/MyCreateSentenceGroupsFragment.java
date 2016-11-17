@@ -101,10 +101,13 @@ public class MyCreateSentenceGroupsFragment extends Fragment {
                 SentenceGroup sentenceGroup = myAdapter.getSentenceGroups().get(position);
                 Log.d(TAG, sentenceGroup.toString());
                 Intent intent = new Intent(MyCreateSentenceGroupsFragment.this.getContext(),SentencesActivity.class);
-                intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.CREATESGROUP);
-                startActivity(intent);
 
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable(SentencesActivity.SENTENCEGROUP,sentenceGroup);
+                bundle.putSerializable(SentencesActivity.TYPE, SentenceGroupType.CREATESGROUP);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
         });

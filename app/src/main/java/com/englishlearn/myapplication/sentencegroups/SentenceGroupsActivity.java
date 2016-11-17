@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.sentencegroups;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.englishlearn.myapplication.R;
 
@@ -26,7 +28,7 @@ public class SentenceGroupsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sentencegroups_act);
-
+        Log.d(TAG,"onCreate");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -51,6 +53,13 @@ public class SentenceGroupsActivity extends AppCompatActivity {
         viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
         tableLayout.getTabTextColors();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG,"onNewIntent");
     }
 
     @Override

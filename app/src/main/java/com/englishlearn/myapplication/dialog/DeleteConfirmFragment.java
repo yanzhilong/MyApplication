@@ -29,7 +29,7 @@ public class DeleteConfirmFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if(bundle.containsKey(TITLE)){
+        if(bundle != null && bundle.containsKey(TITLE)){
             title = bundle.getString(TITLE);
         }
     }

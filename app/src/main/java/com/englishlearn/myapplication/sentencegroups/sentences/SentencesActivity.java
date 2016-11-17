@@ -8,33 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.SentenceCollectGroup;
-import com.englishlearn.myapplication.data.SentenceGroup;
 
 public class SentencesActivity extends AppCompatActivity {
 
-    public static final String OBJECT = "object";
+    public static final String SENTENCEGROUP = "sentencegroup";
     public static final String SENTENCECOLLECTGROUP = "sentencecollectgroup";
-    public static final String TYPE = "sentencegrouptype";
+    public static final String SENTENCEGROUPCOLLECT = "sentencegroupcollect";//收藏的单词分组
+    public static final String TYPE = "grouptype";
+
     private static final String TAG = SentencesActivity.class.getSimpleName();
-    private SentenceGroup sentenceGroup;
-    private SentenceCollectGroup sentenceCollectGroup;//句子收藏分组
-    private SentenceGroupType sentenceGroupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sentences_act);
-
-        if (getIntent().hasExtra(OBJECT)) {
-            sentenceGroup = (SentenceGroup) getIntent().getSerializableExtra(OBJECT);
-            sentenceGroupType = (SentenceGroupType) getIntent().getSerializableExtra(TYPE);
-        }
-
-        if(getIntent().hasExtra(SENTENCECOLLECTGROUP)){
-            sentenceCollectGroup = (SentenceCollectGroup) getIntent().getSerializableExtra(SENTENCECOLLECTGROUP);
-            sentenceGroupType = (SentenceGroupType) getIntent().getSerializableExtra(TYPE);
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,11 +34,9 @@ public class SentencesActivity extends AppCompatActivity {
         ab.setTitle(R.string.title_sentences);
 
         Fragment fragment = SentencesFragment.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(SentencesFragment.OBJECT,sentenceGroup);
-        bundle.putSerializable(SentencesFragment.TYPE,sentenceGroupType);
-        bundle.putSerializable(SentencesFragment.SENTENCECOLLECTGROUP,sentenceCollectGroup);
-        fragment.setArguments(bundle);
+
+        Bundle bundle1 = getIntent().getExtras();
+        fragment.setArguments(bundle1);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contentFrame, fragment)

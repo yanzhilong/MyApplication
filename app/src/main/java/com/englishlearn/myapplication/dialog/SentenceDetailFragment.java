@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
@@ -37,16 +36,14 @@ import rx.subscriptions.CompositeSubscription;
  * Created by yanzl on 16-10-23.
  */
 
-public class SentenceDetailFragment extends DialogFragment implements View.OnClickListener{
+public class SentenceDetailFragment extends DialogFragment{
 
     public static final String SENTENCE = "sentence";
     private static final int SENTENCEFAVORITE = 0;//收藏句子
     public static final int ITEMSELECT = 1;//选择了句子分组
-    public static final String SHOWFAVORITE = "showfavorite";// 是否显示收藏按钮
     private static final String TAG = SentenceDetailFragment.class.getSimpleName();
     private CompositeSubscription mSubscriptions;
 
-    private boolean showfavorite;
     private Sentence sentence;
     private TextView content;
     private TextView translation;
@@ -93,7 +90,6 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
         getActivity();
         if(bundle != null){
             sentence = (Sentence) bundle.getSerializable(SENTENCE);
-            showfavorite = bundle.getBoolean(SHOWFAVORITE,false);
         }
         sentenceGroups = new ArrayList<>();
         sentencegroupss = new String[0];
@@ -117,11 +113,6 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
 
         content = (TextView) view.findViewById(R.id.content);
         translation = (TextView) view.findViewById(R.id.translation);
-        view.findViewById(R.id.favorite).setOnClickListener(this);
-        if(!showfavorite)
-        {
-            view.findViewById(R.id.favorite).setVisibility(View.GONE);
-        }
         return view;
     }
 
@@ -161,39 +152,6 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
     }
 
     @Override
-    public void onClick(View v) {
-        Log.d(TAG,"onClick");
-                switch (v.getId()){
-            case R.id.favorite:
-                Log.d(TAG,"favorite");
-                showSentenceCollectGroups();
-                //this.dismiss();
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void showSentenceCollectGroups(){
-        /*if(sentencegroupss != null){
-            SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(SentenceCollectGroupsSelectFragment.ITEMCLICKLISTENER,this);
-            bundle.putSerializable(SentenceCollectGroupsSelectFragment.ITEMS,sentencegroupss);
-            bundle.putSerializable(SentenceCollectGroupsSelectFragment.SENTENCE,sentence);
-            bundle.putSerializable(SentenceCollectGroupsSelectFragment.SENTENCELIST,sentenceGroups);
-            sentenceCollectGroupsSelectFragment.setTargetFragment(this,SENTENCEFAVORITE);
-            sentenceCollectGroupsSelectFragment.setArguments(bundle);
-            sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencegroup");
-        }else{
-            Toast.makeText(this.getContext(),"获取分组信息失败",Toast.LENGTH_SHORT).show();
-        }*/
-    }
-
-
-
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case SENTENCEFAVORITE:
@@ -210,45 +168,5 @@ public class SentenceDetailFragment extends DialogFragment implements View.OnCli
         }
     }
 
-    /*public void addSentenceGroup(String sentencecollectgroupId){
-        SentenceCollect sentenceCollect = new SentenceCollect();
-        sentenceCollect.setUserId(repository.getUserInfo().getObjectId());
-        sentenceCollect.setSentence(sentence);
-        sentenceCollect.setSentenceCollectGroup(sentencecollectgroupId);
-        Subscription subscription = repository.addSentenceCollectByNotSelf(sentenceCollect).subscribe(new Subscriber<SentenceCollect>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    favoriteFail(bmobRequestException.getMessage());
-                }else{
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-            }
-
-            @Override
-            public void onNext(SentenceCollect sentenceCollect) {
-                if(sentenceCollect != null){
-                    favoriteSuccess();
-                }else {
-                    favoriteFail(getString(R.string.unfavoritefail));
-                }
-            }
-        });
-        mSubscriptions.add(subscription);
-    }*/
-
-    private void favoriteSuccess(){
-        Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
-    }
-
-    private void favoriteFail(String message){
-        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
-    }
 
 }

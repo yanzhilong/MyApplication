@@ -42,7 +42,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by yanzl on 16-8-1.
@@ -1503,11 +1502,6 @@ public class BmobDataSource implements RemoteData {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         Gson gson = new GsonBuilder().create();
                         if(responseBodyResponse.isSuccessful()){
-                            try {
-                                getBatchResult(responseBodyResponse);
-                            } catch (BmobRequestException e) {
-                                return Observable.error(e);
-                            }
                             return Observable.just(true);
                         }else{
                             try {
@@ -2627,9 +2621,35 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Boolean> deleteSentenceGroupRxById(String sentenceGroupId) {
-        return bmobService.deleteSentenceGroupRxById(sentenceGroupId)
-                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+    public Observable<Boolean> deleteSentenceGroupRxById(final String sentenceGroupId) {
+        //先查询是否有句子在这个分组里面
+        String regex = searchUtil.getSentencesRxBySentenceGroupId(sentenceGroupId);
+        return bmobService.getSentencesRxBySentenceGroupId(regex,5,0)
+                .flatMap(new Func1<Response<SentenceResult>, Observable<Response<ResponseBody>>>() {
+                    @Override
+                    public Observable<Response<ResponseBody>> call(Response<SentenceResult> sentenceResultResponse) {
+                        if(sentenceResultResponse.isSuccessful()){
+                            SentenceResult sentenceResult = sentenceResultResponse.body();
+                            List<Sentence> sentences = sentenceResult.getResults();
+                            if(sentences.size() > 0){
+                              BmobRequestException bmobRequestException = new BmobRequestException("删除失败，请先删除当前分组里面的句子");
+                              return Observable.error(bmobRequestException);
+                            }
+                            return bmobService.deleteSentenceGroupRxById(sentenceGroupId);
+                        }else{
+                            try {
+                                Gson gson = new GsonBuilder().create();
+                                String errjson =  sentenceResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                BmobRequestException bmobRequestException = new BmobRequestException(errjson);
+                                return Observable.error(bmobRequestException);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return Observable.error(e);
+                            }
+                        }
+                    }
+                }).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -2687,8 +2707,6 @@ public class BmobDataSource implements RemoteData {
         String objectId = sentenceGroup.getObjectId();
         SentenceGroup sentenceGroup1 = (SentenceGroup) sentenceGroup.clone();
         sentenceGroup1.setObjectId(null);
-        sentenceGroup1.getUser().setPointer();
-
         return bmobService.updateSentenceGroupRxById(objectId,sentenceGroup1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
@@ -2701,7 +2719,11 @@ public class BmobDataSource implements RemoteData {
                         String errjson =  responseBodyResponse.errorBody().string();
                         BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
                         RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
-                        bmobRequestException = new BmobRequestException(createuser.getMessage());
+                        if(createuser == RemoteCode.COMMON.Common_UNIQUE){
+                            bmobRequestException = new BmobRequestException("分组名称已经存在了");
+                        }else{
+                            bmobRequestException = new BmobRequestException(createuser.getMessage());
+                        }
                     }catch (IOException e){
                         e.printStackTrace();
                     }
@@ -2957,24 +2979,24 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<Boolean> deleteSentenceCollectGroupRxById(final String sentencecollectGroupId) {
 
-        //先判断所有里面收藏的所有句子
-        return getSentenceCollectRxBySentenceCollectGroupId(sentencecollectGroupId,0,100)
-                .flatMap(new Func1<List<SentenceCollect>, Observable<Boolean>>() {
+        String regex = searchUtil.getBmobEquals("sentenceCollectGroup",sentencecollectGroupId);
+        //先查询是否有句子在这个分组里面
+        return bmobService.getSentenceCollectRxBySentenceCollectGroupId(regex,5,0)
+                .flatMap(new Func1<Response<SentenceCollectResult>, Observable<Response<ResponseBody>>>() {
                     @Override
-                    public Observable<Boolean> call(List<SentenceCollect> sentenceCollects) {
-
-                        if(sentenceCollects != null && sentenceCollects.size() == 0){
-                            return Observable.just(true);
-                        }
-                        return Observable.error(new BmobRequestException("请确认当前句组下面没有句子了"));
-                    }
-                })
-                .subscribeOn(Schedulers.io()) // 指定 subscribe() 发生在 IO 线程
-                .observeOn(Schedulers.io()) // 指定 Subscriber 的回调发生在主线程
-                .flatMap(new Func1<Boolean, Observable<Response<ResponseBody>>>() {
-                    @Override
-                    public Observable<Response<ResponseBody>> call(Boolean aBoolean) {
+                    public Observable<Response<ResponseBody>> call(Response<SentenceCollectResult> sentenceCollectResultResponse) {
+                        if(sentenceCollectResultResponse.isSuccessful()){
+                            SentenceCollectResult sentenceCollectResult = sentenceCollectResultResponse.body();
+                            List<SentenceCollect> sentenceCollects = sentenceCollectResult.getResults();
+                            if(sentenceCollects.size() > 0){
+                                BmobRequestException bmobRequestException = new BmobRequestException("删除失败，请先删除当前分组里面的句子");
+                                return Observable.error(bmobRequestException);
+                            }
                             return bmobService.deleteSentenceCollectGroupRxById(sentencecollectGroupId);
+                        }else{
+                            BmobRequestException bmobRequestException = new BmobRequestException("删除失败,请稍后再试");
+                            return Observable.error(bmobRequestException);
+                        }
                     }
                 }).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
                     @Override
@@ -3021,6 +3043,7 @@ public class BmobDataSource implements RemoteData {
                     }catch (IOException e){
                         e.printStackTrace();
                     }
+
                 }
                 return Observable.error(bmobRequestException);
             }
@@ -3126,6 +3149,7 @@ public class BmobDataSource implements RemoteData {
                 }).compose(RxUtil.<List<SentenceCollectGroup>>applySchedulers());
     }
 
+    //标准
     @Override
     public Observable<SentenceGroupCollect> addSentenceGroupCollect(SentenceGroupCollect sentenceGroupCollect) {
 
@@ -3147,14 +3171,11 @@ public class BmobDataSource implements RemoteData {
                                 String errjson =  bmobSentenceGroupCollectResponse.errorBody().string();
                                 Log.d(TAG,"addSentenceGroupCollect:" + errjson);
                                 BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
-
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 if(createuser == RemoteCode.COMMON.Common_UNIQUE){
                                     bmobRequestException = new BmobRequestException("已经收藏过当前句单了");
-
                                 }else{
                                     bmobRequestException = new BmobRequestException(createuser.getMessage());
-
                                 }
                             }catch (IOException e){
                                 e.printStackTrace();
@@ -3879,11 +3900,6 @@ public class BmobDataSource implements RemoteData {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         Gson gson = new GsonBuilder().create();
                         if(responseBodyResponse.isSuccessful()){
-                            try {
-                                getBatchResult(responseBodyResponse);
-                            } catch (BmobRequestException e) {
-                                return Observable.error(e);
-                            }
                             return Observable.just(true);
                         }else{
                             try {
@@ -3892,7 +3908,7 @@ public class BmobDataSource implements RemoteData {
                                 RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
                                 bmobRequestException = new BmobRequestException(createuser.getMessage());
                             }catch (IOException e){
-                                e.printStackTrace();
+                                return Observable.error(e);
                             }
                         }
                         return Observable.error(bmobRequestException);
@@ -3995,11 +4011,6 @@ public class BmobDataSource implements RemoteData {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         Gson gson = new GsonBuilder().create();
                         if(responseBodyResponse.isSuccessful()){
-                            try {
-                                getBatchResult(responseBodyResponse);
-                            } catch (BmobRequestException e) {
-                                return Observable.error(e);
-                            }
                             return Observable.just(true);
                         }else{
                             try {

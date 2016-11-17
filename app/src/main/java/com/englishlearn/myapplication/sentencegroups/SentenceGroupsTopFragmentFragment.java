@@ -75,7 +75,7 @@ public class SentenceGroupsTopFragmentFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View root = inflater.inflate(R.layout.sentencegroupstopfragment_frag, container, false);
@@ -100,8 +100,11 @@ public class SentenceGroupsTopFragmentFragment extends Fragment {
                 SentenceGroup sentenceGroup = myAdapter.getSentenceGroups().get(position);
                 Log.d(TAG, sentenceGroup.toString());
                 Intent intent = new Intent(SentenceGroupsTopFragmentFragment.this.getContext(),SentencesActivity.class);
-                intent.putExtra(SentencesActivity.OBJECT,sentenceGroup);
-                intent.putExtra(SentencesActivity.TYPE, SentenceGroupType.OTHERSGROUP);
+                Bundle bundle = new Bundle();
+
+                bundle.putSerializable(SentencesActivity.SENTENCEGROUP,sentenceGroup);
+                bundle.putSerializable(SentencesActivity.TYPE, SentenceGroupType.OTHERSGROUP);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
 

@@ -130,10 +130,10 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
-        fab_edit_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_wordgroup);
+        fab_edit_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit);
         fab_edit_wordgroup.setOnClickListener(this);
 
-        fab_deleteorfavorite_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_deleteorfavorite_wordgroup);
+        fab_deleteorfavorite_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_delete);
         fab_deleteorfavorite_wordgroup.setOnClickListener(this);
 
         switch (wordGroupType){
@@ -464,10 +464,10 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.fab_edit_wordgroup:
+            case R.id.fab_edit:
                 showUpdateWordGroupDialog();
                 break;
-            case R.id.fab_deleteorfavorite_wordgroup:
+            case R.id.fab_delete:
                 switch (wordGroupType){
                     case TOP:
                         favorite();
