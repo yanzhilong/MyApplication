@@ -1087,6 +1087,16 @@ public interface RemoteData extends DataSource{
     Observable<List<TractateCollect>> getTractateCollectRxByUserIdAndTractateGroupId(String userId,String tractateGroupId, int page, int pageSize);
 
 
+
+    /**
+     * 根据TractateCollectGroupId获取文章，分页
+     * @param tractateCollectGroupId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateCollect>> getTractateCollectRxByTractateCollectGroupId(String tractateCollectGroupId, int page, int pageSize);
+
     //上传文件
     Observable<UploadFile> uploadFile(File file);
 }

@@ -21,6 +21,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.tractategroup.tractates.TractateGroupType;
 import com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity;
 
 import java.util.ArrayList;
@@ -93,9 +94,11 @@ public class MyCollectTractateGroupsFragment extends Fragment {
 
                 TractateGroup tractateGroup = myAdapter.getTractateGroups().get(position);
                 Log.d(TAG, tractateGroup.toString());
-
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(TractatesActivity.TRACTATEGROUP,tractateGroup);
+                bundle.putSerializable(TractatesActivity.TYPE, TractateGroupType.CREATEFTGROUP);
                 Intent intent = new Intent(MyCollectTractateGroupsFragment.this.getContext(), TractatesActivity.class);
-                intent.putExtra(TractatesActivity.TRACTATEGROUP,tractateGroup);
+                intent.putExtras(bundle);
                 startActivity(intent);
 
             }

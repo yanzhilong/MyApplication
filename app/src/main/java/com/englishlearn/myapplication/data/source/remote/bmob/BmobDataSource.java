@@ -4234,6 +4234,43 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<TractateCollect>> getTractateCollectRxByTractateCollectGroupId(String tractateCollectGroupId, int page, int pageSize) {
+
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+        String regex = searchUtil.getBmobEquals("tractateCollectGroupId",tractateCollectGroupId);
+        return bmobService.getTractateCollectRxByTractateCollectGroupId(regex,limit,skip)
+                .flatMap(new Func1<Response<TractateCollectResult>, Observable<List<TractateCollect>>>() {
+                    @Override
+                    public Observable<List<TractateCollect>> call(Response<TractateCollectResult> bmobTractateCollectResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(bmobTractateCollectResultResponse.isSuccessful()){
+                            TractateCollectResult bmobTractateCollectResult = bmobTractateCollectResultResponse.body();
+
+                            List<TractateCollect> tractateCollects = bmobTractateCollectResult.getResults();
+
+                            return Observable.just(tractateCollects);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  bmobTractateCollectResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<TractateCollect>>applySchedulers());
+    }
+
+    @Override
     public Observable<UploadFile> uploadFile(final File file) {
 
         RequestBody requestFile =

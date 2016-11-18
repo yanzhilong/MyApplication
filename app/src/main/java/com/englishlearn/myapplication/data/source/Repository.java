@@ -752,6 +752,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<TractateCollect>> getTractateCollectRxByTractateCollectGroupId(String tractateCollectGroupId, int page, int pageSize) {
+        return mBmobDataSource.getTractateCollectRxByTractateCollectGroupId(tractateCollectGroupId,page,pageSize);
+    }
+
+    @Override
     public Observable<UploadFile> uploadFile(File file) {
         return null;
     }

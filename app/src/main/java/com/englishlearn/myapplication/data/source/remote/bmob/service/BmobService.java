@@ -1207,6 +1207,20 @@ public interface BmobService{
     })
     Observable<Response<TractateCollectResult>> getTractateCollectRxByUserIdAndTractateGroupId(@Query("where")String userIdwordgroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
 
+    /**
+     * 根据tractateCollectGroupId获取文章，分页
+     * @param tractateCollectGroupIdjson userId和单词分組Id
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/TractateCollect?include=TractateCollectGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<TractateCollectResult>> getTractateCollectRxByTractateCollectGroupId(@Query("where")String tractateCollectGroupIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
     //上传模块****************************************************************************
 
     @Multipart

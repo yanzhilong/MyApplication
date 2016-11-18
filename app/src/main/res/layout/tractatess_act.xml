@@ -21,11 +21,45 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentFrame"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_anchor="@id/contentFrame"
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_anchorGravity="bottom|right|end">
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_edit"
+                app:fabSize="normal"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete"
+                app:fabSize="normal"
+                android:layout_below="@+id/fab_edit"
+                app:layout_anchor="@id/fab_edit"/>
+
+        </RelativeLayout>
+
+        </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
