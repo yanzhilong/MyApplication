@@ -483,6 +483,13 @@ public interface RemoteData extends DataSource{
     Observable<Boolean> deleteTractateRxById(String tractateId);
 
     /**
+     * 删除多个文章
+     * @param tractates
+     * @return
+     */
+    Observable<Boolean> deleteTractates(List<Tractate> tractates);
+
+    /**
      * 修改文章
      * @param tractate
      * @return
@@ -1067,6 +1074,14 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect);
+
+
+    /**
+     * 增加句子收藏
+     * @param tractateCollects
+     * @return
+     */
+    Observable<Boolean> addTractateCollects(List<TractateCollect> tractateCollects);
 
     /**
      * 删除句子收藏

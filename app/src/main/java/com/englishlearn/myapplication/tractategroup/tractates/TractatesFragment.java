@@ -28,7 +28,6 @@ import com.englishlearn.myapplication.activityforresult.multiple.MultipleActivit
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
-import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateCollectGroup;
@@ -39,7 +38,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestExcepti
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
 import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
-import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
+import com.englishlearn.myapplication.sentencegroups.SentenceGroupsActivity;
 import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
 
@@ -53,8 +52,6 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment.REQUESTCODE;
-import static com.englishlearn.myapplication.tractategroup.tractates.TractateGroupType.CREATEFTGROUP;
-import static com.englishlearn.myapplication.tractategroup.tractates.TractateGroupType.CREATETGROUP;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TRACTATECOLLECTGROUP;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TRACTATEGROUP;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TYPE;
@@ -394,11 +391,11 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
             case OTHERTGROUP:
                 //普通句组
-                favoriteTopSentences(tractates);//显示分组信息
+                favoriteTopTractates(tractates);//显示分组信息
                 break;
             case CREATETGROUP:
                 //删除句子
-                deleteSetnencesAffirm(tractates);
+                deleteTractatesAffirm(tractates);
                 break;
             case CREATEFTGROUP:
                 //删除句子
@@ -411,7 +408,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     /**
      * 收藏热门句单里的多个句子
      */
-    private void favoriteTopSentences() {
+    private void favoriteTopTractates() {
         if(tractateCollectGroup.getUserId().getObjectId().equals(repository.getUserInfo().getObjectId())){
             Toast.makeText(TractatesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
         }else{
@@ -422,14 +419,14 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     /**
      * 收藏热门句单里的多个句子
      */
-    private void favoriteTopSentences(List<Tractate> tractates) {
+    private void favoriteTopTractates(List<Tractate> tractates) {
         this.favoritetractates = tractates;
-        if(sentenceGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
+        if(tractateGroup.getUserId().getObjectId().equals(repository.getUserInfo().getObjectId())){
             Toast.makeText(TractatesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
         }else{
             SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
             Bundle bundle = new Bundle();
-            sentenceCollectGroupsSelectFragment.setTargetFragment(this, SENTENCESFAVORITE);
+            sentenceCollectGroupsSelectFragment.setTargetFragment(this, TRACTATESFAVORITE);
             sentenceCollectGroupsSelectFragment.setArguments(bundle);
             sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencecollectgroup");
         }
@@ -439,7 +436,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
      * 批量收藏句子到指定句子收藏分组
      * @param tractateCollectGroup
      */
-    private void favoriteTopSentences(TractateCollectGroup tractateCollectGroup){
+    private void favoriteTopTractates(TractateCollectGroup tractateCollectGroup){
 
         final List<TractateCollect> tractateCollects = new ArrayList<>();
         for(int i = 0; i < favoritetractates.size(); i++){
@@ -453,7 +450,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
             tractateCollects.add(tractateCollect);
         }
 
-        Subscription subscription = repository.addSentenceCollects(tractateCollects).subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = repository.addTractateCollects(tractateCollects).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -483,17 +480,17 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     /**
      * 修改句组名称
      */
-    private void updateSentenceGroup(){
+    private void updateTractateGroup(){
         Bundle bundle = new Bundle();
         bundle.putString(UpdateWordGroupFragment.TITLE,"修改句组名称");
         UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
         updateWordGroupFragment.setArguments(bundle);
-        updateWordGroupFragment.setOldName(sentenceGroup.getName());
+        updateWordGroupFragment.setOldName(tractateGroup.getName());
         updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
         {
             @Override
             public void onUpdate(String name) {
-                updateSentenceGroup(name);
+                updateTractateGroup(name);
             }
         });
         updateWordGroupFragment.show(getFragmentManager(),"update");
@@ -502,12 +499,12 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     /**
      * 更新句子分组
      */
-    private void updateSentenceGroup(final String name){
+    private void updateTractateGroup(final String name){
 
-        SentenceGroup updatesentenceGroup = new SentenceGroup();
-        updatesentenceGroup.setObjectId(sentenceGroup.getObjectId());
-        updatesentenceGroup.setName(name);
-        Subscription subscription = repository.updateSentenceGroupRxById(updatesentenceGroup).subscribe(new Subscriber<Boolean>() {
+        TractateGroup updatetractateGroup = new TractateGroup();
+        updatetractateGroup.setObjectId(tractateGroup.getObjectId());
+        updatetractateGroup.setName(name);
+        Subscription subscription = repository.updateTractateGroupRxById(updatetractateGroup).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -525,7 +522,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
             @Override
             public void onNext(Boolean b) {
-                sentenceGroup.setName(name);
+                tractateGroup.setName(name);
                 Toast.makeText(TractatesFragment.this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
             }
         });
@@ -535,7 +532,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     /**
      * 删除创建的句组
      */
-    private void deleteSentenceGroup() {
+    private void deleteTractateGroup() {
         DeleteConfirmFragment delete = new DeleteConfirmFragment();
         Bundle bundle = new Bundle();
         bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
@@ -543,7 +540,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
             @Override
             public void onDelete() {
-                deleteSentenceGroup(sentenceGroup);
+                deleteTractateGroup(tractateGroup);
             }
         });
         delete.show(getFragmentManager(),"delete");
@@ -551,8 +548,8 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
 
     //删除句子分组
-    private void deleteSentenceGroup(SentenceGroup sentenceGroup){
-        Subscription subscription = repository.deleteSentenceGroupRxById(sentenceGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+    private void deleteTractateGroup(TractateGroup tractateGroup){
+        Subscription subscription = repository.deleteTractateGroupRxById(tractateGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -577,12 +574,12 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     }
 
     //批量删除句子
-    private void deleteSetnences(){
+    private void deleteTractates(){
         showMultipleSelect();
     }
 
     //批量删除句子确认
-    private void deleteSetnencesAffirm(final List<Tractate> tractates){
+    private void deleteTractatesAffirm(final List<Tractate> tractates){
 
         DeleteConfirmFragment delete = new DeleteConfirmFragment();
         Bundle bundle = new Bundle();
@@ -591,16 +588,16 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
             @Override
             public void onDelete() {
-                deleteSentences(tractates);
+                deleteTractates(tractates);
             }
         });
         delete.show(getFragmentManager(),"delete");
     }
 
     //批量删除句子
-    private void deleteSentences(List<Tractate> tractates){
+    private void deleteTractates(List<Tractate> tractates){
 
-        Subscription subscription = repository.deleteSentences(tractates).subscribe(new Subscriber<Boolean>() {
+        Subscription subscription = repository.deleteTractates(tractates).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
 
@@ -726,7 +723,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     }
 
     //批量删除收藏的句子
-    private void deleteSentenceCollects(){
+    private void deleteTractateCollects(){
 
         showMultipleSelect();
     }
@@ -741,14 +738,14 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
             @Override
             public void onDelete() {
-                deleteSentenceCollects(sentenceCollects);
+                deleteTractateCollects(sentenceCollects);
             }
         });
         delete.show(getFragmentManager(),"delete");
     }
 
     //批量删除句子
-    private void deleteSentenceCollects(List<Tractate> tractates){
+    private void deleteTractateCollects(List<Tractate> tractates){
 
         List<SentenceCollect> list = new ArrayList<>();
         for(int i = 0; i < tractateCollects.size(); i++){
@@ -792,7 +789,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.favorite_tractates:
                 Log.d(TAG, "收藏文章");
-                favoriteTopSentences();
+                favoriteTopTractates();
                 break;
         }
         return true;
@@ -805,7 +802,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.delete_tractates:
                 Log.d(TAG, "删除文章");
-                deleteSetnences();
+                deleteTractates();
                 break;
         }
         return true;
@@ -817,17 +814,37 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.delete_tractates:
                 Log.d(TAG, "删除文章");
-                deleteSentenceCollects();
+                deleteTractateCollects();
                 break;
         }
         return true;
     }
 
 
+    //删除失败
+    private void deleteFail(String message){
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
+    }
 
 
+    //删除分组成功
+    private void deleteGroupSuccess(){
+        deleteSuccess();
+        Intent intent = new Intent(this.getContext(),SentenceGroupsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
+    //删除成功
+    private void deleteSuccess(){
+        Toast.makeText(this.getContext(),R.string.deletesuccess,Toast.LENGTH_SHORT).show();
+    }
 
+    //创建失败
+    private void updateWGFail(String message){
+
+        Toast.makeText(this.getContext(),message,Toast.LENGTH_SHORT).show();
+    }
 
 
 
@@ -859,7 +876,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
                 //showUpdateWordGroupDialog();
                 switch (type){
                     case CREATETGROUP:
-                        updateSentenceGroup();
+                        updateTractateGroup();
                         break;
                     case CREATEFTGROUP:
                         updateSentenceCollectGroup();
@@ -869,7 +886,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
             case R.id.fab_delete:
                 switch (type){
                     case CREATETGROUP:
-                        deleteSentenceGroup();
+                        deleteTractateGroup();
                         break;
                     case CREATEFTGROUP:
                         deleteSentenceCollectGroupAffirm();

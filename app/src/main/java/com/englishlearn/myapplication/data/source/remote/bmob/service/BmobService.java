@@ -672,6 +672,22 @@ public interface BmobService{
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
+    Observable<Response<TractateResult>> getTractateRxByTractateGroupId(@Query("where") String tractategroupidjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
+
+    /**
+     * 根据分类id,关键词的正则,获取文章列表分页展示
+     * @param serachjson 搜索的tractatetypeid
+     * @param limit 取几条
+     * @param skip 从第几条取
+     * @return
+     */
+    @GET("/1/classes/Tractate?include=userId,tractatetypeId,tractateGroupId&order=sort")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
     Observable<Response<TractateResult>> getTractatesRx(@Query("where") String serachjson, @Query("limit")int limit, @Query("skip")int skip);
 
     //单词收藏分组模块****************************************************************************

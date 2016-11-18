@@ -407,6 +407,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> deleteTractates(List<Tractate> tractates) {
+        return mBmobDataSource.deleteTractates(tractates);
+    }
+
+    @Override
     public Observable<Boolean> updateTractateRxById(Tractate tractate) {
         return mBmobDataSource.updateTractateRxById(tractate);
     }
@@ -739,6 +744,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<TractateCollect> addTractateCollect(TractateCollect tractateCollect) {
         return mBmobDataSource.addTractateCollect(tractateCollect);
+    }
+
+    @Override
+    public Observable<Boolean> addTractateCollects(List<TractateCollect> tractateCollects) {
+        return mBmobDataSource.addTractateCollects(tractateCollects);
     }
 
     @Override

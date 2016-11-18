@@ -12,6 +12,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
@@ -2001,6 +2002,42 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteTractates(List<Tractate> tractates) {
+        BatchRequest batchRequest = new BatchRequest();
+
+        List<BatchRequest.BatchRequestChild> batchRequestChildren = new ArrayList<>();
+        for(int i = 0; i < tractates.size(); i ++){
+            BatchRequest.BatchRequestChild<Sentence> batchRequestChild = new BatchRequest.BatchRequestChild();
+            batchRequestChild.setMethod("DELETE");
+            batchRequestChild.setPath("/1/classes/Tractate/" + tractates.get(i).getObjectId());
+            batchRequestChildren.add(batchRequestChild);
+        }
+        batchRequest.setRequests(batchRequestChildren);
+
+        return bmobService.batchPost(batchRequest)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        Gson gson = new GsonBuilder().create();
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
     public Observable<Boolean> updateTractateRxById(Tractate tractate) {
 
         String objectId = tractate.getObjectId();
@@ -3351,9 +3388,36 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Boolean> deleteTractateGroupRxById(String tractateGroupId) {
-        return bmobService.deleteTractateGroupRxById(tractateGroupId)
-                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+    public Observable<Boolean> deleteTractateGroupRxById(final String tractateGroupId) {
+
+        //先查询是否有句子在这个分组里面
+        String regex = searchUtil.getBmobEquals("tractateGroupId",tractateGroupId);
+        return bmobService.getTractateRxByTractateGroupId(regex,5,0)
+                .flatMap(new Func1<Response<TractateResult>, Observable<Response<ResponseBody>>>() {
+                    @Override
+                    public Observable<Response<ResponseBody>> call(Response<TractateResult> tractateResultResponse) {
+                        if(tractateResultResponse.isSuccessful()){
+                            TractateResult tractateResult = tractateResultResponse.body();
+                            List<Tractate> tractates = tractateResult.getResults();
+                            if(tractates.size() > 0){
+                                BmobRequestException bmobRequestException = new BmobRequestException("删除失败，请先删除当前分组里面的文章");
+                                return Observable.error(bmobRequestException);
+                            }
+                            return bmobService.deleteTractateGroupRxById(tractateGroupId);
+                        }else{
+                            try {
+                                Gson gson = new GsonBuilder().create();
+                                String errjson =  tractateResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                BmobRequestException bmobRequestException = new BmobRequestException(errjson);
+                                return Observable.error(bmobRequestException);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                return Observable.error(e);
+                            }
+                        }
+                    }
+                }).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
@@ -3373,6 +3437,7 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<Boolean>applySchedulers());
+
     }
 
     @Override
@@ -4170,6 +4235,57 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<TractateCollect>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> addTractateCollects(List<TractateCollect> tractateCollects) {
+
+        BatchRequest batchRequest = new BatchRequest();
+
+        List<BatchRequest.BatchRequestChild> batchRequestChildren = new ArrayList<>();
+        for(int i = 0; i < tractateCollects.size(); i ++){
+            TractateCollect tractateCollect = tractateCollects.get(i);
+
+            User user = tractateCollect.getUserId();
+            user.setPointer();
+            tractateCollect.setUserId(user);
+            Tractate tractate = tractateCollect.getTractateId();
+            tractate.setPointer();
+            tractateCollect.setTractateId(tractate);
+
+            TractateCollectGroup tractateCollectGroup = tractateCollect.getTractateCollectGroupId();
+            tractateCollectGroup.setPointer();
+            tractateCollect.setTractateCollectGroupId(tractateCollectGroup);
+
+            BatchRequest.BatchRequestChild<TractateCollect> batchRequestChild = new BatchRequest.BatchRequestChild();
+            batchRequestChild.setMethod("POST");
+            batchRequestChild.setPath("/1/classes/TractateCollect");
+            batchRequestChild.setBody(tractateCollect);
+            batchRequestChildren.add(batchRequestChild);
+        }
+        batchRequest.setRequests(batchRequestChildren);
+
+        return bmobService.batchPost(batchRequest)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        Gson gson = new GsonBuilder().create();
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                return Observable.error(e);
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
     }
 
     @Override
