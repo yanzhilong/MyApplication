@@ -10,6 +10,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
@@ -919,6 +920,61 @@ public interface RemoteData extends DataSource{
     Observable<List<TractateGroup>> getTractateGroupsByOpenRx(int page,int pageSize);
 
 
+    //文章收藏分组模块
+    //*****************************************************************************
+
+    /**
+     * 增加文章收藏分组
+     * @param tractateCollectGroup
+     * @return
+     */
+    Observable<TractateCollectGroup> addTractateCollectGroup(TractateCollectGroup tractateCollectGroup);
+
+    /**
+     * 删除文章收藏分组
+     * @param tractateCollectGroupId
+     * @return
+     */
+    Observable<Boolean> deleteTractateCollectGroupRxById(String tractateCollectGroupId);
+
+
+
+
+
+
+    /**
+     * 修改文章收藏分组
+     * @param tractateCollectGroup
+     * @return
+     */
+    Observable<Boolean> updateTractateCollectGroupRxById(TractateCollectGroup tractateCollectGroup);
+
+    /**
+     * 根据id获取文章收藏分组
+     * @param tractateCollectGroupId
+     * @return
+     */
+    Observable<TractateCollectGroup> getTractateCollectGroupRxById(String tractateCollectGroupId);
+
+    /**
+     * 根据userId获取文章收藏分组
+     * @param userId
+     * @return
+     */
+    Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId);
+
+    /**
+     * 根据userId获取文章收藏分组分页展示
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId, int page, int pageSize);
+
+
+
+
     //文章分組收藏模块
     //*****************************************************************************
 
@@ -1090,6 +1146,13 @@ public interface RemoteData extends DataSource{
      */
     Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId);
 
+
+    /**
+     * 删除多个文章
+     * @param tractateCollects
+     * @return
+     */
+    Observable<Boolean> deleteTractateCollects(List<TractateCollect> tractateCollects);
 
     /**
      * 根据userId和文章分組Id获取句子，分页

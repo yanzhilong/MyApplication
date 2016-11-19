@@ -13,7 +13,7 @@ public class TractateCollect implements Serializable,Cloneable{
 
     private String objectId;
     private User userId; //用户Id
-    private TractateCollectGroup tractateCollectGroupId; //分组Id
+    private TractateCollectGroup tractateCollectgId; //分组Id
     private Tractate tractateId; //(句子，单词，文章)
 
     public void setPointer(){
@@ -37,12 +37,12 @@ public class TractateCollect implements Serializable,Cloneable{
         this.userId = userId;
     }
 
-    public TractateCollectGroup getTractateCollectGroupId() {
-        return tractateCollectGroupId;
+    public TractateCollectGroup getTractateCollectgId() {
+        return tractateCollectgId;
     }
 
-    public void setTractateCollectGroupId(TractateCollectGroup tractateCollectGroupId) {
-        this.tractateCollectGroupId = tractateCollectGroupId;
+    public void setTractateCollectgId(TractateCollectGroup tractateCollectgId) {
+        this.tractateCollectgId = tractateCollectgId;
     }
 
     public Tractate getTractateId() {
@@ -70,7 +70,7 @@ public class TractateCollect implements Serializable,Cloneable{
         return "TractateCollect{" +
                 "objectId='" + objectId + '\'' +
                 ", userId=" + userId +
-                ", tractateCollectGroupId=" + tractateCollectGroupId +
+                ", tractateCollectgId=" + tractateCollectgId +
                 ", tractateId=" + tractateId +
                 '}';
     }

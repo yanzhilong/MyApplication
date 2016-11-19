@@ -56,9 +56,20 @@ public class TractateCollectTest {
         //添加　
         Log.d(TAG,"testTractateCollect_add");
         TractateCollect addTractateCollect = new TractateCollect();
-        addTractateCollect.setUserId(null);
-        addTractateCollect.setTractateCollectGroupId(null);
-        addTractateCollect.setTractateId(null);
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        user.setPointer();
+        addTractateCollect.setUserId(user);
+        Tractate tractate = new Tractate();
+        tractate.setObjectId("b5d8b92847");
+        tractate.setPointer();
+        addTractateCollect.setTractateId(tractate);
+
+        TractateCollectGroup tractateCollectGroup = new TractateCollectGroup();
+        tractateCollectGroup.setObjectId("a34e8da68d");
+        tractateCollectGroup.setPointer();
+        addTractateCollect.setTractateCollectgId(tractateCollectGroup);
+
 
         TestSubscriber<TractateCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateCollect(addTractateCollect).toBlocking().subscribe(testSubscriber_add);

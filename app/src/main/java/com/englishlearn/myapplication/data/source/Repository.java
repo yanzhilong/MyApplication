@@ -26,6 +26,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
@@ -662,6 +663,36 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<TractateCollectGroup> addTractateCollectGroup(TractateCollectGroup tractateCollectGroup) {
+        return mBmobDataSource.addTractateCollectGroup(tractateCollectGroup);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollectGroupRxById(String tractateCollectGroupId) {
+        return mBmobDataSource.deleteTractateCollectGroupRxById(tractateCollectGroupId);
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateCollectGroupRxById(TractateCollectGroup tractateCollectGroup) {
+        return mBmobDataSource.updateTractateCollectGroupRxById(tractateCollectGroup);
+    }
+
+    @Override
+    public Observable<TractateCollectGroup> getTractateCollectGroupRxById(String tractateCollectGroupId) {
+        return mBmobDataSource.getTractateCollectGroupRxById(tractateCollectGroupId);
+    }
+
+    @Override
+    public Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId) {
+        return mBmobDataSource.getTractateCollectGroupRxByUserId(userId);
+    }
+
+    @Override
+    public Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId, int page, int pageSize) {
+        return mBmobDataSource.getTractateCollectGroupRxByUserId(userId,page,pageSize);
+    }
+
+    @Override
     public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
         return mBmobDataSource.addTractateGroupCollect(tractateGroupCollect);
     }
@@ -754,6 +785,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId) {
         return mBmobDataSource.deleteTractateCollectRxById(tractateCollectId);
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollects(List<TractateCollect> tractateCollects) {
+        return mBmobDataSource.deleteTractateCollects(tractateCollects);
     }
 
     @Override

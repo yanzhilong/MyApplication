@@ -20,7 +20,7 @@ import java.io.Serializable;
  */
 public class ItemSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener {
 
-    public static final String ITEMS = "tractatetype";
+    public static final String ITEMS = "items";
     public static final String ITEMCLICKLISTENER = "ItemClickListener";
     public static final String FLAG = "flag";//用于一个界面区分不同的点击事件
 

@@ -149,6 +149,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".tractategroup.TractateGroupsActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".tractategroup.tractates.TractatesActivity"

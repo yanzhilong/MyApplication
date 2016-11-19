@@ -24,10 +24,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.activityforresult.multiple.MultipleActivity;
-import com.englishlearn.myapplication.data.Sentence;
-import com.englishlearn.myapplication.data.SentenceCollect;
-import com.englishlearn.myapplication.data.SentenceCollectGroup;
+import com.englishlearn.myapplication.adapter.MultipleAdapter;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
 import com.englishlearn.myapplication.data.TractateCollectGroup;
@@ -35,10 +32,7 @@ import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
-import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
-import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
-import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
-import com.englishlearn.myapplication.sentencegroups.SentenceGroupsActivity;
+import com.englishlearn.myapplication.tractategroup.TractateGroupsActivity;
 import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateHelper;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailActivity;
 
@@ -51,7 +45,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment.REQUESTCODE;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TRACTATECOLLECTGROUP;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TRACTATEGROUP;
 import static com.englishlearn.myapplication.tractategroup.tractates.TractatesActivity.TYPE;
@@ -65,6 +58,17 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     private static final String TAG = TractatesFragment.class.getSimpleName();
     private static final int TRACTATESFAVORITE = 1;//收藏多条句子
 
+
+    private final int FAVORITEFLAG = 11;//收藏多个文章
+    private static final int SELECTTCG = 12;//选择收藏分组
+    private static final int CREATECOLGROUP = 13;//创建新的收藏分组
+    private final int DELETECOLLECTS = 21;//删除收藏的句子
+    private final int UPDATESCOLLECTN = 22;//修改收藏分组名
+    private final int DELETECOLLECTG =23;//删除收藏分组
+    private final int DELETETRACTATE =31;//删除自己的文章
+    private final int UPDATETGROUP =32;//修改文章分组名称
+    private final int DELETETGROUP =33;//删除文章分组
+
     private TractateGroup tractateGroup;
     private TractateCollectGroup tractateCollectGroup;
     private TractateGroupType type;
@@ -74,7 +78,10 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     private int page = 0;
     private ArrayList<Tractate> mList;
     private List<TractateCollect> tractateCollects;
+    private List<TractateCollect> seletedTractateCollects;
+    private List<Tractate> seletedTractates;
     private List<Tractate> favoritetractates;//待收藏句子列表
+    private ArrayList<TractateCollectGroup> tractateCollectGroups;
 
     private LinearLayoutManager mgrlistview;
     private CompositeSubscription mSubscriptions;
@@ -87,6 +94,9 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         return new TractatesFragment();
     }
 
+    private TractateCollectMultipleAdapter tractateCollectMultipleAdapter;
+    private TractatesMultipleAdapter tractatesMultipleAdapter;
+
     @Inject
     Repository repository;
 
@@ -94,28 +104,8 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch(requestCode) {
-
-            case REQUESTCODE:
-                if(resultCode == Activity.RESULT_OK){
-                    List<Integer> checkedlist = data.getIntegerArrayListExtra(MultipleActivity.CHECKEDARRAY);
-                    List<Tractate> checkedtractates = new ArrayList<>();
-                    for(int i = 0; i < mList.size(); i++){
-                        if(checkedlist.contains(i)){
-                            checkedtractates.add(mList.get(i));
-                        }
-                    }
-                    if(checkedtractates.size() > 0){
-                        onTractateSelected(checkedtractates);
-                    }
-                }
-                break;
-            case TRACTATESFAVORITE:
-                SentenceCollectGroup sentenceCollectGroup = (SentenceCollectGroup) data.getSerializableExtra(SentenceCollectGroupsSelectFragment.SENTENCEGCOLLECTGROUP);
-                favoriteTopSentences(sentenceCollectGroup);
-                break;
-        }
+        tractatesMultipleAdapter.onActivityResult(requestCode,resultCode,data);
+        tractateCollectMultipleAdapter.onActivityResult(requestCode,resultCode,data);
     }
 
 
@@ -126,6 +116,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         Log.d(TAG,"onCreate" + "savedInstanceState" + savedInstanceState);
         MyApplication.instance.getAppComponent().inject(this);
 
+
         Bundle bundle = getArguments();
         if(bundle != null){
             tractateCollectGroup = (TractateCollectGroup) bundle.getSerializable(TRACTATECOLLECTGROUP);
@@ -134,7 +125,10 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         }
 
         tractateCollects = new ArrayList<>();
-
+        favoritetractates = new ArrayList<>();
+        seletedTractates = new ArrayList<>();
+        seletedTractateCollects = new ArrayList<>();
+        tractateCollectGroups = new ArrayList<>();
         if(savedInstanceState != null){
             mList = (ArrayList<Tractate>) savedInstanceState.getSerializable("list");
             page = savedInstanceState.getInt("page");
@@ -144,6 +138,9 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
+
+        tractateCollectMultipleAdapter = new TractateCollectMultipleAdapter(this,getActivity());
+        tractatesMultipleAdapter = new TractatesMultipleAdapter(this,getActivity());
     }
 
     @Nullable
@@ -239,13 +236,13 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
             case OTHERTGROUP:
                 //普通句组
-                inflater.inflate(R.menu.menu_sentences_othersgroup, menu);
+                inflater.inflate(R.menu.menu_tractates_othersgroup, menu);
                 break;
             case CREATETGROUP:
-                inflater.inflate(R.menu.menu_sentences_createsgroup, menu);
+                inflater.inflate(R.menu.menu_tractates_createsgroup, menu);
                 break;
             case CREATEFTGROUP:
-                inflater.inflate(R.menu.menu_sentences_createfsgroup, menu);
+                inflater.inflate(R.menu.menu_tractates_createfsgroup, menu);
                 break;
         }
     }
@@ -372,81 +369,300 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         mSubscriptions.add(subscription);
     }
 
-    //统一方法***************************************************************************************
-    //显示多选界面
-    private void showMultipleSelect(){
 
-        String[] tractates = new String[mList.size()];
-        for(int i = 0; i < mList.size(); i++){
-            tractates[i] = mList.get(i).getContent();
+    private class TractatesMultipleAdapter extends MultipleAdapter<TractateGroup,Tractate>{
+
+        public TractatesMultipleAdapter(Fragment fragment, Activity activity) {
+            super(fragment, activity);
         }
-        Intent intent = new Intent(this.getContext(),MultipleActivity.class);
-        intent.putExtra(MultipleActivity.STRINGARRAY,tractates);
-        startActivityForResult(intent,REQUESTCODE);
+
+        @Override
+        protected TractateGroup getListGroup() {
+            return tractateGroup;
+        }
+
+        @Override
+        protected void operationListGroup(TractateGroup tractateGroup, int flag) {
+        }
+
+        @Override
+        protected List<Tractate> getList() {
+            return mList;
+        }
+
+        @Override
+        protected void operationList(List<Tractate> list, TractateGroup group, int tag) {
+
+            if(tag == FAVORITEFLAG){
+                favoriteTopTractates(list);
+            }else if(tag == DELETETRACTATE){
+                seletedTractates = list;
+                showConfirmDialog(DELETETRACTATE,"确认删除所有文章?");
+            }
+        }
+
+        @Override
+        protected boolean selectCreate(int flag) {
+
+            if(flag == SELECTTCG){
+                this.createAndUpdate("创建新的收藏分组",null,CREATECOLGROUP);
+            }
+            return false;
+        }
+
+        @Override
+        protected boolean selectResult(int position, int flag) {
+
+            if(flag == SELECTTCG){
+                TractateCollectGroup tractateCollectGroup = tractateCollectGroups.get(position);
+                favoriteTractates(favoritetractates,tractateCollectGroup);
+            }
+
+            return false;
+        }
+
+        @Override
+        protected String getMultipleItemName(Tractate o) {
+            return o.getTitle();
+        }
+
+        @Override
+        protected void createComplete(String name,int createflag) {
+
+            if(createflag == CREATECOLGROUP){
+                createTractateCollectGroup(name);
+            }else if(createflag == UPDATETGROUP){
+                updateTractateGroup(name);
+            }
+
+        }
+
+        @Override
+        protected void confirm(int confirmflag) {
+
+            if(confirmflag == DELETETRACTATE){
+                deleteTractates(seletedTractates);
+            }else if(confirmflag == DELETETGROUP){
+                deleteTractateGroup(tractateGroup);
+            }
+        }
     }
 
-    //选择多个句子返回
-    private void onTractateSelected(List<Tractate> tractates){
-        switch (type){
 
-            case OTHERTGROUP:
-                //普通句组
-                favoriteTopTractates(tractates);//显示分组信息
-                break;
-            case CREATETGROUP:
-                //删除句子
-                deleteTractatesAffirm(tractates);
-                break;
-            case CREATEFTGROUP:
-                //删除句子
-                deleteSentenceCollectsAffirm(tractates);
-                break;
+
+
+    private class TractateCollectMultipleAdapter extends MultipleAdapter<TractateCollectGroup,TractateCollect>{
+
+        public TractateCollectMultipleAdapter(Fragment fragment, Activity activity) {
+            super(fragment, activity);
         }
+
+        @Override
+        protected TractateCollectGroup getListGroup() {
+            return tractateCollectGroup;
+        }
+
+        @Override
+        protected void operationListGroup(TractateCollectGroup tractateCollectGroup, int flag) {
+
+        }
+
+        @Override
+        protected List<TractateCollect> getList() {
+            return tractateCollects;
+        }
+
+        @Override
+        protected void operationList(List<TractateCollect> list, TractateCollectGroup group, int tag) {
+            if(tag == DELETECOLLECTS){
+                seletedTractateCollects.clear();
+                seletedTractateCollects.addAll(list);
+                showConfirmDialog(DELETECOLLECTS,"删除选中收藏？");
+            }
+        }
+
+        @Override
+        protected boolean selectCreate(int flag) {
+            return false;
+        }
+
+        @Override
+        protected boolean selectResult(int position, int flag) {
+            return false;
+        }
+
+        @Override
+        protected String getMultipleItemName(TractateCollect o) {
+            return o.getTractateId().getTitle();
+        }
+
+        @Override
+        protected void createComplete(String name,int createflag) {
+
+            if(createflag == UPDATESCOLLECTN){
+                updateTractateCollect(name);
+            }
+        }
+
+        @Override
+        protected void confirm(int confirmflag) {
+            if(confirmflag == DELETECOLLECTS){
+                deleteTractateCollects(seletedTractateCollects);
+            }else if(confirmflag == DELETECOLLECTG){
+                deleteTractateCollectGroup();
+            }
+        }
+    }
+
+    //删除收藏分组
+    private void deleteTractateCollectGroup() {
+
+        Subscription subscription = repository.deleteTractateCollectGroupRxById(tractateCollectGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    deleteFail(getContext().getString(R.string.networkerror));
+                }
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                deleteGroupSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //修改收藏分组名称
+    private void updateTractateCollect(final String name) {
+
+        final TractateCollectGroup tractateCollectGroupupdate = new TractateCollectGroup();
+        tractateCollectGroupupdate.setObjectId(tractateCollectGroup.getObjectId());
+        tractateCollectGroupupdate.setName(name);
+        Subscription subscription = repository.updateTractateCollectGroupRxById(tractateCollectGroupupdate).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    Toast.makeText(getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                tractateCollectGroup.setName(name);
+                Toast.makeText(getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+
+    //获得文章收藏分组
+    private void getTractateCollectGroups(){
+
+
+        Subscription subscription = repository.getTractateCollectGroupRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<TractateCollectGroup>>() {
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,e.toString());
+                Toast.makeText(TractatesFragment.this.getContext(),"获取分组信息失败",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(List<TractateCollectGroup> list) {
+                if(list != null){
+                    Log.d(TAG,"onNext size:" + list.size());
+                    tractateCollectGroups.clear();
+                    tractateCollectGroups.addAll(list);
+                    String[] tractatecollectgrouparray = new String[tractateCollectGroups.size()];
+                    for (int i = 0; i < tractateCollectGroups.size(); i++){
+                        tractatecollectgrouparray[i] = tractateCollectGroups.get(i).getName();
+                    }
+
+                    tractatesMultipleAdapter.notifyDataSetChanged(tractatecollectgrouparray);
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    /**
+     * 创建文章收藏分组
+     */
+    private void createTractateCollectGroup(String name){
+
+        if(name.isEmpty()){
+            Toast.makeText(this.getContext(),"名称不能为空",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        TractateCollectGroup tractateCollectGroup = new TractateCollectGroup();
+        tractateCollectGroup.setUserId(repository.getUserInfo());
+        tractateCollectGroup.setName(name);
+        Subscription subscription = repository.addTractateCollectGroup(tractateCollectGroup)
+                .subscribe(new Subscriber<TractateCollectGroup>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if(e instanceof BmobRequestException){
+                            if(((BmobRequestException) e).getBmobDefaultError().getCode() == 401)
+                                Toast.makeText(getContext(),getString(R.string.nameunique),Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(TractateCollectGroup tractateCollectGroup) {
+
+                        if(tractateCollectGroup != null) {
+                            //addSentenceCollect(sentenceCollectGroup.getObjectId());
+                            tractateCollectGroups.add(tractateCollectGroup);
+                            favoriteTractates(favoritetractates,tractateCollectGroup);
+                        }
+                    }
+                });
+        mSubscriptions.add(subscription);
     }
 
 
     /**
-     * 收藏热门句单里的多个句子
+     * 收藏多个文章
      */
-    private void favoriteTopTractates() {
-        if(tractateCollectGroup.getUserId().getObjectId().equals(repository.getUserInfo().getObjectId())){
-            Toast.makeText(TractatesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
-        }else{
-            showMultipleSelect();
-        }
-    }
-
-    /**
-     * 收藏热门句单里的多个句子
-     */
-    private void favoriteTopTractates(List<Tractate> tractates) {
-        this.favoritetractates = tractates;
-        if(tractateGroup.getUserId().getObjectId().equals(repository.getUserInfo().getObjectId())){
-            Toast.makeText(TractatesFragment.this.getContext(),"不能收藏自己创建的句子",Toast.LENGTH_SHORT).show();
-        }else{
-            SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment = new SentenceCollectGroupsSelectFragment();
-            Bundle bundle = new Bundle();
-            sentenceCollectGroupsSelectFragment.setTargetFragment(this, TRACTATESFAVORITE);
-            sentenceCollectGroupsSelectFragment.setArguments(bundle);
-            sentenceCollectGroupsSelectFragment.show(this.getFragmentManager(),"sentencecollectgroup");
-        }
-    }
-
-    /**
-     * 批量收藏句子到指定句子收藏分组
-     * @param tractateCollectGroup
-     */
-    private void favoriteTopTractates(TractateCollectGroup tractateCollectGroup){
+    private void favoriteTractates(List<Tractate> tractates,TractateCollectGroup tractateCollectGroup) {
 
         final List<TractateCollect> tractateCollects = new ArrayList<>();
-        for(int i = 0; i < favoritetractates.size(); i++){
+        for(int i = 0; i < tractates.size(); i++){
             TractateCollect tractateCollect = new TractateCollect();
             User user = repository.getUserInfo();
             tractateCollect.setUserId(user);
-            Tractate tractate = favoritetractates.get(i);
+            Tractate tractate = tractates.get(i);
             tractateCollect.setTractateId(tractate);
-            tractateCollectGroup.setPointer();
-            tractateCollect.setTractateCollectGroupId(tractateCollectGroup);
+            tractateCollect.setTractateCollectgId(tractateCollectGroup);
             tractateCollects.add(tractateCollect);
         }
 
@@ -460,41 +676,31 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
             public void onError(Throwable e) {
                 if(e instanceof BmobRequestException){
                     BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    Toast.makeText(TractatesFragment.this.getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(TractatesFragment.this.getContext(),TractatesFragment.this.getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onNext(Boolean aBoolean) {
-                Toast.makeText(TractatesFragment.this.getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
             }
         });
         mSubscriptions.add(subscription);
     }
 
 
-    //我创建的分组列表进来的******************************************************************************
-
     /**
-     * 修改句组名称
+     * 收藏热门句单里的多个句子
      */
-    private void updateTractateGroup(){
-        Bundle bundle = new Bundle();
-        bundle.putString(UpdateWordGroupFragment.TITLE,"修改句组名称");
-        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
-        updateWordGroupFragment.setArguments(bundle);
-        updateWordGroupFragment.setOldName(tractateGroup.getName());
-        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
-        {
-            @Override
-            public void onUpdate(String name) {
-                updateTractateGroup(name);
-            }
-        });
-        updateWordGroupFragment.show(getFragmentManager(),"update");
+    private void favoriteTopTractates(List<Tractate> tractates) {
+        this.favoritetractates = tractates;
+        tractatesMultipleAdapter.selectItems(SELECTTCG);
+        //查找收藏分组
+        getTractateCollectGroups();
     }
+
 
     /**
      * 更新句子分组
@@ -529,23 +735,6 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         mSubscriptions.add(subscription);
     }
 
-    /**
-     * 删除创建的句组
-     */
-    private void deleteTractateGroup() {
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteTractateGroup(tractateGroup);
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
 
     //删除句子分组
     private void deleteTractateGroup(TractateGroup tractateGroup){
@@ -557,6 +746,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 if(e instanceof BmobRequestException){
                     BmobRequestException bmobRequestException = (BmobRequestException) e;
                     deleteFail(bmobRequestException.getMessage());
@@ -573,28 +763,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         mSubscriptions.add(subscription);
     }
 
-    //批量删除句子
-    private void deleteTractates(){
-        showMultipleSelect();
-    }
-
-    //批量删除句子确认
-    private void deleteTractatesAffirm(final List<Tractate> tractates){
-
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteTractates(tractates);
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    //批量删除句子
+    //批量删除文章
     private void deleteTractates(List<Tractate> tractates){
 
         Subscription subscription = repository.deleteTractates(tractates).subscribe(new Subscriber<Boolean>() {
@@ -605,6 +774,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 if(e instanceof BmobRequestException){
                     BmobRequestException bmobRequestException = (BmobRequestException) e;
                     deleteFail(bmobRequestException.getMessage());
@@ -620,167 +790,6 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         });
         mSubscriptions.add(subscription);
     }
-
-
-    //我创建的收藏句组******************************************************************************
-
-    /**
-     * 修改句组名称
-     */
-    private void updateSentenceCollectGroup(){
-        Bundle bundle = new Bundle();
-        bundle.putString(UpdateWordGroupFragment.TITLE,"修改句组名称");
-        UpdateWordGroupFragment updateWordGroupFragment = new UpdateWordGroupFragment();
-        updateWordGroupFragment.setArguments(bundle);
-        updateWordGroupFragment.setOldName(sentenceCollectGroup.getName());
-        updateWordGroupFragment.setUpdateWordGroupListener(new UpdateWordGroupFragment.UpdateWordGroupListener()
-        {
-            @Override
-            public void onUpdate(String name) {
-                updateSentenceCollectGroup(name);
-            }
-        });
-        updateWordGroupFragment.show(getFragmentManager(),"update");
-    }
-
-    /**
-     * 更新句子分组
-     */
-    private void updateSentenceCollectGroup(final String name){
-
-        SentenceCollectGroup updatesentenceCollectGroup = new SentenceCollectGroup();
-        updatesentenceCollectGroup.setObjectId(sentenceCollectGroup.getObjectId());
-        updatesentenceCollectGroup.setName(name);
-        Subscription subscription = repository.updateSentenceCollectGroupRxById(updatesentenceCollectGroup).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    updateWGFail(bmobRequestException.getMessage());
-                }else{
-                    Toast.makeText(TractatesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                sentenceCollectGroup.setName(name);
-                Toast.makeText(TractatesFragment.this.getContext(),R.string.updatewordgroupsuccess,Toast.LENGTH_SHORT).show();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-
-
-
-    //删除收藏句组确认
-    private void deleteSentenceCollectGroupAffirm(){
-
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除当前句组?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteSentenceCollectGroup(sentenceCollectGroup);
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    //删除收藏的句子分组
-    private void deleteSentenceCollectGroup(SentenceCollectGroup sentenceCollectGroup){
-
-        Subscription subscription = repository.deleteSentenceCollectGroupRxById(sentenceCollectGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    deleteFail(bmobRequestException.getMessage());
-                }else{
-                    deleteFail(getContext().getString(R.string.networkerror));
-                }
-            }
-
-            @Override
-            public void onNext(Boolean aBoolean) {
-                deleteGroupSuccess();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-    //批量删除收藏的句子
-    private void deleteTractateCollects(){
-
-        showMultipleSelect();
-    }
-
-    //批量删除收藏句子确认
-    private void deleteSentenceCollectsAffirm(final List<Sentence> sentenceCollects){
-
-        DeleteConfirmFragment delete = new DeleteConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(DeleteConfirmFragment.TITLE,"删除选中的句子?");
-        delete.setArguments(bundle);
-        delete.setDeleteConfirmListener(new DeleteConfirmFragment.DeleteConfirmListener() {
-            @Override
-            public void onDelete() {
-                deleteTractateCollects(sentenceCollects);
-            }
-        });
-        delete.show(getFragmentManager(),"delete");
-    }
-
-    //批量删除句子
-    private void deleteTractateCollects(List<Tractate> tractates){
-
-        List<SentenceCollect> list = new ArrayList<>();
-        for(int i = 0; i < tractateCollects.size(); i++){
-            for(int j = 0; j < tractates.size(); j++){
-                if(tractateCollects.get(i).getSentence().getObjectId().equals(tractates.get(j).getObjectId())){
-                    list.add(tractateCollects.get(i));
-                }
-            }
-        }
-        Subscription subscription = repository.deleteSentenceCollects(list).subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
-                    BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    deleteFail(bmobRequestException.getMessage());
-                }else{
-                    Toast.makeText(TractatesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNext(Boolean b) {
-                deleteSuccess();
-            }
-        });
-        mSubscriptions.add(subscription);
-    }
-
-
-
 
     //菜单事件****************************************************************************************************
     //其它人的句组
@@ -789,7 +798,12 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.favorite_tractates:
                 Log.d(TAG, "收藏文章");
-                favoriteTopTractates();
+                //favoriteTopTractates();
+                if(tractateGroup.getUserId().getObjectId().equals(repository.getUserInfo().getObjectId())){
+                    Toast.makeText(TractatesFragment.this.getContext(),"不能收藏自己创建的文章",Toast.LENGTH_SHORT).show();
+                }else{
+                    tractatesMultipleAdapter.operationList(FAVORITEFLAG);
+                }
                 break;
         }
         return true;
@@ -802,7 +816,8 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.delete_tractates:
                 Log.d(TAG, "删除文章");
-                deleteTractates();
+                //deleteTractates();
+                tractatesMultipleAdapter.operationList(DELETETRACTATE);
                 break;
         }
         return true;
@@ -814,7 +829,8 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
         switch (item.getItemId()) {
             case R.id.delete_tractates:
                 Log.d(TAG, "删除文章");
-                deleteTractateCollects();
+                //deleteTractateCollects();
+                tractateCollectMultipleAdapter.operationList(DELETECOLLECTS);
                 break;
         }
         return true;
@@ -830,7 +846,7 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     //删除分组成功
     private void deleteGroupSuccess(){
         deleteSuccess();
-        Intent intent = new Intent(this.getContext(),SentenceGroupsActivity.class);
+        Intent intent = new Intent(this.getContext(),TractateGroupsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
@@ -847,6 +863,32 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
     }
 
 
+    //批量删除文章
+    private void deleteTractateCollects(List<TractateCollect> tractateCollects){
+
+        Subscription subscription = repository.deleteTractateCollects(tractateCollects).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(TractatesFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
 
 
     //加载完成
@@ -876,20 +918,20 @@ public class TractatesFragment extends Fragment implements View.OnClickListener 
                 //showUpdateWordGroupDialog();
                 switch (type){
                     case CREATETGROUP:
-                        updateTractateGroup();
+                        tractatesMultipleAdapter.createAndUpdate("修改当前分组",tractateGroup.getName(),UPDATETGROUP);
                         break;
                     case CREATEFTGROUP:
-                        updateSentenceCollectGroup();
+                        tractateCollectMultipleAdapter.createAndUpdate("修改收藏分组",tractateCollectGroup.getName(),UPDATESCOLLECTN);
                         break;
                 }
                 break;
             case R.id.fab_delete:
                 switch (type){
                     case CREATETGROUP:
-                        deleteTractateGroup();
+                        tractatesMultipleAdapter.showConfirmDialog(DELETETGROUP,"删除当前分组?");
                         break;
                     case CREATEFTGROUP:
-                        deleteSentenceCollectGroupAffirm();
+                        tractateCollectMultipleAdapter.showConfirmDialog(DELETECOLLECTG,"删除当前分组");
                         break;
                 }
                 break;

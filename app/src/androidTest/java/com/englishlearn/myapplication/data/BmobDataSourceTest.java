@@ -1138,7 +1138,7 @@ public class BmobDataSourceTest {
         Log.d(TAG,"testTractateCollect_add");
         TractateCollect addTractateCollect = new TractateCollect();
         addTractateCollect.setUserId(null);
-        addTractateCollect.setTractateCollectGroupId(null);
+        addTractateCollect.setTractateCollectgId(null);
         addTractateCollect.setTractateId(null);
 
         TestSubscriber<TractateCollect> testSubscriber_add = new TestSubscriber<>();

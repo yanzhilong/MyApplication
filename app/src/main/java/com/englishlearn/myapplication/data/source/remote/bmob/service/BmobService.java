@@ -10,6 +10,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
@@ -36,6 +37,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.SentenceGroupColle
 import com.englishlearn.myapplication.data.source.remote.bmob.SentenceGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SentenceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.SmsCodeVerify;
+import com.englishlearn.myapplication.data.source.remote.bmob.TractateCollectGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupResult;
@@ -662,7 +664,7 @@ public interface BmobService{
 
     /**
      * 根据分类id,关键词的正则,获取文章列表分页展示
-     * @param serachjson 搜索的tractatetypeid
+     * @param tractategroupidjson 搜索的tractatetypeid
      * @param limit 取几条
      * @param skip 从第几条取
      * @return
@@ -1049,6 +1051,90 @@ public interface BmobService{
     })
     Observable<Response<TractateGroupResult>> getTractateGroupsByOpenRx(@Query("where") String openjson, @Query("limit")int limit, @Query("skip")int skip);
 
+
+
+    //文章收藏分组模块****************************************************************************
+
+    //添加文章收藏分组
+    @POST("/1/classes/TractateCollectGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<TractateCollectGroup>> addTractateCollectGroup(@Body TractateCollectGroup tractateCollectGroup);
+
+    //修改文章收藏分组
+    @PUT("/1/classes/TractateCollectGroup/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json",
+    })
+    Observable<Response<ResponseBody>> updateTractateCollectGroupRxById(@Path("id") String id,@Body TractateCollectGroup tractateCollectGroup);
+
+    //删除文章收藏分组
+    @DELETE("/1/classes/TractateCollectGroup/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<ResponseBody>> deleteTractateCollectGroupRxById(@Path("id") String id);
+
+
+    //根据id获取文章收藏分组
+    @GET("/1/classes/TractateCollectGroup/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<TractateCollectGroup>> getTractateCollectGroupRxById(@Path("id") String id);
+
+    //根据userId获取文章收藏分组，分页展示
+    @GET("/1/classes/TractateCollectGroup?include=user")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<TractateCollectGroupResult>> getTractateCollectGroupRxByUserId(@Query("where")String userIdjson);
+
+
+    //根据userId获取文章收藏分组，分页展示
+    @GET("/1/classes/TractateCollectGroup")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<TractateCollectGroupResult>> getTractateCollectGroupRxByUserId(@Query("where")String userIdjson, @Query("limit")int limit, @Query("skip")int skip);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //文章分組收藏模块****************************************************************************
 
     //增加文章分組收藏
@@ -1230,7 +1316,7 @@ public interface BmobService{
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/TractateCollect?include=TractateCollectGroup")
+    @GET("/1/classes/TractateCollect?include=tractateId")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"

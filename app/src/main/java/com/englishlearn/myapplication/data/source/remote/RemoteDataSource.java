@@ -11,6 +11,7 @@ import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateCollect;
+import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.TractateGroupCollect;
 import com.englishlearn.myapplication.data.TractateType;
@@ -340,6 +341,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteTractates(List<Tractate> tractates) {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> updateTractateRxById(Tractate tractate) {
         return null;
     }
@@ -591,6 +597,36 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<TractateCollectGroup> addTractateCollectGroup(TractateCollectGroup tractateCollectGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollectGroupRxById(String tractateCollectGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateTractateCollectGroupRxById(TractateCollectGroup tractateCollectGroup) {
+        return null;
+    }
+
+    @Override
+    public Observable<TractateCollectGroup> getTractateCollectGroupRxById(String tractateCollectGroupId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<TractateCollectGroup>> getTractateCollectGroupRxByUserId(String userId, int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<TractateGroupCollect> addTractateGroupCollect(TractateGroupCollect tractateGroupCollect) {
         return null;
     }
@@ -682,6 +718,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> deleteTractateCollectRxById(String tractateCollectId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteTractateCollects(List<TractateCollect> tractateCollects) {
         return null;
     }
 
