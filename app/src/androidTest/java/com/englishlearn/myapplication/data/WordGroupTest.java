@@ -92,7 +92,7 @@ public class WordGroupTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setIsvowel(isvowel ? 1 : 0);
+                phoneticsSymbols.setVowel(isvowel);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }
@@ -105,8 +105,10 @@ public class WordGroupTest {
             Log.d(TAG, "testWordGroup_add");
             WordGroup addwordGroup = new WordGroup();
             addwordGroup.setName(phoneticsSymbols.getIpaname() + " or " + phoneticsSymbols.getKkname() + "示例单词");
-            addwordGroup.setOpen(true);
-            addwordGroup.setUser(null);
+            addwordGroup.setOpen(false);
+            User user = new User();
+            user.setObjectId("9d7707245a");
+            addwordGroup.setUser(user);
 
             TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
             mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);

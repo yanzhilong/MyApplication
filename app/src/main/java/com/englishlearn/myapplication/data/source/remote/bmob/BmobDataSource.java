@@ -758,6 +758,10 @@ public class BmobDataSource implements RemoteData {
     @Override
     public Observable<PhoneticsSymbols> addPhoneticsSymbols(PhoneticsSymbols phoneticsSymbols) {
 
+        WordGroup wordGroup = phoneticsSymbols.getWordGroup();
+        wordGroup.setPointer();
+        phoneticsSymbols.setWordGroup(wordGroup);
+
         return bmobService.addPhoneticsSymbols(phoneticsSymbols)
                 .flatMap(new Func1<Response<PhoneticsSymbols>, Observable<PhoneticsSymbols>>() {
                     @Override

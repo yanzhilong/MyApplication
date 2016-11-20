@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.englishlearn.myapplication.R;
 
@@ -105,6 +106,7 @@ public class MultipleActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.cancel:
                 setResult(Activity.RESULT_CANCELED);
+                finish();
                 break;
             case R.id.confirm:
 
@@ -120,6 +122,12 @@ public class MultipleActivity extends AppCompatActivity implements View.OnClickL
                         checkoutpositions.add(i);
                     }
                 }
+
+                if(checkoutpositions.size() >50){
+                    Toast.makeText(this,"最多选择50项",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 intent.putIntegerArrayListExtra(CHECKEDARRAY,checkoutpositions);
                 setResult(Activity.RESULT_OK,intent);
                 finish();

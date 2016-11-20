@@ -30,6 +30,11 @@
         android:dividerHeight="1px"
         android:scrollbars="none" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="一次操作最多不能超过50项"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

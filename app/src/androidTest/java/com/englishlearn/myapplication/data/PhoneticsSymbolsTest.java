@@ -70,6 +70,7 @@ public class PhoneticsSymbolsTest {
 
         String line;
 
+        List<WordGroup> wordGroups = getPhoneticsWordGroups();
         while ((line = bufferedReader.readLine()) != null){
 
             Log.d(TAG,line);
@@ -91,7 +92,15 @@ public class PhoneticsSymbolsTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setIsvowel(isvowel ? 1 : 0);
+                phoneticsSymbols.setVowel(isvowel);
+                WordGroup wordGroup = new WordGroup();
+
+                for(WordGroup w:wordGroups){
+                    if(w.getName().contains(ipaname)){
+                        wordGroup.setObjectId(w.getObjectId());
+                    }
+                }
+                phoneticsSymbols.setWordGroup(wordGroup);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }
@@ -115,4 +124,26 @@ public class PhoneticsSymbolsTest {
         }
     }
 
+    private List<WordGroup> getPhoneticsWordGroups(){
+        //获取所有信息来源　
+        Log.d(TAG,"testWordGroup_getAll");
+        TestSubscriber<List<WordGroup>> testSubscriber_getall = new TestSubscriber<>();
+        mBmobRemoteData.getWordGroupRxByUserId("9d7707245a",0,100).toBlocking().subscribe(testSubscriber_getall);
+        testSubscriber_getall.assertNoErrors();
+        List<List<WordGroup>> listall = testSubscriber_getall.getOnNextEvents();
+        List<WordGroup> sentences = null;
+        if(listall != null && listall.size() > 0){
+            sentences = listall.get(0);
+        }
+        Log.d(TAG,"testWordGroup_getAll_result:" + sentences.toString());
+        List<WordGroup> list = new ArrayList<>();
+        for(WordGroup wordGroup: sentences){
+            if(wordGroup.getName().contains("示例单词")){
+                list.add(wordGroup);
+            }
+        }
+
+
+        return list;
+    }
 }

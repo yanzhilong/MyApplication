@@ -57,7 +57,9 @@ public class TractateGroupTest {
         Log.d(TAG,"testTractateGroup_add");
         TractateGroup addTractateGroup = new TractateGroup();
         addTractateGroup.setName("新概念英语第一册");
-        addTractateGroup.setUserId(null);
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        addTractateGroup.setUserId(user);
 
         TestSubscriber<TractateGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addTractateGroup(addTractateGroup).toBlocking().subscribe(testSubscriber_add);

@@ -9,13 +9,13 @@ import java.io.Serializable;
 public class PhoneticsSymbols implements Serializable,Cloneable{
 
     private String objectId;
-    //国际音标（IPA）
-    private String ipaname; //国际音标（DJ）英音
-    private String kkname; //国际音标（KK）美音
+    private String ipaname; //英音国际标准（DJ）
+    private String kkname; //美音国际标准（KK）
     private String soundurl;//读音
     private String videourl;//视频
     private String content;//发音方法,及相关说明
-    private int isvowel;// 1 0
+    private WordGroup wordGroup;//相关的示例单词
+    private Boolean vowel;//元音
 
     public String getObjectId() {
         return objectId;
@@ -65,12 +65,20 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
         this.content = content;
     }
 
-    public int getIsvowel() {
-        return isvowel;
+    public Boolean getVowel() {
+        return vowel;
     }
 
-    public void setIsvowel(int isvowel) {
-        this.isvowel = isvowel;
+    public void setVowel(Boolean vowel) {
+        this.vowel = vowel;
+    }
+
+    public WordGroup getWordGroup() {
+        return wordGroup;
+    }
+
+    public void setWordGroup(WordGroup wordGroup) {
+        this.wordGroup = wordGroup;
     }
 
     @Override
@@ -83,5 +91,18 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
             e.printStackTrace();
         }
         return o;
+    }
+
+    @Override
+    public String toString() {
+        return "PhoneticsSymbols{" +
+                "objectId='" + objectId + '\'' +
+                ", ipaname='" + ipaname + '\'' +
+                ", kkname='" + kkname + '\'' +
+                ", soundurl='" + soundurl + '\'' +
+                ", videourl='" + videourl + '\'' +
+                ", content='" + content + '\'' +
+                ", vowel=" + vowel +
+                '}';
     }
 }

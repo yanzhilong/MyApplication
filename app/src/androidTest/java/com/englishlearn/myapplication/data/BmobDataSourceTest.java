@@ -91,7 +91,7 @@ public class BmobDataSourceTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setIsvowel(isvowel ? 1 : 0);
+                phoneticsSymbols.setVowel(isvowel);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }

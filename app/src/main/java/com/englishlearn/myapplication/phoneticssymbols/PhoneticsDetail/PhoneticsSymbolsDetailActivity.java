@@ -90,7 +90,7 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
 
         phonetics_ipaname.setText(phoneticsSymbols.getIpaname());
         phonetics_kkname.setText(phoneticsSymbols.getKkname());
-        phonetics_type.setText(phoneticsSymbols.getIsvowel() == 1 ? "元音" : "輔音");
+        phonetics_type.setText(phoneticsSymbols.getVowel() ? "元音" : "輔音");
         phonetics_content.setText(phoneticsSymbols.getContent());
         phonetics_videourl.setText(phoneticsSymbols.getVideourl());
 
@@ -162,7 +162,7 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
     }
 
     void getWords() {
-        Subscription subscription = repository.getWordsRxByPhoneticsId(phoneticsSymbols.getObjectId()).
+        Subscription subscription = repository.getWordsRxByWordGroupId(phoneticsSymbols.getWordGroup().getObjectId(),0,200).
                 subscribe(new Subscriber<List<Word>>() {
                     @Override
                     public void onCompleted() {

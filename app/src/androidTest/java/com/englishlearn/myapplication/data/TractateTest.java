@@ -154,7 +154,7 @@ public class TractateTest {
             addtractate.setTractatetypeId(tractateType);
 
             TractateGroup tractateGroup = new TractateGroup();
-            tractateGroup.setObjectId("a34e8da68d");
+            tractateGroup.setObjectId("85cd0fcb72");
             tractateGroup.setPointer();
             addtractate.setTractateGroupId(tractateGroup);
             addtractate.setOpen(true);
