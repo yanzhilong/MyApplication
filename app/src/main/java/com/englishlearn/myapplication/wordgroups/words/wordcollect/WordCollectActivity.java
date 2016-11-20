@@ -16,6 +16,8 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.RemoteCode;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.CreateWordGroupFragment;
 import com.englishlearn.myapplication.dialog.ItemSelectFragment;
@@ -91,12 +93,20 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    BmobDefaultError bmobDefaultError = (BmobDefaultError) bmobRequestException.getObject();
+                    RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                    if(createuser == RemoteCode.COMMON.Common_NOTFOUND){
+                        wordgroupss = new String[0];
+                    }
+                }
             }
 
             @Override
             public void onNext(List<WordGroup> list) {
-                if(list != null && list.size() > 0){
+                if(list != null){
                     Log.d(TAG,"onNext size:" + list.size());
                     wordGroups.clear();
                     wordGroups.addAll(list);
@@ -121,9 +131,13 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
     public void addWordCollect(Word word,String wordGroupId){
 
         WordCollect wordCollect = new WordCollect();
-        wordCollect.setUserId(repository.getUserInfo().getObjectId());
-        wordCollect.setWordgroupId(wordGroupId);
-        wordCollect.setWordId(word.getObjectId());
+
+        wordCollect.setUser(repository.getUserInfo());
+        WordGroup wordGroup = new WordGroup();
+        wordGroup.setObjectId(wordGroupId);
+
+        wordCollect.setWordGroup(wordGroup);
+        wordCollect.setWord(word);
         Subscription subscription = repository.addWordCollect(wordCollect).subscribe(new Subscriber<WordCollect>() {
             @Override
             public void onCompleted() {
@@ -156,6 +170,8 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
                     bundle.putInt(ItemSelectFragment.FLAG,R.id.tractatetype);
                     tractateTypeFragment.setArguments(bundle);
                     tractateTypeFragment.show(getSupportFragmentManager(),"wordgroup");
+                }else if(wordgroupss != null) {
+                    Toast.makeText(this,"请先创建分组",Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(this,"获取分组信息失败",Toast.LENGTH_SHORT).show();
                 }
@@ -203,9 +219,9 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
 
         this.wordgroupname = name;
         WordGroup createwg = new WordGroup();
-        createwg.setUserId(repository.getUserInfo().getObjectId());
+        createwg.setUser(repository.getUserInfo());
         createwg.setName(name);
-        createwg.setOpen("false");
+        createwg.setOpen(false);
         Subscription subscription = repository.addWordGroup(createwg).subscribe(new Subscriber<WordGroup>() {
             @Override
             public void onCompleted() {
@@ -255,6 +271,7 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
     public void onItemClick(int flag, int posion) {
 
         currentgroupposition = posion;
+        wordGroup = wordGroups.get(currentgroupposition);
         wordgroup.setText(wordGroups.get(posion).getName());
 
     }

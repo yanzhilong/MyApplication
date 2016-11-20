@@ -105,8 +105,8 @@ public class WordGroupTest {
             Log.d(TAG, "testWordGroup_add");
             WordGroup addwordGroup = new WordGroup();
             addwordGroup.setName(phoneticsSymbols.getIpaname() + " or " + phoneticsSymbols.getKkname() + "示例单词");
-            addwordGroup.setOpen("true");
-            addwordGroup.setUserId(USERID_189);
+            addwordGroup.setOpen(true);
+            addwordGroup.setUser(null);
 
             TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
             mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);
@@ -130,8 +130,10 @@ public class WordGroupTest {
         Log.d(TAG, "testWordGroup_add");
         WordGroup addwordGroup = new WordGroup();
         addwordGroup.setName("新概念英语第一册(1-10)");
-        addwordGroup.setOpen("false");
-        addwordGroup.setUserId(USERID_159);
+        addwordGroup.setOpen(false);
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        addwordGroup.setUser(user);
 
         TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);

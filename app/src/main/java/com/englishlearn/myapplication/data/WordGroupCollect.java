@@ -1,15 +1,25 @@
 package com.englishlearn.myapplication.data;
 
+import java.io.Serializable;
+
 /**
  * Created by yanzl on 16-9-12.
  * 单词分级收藏表
  */
-public class WordGroupCollect {
+public class WordGroupCollect  implements Serializable,Cloneable{
+
+    //标记一对多关系
+    private String __type;
+    private String className;
 
     private String objectId;
-    private String userId; //用户Id
-    private String wordgroupId; //单词分组Id
+    private User user; //用户Id
+    private WordGroup wordGroup; //单词分组Id
 
+    public void setPointer(){
+        __type = "Pointer";
+        className = "WordGroupCollect";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -19,28 +29,40 @@ public class WordGroupCollect {
         this.objectId = objectId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getWordgroupId() {
-        return wordgroupId;
+    public WordGroup getWordGroup() {
+        return wordGroup;
     }
 
-    public void setWordgroupId(String wordgroupId) {
-        this.wordgroupId = wordgroupId;
+    public void setWordGroup(WordGroup wordGroup) {
+        this.wordGroup = wordGroup;
     }
 
     @Override
     public String toString() {
         return "WordGroupCollect{" +
                 "objectId='" + objectId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", wordgroupId='" + wordgroupId + '\'' +
+                ", user=" + user +
+                ", wordGroup=" + wordGroup +
                 '}';
+    }
+
+    @Override
+    public Object clone(){
+
+        Object o = null;
+        try {
+            o = super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return o;
     }
 }

@@ -99,8 +99,8 @@ public class WordGroupsTopFragment extends Fragment {
                 WordGroup wordGroup = myAdapter.getWordGroups().get(position);
                 Log.d(TAG, wordGroup.toString());
                 Intent intent = new Intent(WordGroupsTopFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                intent.putExtra(WordsActivity.TYPE, WordGroupType.TOP);
+                intent.putExtra(WordsActivity.WORDGROUP,wordGroup);
+                intent.putExtra(WordsActivity.TYPE, WordGroupType.OTHERWGROUP);
                 startActivity(intent);
             }
 
@@ -163,7 +163,7 @@ public class WordGroupsTopFragment extends Fragment {
 
     //获取下一页
     public void getNextPage() {
-        Subscription subscription = repository.getWordGroupsByOpenAndNotCollectRx(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupsByOpenRx(page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();

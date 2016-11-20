@@ -8,6 +8,10 @@ import java.io.Serializable;
  */
 public class Word  implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
     private String name;
     private String british_phonogram; //英式发音音标(多个用"|"分割)
@@ -17,6 +21,11 @@ public class Word  implements Serializable,Cloneable{
     private String translate;//解释，各种词类型用"|"分割
     private String correlation; //其它相关的（第三人称单数，复数....）
     private String remark; //备注
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "Word";
+    }
 
     public String getObjectId() {
         return objectId;

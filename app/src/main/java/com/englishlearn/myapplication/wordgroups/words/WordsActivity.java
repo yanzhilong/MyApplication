@@ -5,27 +5,23 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.WordGroup;
 
 public class WordsActivity extends AppCompatActivity {
 
-    public static final String OBJECT = "object";
-    public static final String TYPE = "wordgrouptype";
+    public static final String WORDGROUP = "wordgroup";
+    public static final String WORDGROUPCOLLECT = "wordgroupcollect";
+
+    public static final String TYPE = "grouptype";
+
     private static final String TAG = WordsActivity.class.getSimpleName();
-    private WordGroup wordGroup;
-    private WordGroupType wordGroupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.words_act);
-
-        if (getIntent().hasExtra(OBJECT)) {
-            wordGroup = (WordGroup) getIntent().getSerializableExtra(OBJECT);
-            wordGroupType = (WordGroupType) getIntent().getSerializableExtra(TYPE);
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -38,9 +34,8 @@ public class WordsActivity extends AppCompatActivity {
         ab.setTitle(R.string.title_words);
 
         Fragment fragment = WordsFragment.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(WordsFragment.OBJECT,wordGroup);
-        bundle.putSerializable(WordsFragment.TYPE,wordGroupType);
+
+        Bundle bundle = getIntent().getExtras();
         fragment.setArguments(bundle);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -53,6 +48,18 @@ public class WordsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Open the navigation drawer when the home icon is selected from the toolbar.
+                //mDrawerLayout.openDrawer(GravityCompat.START);
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

@@ -6,7 +6,7 @@ package com.englishlearn.myapplication.wordgroups.words;
 
 public enum WordGroupType {
 
-    TOP,//热门词单
-    CREATE,//我创建的词单
-    FAVORITE//我收藏的词单
+    OTHERWGROUP,//热门词单
+    CREATEWGROUP,//我创建的词单
+    FAVORITEWGROUP//我收藏的词单
 }

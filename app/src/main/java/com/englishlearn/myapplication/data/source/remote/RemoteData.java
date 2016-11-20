@@ -600,7 +600,7 @@ public interface RemoteData extends DataSource{
      * @param pageSize
      * @return
      */
-    Observable<List<WordGroup>> getWordGroupsByOpenRx(int page,int pageSize);
+        Observable<List<WordGroup>> getWordGroupsByOpenRx(int page,int pageSize);
 
 
     /**
@@ -1038,6 +1038,14 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<Boolean> deleteWordCollectRxById(String wordCollectId);
+
+
+    /**
+     * 删除单词收藏
+     * @param wordCollects
+     * @return
+     */
+    Observable<Boolean> deleteWordCollects(List<WordCollect> wordCollects);
 
 
     /**

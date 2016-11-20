@@ -35,8 +35,8 @@ public class SentencesActivity extends AppCompatActivity {
 
         Fragment fragment = SentencesFragment.newInstance();
 
-        Bundle bundle1 = getIntent().getExtras();
-        fragment.setArguments(bundle1);
+        Bundle bundle = getIntent().getExtras();
+        fragment.setArguments(bundle);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contentFrame, fragment)

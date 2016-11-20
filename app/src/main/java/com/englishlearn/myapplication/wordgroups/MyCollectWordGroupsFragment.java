@@ -20,6 +20,7 @@ import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
+import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.wordgroups.words.WordGroupType;
 import com.englishlearn.myapplication.wordgroups.words.WordsActivity;
@@ -45,7 +46,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<WordGroup> mList;
+    private List<WordGroupCollect> mList;
 
     private User user;
     private CompositeSubscription mSubscriptions;
@@ -99,11 +100,11 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
             @Override
             public void onItemClick(View view, int position) {
 
-                WordGroup wordGroup = myAdapter.getWordGroups().get(position);
-                Log.d(TAG, wordGroup.toString());
+                WordGroupCollect wordGroupCollect = myAdapter.getWordGroups().get(position);
+                Log.d(TAG, wordGroupCollect.toString());
                 Intent intent = new Intent(MyCollectWordGroupsFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                intent.putExtra(WordsActivity.TYPE, WordGroupType.FAVORITE);
+                intent.putExtra(WordsActivity.WORDGROUPCOLLECT,wordGroupCollect);
+                intent.putExtra(WordsActivity.TYPE, WordGroupType.FAVORITEWGROUP);
                 startActivity(intent);
 
             }
@@ -166,7 +167,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getCollectWordGroupRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroup>>() {
+        Subscription subscription = repository.getWordGroupCollectRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordGroupCollect>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -178,7 +179,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
             }
 
             @Override
-            public void onNext(List list) {
+            public void onNext(List<WordGroupCollect> list) {
                 Log.d(TAG,"onNext size:" + list.size());
 
                 if(list == null || list.size() == 0){
@@ -211,7 +212,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
     }
 
     //显示列表
-    private void showList(List list) {
+    private void showList(List<WordGroupCollect> list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
     }
@@ -236,7 +237,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<WordGroup> wordGroups;
+        private List<WordGroupCollect> wordGroups;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
@@ -257,7 +258,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<WordGroup> getWordGroups() {
+        public List<WordGroupCollect> getWordGroups() {
             return wordGroups;
         }
 
@@ -265,7 +266,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<WordGroup> wordGroups) {
+        public void replaceData(List<WordGroupCollect> wordGroups) {
             if (wordGroups != null) {
                 this.wordGroups.clear();
                 this.wordGroups.addAll(wordGroups);
@@ -307,7 +308,7 @@ public class MyCollectWordGroupsFragment extends Fragment implements View.OnClic
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(wordGroups.get(position).getName());
+                itemViewHolder.name.setText(wordGroups.get(position).getWordGroup().getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override

@@ -7,12 +7,19 @@ import java.io.Serializable;
  */
 public class WordGroup implements Serializable,Cloneable{
 
-    private String objectId;
-    private String open; //是否公开
-    private String create;//是否是保存自己创建的文章
-    private String name; //分组名称
-    private String userId; //用户Id
+    //标记一对多关系
+    private String __type;
+    private String className;
 
+    private String objectId;
+    private String name; //分组名称
+    private boolean open;//是否公开
+    private User user; //用户
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "WordGroup";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -22,12 +29,12 @@ public class WordGroup implements Serializable,Cloneable{
         this.objectId = objectId;
     }
 
-    public String getOpen() {
-        return open;
+    public User getUser() {
+        return user;
     }
 
-    public void setOpen(String open) {
-        this.open = open;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {
@@ -38,30 +45,21 @@ public class WordGroup implements Serializable,Cloneable{
         this.name = name;
     }
 
-    public String getUserId() {
-        return userId;
+    public boolean isOpen() {
+        return open;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getCreate() {
-        return create;
-    }
-
-    public void setCreate(String create) {
-        this.create = create;
+    public void setOpen(boolean open) {
+        this.open = open;
     }
 
     @Override
     public String toString() {
         return "WordGroup{" +
-                "objectId='" + objectId + '\'' +
-                ", open='" + open + '\'' +
-                ", create='" + create + '\'' +
+                ", objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
-                ", userId='" + userId + '\'' +
+                ", open=" + open +
+                ", user=" + user +
                 '}';
     }
 

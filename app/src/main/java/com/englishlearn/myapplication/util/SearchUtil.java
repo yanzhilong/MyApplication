@@ -89,13 +89,13 @@ public class SearchUtil {
 
         Gson gson = new Gson();
         Map map5 = new HashMap();
-        map5.put("wordgroupId",wordgroupId);
+        map5.put("wordGroup",wordgroupId);
         Map map6 = new HashMap();
         map6.put("className","WordCollect");
         map6.put("where",map5);
         Map map7 = new HashMap();
         map7.put("query",map6);
-        map7.put("key","wordId");
+        map7.put("key","word");
         Map map8 = new HashMap();
         map8.put("$select",map7);
         Map map9 = new HashMap();
@@ -752,6 +752,21 @@ public class SearchUtil {
     public String getBmobEquals(String regexName, String regexValue){
         String where = "{\""+regexName+"\":\""+ regexValue +"\"}";
         return where;
+    }
+
+
+    /**
+     * 根据名称和值返回搜索的匹配字条串
+     * @return
+     */
+    public String getWordGroupsByOpenRx(){
+        Gson gson = new Gson();
+
+        Map map14 = new HashMap();
+        map14.put("open",true);
+
+        String jsonStr = gson.toJson(map14);
+        return jsonStr;
     }
 
 

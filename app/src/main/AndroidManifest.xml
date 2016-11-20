@@ -133,7 +133,9 @@
         <activity
             android:name=".grammardetail.GrammarDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".wordgroups.WordGroupsActivity" />
+        <activity android:name=".wordgroups.WordGroupsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".wordgroups.words.WordsActivity"
             android:screenOrientation="portrait" />

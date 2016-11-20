@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.wordgroups.words;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,15 +24,17 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.adapter.MultipleAdapter;
 import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.RemoteCode;
-import com.englishlearn.myapplication.data.source.remote.bmob.BmobDefaultError;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.dialog.DeleteConfirmFragment;
 import com.englishlearn.myapplication.dialog.UpdateWordGroupFragment;
+import com.englishlearn.myapplication.wordgroups.WordGroupsActivity;
 import com.englishlearn.myapplication.wordgroups.words.word.WordDetailActivity;
 
 import java.util.ArrayList;
@@ -46,16 +52,21 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class WordsFragment extends Fragment implements View.OnClickListener {
 
-    public static final String OBJECT = "object";
-    public static final String TYPE = "wordgrouptype";
     private static final String TAG = WordsFragment.class.getSimpleName();
+    private final int DELETEWORDS = 1;//批量删除单词
+    private final int UPDATEWORDGROUP = 2;//修改词单名称
+    private final int DELETEWORDGROUP = 3;//删除词单
+    private final int DELETEWORDGROUPCOLLECT = 4;//删除词单
     private final int PAGESIZE = 10;
     private WordGroup wordGroup;
+    private WordGroupCollect wordGroupCollect;
     private WordGroupType wordGroupType;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<Word> mList;
-    private String userId = "943a8a40ed";
+    private List<WordCollect> mList;
+    private List<WordCollect> selectWords;
+
+    private WordsMultipleAdapter wordsMultipleAdapter;
 
     private CompositeSubscription mSubscriptions;
     @Inject
@@ -63,20 +74,35 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     private LinearLayoutManager mgrlistview;
 
     private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新按钮
-    private FloatingActionButton fab_deleteorfavorite_wordgroup;
-    private FloatingActionButton fab_edit_wordgroup;
+
+    private FloatingActionButton fab_edit;
+    private FloatingActionButton fab_favorite;
+    private FloatingActionButton fab_delete;
+
 
     public static WordsFragment newInstance() {
         return new WordsFragment();
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        wordsMultipleAdapter.onActivityResult(requestCode,resultCode,data);
+    }
+
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments().containsKey(OBJECT)){
-            wordGroup = (WordGroup) getArguments().getSerializable(OBJECT);
-            wordGroupType = (WordGroupType) getArguments().getSerializable(TYPE);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            wordGroup = (WordGroup) bundle.getSerializable(WordsActivity.WORDGROUP);
+            wordGroupType = (WordGroupType) bundle.getSerializable(WordsActivity.TYPE);
+            wordGroupCollect = (WordGroupCollect) bundle.getSerializable(WordsActivity.WORDGROUPCOLLECT);
+            if(wordGroupCollect != null){
+                wordGroup = wordGroupCollect.getWordGroup();
+            }
         }
 
         MyApplication.instance.getAppComponent().inject(this);
@@ -85,6 +111,8 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
+
+        wordsMultipleAdapter = new WordsMultipleAdapter(this,getActivity());
     }
 
     @Nullable
@@ -111,7 +139,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(View view, int position) {
 
-                Word word = myAdapter.getStrings().get(position);
+                Word word = myAdapter.getStrings().get(position).getWord();
                 Log.d(TAG, word.toString());
                 Intent intent = new Intent(WordsFragment.this.getContext(),WordDetailActivity.class);
                 intent.putExtra(WordDetailActivity.OBJECT,word);
@@ -130,32 +158,36 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         //设置适配器
         recyclerView.setAdapter(myAdapter);
 
-        fab_edit_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit);
-        fab_edit_wordgroup.setOnClickListener(this);
+        fab_edit = (FloatingActionButton) getActivity().findViewById(R.id.fab_edit);
+        fab_edit.setOnClickListener(this);
 
-        fab_deleteorfavorite_wordgroup = (FloatingActionButton) getActivity().findViewById(R.id.fab_delete);
-        fab_deleteorfavorite_wordgroup.setOnClickListener(this);
+        fab_favorite = (FloatingActionButton) getActivity().findViewById(R.id.fab_favorite);
+        fab_favorite.setOnClickListener(this);
+
+        fab_delete = (FloatingActionButton) getActivity().findViewById(R.id.fab_delete);
+        fab_delete.setOnClickListener(this);
+
 
         switch (wordGroupType){
-            case TOP:
-                fab_edit_wordgroup.setVisibility(View.GONE);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+            case OTHERWGROUP:
+                fab_edit.setVisibility(View.GONE);
+                fab_delete.setVisibility(View.GONE);
+                fab_favorite.setVisibility(View.VISIBLE);
                 break;
-            case CREATE:
-                fab_edit_wordgroup.setVisibility(View.VISIBLE);
-                fab_edit_wordgroup.setBackgroundResource(R.drawable.ic_edit);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_delete);
+            case CREATEWGROUP:
+                fab_edit.setVisibility(View.VISIBLE);
+                fab_delete.setVisibility(View.VISIBLE);
+                fab_favorite.setVisibility(View.GONE);
                 break;
-            case FAVORITE:
-                fab_edit_wordgroup.setVisibility(View.GONE);
-                fab_deleteorfavorite_wordgroup.setVisibility(View.VISIBLE);
-                fab_deleteorfavorite_wordgroup.setImageResource(R.drawable.ic_favorite_black_24dp);
+            case FAVORITEWGROUP:
+                fab_edit.setVisibility(View.GONE);
+                fab_delete.setVisibility(View.VISIBLE);
+                fab_favorite.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -174,12 +206,50 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
         refershList();//刷新列表
 
+        //如果有设置菜单，需要加这个
+        setHasOptionsMenu(true);
+
         return root;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        switch (wordGroupType){
+
+            case CREATEWGROUP:
+                inflater.inflate(R.menu.menu_sentences_createsgroup, menu);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (wordGroupType){
+
+            case CREATEWGROUP:
+                return createsgroup(item);
+        }
+        return true;
+    }
+
+    //我创建的句组
+    private boolean createsgroup(MenuItem item){
+
+        switch (item.getItemId()) {
+            case R.id.delete_sentences:
+                Log.d(TAG, "删除单词");
+                wordsMultipleAdapter.operationList(DELETEWORDS);
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -202,7 +272,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getWordsRxByWordGroupId(wordGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Word>>() {
+        Subscription subscription = repository.getWordCollectRxByWordGroupId(wordGroup.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<WordCollect>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -214,7 +284,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             }
 
             @Override
-            public void onNext(List list) {
+            public void onNext(List<WordCollect> list) {
                 Log.d(TAG,"onNext size:" + list.size());
 
                 if(list == null || list.size() == 0){
@@ -267,6 +337,102 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         delete.show(getFragmentManager(),"delete");
     }
 
+    private class WordsMultipleAdapter extends MultipleAdapter<WordGroup,WordCollect> {
+
+        public WordsMultipleAdapter(Fragment fragment, Activity activity) {
+            super(fragment, activity);
+        }
+
+        @Override
+        protected WordGroup getListGroup() {
+            return wordGroup;
+        }
+
+        @Override
+        protected void operationListGroup(WordGroup wordGroup, int flag) {
+        }
+
+        @Override
+        protected List<WordCollect> getList() {
+            return mList;
+        }
+
+        @Override
+        protected void operationList(List<WordCollect> list, WordGroup group, int tag) {
+
+            if(tag == DELETEWORDS){
+                selectWords = list;
+                showConfirmDialog(DELETEWORDS,"删除选中的单词?");
+            }
+        }
+
+        @Override
+        protected boolean selectCreate(int flag) {
+
+            return false;
+        }
+
+        @Override
+        protected boolean selectResult(int position, int flag) {
+
+
+            return false;
+        }
+
+        @Override
+        protected String getMultipleItemName(WordCollect o) {
+            return o.getWord().getName();
+        }
+
+        @Override
+        protected void createComplete(String name,int createflag) {
+            if(createflag == UPDATEWORDGROUP){
+                updateWordGroup(name);
+            }
+        }
+
+        @Override
+        protected void confirm(int confirmflag) {
+
+            if(confirmflag == DELETEWORDS){
+                deleteCreateWords(selectWords);
+            }else if(confirmflag == DELETEWORDGROUP){
+                deleteWordGroup();
+            }else if(confirmflag == DELETEWORDGROUPCOLLECT){
+                deleteWordGroupCollect();
+            }
+        }
+    }
+
+    //批量删除word
+    private void deleteCreateWords(List<WordCollect> list) {
+
+
+        Subscription subscription = repository.deleteWordCollects(list).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+
+    }
+
 
     /**
      * 显示对话框
@@ -295,21 +461,17 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onError(Throwable e) {
                 if(e instanceof BmobRequestException){
-                    BmobDefaultError bm = ((BmobRequestException) e).getBmobDefaultError();
-                    if(bm != null){
-                        deleteFail(bm.getError());
-                    }else{
-                        deleteFail(RemoteCode.COMMON.getDefauleError().getMessage());
-                    }
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
                 }else{
-                    Toast.makeText(WordsFragment.this.getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
             public void onNext(Boolean b) {
-                deleteSuccess();
+                deleteGroupSuccess();
             }
         });
         mSubscriptions.add(subscription);
@@ -322,9 +484,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
         WordGroup createwg = new WordGroup();
         createwg.setObjectId(wordGroup.getObjectId());
-        createwg.setUserId(userId);
         createwg.setName(name);
-        createwg.setOpen("false");
         Subscription subscription = repository.updateWordGroupRxById(createwg).subscribe(new Subscriber<Boolean>() {
             @Override
             public void onCompleted() {
@@ -362,6 +522,14 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(this.getContext(),R.string.deletesuccess,Toast.LENGTH_SHORT).show();
     }
 
+    //删除分组成功
+    private void deleteGroupSuccess(){
+        deleteSuccess();
+        Intent intent = new Intent(this.getContext(),WordGroupsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
     //创建失败
     private void updateWGFail(String message){
 
@@ -376,9 +544,9 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
 
 
-    /**
+   /* *//**
      * 取消收藏
-     */
+     *//*
     private void unFavorite(){
         fab_deleteorfavorite_wordgroup.setEnabled(false);
         Subscription subscription = repository.deleteWordGroupCollectRxByuserIdAndwordGroupId(userId,wordGroup.getObjectId()).subscribe(new Subscriber<Boolean>() {
@@ -402,15 +570,15 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         mSubscriptions.add(subscription);
     }
 
-    /**
+    *//**
      * 收藏
-     */
+     *//*
     private void favorite(){
 
         fab_deleteorfavorite_wordgroup.setEnabled(false);
         WordGroupCollect wordGroupCollect = new WordGroupCollect();
-        wordGroupCollect.setUserId(userId);
-        wordGroupCollect.setWordgroupId(wordGroup.getObjectId());
+        wordGroupCollect.setUser(null);
+        wordGroupCollect.setWordGroup(wordGroup);
         repository.addWordGroupCollect(wordGroupCollect).subscribe(new Subscriber<WordGroupCollect>() {
             @Override
             public void onCompleted() {
@@ -435,10 +603,10 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    /**
+    *//**
      * 收藏结果
      * @param isSuccess 成功或失败
-     */
+     *//*
     private void favoriteResult(boolean isSuccess){
         if(isSuccess){
             Toast.makeText(this.getContext(),R.string.favoritesuccess,Toast.LENGTH_SHORT).show();
@@ -448,10 +616,9 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /**
+    *//**
      * 取消收藏结果
-     * @param isSuccess 成功或失败
-     */
+     *//*
     private void unFavoriteResult(boolean isSuccess){
         if(isSuccess){
             Toast.makeText(this.getContext(),R.string.unfavoritesuccess,Toast.LENGTH_SHORT).show();
@@ -460,23 +627,29 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(this.getContext(),R.string.unfavoritefail,Toast.LENGTH_SHORT).show();
         }
     }
-
+*/
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.fab_edit:
-                showUpdateWordGroupDialog();
+                //showUpdateWordGroupDialog();
+                wordsMultipleAdapter.createAndUpdate("修改记词单名称",wordGroup.getName(),UPDATEWORDGROUP);
+                break;
+            case R.id.fab_favorite:
+                favoriteWordGroup();
                 break;
             case R.id.fab_delete:
                 switch (wordGroupType){
-                    case TOP:
-                        favorite();
+                    case OTHERWGROUP:
+                        //favorite();
                         break;
-                    case CREATE:
-                        showDeleteWordGroupConfirm();
+                    case CREATEWGROUP:
+                        wordsMultipleAdapter.showConfirmDialog(DELETEWORDGROUP,"删除当前词单?");
+                        //showDeleteWordGroupConfirm();
                         break;
-                    case FAVORITE:
-                        unFavorite();
+                    case FAVORITEWGROUP:
+                        wordsMultipleAdapter.showConfirmDialog(DELETEWORDGROUPCOLLECT,"取消当前收藏?");
+                        //unFavorite();
                         break;
                     default:
                         break;
@@ -487,6 +660,77 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * 收藏句单
+     */
+    private void favoriteWordGroup(){
+
+        if(wordGroup.getUser().getObjectId().equals(repository.getUserInfo().getObjectId())){
+            Toast.makeText(getContext(),"不能收藏自己创建的词单",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        WordGroupCollect wordGroupCollect = new WordGroupCollect();
+        wordGroupCollect.setUser(repository.getUserInfo());
+        wordGroupCollect.setWordGroup(wordGroup);
+        Subscription subscription = repository.addWordGroupCollect(wordGroupCollect).subscribe(new Subscriber<WordGroupCollect>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    Toast.makeText(getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(getContext(),getContext().getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onNext(WordGroupCollect wordGroupCollect) {
+
+                if(wordGroupCollect != null){
+                    Toast.makeText(getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getContext(),"收藏失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
+
+    //取消收藏当前句组
+    private void deleteWordGroupCollect(){
+
+        Subscription subscription = repository.deleteWordGroupCollectRxById(wordGroupCollect.getObjectId()).subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    deleteFail(bmobRequestException.getMessage());
+                }else{
+                    Toast.makeText(getContext(),R.string.networkerror,Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(Boolean b) {
+                deleteGroupSuccess();
+            }
+        });
+        mSubscriptions.add(subscription);
+    }
 
     //接口
     public interface OnItemClickListener {
@@ -502,7 +746,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
         private boolean isGone = false;//是否加载完成
         private OnLoadMoreListener mOnLoadMoreListener;
-        private List<Word> words;
+        private List<WordCollect> words;
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
@@ -523,7 +767,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
-        public List<Word> getStrings() {
+        public List<WordCollect> getStrings() {
             return words;
         }
 
@@ -531,7 +775,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             this.onItemClickListener = onItemClickListener;
         }
 
-        public void replaceData(List<Word> words) {
+        public void replaceData(List<WordCollect> words) {
             if (words != null) {
                 this.words.clear();
                 this.words.addAll(words);
@@ -573,7 +817,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(words.get(position).getName());
+                itemViewHolder.name.setText(words.get(position).getWord().getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override

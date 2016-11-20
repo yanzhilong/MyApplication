@@ -58,8 +58,13 @@ public class WordGroupCollectTest {
 
         Log.d(TAG,"testWordGroupCollect_add");
         WordGroupCollect addWordGroupCollect = new WordGroupCollect();
-        addWordGroupCollect.setUserId("943a8a40ed");
-        addWordGroupCollect.setWordgroupId("fb4bc0109b");
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        addWordGroupCollect.setUser(user);
+        WordGroup wordGroup = new WordGroup();
+        wordGroup.setObjectId("f4a2aea3e3");
+
+        addWordGroupCollect.setWordGroup(wordGroup);
 
         TestSubscriber<WordGroupCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addWordGroupCollect(addWordGroupCollect).toBlocking().subscribe(testSubscriber_add);

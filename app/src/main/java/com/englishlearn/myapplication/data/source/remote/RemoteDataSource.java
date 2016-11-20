@@ -662,6 +662,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteWordCollects(List<WordCollect> wordCollects) {
+        return null;
+    }
+
+    @Override
     public Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId, String wordGroupId, int page, int pageSize) {
         return null;
     }

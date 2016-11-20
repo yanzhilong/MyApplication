@@ -7,10 +7,19 @@ import java.io.Serializable;
  */
 public class WordCollect implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
-    private String userId; //用户Id
-    private String wordgroupId; //分组Id
-    private String wordId; //(句子，单词，文章)
+    private User user; //用户Id
+    private WordGroup wordGroup; //分组Id
+    private Word word; //(句子，单词，文章)
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "WordCollect";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -20,28 +29,28 @@ public class WordCollect implements Serializable,Cloneable{
         this.objectId = objectId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getWordgroupId() {
-        return wordgroupId;
+    public WordGroup getWordGroup() {
+        return wordGroup;
     }
 
-    public void setWordgroupId(String wordgroupId) {
-        this.wordgroupId = wordgroupId;
+    public void setWordGroup(WordGroup wordGroup) {
+        this.wordGroup = wordGroup;
     }
 
-    public String getWordId() {
-        return wordId;
+    public Word getWord() {
+        return word;
     }
 
-    public void setWordId(String wordId) {
-        this.wordId = wordId;
+    public void setWord(Word word) {
+        this.word = word;
     }
 
     @Override
@@ -60,9 +69,9 @@ public class WordCollect implements Serializable,Cloneable{
     public String toString() {
         return "WordCollect{" +
                 "objectId='" + objectId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", wordgroupId='" + wordgroupId + '\'' +
-                ", wordId='" + wordId + '\'' +
+                ", user=" + user +
+                ", wordGroup=" + wordGroup +
+                ", word=" + word +
                 '}';
     }
 }

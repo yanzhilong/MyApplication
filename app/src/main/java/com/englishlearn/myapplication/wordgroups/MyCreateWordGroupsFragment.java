@@ -106,8 +106,8 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
                 WordGroup wordGroup = myAdapter.getWordGroups().get(position);
                 Log.d(TAG, wordGroup.toString());
                 Intent intent = new Intent(MyCreateWordGroupsFragment.this.getContext(),WordsActivity.class);
-                intent.putExtra(WordsActivity.OBJECT,wordGroup);
-                intent.putExtra(WordsActivity.TYPE, WordGroupType.CREATE);
+                intent.putExtra(WordsActivity.WORDGROUP,wordGroup);
+                intent.putExtra(WordsActivity.TYPE, WordGroupType.CREATEWGROUP);
                 startActivity(intent);
             }
 
@@ -175,9 +175,9 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     private void createWordGroup(String name){
 
         WordGroup createwg = new WordGroup();
-        createwg.setUserId(user.getObjectId());
+        createwg.setUser(user);
         createwg.setName(name);
-        createwg.setOpen("false");
+        createwg.setOpen(false);
         Subscription subscription = repository.addWordGroup(createwg).subscribe(new Subscriber<WordGroup>() {
             @Override
             public void onCompleted() {

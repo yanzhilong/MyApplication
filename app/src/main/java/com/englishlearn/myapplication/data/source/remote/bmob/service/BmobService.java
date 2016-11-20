@@ -756,7 +756,7 @@ public interface BmobService{
 
 
     //获取所有公开的单词分组分页展示,按时间降序(从近到远)
-    @GET("/1/classes/WordGroup?order=-createdAt")
+    @GET("/1/classes/WordGroup?include=user&order=-createdAt")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
@@ -793,7 +793,7 @@ public interface BmobService{
     Observable<Response<ResponseBody>> deleteWordGroupCollectRxById(@Path("id") String id);
 
     //根据userId获取单词分組收藏,分页展示
-    @GET("/1/classes/WordGroupCollect")
+    @GET("/1/classes/WordGroupCollect?include=wordGroup,user")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
@@ -1214,7 +1214,7 @@ public interface BmobService{
      * @param skip 从第几条取
      * @return
      */
-    @GET("/1/classes/WordCollect")
+    @GET("/1/classes/WordCollect?include=word,wordGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"

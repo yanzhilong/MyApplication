@@ -728,13 +728,18 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> deleteWordCollects(List<WordCollect> wordCollects) {
+        return mBmobDataSource.deleteWordCollects(wordCollects);
+    }
+
+    @Override
     public Observable<List<WordCollect>> getWordCollectRxByUserIdAndWordGroupId(String userId, String wordGroupId, int page, int pageSize) {
         return mBmobDataSource.getWordCollectRxByUserIdAndWordGroupId(userId,wordGroupId,page,pageSize);
     }
 
     @Override
     public Observable<List<WordCollect>> getWordCollectRxByWordGroupId(String wordGroupId, int page, int pageSize) {
-        return null;
+        return mBmobDataSource.getWordCollectRxByWordGroupId(wordGroupId,page,pageSize);
     }
 
     @Override
