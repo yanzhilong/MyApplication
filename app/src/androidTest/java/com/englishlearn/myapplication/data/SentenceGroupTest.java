@@ -51,7 +51,7 @@ public class SentenceGroupTest {
 
     //添加音标单词分组
     @Test
-    public void addWordGroup() {
+    public void addSentenceGroup() {
 
         for(int i = 0; i < 5; i++){
 
@@ -72,6 +72,31 @@ public class SentenceGroupTest {
                 SentenceGroup sentenceGroup = list.get(0);
                 Log.d(TAG,"testSentenceGroup_add_result:" + sentenceGroup.toString());
             }
+        }
+    }
+
+    //添加音标单词分组
+    @Test
+    public void addGrammaeSentenceGroup() {
+
+        //添加　
+        Log.d(TAG,"testSentenceGroup_add");
+        SentenceGroup addSentenceGroup = new SentenceGroup();
+        addSentenceGroup.setName("语法相关句子");
+
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        addSentenceGroup.setUser(user);
+
+        TestSubscriber<SentenceGroup> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addSentenceGroup(addSentenceGroup).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<SentenceGroup> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+
+        if(list != null && list.size() > 0){
+            SentenceGroup sentenceGroup = list.get(0);
+            Log.d(TAG,"testSentenceGroup_add_result:" + sentenceGroup.toString());
         }
     }
 }

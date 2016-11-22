@@ -1394,6 +1394,71 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<Word>> getWordsRx() {
+
+        return bmobService.getWordsRx()
+                .flatMap(new Func1<Response<WordResult>, Observable<List<Word>>>() {
+                    @Override
+                    public Observable<List<Word>> call(Response<WordResult> wordResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(wordResultResponse.isSuccessful()){
+                            WordResult wordResult = wordResultResponse.body();
+                            List<Word> words = wordResult.getResults();
+                            return Observable.just(words);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  wordResultResponse.errorBody().string();
+                                Log.d(TAG,"getWordsRxByPhoneticsId(String phoneticsId):" + errjson);
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<Word>>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<Word>> getWordsRx(int page, int pageSize) {
+
+        if(page < 0){
+            throw new RuntimeException("The page shoule don't be above 0");
+        }
+
+        final int limit = pageSize;
+        final int skip = (page) * pageSize;
+
+        return bmobService.getWordsRx(limit,skip)
+                .flatMap(new Func1<Response<WordResult>, Observable<List<Word>>>() {
+                    @Override
+                    public Observable<List<Word>> call(Response<WordResult> wordResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(wordResultResponse.isSuccessful()){
+                            WordResult wordResult = wordResultResponse.body();
+                            List<Word> words = wordResult.getResults();
+                            return Observable.just(words);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  wordResultResponse.errorBody().string();
+                                Log.d(TAG,"getWordsRxByPhoneticsId(String phoneticsId):" + errjson);
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<Word>>applySchedulers());
+    }
+
+    @Override
     public Observable<List<Word>> getWordsRxByWordGroupId(String wordgroupId,int page,int pageSize) {
 
         if(page < 0){
@@ -1738,6 +1803,19 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Grammar> addGrammar(Grammar grammar) {
+
+        WordGroup wordGroup = grammar.getWordGroup();
+        wordGroup.setPointer();
+        grammar.setWordGroup(wordGroup);
+
+        SentenceGroup sentenceGroup = grammar.getSentenceGroup();
+        sentenceGroup.setPointer();
+        grammar.setSentenceGroup(sentenceGroup);
+
+        User user = grammar.getUser();
+        user.setPointer();
+
+        grammar.setUser(user);
 
         return bmobService.addGrammarRx(grammar)
                 .flatMap(new Func1<Response<Grammar>, Observable<Grammar>>() {

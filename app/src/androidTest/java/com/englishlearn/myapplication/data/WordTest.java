@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.observers.TestSubscriber;
@@ -252,5 +253,35 @@ public class WordTest {
         }
         Word wordresult = list.get(0);
         Log.d(TAG,"testWord_add_result:" + wordresult.toString());
+    }
+
+    @Test
+    public void getWords(){
+
+        int page = 0;
+        int pagesize = 100;
+
+        List<Word> words = new ArrayList<>();
+        List<Word> wordtemp = new ArrayList<>();
+
+        do{
+            Log.d(TAG,"getWords():" + page);
+            TestSubscriber<List<Word>> testSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.getWordsRx(page,pagesize).subscribe(testSubscriber);
+            testSubscriber.assertNoErrors();
+            List<List<Word>> wordslist = testSubscriber.getOnNextEvents();
+            if(wordslist == null || wordslist.size() == 0){
+                page++;
+                continue;
+            }else{
+                page++;
+            }
+            wordtemp = wordslist.get(0);
+            Log.d(TAG,"getWords():" + wordtemp.size());
+            words.addAll(wordtemp);
+        }while (wordtemp.size() == 100);
+
+
+        Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
     }
 }

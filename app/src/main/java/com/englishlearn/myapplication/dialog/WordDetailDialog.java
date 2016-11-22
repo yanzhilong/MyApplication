@@ -211,7 +211,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 break;
             case R.id.british_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
-                if(word.getBritish_soundurl() != null){
+                if(word != null && word.getBritish_soundurl() != null){
                     try {
                         musicService.playUrl(word.getBritish_soundurl());
                     } catch (IOException e) {
@@ -222,6 +222,14 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 break;
             case R.id.american_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
+                if(word != null && word.getAmerican_soundurl() != null){
+                    try {
+                        musicService.playUrl(word.getBritish_soundurl());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(WordDetailDialog.this.getContext(),"获取读音失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case R.id.add_sentence:
                 Intent intentsentence = new Intent(this.getContext(),CreateSentenceActivity.class);
@@ -236,5 +244,12 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unbindService(musicConnection);
+        //musicService.unbindService(musicConnection);
     }
 }

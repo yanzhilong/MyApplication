@@ -430,6 +430,24 @@ public interface BmobService{
     })
     Observable<Response<WordResult>> getWordRxByName(@Query("where")String wordjson);
 
+
+    //获取所有的单词
+    @GET("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordResult>> getWordsRx();
+
+
+    //获取所有的单词
+    @GET("/1/classes/Word")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordResult>> getWordsRx(@Query("limit")int limit, @Query("skip")int skip);
+
     //查询音标关联收藏分组的所有单词
     @GET("/1/classes/Word")
     @Headers({
@@ -581,7 +599,7 @@ public interface BmobService{
     Observable<Response<Grammar>> getGrammarRxById(@Path("id") String id);
 
     //获取所有语法
-    @GET("/1/classes/Grammar")
+    @GET("/1/classes/Grammar?include=wordGroup,sentenceGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
@@ -593,7 +611,7 @@ public interface BmobService{
      * 获取所有语法(分页)
      * @return
      */
-    @GET("/1/classes/Grammar")
+    @GET("/1/classes/Grammar?include=wordGroup,sentenceGroup")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",

@@ -308,6 +308,16 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<Word>> getWordsRx() {
+        return mBmobDataSource.getWordsRx();
+    }
+
+    @Override
+    public Observable<List<Word>> getWordsRx(int page, int pageSize) {
+        return mBmobDataSource.getWordsRx(page,pageSize);
+    }
+
+    @Override
     public Observable<List<Word>> getWordsRxByWordGroupId(String wordgroupId, int page, int pageSize) {
         return mBmobDataSource.getWordsRxByWordGroupId(wordgroupId,page,pageSize);
     }

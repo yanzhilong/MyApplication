@@ -11,7 +11,9 @@ public class Grammar implements Serializable,Cloneable {
     private String objectId;
     private String title; //标题
     private String content; //内容
-    private String userId; //用户Id
+    private SentenceGroup sentenceGroup; //相关示例句子
+    private WordGroup wordGroup;//相关单词列表
+    private User user;//添加用户
     private String remark; //备注
 
     public String getObjectId() {
@@ -38,12 +40,20 @@ public class Grammar implements Serializable,Cloneable {
         this.content = content;
     }
 
-    public String getUserId() {
-        return userId;
+    public SentenceGroup getSentenceGroup() {
+        return sentenceGroup;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setSentenceGroup(SentenceGroup sentenceGroup) {
+        this.sentenceGroup = sentenceGroup;
+    }
+
+    public WordGroup getWordGroup() {
+        return wordGroup;
+    }
+
+    public void setWordGroup(WordGroup wordGroup) {
+        this.wordGroup = wordGroup;
     }
 
     public String getRemark() {
@@ -52,6 +62,14 @@ public class Grammar implements Serializable,Cloneable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -72,7 +90,9 @@ public class Grammar implements Serializable,Cloneable {
                 "objectId='" + objectId + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", userId='" + userId + '\'' +
+                ", sentenceGroup=" + sentenceGroup +
+                ", wordGroup=" + wordGroup +
+                ", user=" + user +
                 ", remark='" + remark + '\'' +
                 '}';
     }

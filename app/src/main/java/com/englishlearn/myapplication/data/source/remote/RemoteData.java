@@ -335,6 +335,18 @@ public interface RemoteData extends DataSource{
     Observable<List<Word>> getWordsRxByPhoneticsId(String phoneticsId);
 
     /**
+     * 根据音标id获取单词列表
+     * @return
+     */
+    Observable<List<Word>> getWordsRx();
+
+    /**
+     * 根据音标id获取单词列表
+     * @return
+     */
+    Observable<List<Word>> getWordsRx(int page,int pageSize);
+
+    /**
      * 根据单词收藏分组id获取单词列表
      * @param wordgroupId
      * @return

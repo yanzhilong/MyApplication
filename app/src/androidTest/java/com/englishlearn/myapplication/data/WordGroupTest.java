@@ -149,4 +149,30 @@ public class WordGroupTest {
         Log.d(TAG, "testWordGroup_add_result:" + wordGroup.toString());
 
     }
+
+    //添加语法关联单词分组
+    @Test
+    public void addGrammarWordGroup() {
+
+        //添加　
+        Log.d(TAG, "testWordGroup_add");
+        WordGroup addwordGroup = new WordGroup();
+        addwordGroup.setName("语法相关单词");
+        addwordGroup.setOpen(false);
+        User user = new User();
+        user.setObjectId("9d7707245a");
+        addwordGroup.setUser(user);
+
+        TestSubscriber<WordGroup> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addWordGroup(addwordGroup).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<WordGroup> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if (list == null || list.size() == 0) {
+            return;
+        }
+        WordGroup wordGroup = list.get(0);
+        Log.d(TAG, "testWordGroup_add_result:" + wordGroup.toString());
+
+    }
 }
