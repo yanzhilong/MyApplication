@@ -23,7 +23,7 @@ import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.RemoteCode;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
-import com.englishlearn.myapplication.data.source.remote.bmob.service.BmobService;
+import com.englishlearn.myapplication.data.source.remote.bmob.service.RetrofitService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
 import com.englishlearn.myapplication.util.RxUtil;
 import com.englishlearn.myapplication.util.SearchUtil;
@@ -52,7 +52,7 @@ public class BmobDataSource implements RemoteData {
     private static final String TAG = BmobDataSource.class.getSimpleName();
 
     private static BmobDataSource INSTANCE;
-    private BmobService bmobService;//请求接口
+    private RetrofitService bmobService;//请求接口
 
     private SearchUtil searchUtil;
 
@@ -64,11 +64,11 @@ public class BmobDataSource implements RemoteData {
     }
 
     public BmobDataSource(){
-        bmobService = ServiceFactory.getInstance().createBmobService();
+        bmobService = ServiceFactory.getInstance().createRetrofitService();
         searchUtil = SearchUtil.getInstance();
     }
 
-    public BmobDataSource(BmobService bmobService) {
+    public BmobDataSource(RetrofitService bmobService) {
         this.bmobService = bmobService;
         searchUtil = SearchUtil.getInstance();
     }

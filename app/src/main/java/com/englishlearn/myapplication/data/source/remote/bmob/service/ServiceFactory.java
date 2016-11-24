@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
         private static ServiceFactory INSTANCE;
 
-        private BmobService bmobService;
+        private RetrofitService retrofitService;
 
         public static synchronized ServiceFactory getInstance() {
             if (INSTANCE == null) {
@@ -20,16 +20,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
             return INSTANCE;
         }
 
-        public synchronized BmobService createBmobService(){
-            if(bmobService == null){
+        public synchronized RetrofitService createRetrofitService(){
+            if(retrofitService == null){
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(BmobService.BMOBAPI)
+                        .baseUrl(RetrofitService.BMOBAPI)
                         .addConverterFactory(GsonConverterFactory.create())
                         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                         .build();
 
-                bmobService = retrofit.create(BmobService.class);
+                retrofitService = retrofit.create(RetrofitService.class);
             }
-            return bmobService;
+            return retrofitService;
         }
     }

@@ -71,7 +71,7 @@ import rx.Observable;
 /**
  * Created by yanzl on 16-8-11.
  */
-public interface BmobService{
+public interface RetrofitService {
 
     String BMOBAPI = "https://api.bmob.cn";
 
