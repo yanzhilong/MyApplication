@@ -7,29 +7,43 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by yanzl on 16-8-11.
  */
-    public class ServiceFactory {
+public class ServiceFactory {
 
-        private static ServiceFactory INSTANCE;
+    private static ServiceFactory INSTANCE;
 
-        private RetrofitService retrofitService;
+    private RetrofitService retrofitService;
+    private YouDaoService youDaoService;
 
-        public static synchronized ServiceFactory getInstance() {
-            if (INSTANCE == null) {
-                INSTANCE = new ServiceFactory();
-            }
-            return INSTANCE;
+    public static synchronized ServiceFactory getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new ServiceFactory();
         }
-
-        public synchronized RetrofitService createRetrofitService(){
-            if(retrofitService == null){
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(RetrofitService.BMOBAPI)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                        .build();
-
-                retrofitService = retrofit.create(RetrofitService.class);
-            }
-            return retrofitService;
-        }
+        return INSTANCE;
     }
+
+    public synchronized RetrofitService createRetrofitService() {
+        if (retrofitService == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(RetrofitService.BMOBAPI)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
+
+            retrofitService = retrofit.create(RetrofitService.class);
+        }
+        return retrofitService;
+    }
+
+    public synchronized YouDaoService createYouDaoService() {
+        if (youDaoService == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(YouDaoService.YOUDAOAPI)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
+
+            youDaoService = retrofit.create(YouDaoService.class);
+        }
+        return youDaoService;
+    }
+}

@@ -25,11 +25,17 @@ import com.englishlearn.myapplication.data.source.remote.RemoteCode;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.RetrofitService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
+import com.englishlearn.myapplication.data.source.remote.bmob.service.YouDaoService;
 import com.englishlearn.myapplication.util.RxUtil;
 import com.englishlearn.myapplication.util.SearchUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +50,6 @@ import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
 
-import static com.englishlearn.myapplication.R.id.word;
-
 /**
  * Created by yanzl on 16-8-1.
  */
@@ -55,6 +59,7 @@ public class BmobDataSource implements RemoteData {
 
     private static BmobDataSource INSTANCE;
     private RetrofitService bmobService;//请求接口
+    private YouDaoService youDaoService;//请求接口
 
     private SearchUtil searchUtil;
 
@@ -67,6 +72,7 @@ public class BmobDataSource implements RemoteData {
 
     public BmobDataSource(){
         bmobService = ServiceFactory.getInstance().createRetrofitService();
+        youDaoService = ServiceFactory.getInstance().createYouDaoService();
         searchUtil = SearchUtil.getInstance();
     }
 
@@ -1324,6 +1330,105 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<Word>applySchedulers());
+    }
+
+    @Override
+    public Observable<Word> getWordRxByHtml(String wordname) {
+        return youDaoService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
+            @Override
+            public Observable<Word> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    String wordhtml = null;
+                    ResponseBody responseBody = responseBodyResponse.body();
+                    try {
+                        wordhtml = new String(responseBody.bytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Word word = null;
+                    if(wordhtml != null){
+
+                        word = new Word();
+                        String name = "";
+                        String british_phonogram = ""; // 英式发音音标(多个用"|"分割)
+                        String british_soundurl = ""; // 英式发音(下面同上)
+                        String american_phonogram = ""; // 英式发音音标
+                        String american_soundurl = ""; // 美式发音
+                        StringBuffer translate = new StringBuffer();// 解释，各种词类型用"|"分割
+                        String correlation = ""; // 其它相关的（第三人称单数，复数....）
+                        String remark = ""; // 备注
+
+                        Document doc = Jsoup.parse(wordhtml);
+                        // 名称
+                        Element nameclass = doc.getElementsByAttributeValue("class",
+                                "keyword").first();
+                        if (nameclass != null) {
+                            name = nameclass.text();
+                        }
+                        // 音标
+                        Element phoneticdiv = doc.select("div[class=baav]").first();
+                        if (phoneticdiv != null) {
+                            Elements phoneticdivchile = phoneticdiv
+                                    .getElementsByAttributeValue("class", "phonetic");
+                            if (phoneticdivchile != null) {
+                                for (int i = 0; i < phoneticdivchile.size(); i++) {
+                                    if (i == 0) {
+                                        british_phonogram = phoneticdivchile.get(i)
+                                                .text();
+                                    }
+                                    if (i == 1) {
+                                        american_phonogram = phoneticdivchile.get(i)
+                                                .text();
+                                    }
+                                }
+                            }
+                        }
+                        // 其它相关的
+                        Element correlationdiv = doc.getElementById("phrsListTab");
+                        if (correlationdiv != null) {
+
+                            Element translateclass = correlationdiv
+                                    .getElementsByAttributeValue("class",
+                                            "trans-container").first();
+                            if (translateclass != null) {
+                                // 其它相关
+                                Element correlationclass = translateclass
+                                        .getElementsByAttributeValue("class",
+                                                "additional").first();
+                                if (correlationclass != null) {
+                                    correlation = correlationclass.text();
+                                }
+                                // 解释
+                                Elements translateclassli = translateclass
+                                        .select("li");
+                                for (Element emement : translateclassli) {
+                                    String tran = emement.text();
+                                    translate.append(tran
+                                            + System.getProperty("line.separator"));
+                                }
+                            }
+                        }
+
+                        word.setName(name);
+                        word.setBritish_phonogram(british_phonogram);
+                        word.setAmerican_phonogram(american_phonogram);
+                        word.setTranslate(translate.toString());
+                        word.setCorrelation(correlation);
+                    }
+                    return Observable.just(word);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        bmobRequestException = new BmobRequestException(errjson);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }).compose(RxUtil.<Word>applySchedulers());
     }
 
     @Override

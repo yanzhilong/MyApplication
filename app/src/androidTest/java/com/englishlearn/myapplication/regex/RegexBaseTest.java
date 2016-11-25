@@ -44,7 +44,8 @@ public class RegexBaseTest {
         String englishTitle = "";
         String chineseTitle = "";
 
-        String resouse = AndroidUtils.newInstance(context).getStringByResource(R.raw.newconcept_one);
+        //String resouse = AndroidUtils.newInstance(context).getStringByResource(R.raw.newconcept_one);
+        String resouse = AndroidUtils.newInstance(context).getStringByResource(R.raw.newconcept_one_lesson1);
         //英文标题
         String entitleRegex = "\\w[\\w,\\s]*.";
         Pattern entitlepattern = Pattern.compile(entitleRegex);

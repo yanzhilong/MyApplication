@@ -320,6 +320,14 @@ public interface RemoteData extends DataSource{
 
 
     /**
+     * 从有道获取单词
+     * @param wordname
+     * @return
+     */
+    Observable<Word> getWordRxByHtml(String wordname);
+
+
+    /**
      * 根据名称获取单词
      * @param name
      * @return

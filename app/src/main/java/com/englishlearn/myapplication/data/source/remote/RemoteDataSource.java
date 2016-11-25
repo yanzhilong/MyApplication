@@ -231,6 +231,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Word> getWordRxByHtml(String wordname) {
+        return null;
+    }
+
+    @Override
     public Observable<Word> getWordRxByName(String name) {
         return null;
     }

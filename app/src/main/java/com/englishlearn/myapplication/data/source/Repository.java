@@ -297,6 +297,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Word> getWordRxByHtml(String wordname) {
+        return mBmobDataSource.getWordRxByHtml(wordname);
+    }
+
+    @Override
     public Observable<Word> getWordRxByName(String name) {
         name = name.toLowerCase();
         return mBmobDataSource.getWordRxByName(name);
