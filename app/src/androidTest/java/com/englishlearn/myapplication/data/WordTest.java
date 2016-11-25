@@ -72,7 +72,7 @@ public class WordTest {
 
         //获得单詞json
         String wordjson = "";
-        wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.words);
+        //wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.words);
 
         Gson gson = new Gson();
         List<Word> words = gson.fromJson(wordjson,new TypeToken<List<Word>>() {
@@ -225,7 +225,7 @@ public class WordTest {
 
         //获得单詞json
         String wordjson = "";
-        wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.words);
+        //wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.words);
 
         Gson gson = new Gson();
         List<Word> words = gson.fromJson(wordjson,new TypeToken<List<Word>>() {

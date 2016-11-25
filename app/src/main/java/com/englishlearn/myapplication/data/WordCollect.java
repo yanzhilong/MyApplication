@@ -12,9 +12,10 @@ public class WordCollect implements Serializable,Cloneable{
     private String className;
 
     private String objectId;
+    private String name;
     private User user; //用户Id
     private WordGroup wordGroup; //分组Id
-    private Word word; //(句子，单词，文章)
+
 
     public void setPointer(){
         __type = "Pointer";
@@ -45,12 +46,12 @@ public class WordCollect implements Serializable,Cloneable{
         this.wordGroup = wordGroup;
     }
 
-    public Word getWord() {
-        return word;
+    public String getName() {
+        return name;
     }
 
-    public void setWord(Word word) {
-        this.word = word;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -69,9 +70,9 @@ public class WordCollect implements Serializable,Cloneable{
     public String toString() {
         return "WordCollect{" +
                 "objectId='" + objectId + '\'' +
+                ", name='" + name + '\'' +
                 ", user=" + user +
                 ", wordGroup=" + wordGroup +
-                ", word=" + word +
                 '}';
     }
 }

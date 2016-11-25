@@ -44,6 +44,8 @@ import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
 
+import static com.englishlearn.myapplication.R.id.word;
+
 /**
  * Created by yanzl on 16-8-1.
  */
@@ -4144,12 +4146,8 @@ public class BmobDataSource implements RemoteData {
         WordGroup wordGroup = wordCollect.getWordGroup();
         wordGroup.setPointer();
 
-        Word word = wordCollect.getWord();
-        word.setPointer();
-
         wordCollect.setUser(user);
         wordCollect.setWordGroup(wordGroup);
-        wordCollect.setWord(word);
 
         return bmobService.addWordCollect(wordCollect)
                 .flatMap(new Func1<Response<WordCollect>, Observable<WordCollect>>() {

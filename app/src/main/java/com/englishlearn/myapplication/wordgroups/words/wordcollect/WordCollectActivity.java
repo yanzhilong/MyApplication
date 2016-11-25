@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -32,13 +31,15 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.englishlearn.myapplication.R.id.word;
+
 //收藏单词
 public class WordCollectActivity extends AppCompatActivity implements View.OnClickListener,Serializable,ItemSelectFragment.onItemClickListener {
 
     public static final String WORD = "word";
     private static final String TAG = WordCollectActivity.class.getSimpleName();
     private CompositeSubscription mSubscriptions;
-    private Word word;
+    private String wordname;
     private ArrayList<WordGroup> wordGroups;
     private String[] wordgroupss;
     private TextView wordgroup;
@@ -62,12 +63,12 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
         }
 
         if (getIntent().hasExtra(WORD)) {
-            word = (Word) getIntent().getSerializableExtra(WORD);
+            wordname = getIntent().getStringExtra(WORD);
         }
         wordgroup = (TextView) findViewById(R.id.wordgroup);
-        wordedit = (EditText) findViewById(R.id.word);
-        if(word != null){
-            wordedit.setText(word.getName());
+        wordedit = (EditText) findViewById(word);
+        if(wordname != null){
+            wordedit.setText(wordname);
         }
         wordGroups = new ArrayList<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -128,7 +129,7 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
     }
 
 
-    public void addWordCollect(Word word,String wordGroupId){
+    public void addWordCollect(String wordname,String wordGroupId){
 
         WordCollect wordCollect = new WordCollect();
 
@@ -137,7 +138,7 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
         wordGroup.setObjectId(wordGroupId);
 
         wordCollect.setWordGroup(wordGroup);
-        wordCollect.setWord(word);
+        wordCollect.setName(wordname);
         Subscription subscription = repository.addWordCollect(wordCollect).subscribe(new Subscriber<WordCollect>() {
             @Override
             public void onCompleted() {
@@ -177,7 +178,7 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
                 }
                 break;
             case R.id.affirm:
-                if((currentgroupposition == Integer.MAX_VALUE && wordGroup == null) || word == null){
+                if((currentgroupposition == Integer.MAX_VALUE && wordGroup == null)){
                     Toast.makeText(this,"请选择分组",Toast.LENGTH_SHORT).show();
                 }else{
                     String wordGroupId = "";
@@ -186,7 +187,7 @@ public class WordCollectActivity extends AppCompatActivity implements View.OnCli
                     }else {
                         wordGroupId = wordGroups.get(currentgroupposition).getObjectId();
                     }
-                    addWordCollect(word,wordGroupId);
+                    addWordCollect(wordname,wordGroupId);
                 }
                 break;
 

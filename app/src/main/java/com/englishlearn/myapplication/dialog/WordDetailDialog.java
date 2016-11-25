@@ -201,9 +201,9 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 this.dismiss();
                 break;
             case R.id.add_word:
-                if(word != null){
+                if(wordstring != null){
                     Intent intent = new Intent(this.getContext(),WordCollectActivity.class);
-                    intent.putExtra(WordCollectActivity.WORD,word);
+                    intent.putExtra(WordCollectActivity.WORD,wordstring);
                     startActivity(intent);
                 }else{
                     Toast.makeText(WordDetailDialog.this.getContext(),"未获取到单词信息",Toast.LENGTH_SHORT).show();

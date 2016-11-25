@@ -39,6 +39,7 @@ import com.englishlearn.myapplication.wordgroups.MyCollectWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.MyCreateWordGroupsFragment;
 import com.englishlearn.myapplication.wordgroups.WordGroupsTopFragment;
 import com.englishlearn.myapplication.wordgroups.words.WordsFragment;
+import com.englishlearn.myapplication.wordgroups.words.word.WordDetailFragment;
 import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
 
 import dagger.Component;
@@ -129,6 +130,7 @@ public interface AppComponent {
 
     void inject(SentenceCollectGroupsSelectFragment sentenceCollectGroupsSelectFragment);
 
+    void inject(WordDetailFragment wordDetailFragment);
 
 
 }

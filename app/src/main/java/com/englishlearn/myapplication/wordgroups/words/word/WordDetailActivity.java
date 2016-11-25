@@ -9,28 +9,27 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.data.Word;
 
 public class WordDetailActivity extends AppCompatActivity {
 
-    public static final String OBJECT = "object";
+    public static final String WORDNAME = "wordname";
     private static final String TAG = WordDetailActivity.class.getSimpleName();
-    private Word word;
+    private String wordname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.worddetail_act);
 
-        if (getIntent().hasExtra(OBJECT)) {
-            word = (Word) getIntent().getSerializableExtra(OBJECT);
+        if (getIntent().hasExtra(WORDNAME)) {
+            wordname = getIntent().getStringExtra(WORDNAME);
         }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String cheeseName = word!= null ? word.getName() : getResources().getString(R.string.title_worddetail);
+        String cheeseName = wordname!= null ? wordname : getResources().getString(R.string.title_worddetail);
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -40,7 +39,7 @@ public class WordDetailActivity extends AppCompatActivity {
 
 	Fragment fragment = WordDetailFragment.newInstance();
         Bundle arguments = new Bundle();
-        arguments.putSerializable(WordDetailFragment.OBJECT,word);
+        arguments.putSerializable(WORDNAME,wordname);
         fragment.setArguments(arguments);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

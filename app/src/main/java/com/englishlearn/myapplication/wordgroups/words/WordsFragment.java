@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.MultipleAdapter;
-import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
@@ -45,6 +44,8 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.englishlearn.myapplication.R.id.word;
 
 
 /**
@@ -139,10 +140,10 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(View view, int position) {
 
-                Word word = myAdapter.getStrings().get(position).getWord();
-                Log.d(TAG, word.toString());
+                String wordName = myAdapter.getStrings().get(position).getName();
+                Log.d(TAG, wordName);
                 Intent intent = new Intent(WordsFragment.this.getContext(),WordDetailActivity.class);
-                intent.putExtra(WordDetailActivity.OBJECT,word);
+                intent.putExtra(WordDetailActivity.WORDNAME,word);
                 startActivity(intent);
 
             }
@@ -381,7 +382,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
         @Override
         protected String getMultipleItemName(WordCollect o) {
-            return o.getWord().getName();
+            return o.getName();
         }
 
         @Override
@@ -817,7 +818,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "onBindViewHolder" + position);
             if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(words.get(position).getWord().getName());
+                itemViewHolder.name.setText(words.get(position).getName());
             } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
