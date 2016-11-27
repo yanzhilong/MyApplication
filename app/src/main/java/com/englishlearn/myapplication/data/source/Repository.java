@@ -40,12 +40,14 @@ import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesD
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
+import com.englishlearn.myapplication.util.RxUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 public class Repository implements DataSource,RemoteData,LocalData,SharedPreferencesData {
 
@@ -278,12 +280,47 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
 
     @Override
     public Observable<Word> addWord(Word word) {
-        return mBmobDataSource.addWord(word);
+        return mBmobDataSource.addWord(word).compose(RxUtil.<Word>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> addWords(List<Word> words) {
+        return mBmobDataSource.addWords(words).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> addWordByYouDao(String wordName) {
+        return mBmobDataSource.addWordByYouDao(wordName).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    public void addWordByHtml(String wordName) {
+        mBmobDataSource.addWordByYouDao(wordName).compose(RxUtil.<Boolean>applySchedulers())
+        .subscribe(new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+
+            }
+        });
     }
 
     @Override
     public Observable<Boolean> deleteWordById(String wordId) {
         return mBmobDataSource.deleteWordById(wordId);
+    }
+
+    @Override
+    public Observable<Boolean> deleteWords(List<Word> words) {
+        return mBmobDataSource.deleteWords(words).compose(RxUtil.<Boolean>applySchedulers());
     }
 
     @Override
@@ -298,12 +335,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
 
     @Override
     public Observable<Word> getWordRxByHtml(String wordname) {
-        return mBmobDataSource.getWordRxByHtml(wordname);
+        return mBmobDataSource.getWordRxByHtml(wordname).compose(RxUtil.<Word>applySchedulers());
     }
 
     @Override
     public Observable<Word> getWordRxByName(String name) {
-        name = name.toLowerCase();
         return mBmobDataSource.getWordRxByName(name);
     }
 

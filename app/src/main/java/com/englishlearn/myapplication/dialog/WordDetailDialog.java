@@ -22,6 +22,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
 import com.englishlearn.myapplication.service.MusicService;
 import com.englishlearn.myapplication.tractategroup.tractate.TractateDetailFragment;
@@ -55,6 +56,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     private Word word;
     private Tractate tractate;
     private TextView wordname;
+    private TextView aliasname;//真实名
     private TextView british_phonogram;
     private TextView american_phonogram;
     private TextView translate;
@@ -136,6 +138,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         view.findViewById(R.id.moresentence).setOnClickListener(this);
 
         wordname = (TextView) view.findViewById(R.id.wordname);
+        aliasname = (TextView) view.findViewById(R.id.aliasname);
         british_phonogram = (TextView) view.findViewById(R.id.british_phonogram);
         american_phonogram = (TextView) view.findViewById(R.id.american_phonogram);
         translate = (TextView) view.findViewById(R.id.translate);
@@ -153,7 +156,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     }
 
     //获取单词
-    private void getWord(String wordstring) {
+    private void getWord(final String wordstring) {
         Subscription subscription = repository.getWordRxByName(wordstring).subscribe(new Subscriber<Word>() {
             @Override
             public void onCompleted() {
@@ -163,7 +166,14 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             @Override
             public void onError(Throwable e) {
 
-                Toast.makeText(WordDetailDialog.this.getContext(),"未查到相关单词",Toast.LENGTH_SHORT).show();
+                if(e instanceof BmobRequestException){
+                    BmobRequestException bmobRequestException = (BmobRequestException) e;
+                    Toast.makeText(WordDetailDialog.this.getContext(),bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+                    repository.addWordByHtml(wordstring);
+                }else{
+                    Toast.makeText(WordDetailDialog.this.getContext(),"未查到相关单词",Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
@@ -185,6 +195,9 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
     //显示单词详情
     private void showWordInfo(){
 
+        if(word.getAliasName() != null && !word.getAliasName().equals(wordstring)){
+            aliasname.setText("[" + word.getAliasName() + "]");
+        }
         british_phonogram.setText(word.getBritish_phonogram());
         american_phonogram.setText(word.getAmerican_phonogram());
         translate.setText(word.getTranslate());

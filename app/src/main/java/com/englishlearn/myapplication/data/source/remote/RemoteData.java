@@ -297,12 +297,35 @@ public interface RemoteData extends DataSource{
      */
     Observable<Word> addWord(Word word);
 
+
+     /**
+     * 增加单词
+     * @param words
+     * @return
+     */
+    Observable<Boolean> addWords(List<Word> words);
+
+
+    /**
+     * 增加单词
+     * @param wordName
+     * @return
+     */
+    Observable<Boolean> addWordByYouDao(String wordName);
+
     /**
      * 删除单词
      * @param wordId
      * @return
      */
     Observable<Boolean> deleteWordById(String wordId);
+
+    /**
+     * 删除单词
+     * @param words
+     * @return
+     */
+    Observable<Boolean> deleteWords(List<Word> words);
 
     /**
      * 修改单词

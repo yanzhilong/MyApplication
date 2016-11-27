@@ -441,7 +441,7 @@ public interface RetrofitService {
 
 
     //获取所有的单词
-    @GET("/1/classes/Word")
+    @GET("/1/classes/Word?order=-createdAt")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"

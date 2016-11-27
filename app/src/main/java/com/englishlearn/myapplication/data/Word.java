@@ -13,7 +13,8 @@ public class Word  implements Serializable,Cloneable{
     private String className;
 
     private String objectId;
-    private String name;
+    private String name;//
+    private String aliasName;//别名，查询的单词实现返回的是这个的意思的时候使用
     private String british_phonogram; //英式发音音标(多个用"|"分割)
     private String british_soundurl; //英式发音(下面同上)
     private String american_phonogram; //英式发音音标
@@ -25,6 +26,14 @@ public class Word  implements Serializable,Cloneable{
     public void setPointer(){
         __type = "Pointer";
         className = "Word";
+    }
+
+    public String getAliasName() {
+        return aliasName;
+    }
+
+    public void setAliasName(String aliasName) {
+        this.aliasName = aliasName;
     }
 
     public String getObjectId() {
@@ -116,6 +125,7 @@ public class Word  implements Serializable,Cloneable{
         return "Word{" +
                 "objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
+                ", aliasName='" + aliasName + '\'' +
                 ", british_phonogram='" + british_phonogram + '\'' +
                 ", british_soundurl='" + british_soundurl + '\'' +
                 ", american_phonogram='" + american_phonogram + '\'' +

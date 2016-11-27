@@ -1247,7 +1247,68 @@ public class BmobDataSource implements RemoteData {
                         }
                         return Observable.error(bmobRequestException);
                     }
-                }).compose(RxUtil.<Word>applySchedulers());
+                });
+    }
+
+    @Override
+    public Observable<Boolean> addWords(List<Word> words) {
+        BatchRequest batchRequest = new BatchRequest();
+
+        List<BatchRequest.BatchRequestChild> batchRequestChildren = new ArrayList<>();
+        for(int i = 0; i < words.size(); i ++){
+            Word word = words.get(i);
+
+            BatchRequest.BatchRequestChild<Word> batchRequestChild = new BatchRequest.BatchRequestChild();
+            batchRequestChild.setMethod("POST");
+            batchRequestChild.setPath("/1/classes/Word");
+            batchRequestChild.setBody(word);
+            batchRequestChildren.add(batchRequestChild);
+        }
+        batchRequest.setRequests(batchRequestChildren);
+
+        return bmobService.batchPost(batchRequest)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        Gson gson = new GsonBuilder().create();
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                return Observable.error(e);
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                });
+    }
+
+    @Override
+    public Observable<Boolean> addWordByYouDao(final String wordName) {
+        return getWordRxByHtml(wordName)
+                .flatMap(new Func1<Word, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Word word) {
+                List<Word> list = new ArrayList<>();
+                if(!word.getTranslate().trim().equals("")){
+                    if(word.getName().equals(wordName)){
+                        list.add(word);
+                    }else {
+                        Word wordnew = (Word) word.clone();
+                        wordnew.setName(wordName);
+                        list.add(word);
+                        list.add(wordnew);
+                    }
+                }
+                return addWords(list);
+            }
+        });
     }
 
     @Override
@@ -1273,6 +1334,43 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> deleteWords(List<Word> words) {
+
+        BatchRequest batchRequestget = new BatchRequest();
+
+        List<BatchRequest.BatchRequestChild> batchRequestChildrenget = new ArrayList<>();
+        for(int i = 0; i < words.size(); i ++){
+            BatchRequest.BatchRequestChild<SentenceCollect> batchRequestChild = new BatchRequest.BatchRequestChild();
+            batchRequestChild.setMethod("DELETE");
+            batchRequestChild.setPath("/1/classes/Word/" + words.get(i).getObjectId());
+            batchRequestChildrenget.add(batchRequestChild);
+        }
+        batchRequestget.setRequests(batchRequestChildrenget);
+
+        return bmobService.batchPost(batchRequestget)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        Gson gson = new GsonBuilder().create();
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                return Observable.error(e);
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                });
     }
 
     @Override
@@ -1333,7 +1431,7 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Word> getWordRxByHtml(String wordname) {
+    public Observable<Word> getWordRxByHtml(final String wordname) {
         return youDaoService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
             @Override
             public Observable<Word> call(Response<ResponseBody> responseBodyResponse) {
@@ -1351,6 +1449,7 @@ public class BmobDataSource implements RemoteData {
 
                         word = new Word();
                         String name = "";
+                        String alias = "";
                         String british_phonogram = ""; // 英式发音音标(多个用"|"分割)
                         String british_soundurl = ""; // 英式发音(下面同上)
                         String american_phonogram = ""; // 英式发音音标
@@ -1410,7 +1509,8 @@ public class BmobDataSource implements RemoteData {
                             }
                         }
 
-                        word.setName(name);
+                        word.setName(wordname);
+                        word.setAliasName(name);
                         word.setBritish_phonogram(british_phonogram);
                         word.setAmerican_phonogram(american_phonogram);
                         word.setTranslate(translate.toString());
@@ -1428,7 +1528,7 @@ public class BmobDataSource implements RemoteData {
                 }
                 return Observable.error(bmobRequestException);
             }
-        }).compose(RxUtil.<Word>applySchedulers());
+        });
     }
 
     @Override
@@ -1449,7 +1549,8 @@ public class BmobDataSource implements RemoteData {
 
                                 return Observable.just(word);
                             }else{
-                                return Observable.error(new NullPointerException());
+                                bmobRequestException = new BmobRequestException(RemoteCode.COMMON.CUSTOM_EMPTYWORD.getMessage());
+                                return Observable.error(bmobRequestException);
                             }
 
                         }else{

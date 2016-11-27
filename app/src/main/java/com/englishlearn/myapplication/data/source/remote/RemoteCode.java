@@ -17,7 +17,8 @@ public class RemoteCode {
         Common_KEYERRO(111,"没有找到数据键"),
         Common_COLLECTSENTENCEGROUPNOTSELF(800,"不能收藏自己创建的句单"),
         Common_COLLECTSENTENCENOTSELF(800,"不能收藏自己创建的句子"),
-        MOBILE_ERROR(301,"参数不合法（字段名不能大于20...）");
+        MOBILE_ERROR(301,"参数不合法（字段名不能大于20...）"),
+        CUSTOM_EMPTYWORD(88001,"未查询到单词");
 
         private int code;
         private String message;

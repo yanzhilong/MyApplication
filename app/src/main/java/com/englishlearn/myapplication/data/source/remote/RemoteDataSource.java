@@ -216,7 +216,22 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> addWords(List<Word> words) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> addWordByYouDao(String wordName) {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> deleteWordById(String wordId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteWords(List<Word> words) {
         return null;
     }
 
