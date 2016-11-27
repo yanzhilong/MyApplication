@@ -13,6 +13,7 @@ public class ServiceFactory {
 
     private RetrofitService retrofitService;
     private YouDaoService youDaoService;
+    private IcibaService baiDuService;
 
     public static synchronized ServiceFactory getInstance() {
         if (INSTANCE == null) {
@@ -45,5 +46,18 @@ public class ServiceFactory {
             youDaoService = retrofit.create(YouDaoService.class);
         }
         return youDaoService;
+    }
+
+    public synchronized IcibaService createIcibaService() {
+        if (baiDuService == null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(IcibaService.ICIBAAPI)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
+
+            baiDuService = retrofit.create(IcibaService.class);
+        }
+        return baiDuService;
     }
 }

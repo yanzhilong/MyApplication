@@ -314,6 +314,13 @@ public interface RemoteData extends DataSource{
     Observable<Boolean> addWordByYouDao(String wordName);
 
     /**
+     * 增加单词
+     * @param wordName
+     * @return
+     */
+    Observable<Boolean> addWordByIciba(String wordName);
+
+    /**
      * 删除单词
      * @param wordId
      * @return
@@ -347,8 +354,15 @@ public interface RemoteData extends DataSource{
      * @param wordname
      * @return
      */
-    Observable<Word> getWordRxByHtml(String wordname);
+    Observable<Word> getWordRxByYouDao(String wordname);
 
+
+    /**
+     * 从百度获取单词
+     * @param wordname
+     * @return
+     */
+    Observable<Word> getWordRxByIciba(String wordname);
 
     /**
      * 根据名称获取单词

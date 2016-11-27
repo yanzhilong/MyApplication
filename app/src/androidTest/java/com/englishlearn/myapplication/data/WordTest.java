@@ -278,7 +278,7 @@ public class WordTest {
         Iterator<String> iterator = wordsSet.iterator();
         while (iterator.hasNext()){
             String wordName = iterator.next();
-            addWordsByHtml(wordName);
+            addWordsByYouDao(wordName);
         }
         /*String[] wordsArray = (String[]) wordsSet.toArray();
         for(int i = 0; i < words1.size(); i++){
@@ -302,7 +302,7 @@ public class WordTest {
 
         for(int i = 0; i < words.size(); i++){
             String name = words.get(i);
-            addWordsByHtml(name);
+            addWordsByYouDao(name);
         }*/
     }
 
@@ -350,7 +350,7 @@ public class WordTest {
 
         for(int i = 0; i < words.size(); i++){
             String name = words.get(i);
-            //addWordsByHtml(name);
+            //addWordsByYouDao(name);
         }
     }
 
@@ -368,7 +368,7 @@ public class WordTest {
         String[] words = wordjson.split(System.getProperty("line.separator"));
         for(int i = 0; i < words.length; i++){
             String word = words[i];
-            addWordsByHtml(word);
+            addWordsByYouDao(word);
             Log.d(TAG,words[i]);
         }
     }
@@ -387,7 +387,7 @@ public class WordTest {
         String[] words = wordjson.split(System.getProperty("line.separator"));
         for(int i = 0; i < words.length; i++){
             String word = words[i];
-            addWordsByHtml(word);
+            addWordsByYouDao(word);
             Log.d(TAG,words[i]);
         }
     }
@@ -396,11 +396,11 @@ public class WordTest {
      * 从列表添加单詞
      */
     @Test
-    public void addWordsByHtml(){
+    public void addWordsByYouDao(){
 
         String wordName = "Pardon";
             TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
-            mBmobRemoteData.getWordRxByHtml(wordName).toBlocking().subscribe(testSubscriber_add);
+            mBmobRemoteData.getWordRxByYouDao(wordName).toBlocking().subscribe(testSubscriber_add);
             //testSubscriber_add.assertNoErrors();
             List<Word> list = testSubscriber_add.getOnNextEvents();
             if(list == null || list.size() == 0){
@@ -421,10 +421,10 @@ public class WordTest {
             //addWord(word);
     }
 
-    public void addWordsByHtml(String wordName){
+    public void addWordsByYouDao(String wordName){
 
         TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
-        mBmobRemoteData.getWordRxByHtml(wordName).toBlocking().subscribe(testSubscriber_add);
+        mBmobRemoteData.getWordRxByYouDao(wordName).toBlocking().subscribe(testSubscriber_add);
         //testSubscriber_add.assertNoErrors();
         List<Word> list = testSubscriber_add.getOnNextEvents();
         if(list == null || list.size() == 0){
@@ -449,13 +449,13 @@ public class WordTest {
      * 从列表添加单詞
      */
     @Test
-    public void addWordsByYouDao(){
+    public void getWordByBaiDu(){
 
-        String wordName = "java";
-        TestSubscriber<Boolean> testSubscriber_add = new TestSubscriber<>();
-        mRepository.addWordByYouDao(wordName).toBlocking().subscribe(testSubscriber_add);
+        String wordName = "correlation";
+        TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
+        mRepository.getWordRxByIciba(wordName).toBlocking().subscribe(testSubscriber_add);
         //testSubscriber_add.assertNoErrors();
-        List<Boolean> list = testSubscriber_add.getOnNextEvents();
+        List<Word> list = testSubscriber_add.getOnNextEvents();
         List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
         if(throwables != null && throwables.size() > 0){
             for(int i = 0; i < throwables.size(); i++){
@@ -466,8 +466,8 @@ public class WordTest {
             return;
         }
         for(int i = 0; i < list.size(); i++){
-            Boolean aBoolean = list.get(i);
-            Log.d(TAG,"addWordBYYouDao_result:" + aBoolean);
+            Word word = list.get(i);
+            Log.d(TAG,"addWordBYYouDao_result:" + word);
         }
     }
 

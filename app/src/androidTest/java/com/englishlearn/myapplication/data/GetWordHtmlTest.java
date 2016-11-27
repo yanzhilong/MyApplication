@@ -54,7 +54,7 @@ public class GetWordHtmlTest {
     public void getWordByHtmlTest(){
         String wordName = "hello";
         TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
-        mBmobRemoteData.getWordRxByHtml(wordName).toBlocking().subscribe(testSubscriber_add);
+        mBmobRemoteData.getWordRxByYouDao(wordName).toBlocking().subscribe(testSubscriber_add);
         testSubscriber_add.assertNoErrors();
         List<Word> list = testSubscriber_add.getOnNextEvents();
         Assert.assertNotNull(list);

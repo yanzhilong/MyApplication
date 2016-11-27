@@ -293,24 +293,47 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
         return mBmobDataSource.addWordByYouDao(wordName).compose(RxUtil.<Boolean>applySchedulers());
     }
 
+    @Override
+    public Observable<Boolean> addWordByIciba(String wordName) {
+        return mBmobDataSource.addWordByIciba(wordName).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
     public void addWordByHtml(String wordName) {
+
+        mBmobDataSource.addWordByIciba(wordName).compose(RxUtil.<Boolean>applySchedulers())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+
+                    }
+                });
         mBmobDataSource.addWordByYouDao(wordName).compose(RxUtil.<Boolean>applySchedulers())
-        .subscribe(new Subscriber<Boolean>() {
-            @Override
-            public void onCompleted() {
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(Boolean aBoolean) {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
 
-            }
-        });
+                    }
+                });
     }
 
     @Override
@@ -334,8 +357,13 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<Word> getWordRxByHtml(String wordname) {
-        return mBmobDataSource.getWordRxByHtml(wordname).compose(RxUtil.<Word>applySchedulers());
+    public Observable<Word> getWordRxByYouDao(String wordname) {
+        return mBmobDataSource.getWordRxByYouDao(wordname).compose(RxUtil.<Word>applySchedulers());
+    }
+
+    @Override
+    public Observable<Word> getWordRxByIciba(String wordname) {
+        return mBmobDataSource.getWordRxByIciba(wordname).compose(RxUtil.<Word>applySchedulers());
     }
 
     @Override

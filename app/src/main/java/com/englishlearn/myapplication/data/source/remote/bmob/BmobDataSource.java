@@ -23,6 +23,7 @@ import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.RemoteCode;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
+import com.englishlearn.myapplication.data.source.remote.bmob.service.IcibaService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.RetrofitService;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.ServiceFactory;
 import com.englishlearn.myapplication.data.source.remote.bmob.service.YouDaoService;
@@ -41,6 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -60,6 +63,7 @@ public class BmobDataSource implements RemoteData {
     private static BmobDataSource INSTANCE;
     private RetrofitService bmobService;//请求接口
     private YouDaoService youDaoService;//请求接口
+    private IcibaService baiDuService;//百度接口
 
     private SearchUtil searchUtil;
 
@@ -73,6 +77,7 @@ public class BmobDataSource implements RemoteData {
     public BmobDataSource(){
         bmobService = ServiceFactory.getInstance().createRetrofitService();
         youDaoService = ServiceFactory.getInstance().createYouDaoService();
+        baiDuService = ServiceFactory.getInstance().createIcibaService();
         searchUtil = SearchUtil.getInstance();
     }
 
@@ -1291,7 +1296,7 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Boolean> addWordByYouDao(final String wordName) {
-        return getWordRxByHtml(wordName)
+        return getWordRxByYouDao(wordName)
                 .flatMap(new Func1<Word, Observable<Boolean>>() {
             @Override
             public Observable<Boolean> call(Word word) {
@@ -1309,6 +1314,28 @@ public class BmobDataSource implements RemoteData {
                 return addWords(list);
             }
         });
+    }
+
+    @Override
+    public Observable<Boolean> addWordByIciba(final String wordName) {
+        return getWordRxByIciba(wordName)
+                .flatMap(new Func1<Word, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Word word) {
+                        List<Word> list = new ArrayList<>();
+                        if(!word.getTranslate().trim().equals("")){
+                            if(word.getName().equals(wordName)){
+                                list.add(word);
+                            }else {
+                                Word wordnew = (Word) word.clone();
+                                wordnew.setName(wordName);
+                                list.add(word);
+                                list.add(wordnew);
+                            }
+                        }
+                        return addWords(list);
+                    }
+                });
     }
 
     @Override
@@ -1431,7 +1458,7 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Word> getWordRxByHtml(final String wordname) {
+    public Observable<Word> getWordRxByYouDao(final String wordname) {
         return youDaoService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
             @Override
             public Observable<Word> call(Response<ResponseBody> responseBodyResponse) {
@@ -1511,6 +1538,190 @@ public class BmobDataSource implements RemoteData {
 
                         word.setName(wordname);
                         word.setAliasName(name);
+                        word.setBritish_phonogram(british_phonogram);
+                        word.setAmerican_phonogram(american_phonogram);
+                        word.setTranslate(translate.toString());
+                        word.setCorrelation(correlation);
+                    }
+                    return Observable.just(word);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        bmobRequestException = new BmobRequestException(errjson);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        });
+    }
+
+    @Override
+    public Observable<Word> getWordRxByIciba(final String wordname) {
+        return baiDuService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
+            @Override
+            public Observable<Word> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    String wordhtml = null;
+                    ResponseBody responseBody = responseBodyResponse.body();
+                    try {
+                        wordhtml = new String(responseBody.bytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Word word = null;
+                    if(wordhtml != null){
+
+                        word = new Word();
+                        String name = "";
+                        String alias = "";
+                        String british_phonogram = ""; // 英式发音音标(多个用"|"分割)
+                        String british_soundurl = ""; // 英式发音(下面同上)
+                        String american_phonogram = ""; // 英式发音音标
+                        String american_soundurl = ""; // 美式发音
+                        StringBuffer translate = new StringBuffer();// 解释，各种词类型用"|"分割
+                        String correlation = ""; // 其它相关的（第三人称单数，复数....）
+                        String remark = ""; // 备注
+
+                        Document doc = Jsoup.parse(wordhtml);
+                        // 名称
+                        Element nameclass = doc.getElementsByAttributeValue("class",
+                                "keyword").first();
+                        if (nameclass != null) {
+                            name = nameclass.text();
+                        }
+                        // 音标
+                        Element phoneticdiv = doc.select("div[class=base-speak]").first();
+                        if (phoneticdiv != null) {
+                            Elements phoneticdivchile = phoneticdiv.getElementsByTag("span");
+
+                            Elements newSpeak = phoneticdiv.getElementsByAttributeValue("class","new-speak-step");
+                            for(int i = 0; i < newSpeak.size(); i++){
+                                Element element = newSpeak.get(i);
+                                String sound1 = element.attr("ms-on-mouseover");
+                            }
+
+
+
+                            for(int i = 0; i < phoneticdivchile.size(); i++){
+                                Element span = phoneticdivchile.get(i);
+                                span.childNodes();
+
+                                String spanstr = span.text();
+                                if(span.text().contains("英")){
+                                    String cntitleRegex = "\\[.*\\]";
+                                    Pattern cntitlepattern = Pattern.compile(cntitleRegex);
+                                    Matcher cntitlematcher = cntitlepattern.matcher(spanstr);
+                                    if(cntitlematcher.find()){
+                                        int start = cntitlematcher.start();
+                                        int end = cntitlematcher.end();
+                                        british_phonogram = spanstr.substring(start,end);
+                                    }
+
+                                    String sound1 = span.getElementsByAttributeValue("class","new-speak-step").attr("ms-on-mouseover");
+
+                                    String cntitleRegex1 = "http.*\\.\\w+";
+                                    Pattern cntitlepattern1 = Pattern.compile(cntitleRegex1);
+                                    Matcher cntitlematcher1 = cntitlepattern1.matcher(sound1);
+                                    if(cntitlematcher1.find()){
+                                        int start = cntitlematcher1.start();
+                                        int end = cntitlematcher1.end();
+                                        british_soundurl = sound1.substring(start,end);
+                                    }
+                                }
+
+
+                                if(span.text().contains("美")){
+                                    String cntitleRegex = "\\[.*\\]";
+                                    Pattern cntitlepattern = Pattern.compile(cntitleRegex);
+                                    Matcher cntitlematcher = cntitlepattern.matcher(spanstr);
+                                    if(cntitlematcher.find()){
+                                        int start = cntitlematcher.start();
+                                        int end = cntitlematcher.end();
+                                        american_phonogram = spanstr.substring(start,end);
+                                    }
+
+                                    String sound1 = span.getElementsByAttributeValue("class","new-speak-step").attr("ms-on-mouseover");
+
+                                    String cntitleRegex1 = "http.*\\.\\w+";
+                                    Pattern cntitlepattern1 = Pattern.compile(cntitleRegex1);
+                                    Matcher cntitlematcher1 = cntitlepattern1.matcher(sound1);
+                                    if(cntitlematcher1.find()){
+                                        int start = cntitlematcher1.start();
+                                        int end = cntitlematcher1.end();
+                                        american_soundurl = sound1.substring(start,end);
+                                    }
+                                }
+
+                            }
+
+                            /* Elements phoneticdivchile = phoneticdiv
+                                    .getElementsByAttributeValue("class", "phonetic");
+                            if (phoneticdivchile != null) {
+                                for (int i = 0; i < phoneticdivchile.size(); i++) {
+                                    if (i == 0) {
+                                        british_phonogram = phoneticdivchile.get(i)
+                                                .text();
+                                    }
+                                    if (i == 1) {
+                                        american_phonogram = phoneticdivchile.get(i)
+                                                .text();
+                                    }
+                                }
+                            }*/
+                        }
+                        // 其它相关的
+                        Elements elements = doc.select("li[class=clearfix]");
+                        for(int i = 0; i < elements.size(); i++){
+                            Element element = elements.get(i);
+                            Element elementspan = element.select("span[class=prop]").first();
+                            if(elementspan == null){
+                                continue;
+                            }else{
+
+                                translate.append(elementspan.text());
+                                Element elements1 = element.getElementsByTag("p").first();
+                                Elements spanele = elements1.getElementsByTag("span");
+                                for(Element e:spanele){
+                                    translate.append(e.text());
+                                }
+                                translate.append(System.getProperty("line.separator"));
+                            }
+
+                        }
+
+                        correlation = doc.select("li[class=change clearfix]").first().getElementsByTag("p").text();
+                        /*if (correlationdiv != null) {
+
+                            Element translateclass = correlationdiv
+                                    .getElementsByAttributeValue("class",
+                                            "trans-container").first();
+                            if (translateclass != null) {
+                                // 其它相关
+                                Element correlationclass = translateclass
+                                        .getElementsByAttributeValue("class",
+                                                "additional").first();
+                                if (correlationclass != null) {
+                                    correlation = correlationclass.text();
+                                }
+                                // 解释
+                                Elements translateclassli = translateclass
+                                        .select("li");
+                                for (Element emement : translateclassli) {
+                                    String tran = emement.text();
+                                    translate.append(tran
+                                            + System.getProperty("line.separator"));
+                                }
+                            }
+                        }*/
+
+                        word.setName(wordname);
+                        word.setAliasName(name);
+                        word.setBritish_soundurl(british_soundurl);
+                        word.setAmerican_soundurl(american_soundurl);
                         word.setBritish_phonogram(british_phonogram);
                         word.setAmerican_phonogram(american_phonogram);
                         word.setTranslate(translate.toString());

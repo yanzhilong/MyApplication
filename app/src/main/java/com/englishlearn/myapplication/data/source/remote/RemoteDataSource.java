@@ -226,6 +226,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> addWordByIciba(String wordName) {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> deleteWordById(String wordId) {
         return null;
     }
@@ -246,7 +251,12 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<Word> getWordRxByHtml(String wordname) {
+    public Observable<Word> getWordRxByYouDao(String wordname) {
+        return null;
+    }
+
+    @Override
+    public Observable<Word> getWordRxByIciba(String wordname) {
         return null;
     }
 
