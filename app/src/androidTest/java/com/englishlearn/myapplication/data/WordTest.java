@@ -28,6 +28,9 @@ import org.junit.runner.RunWith;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.observers.TestSubscriber;
@@ -243,41 +246,149 @@ public class WordTest {
     }
 
 
+
+
     /**
      * 从列表添加单詞
      */
     @Test
-    public void addWordsByRawList(){
+    public void addWordsByRawDicts(){
+
+        Gson gson = new Gson();
+        //获得单詞json
+        String wordstr1 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.dicts);
+        String wordstr2 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google20k);
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+
+
+        String[] wordstr2s = wordstr2.split(System.getProperty("line.separator"));
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        List<String> words1 = gson.fromJson(wordstr1,new TypeToken<List<String>>() {}.getType());
+        List<String> words2 = Arrays.asList(wordstr2s);
+        List<String> words3 = Arrays.asList(wordstr3s);
+
+        List<String> words = new ArrayList<>();
+        words.addAll(words1);
+        words.addAll(words2);
+        words.addAll(words3);
+
+        HashSet<String> wordsSet = new HashSet<String>(words);
+
+        Iterator<String> iterator = wordsSet.iterator();
+        while (iterator.hasNext()){
+            String wordName = iterator.next();
+            addWordsByHtml(wordName);
+        }
+        /*String[] wordsArray = (String[]) wordsSet.toArray();
+        for(int i = 0; i < words1.size(); i++){
+            if(!words.contains(words1.get(i))){
+                words.add(words1.get(i));
+            }
+        }
+
+        for(int i = 0; i < wordstr2s.length; i++){
+            if(!words.contains(wordstr2s[i])){
+                words.add(wordstr2s[i]);
+            }
+        }
+
+        for(int i = 0; i < wordstr3s.length; i++){
+            if(!words.contains(wordstr3s[i])){
+                words.add(wordstr3s[i]);
+            }
+        }
+
+
+        for(int i = 0; i < words.size(); i++){
+            String name = words.get(i);
+            addWordsByHtml(name);
+        }*/
+    }
+
+
+    @Test
+    public void addWordsByRawDicts1(){
+
+        Gson gson = new Gson();
+        //获得单詞json
+        String wordstr1 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.dicts);
+        String wordstr2 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google20k);
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+
+
+        String[] wordstr2s = wordstr2.split(System.getProperty("line.separator"));
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        List<String> words1 = gson.fromJson(wordstr1,new TypeToken<List<String>>() {}.getType());
+        List<String> words2 = Arrays.asList(wordstr2s);
+        List<String> words3 = Arrays.asList(wordstr3s);
+
+        List<String> words = new ArrayList<>();
+        words.addAll(words1);
+        words.addAll(words2);
+        words.addAll(words3);
+
+        for(int i = 0; i < words1.size(); i++){
+            if(!words.contains(words1.get(i))){
+                words.add(words1.get(i));
+            }
+        }
+
+        for(int i = 0; i < wordstr2s.length; i++){
+            if(!words.contains(wordstr2s[i])){
+                words.add(wordstr2s[i]);
+            }
+        }
+
+        for(int i = 0; i < wordstr3s.length; i++){
+            if(!words.contains(wordstr3s[i])){
+                words.add(wordstr3s[i]);
+            }
+        }
+
+
+        for(int i = 0; i < words.size(); i++){
+            String name = words.get(i);
+            //addWordsByHtml(name);
+        }
+    }
+
+    /**
+     * 从列表添加单詞
+     */
+
+    public void addWordsByRawgoogle(){
 
         //获得单詞json
         String wordjson = "";
-        wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.dicts);
 
-        Gson gson = new Gson();
-        List<String> words = gson.fromJson(wordjson,new TypeToken<List<String>>() {
-        }.getType());
-        for(int i = 0; i < words.size(); i++){
-            String name = words.get(i);
-            TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
-            mBmobRemoteData.getWordRxByHtml(name).toBlocking().subscribe(testSubscriber_add);
-            //testSubscriber_add.assertNoErrors();
-            List<Word> list = testSubscriber_add.getOnNextEvents();
-            if(list == null || list.size() == 0){
-                continue;
-            }
-            Word word = list.get(0);
-            if(!word.getTranslate().trim().equals("")){
-                if(word.getName().equals(name)){
-                    addWord(word);
-                }else {
-                    Word wordnew = (Word) word.clone();
-                    wordnew.setName(name);
-                    addWord(word);
-                    addWord(wordnew);
-                }
-            }
-            Log.d(TAG,"testGrammar_add_result:" + word.toString());
-            //addWord(word);
+        wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+
+        String[] words = wordjson.split(System.getProperty("line.separator"));
+        for(int i = 0; i < words.length; i++){
+            String word = words[i];
+            addWordsByHtml(word);
+            Log.d(TAG,words[i]);
+        }
+    }
+
+    /**
+     * 从列表添加单詞
+     */
+
+    public void addWordsByRawgoogle1(){
+
+        //获得单詞json
+        String wordjson = "";
+
+        wordjson =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google20k);
+
+        String[] words = wordjson.split(System.getProperty("line.separator"));
+        for(int i = 0; i < words.length; i++){
+            String word = words[i];
+            addWordsByHtml(word);
+            Log.d(TAG,words[i]);
         }
     }
 
@@ -308,6 +419,30 @@ public class WordTest {
             }
             Log.d(TAG,"testGrammar_add_result:" + word.toString());
             //addWord(word);
+    }
+
+    public void addWordsByHtml(String wordName){
+
+        TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.getWordRxByHtml(wordName).toBlocking().subscribe(testSubscriber_add);
+        //testSubscriber_add.assertNoErrors();
+        List<Word> list = testSubscriber_add.getOnNextEvents();
+        if(list == null || list.size() == 0){
+            return;
+        }
+        Word word = list.get(0);
+        if(!word.getTranslate().trim().equals("")){
+            if(word.getName().equals(wordName)){
+                addWord(word);
+            }else {
+                Word wordnew = (Word) word.clone();
+                wordnew.setName(wordName);
+                addWord(word);
+                addWord(wordnew);
+            }
+        }
+        Log.d(TAG,"testGrammar_add_result:" + word.toString());
+        //addWord(word);
     }
 
     /**
