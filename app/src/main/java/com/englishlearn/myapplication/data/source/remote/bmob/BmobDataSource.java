@@ -1598,10 +1598,23 @@ public class BmobDataSource implements RemoteData {
                         if (phoneticdiv != null) {
                             Elements phoneticdivchile = phoneticdiv.getElementsByTag("span");
 
+                            //处理只有一个读音的情况，默认只有英音
                             Elements newSpeak = phoneticdiv.getElementsByAttributeValue("class","new-speak-step");
                             for(int i = 0; i < newSpeak.size(); i++){
                                 Element element = newSpeak.get(i);
                                 String sound1 = element.attr("ms-on-mouseover");
+
+                                String cntitleRegex1 = "http.*\\.\\w+";
+                                Pattern cntitlepattern1 = Pattern.compile(cntitleRegex1);
+                                Matcher cntitlematcher1 = cntitlepattern1.matcher(sound1);
+                                if(cntitlematcher1.find()){
+                                    int start = cntitlematcher1.start();
+                                    int end = cntitlematcher1.end();
+                                    String british = sound1.substring(start,end);
+                                    if(!british.contains("res-tts")){
+                                        british_soundurl = sound1.substring(start,end);
+                                    }
+                                }
                             }
 
 
@@ -1629,7 +1642,10 @@ public class BmobDataSource implements RemoteData {
                                     if(cntitlematcher1.find()){
                                         int start = cntitlematcher1.start();
                                         int end = cntitlematcher1.end();
-                                        british_soundurl = sound1.substring(start,end);
+                                        String british = sound1.substring(start,end);
+                                        if(!british.contains("res-tts")){
+                                            british_soundurl = sound1.substring(start,end);
+                                        }
                                     }
                                 }
 
@@ -1653,6 +1669,10 @@ public class BmobDataSource implements RemoteData {
                                         int start = cntitlematcher1.start();
                                         int end = cntitlematcher1.end();
                                         american_soundurl = sound1.substring(start,end);
+                                        String american = sound1.substring(start,end);
+                                        if(!american.contains("res-tts")){
+                                            american_soundurl = sound1.substring(start,end);
+                                        }
                                     }
                                 }
 
@@ -1693,7 +1713,15 @@ public class BmobDataSource implements RemoteData {
 
                         }
 
-                        correlation = doc.select("li[class=change clearfix]").first().getElementsByTag("p").text();
+                        Element change = doc.select("li[class=change clearfix]").first();
+                        if(change != null){
+                            try{
+                                correlation = change.getElementsByTag("p").text();
+                            }catch (Exception e){
+
+                            }
+                        }
+
                         /*if (correlationdiv != null) {
 
                             Element translateclass = correlationdiv
