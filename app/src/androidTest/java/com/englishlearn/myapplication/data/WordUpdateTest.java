@@ -92,8 +92,14 @@ public class WordUpdateTest {
     private void updateWords(List<Word> words) {
 
         for(int i = 0; i < words.size(); i++){
+
             Word word = words.get(i);
-            Word wordIciba = getWordByIciba(word.getName());
+
+
+            if(word == null){
+                continue;
+            }
+
             if(word.getBritish_soundurl() != null && word.getBritish_soundurl().contains("res-tts") || word.getAmerican_soundurl() != null && word.getAmerican_soundurl().contains("res-tts")){
 
                 if(word.getBritish_soundurl().contains("res-tts")){
@@ -104,6 +110,12 @@ public class WordUpdateTest {
                 }
                 updateWord(word);
             }else if(word.getBritish_soundurl() != null && !word.getBritish_soundurl().equals("") || word.getAmerican_soundurl() != null && !word.getAmerican_soundurl().equals("")){
+                continue;
+            }
+
+            Word wordIciba = getWordByIciba(word.getName());
+
+            if(wordIciba == null){
                 continue;
             }
 
@@ -118,6 +130,8 @@ public class WordUpdateTest {
     }
 
     private void updateWord(Word word) {
+
+        Log.d(TAG,"updateWord:" + word.getName());
         TestSubscriber<Boolean> testSubscriber_add = new TestSubscriber<>();
         mRepository.updateWordRxById(word).toBlocking().subscribe(testSubscriber_add);
         List<Boolean> list = testSubscriber_add.getOnNextEvents();
@@ -136,6 +150,7 @@ public class WordUpdateTest {
 
     public Word getWordByIciba(String wordName){
 
+        Log.d(TAG,"getWordByIciba:" + wordName);
         TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
         mRepository.getWordRxByIciba(wordName).toBlocking().subscribe(testSubscriber_add);
         List<Word> list = testSubscriber_add.getOnNextEvents();
