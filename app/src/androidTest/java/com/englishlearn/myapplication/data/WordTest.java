@@ -543,7 +543,7 @@ public class WordTest {
     @Test
     public void getWordByBaiDu(){
 
-        String wordName = "correlation";
+        String wordName = "dd";
         TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
         mRepository.getWordRxByIciba(wordName).toBlocking().subscribe(testSubscriber_add);
         //testSubscriber_add.assertNoErrors();
