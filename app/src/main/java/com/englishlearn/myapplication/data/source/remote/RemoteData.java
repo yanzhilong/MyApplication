@@ -23,6 +23,7 @@ import com.englishlearn.myapplication.data.source.DataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -390,6 +391,13 @@ public interface RemoteData extends DataSource{
      * @return
      */
     Observable<List<Word>> getWordsRx(int page,int pageSize);
+
+
+    /**
+     * 查询指定日期前修改的单     * @return
+     */
+    Observable<List<Word>> getWordsRxUpdatedAtBefore(int page,int pageSize,Date date);
+
 
     /**
      * 根据单词收藏分组id获取单词列表

@@ -439,7 +439,6 @@ public interface RetrofitService {
     })
     Observable<Response<WordResult>> getWordsRx();
 
-
     //获取所有的单词
     @GET("/1/classes/Word?order=-createdAt")
     @Headers({
@@ -447,6 +446,16 @@ public interface RetrofitService {
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
     })
     Observable<Response<WordResult>> getWordsRx(@Query("limit")int limit, @Query("skip")int skip);
+
+
+    //获取符合条件的所有的单词
+    @GET("/1/classes/Word?order=-createdAt")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09"
+    })
+    Observable<Response<WordResult>> getWordsRx(@Query("where") String wordson, @Query("limit")int limit, @Query("skip")int skip);
+
 
     //查询音标关联收藏分组的所有单词
     @GET("/1/classes/Word")

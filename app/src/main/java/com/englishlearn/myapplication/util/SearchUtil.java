@@ -8,7 +8,9 @@ import android.text.style.ForegroundColorSpan;
 import com.englishlearn.myapplication.R;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,31 @@ public class SearchUtil {
         String jsonStr = gson.toJson(map9);
         return jsonStr;
         //return where;
+    }
+
+
+    /**
+     * 查询指定更新日期前的单词
+     * @param date
+     * @return
+     */
+    public String getWordJsonByUpdatedAtBefore(Date date){
+
+        Gson gson = new Gson();
+        Map map1 = new HashMap();
+        map1.put("__type","Date");
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datestr = simpleDateFormat.format(date);
+        map1.put("iso",datestr);
+        Map map3 = new HashMap();
+        map3.put("$lte",map1);
+
+        Map map4 = new HashMap();
+        map4.put("updatedAt",map3);
+
+        String jsonStr = gson.toJson(map4);
+        return jsonStr;
     }
 
 

@@ -23,6 +23,7 @@ import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -277,6 +278,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<Word>> getWordsRx(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Word>> getWordsRxUpdatedAtBefore(int page, int pageSize, Date date) {
         return null;
     }
 

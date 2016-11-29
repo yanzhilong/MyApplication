@@ -44,6 +44,7 @@ import com.englishlearn.myapplication.util.RxUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -384,6 +385,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<List<Word>> getWordsRx(int page, int pageSize) {
         return mBmobDataSource.getWordsRx(page,pageSize);
+    }
+
+    @Override
+    public Observable<List<Word>> getWordsRxUpdatedAtBefore(int page, int pageSize, Date date) {
+        return mBmobDataSource.getWordsRxUpdatedAtBefore(page,pageSize,date);
     }
 
     @Override

@@ -18,7 +18,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rx.observers.TestSubscriber;
@@ -57,72 +60,124 @@ public class WordUpdateTest {
 
 
     @Test
-    public void updteWords(){
+    public void getWordsByUpdateBefore() {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String dateStr = "2016-11-28 12:59:27";
+        try {
+            date = simpleDateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int page = 0;
+        int pagesize = 100;
+        List<Word> words = new ArrayList<>();
+
+        Log.d(TAG, "getWords():" + page);
+        TestSubscriber<List<Word>> testSubscriber = new TestSubscriber<>();
+        mBmobRemoteData.getWordsRxUpdatedAtBefore(page, pagesize,date).toBlocking().subscribe(testSubscriber);
+        testSubscriber.assertNoErrors();
+        List<List<Word>> wordslist = testSubscriber.getOnNextEvents();
+
+        List<Throwable> throwables = testSubscriber.getOnErrorEvents();
+        if (throwables != null && throwables.size() > 0) {
+            for (int i = 0; i < throwables.size(); i++) {
+                Log.d(TAG, "getWords_error:" + throwables.get(i).getMessage());
+            }
+        }
+        if (wordslist == null || wordslist.size() == 0) {
+            page++;
+        } else {
+            page++;
+        }
+        words = wordslist.get(0);
+    }
+
+
+    @Test
+    public void updteWords() {
 
         int page = 0;
         int pagesize = 100;
 
         List<Word> words = new ArrayList<>();
 
-        do{
-            Log.d(TAG,"getWords():" + page);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String dateStr = "2016-11-28 12:59:27";
+        try {
+            date = simpleDateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        do {
+            Log.d(TAG, "getWords():" + page);
             TestSubscriber<List<Word>> testSubscriber = new TestSubscriber<>();
-            mBmobRemoteData.getWordsRx(page,pagesize).toBlocking().subscribe(testSubscriber);
+            mBmobRemoteData.getWordsRxUpdatedAtBefore(page, pagesize,date).toBlocking().subscribe(testSubscriber);
             testSubscriber.assertNoErrors();
             List<List<Word>> wordslist = testSubscriber.getOnNextEvents();
 
             List<Throwable> throwables = testSubscriber.getOnErrorEvents();
-            if(throwables != null && throwables.size() > 0){
-                for(int i = 0; i < throwables.size(); i++){
-                    Log.d(TAG,"getWords_error:" + throwables.get(i).getMessage());
+            if (throwables != null && throwables.size() > 0) {
+                for (int i = 0; i < throwables.size(); i++) {
+                    Log.d(TAG, "getWords_error:" + throwables.get(i).getMessage());
                 }
             }
-            if(wordslist == null || wordslist.size() == 0){
+            if (wordslist == null || wordslist.size() == 0) {
                 page++;
                 continue;
-            }else{
+            } else {
                 page++;
             }
             words = wordslist.get(0);
-            Log.d(TAG,"getWords():" +page+":"+ words.size());
+            Log.d(TAG, "getWords():" + page + ":" + words.size());
             updateWords(words);
-        }while (words.size() == 100);
+        } while (words.size() == 100);
     }
 
     private void updateWords(List<Word> words) {
 
-        for(int i = 0; i < words.size(); i++){
+        for (int i = 0; i < words.size(); i++) {
 
             Word word = words.get(i);
 
 
-            if(word == null){
+            if (word == null) {
                 continue;
             }
 
-            if(word.getBritish_soundurl() != null && word.getBritish_soundurl().contains("res-tts") || word.getAmerican_soundurl() != null && word.getAmerican_soundurl().contains("res-tts")){
+            if (word.getBritish_soundurl() != null && word.getBritish_soundurl().contains("res-tts") || word.getAmerican_soundurl() != null && word.getAmerican_soundurl().contains("res-tts")) {
 
-                if(word.getBritish_soundurl().contains("res-tts")){
+                if (word.getBritish_soundurl().contains("res-tts")) {
                     word.setBritish_soundurl("");
                 }
-                if(word.getAmerican_soundurl().contains("res-tts")){
+                if (word.getAmerican_soundurl().contains("res-tts")) {
                     word.setAmerican_soundurl("");
                 }
                 updateWord(word);
-            }else if(word.getBritish_soundurl() != null && !word.getBritish_soundurl().equals("") || word.getAmerican_soundurl() != null && !word.getAmerican_soundurl().equals("")){
+            } else if (word.getBritish_soundurl() != null && !word.getBritish_soundurl().equals("") || word.getAmerican_soundurl() != null && !word.getAmerican_soundurl().equals("")) {
                 continue;
             }
 
             Word wordIciba = getWordByIciba(word.getName());
 
-            if(wordIciba == null){
+            if (wordIciba == null) {
                 continue;
             }
 
-            if(wordIciba.getBritish_soundurl() != null && !wordIciba.getBritish_soundurl().equals("") || wordIciba.getAmerican_soundurl() != null && !wordIciba.getAmerican_soundurl().equals("")){
-                if(word.getAliasName().toLowerCase().equals(wordIciba.getName().toLowerCase())){
-                    word.setBritish_soundurl(wordIciba.getBritish_soundurl());
-                    word.setAmerican_soundurl(wordIciba.getAmerican_soundurl());
+            if (wordIciba.getBritish_soundurl() != null && !wordIciba.getBritish_soundurl().equals("") && !wordIciba.getBritish_soundurl().contains("res-tts") || wordIciba.getAmerican_soundurl() != null && !wordIciba.getAmerican_soundurl().equals("") && !wordIciba.getBritish_soundurl().contains("res-tts")) {
+                if (word.getAliasName().toLowerCase().equals(wordIciba.getName().toLowerCase())) {
+
+                    if (wordIciba.getBritish_soundurl() != null && !wordIciba.getBritish_soundurl().equals("") && !wordIciba.getBritish_soundurl().contains("res-tts")) {
+                        word.setBritish_soundurl(wordIciba.getBritish_soundurl());
+                    }
+                    if (wordIciba.getAmerican_soundurl() != null && !wordIciba.getAmerican_soundurl().equals("") && !wordIciba.getBritish_soundurl().contains("res-tts")) {
+                        word.setAmerican_soundurl(wordIciba.getAmerican_soundurl());
+                    }
                     updateWord(word);
                 }
             }
@@ -131,36 +186,36 @@ public class WordUpdateTest {
 
     private void updateWord(Word word) {
 
-        Log.d(TAG,"updateWord:" + word.getName());
+        Log.d(TAG, "updateWord:" + word.getName());
         TestSubscriber<Boolean> testSubscriber_add = new TestSubscriber<>();
         mRepository.updateWordRxById(word).toBlocking().subscribe(testSubscriber_add);
         List<Boolean> list = testSubscriber_add.getOnNextEvents();
         List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
-        if(throwables != null && throwables.size() > 0){
-            for(int i = 0; i < throwables.size(); i++){
-                Log.d(TAG,"updateWordRxById_error:" + throwables.get(i).getMessage());
+        if (throwables != null && throwables.size() > 0) {
+            for (int i = 0; i < throwables.size(); i++) {
+                Log.d(TAG, "updateWordRxById_error:" + throwables.get(i).getMessage());
             }
         }
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return;
         }
-        Log.d(TAG,"updateWordRxById_result:" + list.get(0));
+        Log.d(TAG, "updateWordRxById_result:" + list.get(0));
     }
 
 
-    public Word getWordByIciba(String wordName){
+    public Word getWordByIciba(String wordName) {
 
-        Log.d(TAG,"getWordByIciba:" + wordName);
+        Log.d(TAG, "getWordByIciba:" + wordName);
         TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
         mRepository.getWordRxByIciba(wordName).toBlocking().subscribe(testSubscriber_add);
         List<Word> list = testSubscriber_add.getOnNextEvents();
         List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
-        if(throwables != null && throwables.size() > 0){
-            for(int i = 0; i < throwables.size(); i++){
-                Log.d(TAG,"getWordByIciba_error:" + throwables.get(i).getMessage());
+        if (throwables != null && throwables.size() > 0) {
+            for (int i = 0; i < throwables.size(); i++) {
+                Log.d(TAG, "getWordByIciba_error:" + throwables.get(i).getMessage());
             }
         }
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return null;
         }
         Word word = list.get(0);
