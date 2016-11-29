@@ -177,6 +177,9 @@
         <activity
             android:name=".activityforresult.multiple.MultipleActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".setting.SettingActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

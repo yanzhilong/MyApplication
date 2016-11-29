@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.elementary.ElementaryFragment;
 import com.englishlearn.myapplication.intermediate.IntermediateFragment;
+import com.englishlearn.myapplication.setting.SettingActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         View login_layout = headerView.findViewById(R.id.login_layout);
         loginname = (TextView) headerView.findViewById(R.id.loginname);
+
         login_layout.setOnClickListener(this);
 
 
@@ -152,6 +155,10 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this,"nav_slideshow",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_manage) {
             Toast.makeText(this,"nav_manage",Toast.LENGTH_SHORT).show();
+        }else if (id == R.id.nav_setting) {
+            item.setChecked(false);
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
             Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_send) {

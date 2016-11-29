@@ -2,6 +2,8 @@
     <string name="app_name">MyApplication</string>
 
 
+
+
     <!-- TestMainActivity -->
     <string name="testmain_title">English learn</string>
     <!-- 菜单 -->
@@ -218,6 +220,9 @@
     <!-- TractateCollectActivity -->
     <string name="tractatecollect_title">TractateCollect</string>
 
+    <!-- SettingActivity -->
+    <string name="title_setting">设置</string>
+
     <!-- 网絡错误 -->
     <string name="networkerror">服务器开小差了，请稍后再試</string>
     <string name="bmoberror">请求服务器出錯:%s</string>
@@ -228,6 +233,7 @@
     <string name="elementary">基础</string>
     <string name="intermediate">中級</string>
     <string name="advanced">高级</string>
+
 
     <string-array name="main_tablayout">
         <item>基础</item>
@@ -262,6 +268,7 @@
     <string name="navigation_drawer_guest_title">登陆后收藏自己感兴趣的内容</string>
     <string name="navigation_drawer_loginandregister">登陆/注册</string>
     <string name="navigation_drawer_home">学习中心</string>
+    <string name="navigation_drawer_setting">设置</string>
 
 
     <string name="action_settings">Settings</string>

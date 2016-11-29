@@ -39,6 +39,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
 
     private static final String TAG = TestMainFragment.class.getSimpleName();
     private TestMainContract.Presenter mPresenter;
+    private TestMainHelper testMainHelper;
 
     public static TestMainFragment newInstance() {
         return new TestMainFragment();
@@ -52,6 +53,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testMainHelper = new TestMainHelper();
     }
 
     @Nullable
@@ -79,6 +81,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         Button sentencecollect = (Button) root.findViewById(R.id.sentencecollect);
         Button tractatecollect = (Button) root.findViewById(R.id.tractatecollect);
         Button worddetail = (Button) root.findViewById(R.id.worddetail);
+        Button test = (Button) root.findViewById(R.id.test);
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
@@ -99,6 +102,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         sentencecollect.setOnClickListener(this);
         tractatecollect.setOnClickListener(this);
         worddetail.setOnClickListener(this);
+        test.setOnClickListener(this);
 
         //如果有设置菜单，需要加这个
         setHasOptionsMenu(true);
@@ -196,6 +200,9 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
             case R.id.worddetail:
                 Intent worddetail = new Intent(this.getContext(),WordDetail.class);
                 this.startActivity(worddetail);
+                break;
+            case R.id.test:
+                testMainHelper.updateWordSoundByIciba(0);
                 break;
             default:
                 break;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="base"
+        android:summary="基本设置"
+        android:title="基本设置">
+
+        <CheckBoxPreference
+            android:key="mdict_custom"
+            android:title="自定义位置"/>
+
+        <ListPreference
+            android:key="mdict_custom_folder"
+            android:title="词典目录"></ListPreference>
+
+    </PreferenceCategory>
+</PreferenceScreen>

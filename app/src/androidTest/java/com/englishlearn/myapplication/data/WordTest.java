@@ -144,6 +144,98 @@ public class WordTest {
     }
 
 
+    @Test
+    public void updateWord(){
+
+        int page = 0;
+        int pagesize = 100;
+
+        List<Word> words = new ArrayList<>();
+        List<Word> wordtemp = new ArrayList<>();
+
+        do{
+            Log.d(TAG,"getWords():" + page);
+            TestSubscriber<List<Word>> testSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.getWordsRx(page,pagesize).toBlocking().subscribe(testSubscriber);
+            testSubscriber.assertNoErrors();
+            List<List<Word>> wordslist = testSubscriber.getOnNextEvents();
+
+            List<Throwable> throwables = testSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                for(int i = 0; i < throwables.size(); i++){
+                    Log.d(TAG,"addWordBYYouDao_error:" + throwables.get(i).getMessage());
+                }
+            }
+            if(wordslist == null || wordslist.size() == 0){
+                page++;
+                continue;
+            }else{
+                page++;
+            }
+            wordtemp = wordslist.get(0);
+            Log.d(TAG,"getWords():" +page+ wordtemp.size());
+            updateWords(wordtemp);
+        }while (wordtemp.size() == 100);
+
+
+        Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+    }
+
+    private void updateWords(List<Word> words) {
+
+        Log.d(TAG,"updateWords:" + words.size());
+        for(int i = 0; i < words.size(); i++){
+            Word word = words.get(i);
+            Word wordIciba = getWordByIciba(word.getName());
+            if(wordIciba != null && wordIciba.getName() .equals(word.getAliasName())){
+                word.setAmerican_soundurl(wordIciba.getAmerican_soundurl());
+                word.setBritish_soundurl(wordIciba.getBritish_soundurl());
+                updateWord(word);
+            }else if(wordIciba != null){
+                word.setAmerican_soundurl("");
+                word.setBritish_soundurl("");
+                updateWord(word);
+            }
+        }
+    }
+
+    private void updateWord(Word word){
+        Log.d(TAG,"updateWord:" + word);
+        TestSubscriber<Boolean> testSubscriber_add = new TestSubscriber<>();
+        mRepository.updateWordRxById(word).toBlocking().subscribe(testSubscriber_add);
+        //testSubscriber_add.assertNoErrors();
+        List<Boolean> list = testSubscriber_add.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            for(int i = 0; i < throwables.size(); i++){
+                Log.d(TAG,"addWordBYIciba_error:" + throwables.get(i).getMessage());
+            }
+        }
+        if(list != null || list.size() > 0){
+            Log.d(TAG,"addWordBYIciba:" + list.get(0));
+        }
+    }
+
+    private Word getWordByIciba(String wordName){
+        TestSubscriber<Word> testSubscriber_add = new TestSubscriber<>();
+        mRepository.getWordRxByIciba(wordName).toBlocking().subscribe(testSubscriber_add);
+        //testSubscriber_add.assertNoErrors();
+        List<Word> list = testSubscriber_add.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            for(int i = 0; i < throwables.size(); i++){
+                Log.d(TAG,"addWordBYYouDao_error:" + wordName +":"+ throwables.get(i).getMessage() + "");
+            }
+        }
+        if(list == null || list.size() == 0){
+            return null;
+        }
+        return list.get(0);
+    }
+
+
+
+
     //上传单读音，添加单词
     @Test
     public void addWord() {
