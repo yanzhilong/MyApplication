@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
@@ -21,6 +22,7 @@ import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.remote.bmob.BatchRequest;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobCreateOrLoginUserByPhoneRequest;
+import com.englishlearn.myapplication.data.source.remote.bmob.DictResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.EmailVerify;
 import com.englishlearn.myapplication.data.source.remote.bmob.GrammarResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetEmail;
@@ -1360,4 +1362,44 @@ public interface RetrofitService {
             "Content-Type: audio/mp3"
     })
     Observable<Response<UploadFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part file);
+
+
+    //词典模块****************************************************************************
+
+    @POST("/1/classes/Dict")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<Dict>> addDict(@Body Dict dict);
+
+    //删除词典
+    @DELETE("/1/classes/Dict/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<ResponseBody>> deleteDictById(@Path("id") String id);
+
+
+    //修改音标
+    @PUT("/1/classes/Dict/{id}/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json",
+    })
+    Observable<Response<ResponseBody>> updateDictRxById(@Path("id") String id,@Body Dict dict);
+
+    //获取所有音标
+    @GET("/1/classes/Dict/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+            "Content-Type: application/json"
+    })
+    Observable<Response<DictResult>> getDicts();
+
 }

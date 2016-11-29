@@ -23,6 +23,7 @@ import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.advanced.AdvancedFragment;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.dict.DictActivity;
 import com.englishlearn.myapplication.elementary.ElementaryFragment;
 import com.englishlearn.myapplication.intermediate.IntermediateFragment;
 import com.englishlearn.myapplication.setting.SettingActivity;
@@ -158,6 +159,10 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.nav_setting) {
             item.setChecked(false);
             Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_dict) {
+            item.setChecked(false);
+            Intent intent = new Intent(this, DictActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
             Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();

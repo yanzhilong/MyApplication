@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import android.util.Log;
 
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
@@ -2142,12 +2143,6 @@ public class BmobDataSource implements RemoteData {
                     public Observable<List<Sentence>> call(Response<SentenceResult> sentenceResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(sentenceResultResponse.isSuccessful()){
-
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
 
                             SentenceResult sentenceResult = sentenceResultResponse.body();
 
@@ -5305,5 +5300,115 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<UploadFile>applySchedulers());
+    }
+
+    @Override
+    public Observable<Dict> addDict(Dict dict) {
+        return bmobService.addDict(dict)
+                .flatMap(new Func1<Response<Dict>, Observable<Dict>>() {
+                    @Override
+                    public Observable<Dict> call(Response<Dict> dictResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(dictResponse.isSuccessful()){
+
+                            Dict dict = dictResponse.body();
+
+                            return Observable.just(dict);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  dictResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Dict>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> deleteDictById(String dictId) {
+        return bmobService.deleteDictById(dictId)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> updateDictRxById(Dict dict) {
+        String dictId = dict.getObjectId();
+        Dict dict1 = (Dict) dict.clone();
+        dict1.setObjectId(null);
+
+        return bmobService.updateDictRxById(dictId,dict1).flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+            @Override
+            public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                if(responseBodyResponse.isSuccessful()){
+                    return Observable.just(true);
+                }else{
+                    Gson gson = new GsonBuilder().create();
+                    try {
+                        String errjson =  responseBodyResponse.errorBody().string();
+                        BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                        RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                        bmobRequestException = new BmobRequestException(createuser.getMessage());
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                return Observable.error(bmobRequestException);
+            }
+        }).compose(RxUtil.<Boolean>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<Dict>> getDicts() {
+        return bmobService.getDicts()
+                .flatMap(new Func1<Response<DictResult>, Observable<List<Dict>>>() {
+                    @Override
+                    public Observable<List<Dict>> call(Response<DictResult> dictResultResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(dictResultResponse.isSuccessful()){
+
+                            DictResult dictResult = dictResultResponse.body();
+
+                            List<Dict> dicts = dictResult.getResults();
+                            return Observable.just(dicts);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  dictResultResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<List<Dict>>applySchedulers());
     }
 }

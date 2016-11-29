@@ -2,8 +2,6 @@
     <string name="app_name">MyApplication</string>
 
 
-
-
     <!-- TestMainActivity -->
     <string name="testmain_title">English learn</string>
     <!-- 菜单 -->
@@ -269,6 +267,7 @@
     <string name="navigation_drawer_loginandregister">登陆/注册</string>
     <string name="navigation_drawer_home">学习中心</string>
     <string name="navigation_drawer_setting">设置</string>
+    <string name="navigation_drawer_dict">离线词典</string>
 
 
     <string name="action_settings">Settings</string>
@@ -329,5 +328,7 @@
     <string name="title_sentencecollect">SentenceCollect</string>
 
     <string name="title_multiple">Multiple</string>
+
+    <string name="title_dict">Dict</string>
 
 </resources>

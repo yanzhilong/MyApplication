@@ -1,6 +1,7 @@
 
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
@@ -789,6 +790,26 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<UploadFile> uploadFile(File file) {
+        return null;
+    }
+
+    @Override
+    public Observable<Dict> addDict(Dict dict) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> deleteDictById(String dictId) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> updateDictRxById(Dict dict) {
+        return null;
+    }
+
+    @Override
+    public Observable<List<Dict>> getDicts() {
         return null;
     }
 }

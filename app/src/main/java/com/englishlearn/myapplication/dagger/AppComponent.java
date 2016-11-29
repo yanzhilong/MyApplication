@@ -5,6 +5,7 @@ import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
 import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
+import com.englishlearn.myapplication.dict.DictActivity;
 import com.englishlearn.myapplication.domain.DeleteGrammars;
 import com.englishlearn.myapplication.domain.DeleteSentences;
 import com.englishlearn.myapplication.grammar.GrammarPresenter;
@@ -135,5 +136,6 @@ public interface AppComponent {
 
     void inject(TestMainHelper testMainHelper);
 
+    void inject(DictActivity dictActivity);
 
 }

@@ -23,6 +23,10 @@
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/navigation_drawer_setting" />
+        <item
+            android:id="@+id/nav_dict"
+            android:icon="@drawable/ic_cloud_download_black_24dp"
+            android:title="@string/navigation_drawer_dict" />
     </group>
 
     <item android:title="Communicate">

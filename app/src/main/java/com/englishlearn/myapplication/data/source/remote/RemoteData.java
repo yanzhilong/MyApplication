@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
 import com.englishlearn.myapplication.data.PhoneticsWords;
@@ -1248,6 +1249,41 @@ public interface RemoteData extends DataSource{
      */
     Observable<List<TractateCollect>> getTractateCollectRxByTractateCollectGroupId(String tractateCollectGroupId, int page, int pageSize);
 
+    //文件模块
+    //*****************************************************************************
     //上传文件
     Observable<UploadFile> uploadFile(File file);
+
+
+    //离线词典模块
+    //*****************************************************************************
+
+    /**
+     * 增加词典
+     * @param dict
+     * @return
+     */
+    Observable<Dict> addDict(Dict dict);
+
+    /**
+     * 删除音标
+     * @param dictId
+     * @return
+     */
+    Observable<Boolean> deleteDictById(String dictId);
+
+    /**
+     * 修改音标
+     * @param dict
+     * @return
+     */
+    Observable<Boolean> updateDictRxById(Dict dict);
+
+
+    /**
+     * 获得所有的离线词典
+     * @return
+     */
+    Observable<List<Dict>> getDicts();
+
 }
