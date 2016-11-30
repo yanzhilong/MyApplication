@@ -180,6 +180,24 @@ public class WordUpdateTest {
                     }
                     updateWord(word);
                 }
+            }else{
+                Log.d(TAG, wordIciba.toString());
+                if (wordIciba.getBritish_soundurl() != null && !wordIciba.getBritish_soundurl().equals("")) {
+
+                    Log.d(TAG, wordIciba.getName() + "　british_soundurl" + "is empty");
+                }
+                if (wordIciba.getBritish_soundurl() != null  && !wordIciba.getBritish_soundurl().contains("res-tts")) {
+                    Log.d(TAG, wordIciba.getName() + "　british_soundurl" + "is tts");
+                }
+
+                if (wordIciba.getAmerican_soundurl() != null && !wordIciba.getAmerican_soundurl().equals("") ) {
+                    Log.d(TAG, wordIciba.getName() + "　american_soundurl" + "is empty");
+                }
+
+                if (wordIciba.getAmerican_soundurl() != null && !wordIciba.getBritish_soundurl().contains("res-tts")) {
+                    Log.d(TAG, wordIciba.getName() + "　american_soundurl" + "is tts");
+                }
+
             }
         }
     }
