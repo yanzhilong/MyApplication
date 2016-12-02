@@ -3,6 +3,7 @@ package com.englishlearn.myapplication;
 import android.app.Application;
 import android.content.Context;
 
+import com.englishlearn.myapplication.core.LearnEnglishManager;
 import com.englishlearn.myapplication.dagger.AppComponent;
 import com.englishlearn.myapplication.dagger.AppModule;
 import com.englishlearn.myapplication.dagger.DaggerAppComponent;
@@ -28,5 +29,7 @@ public class MyApplication extends Application{
         mContext = getApplicationContext();
 
         appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+        LearnEnglishManager.newInstance(this).init();
+
     }
 }

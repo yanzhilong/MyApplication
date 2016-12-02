@@ -21,4 +21,12 @@ public class LearnEnglishManager {
         return learnEnglishManager;
     }
 
+    /**
+     * 初始化
+     */
+    public void init(){
+
+        MdictManager.newInstance(context).initMdict();
+    }
+
 }

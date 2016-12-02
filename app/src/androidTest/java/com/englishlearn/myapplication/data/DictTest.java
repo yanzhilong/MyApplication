@@ -1,6 +1,7 @@
 package com.englishlearn.myapplication.data;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -15,8 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.util.List;
 
+import cn.mdict.utils.IOUtil;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
@@ -72,6 +75,21 @@ public class DictTest {
             Log.d(TAG,"addDict_result:" + dict.toString());
         }
 
+    }
+
+    @Test
+    public void copyFileTest(){
+        String mdictHome = context.getFilesDir().getAbsolutePath() + "/mdict";
+        String docfolder = mdictHome + "/doc";
+        File file = new File(docfolder);
+        AssetManager assets = context.getAssets();
+        if(file.exists() && file.isDirectory()){
+            IOUtil.copyAssetToFile(assets, "niu.mdx", true, docfolder, null);
+            String[] files = file.list();
+            for (String s : files){
+                Log.d(TAG,s);
+            }
+        }
     }
 
 }
