@@ -45,7 +45,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupColle
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateTypeResult;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordGroupCollectResult;
@@ -1359,9 +1359,8 @@ public interface RetrofitService {
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: audio/mp3"
     })
-    Observable<Response<UploadFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part file);
+    Observable<Response<BmobFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part file,@Header("Content-Type") String ontenttype);
 
 
     //词典模块****************************************************************************

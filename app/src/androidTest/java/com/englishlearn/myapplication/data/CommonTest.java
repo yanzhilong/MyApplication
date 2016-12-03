@@ -4,25 +4,14 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
 
-import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
-import com.englishlearn.myapplication.util.AndroidUtils;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.assertNotNull;
 

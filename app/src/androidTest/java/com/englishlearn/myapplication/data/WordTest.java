@@ -13,7 +13,6 @@ import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesD
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.RemoteDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 import com.englishlearn.myapplication.util.AndroidFileUtils;
 import com.englishlearn.myapplication.util.AndroidUtils;
 import com.google.gson.Gson;
@@ -104,12 +103,12 @@ public class WordTest {
 
 
                 if(file.exists()){
-                    TestSubscriber<UploadFile> testSubscriber_deleteById = new TestSubscriber<>();
-                    mBmobRemoteData.uploadFile(file).toBlocking().subscribe(testSubscriber_deleteById);
+                    TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+                    mBmobRemoteData.uploadFile(file,"audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
                     testSubscriber_deleteById.assertNoErrors();
 
-                    List<UploadFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
-                    UploadFile uploadFile = null;
+                    List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+                    BmobFile uploadFile = null;
                     if(uploadFiles != null && uploadFiles.size() > 0){
                         uploadFile = uploadFiles.get(0);
                     }
@@ -179,12 +178,12 @@ public class WordTest {
             return;
         }
 
-        TestSubscriber<UploadFile> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.uploadFile(file).toBlocking().subscribe(testSubscriber_deleteById);
+        TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.uploadFile(file,"audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
         testSubscriber_deleteById.assertNoErrors();
 
-        List<UploadFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
-        UploadFile uploadFile = null;
+        List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+        BmobFile uploadFile = null;
         if(uploadFiles != null && uploadFiles.size() > 0){
             uploadFile = uploadFiles.get(0);
         }

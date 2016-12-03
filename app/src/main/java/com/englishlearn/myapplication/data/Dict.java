@@ -12,10 +12,18 @@ public class Dict implements Serializable,Cloneable {
     private String objectId;
     private String name; //标题
     private String content;//说明
-    private String url; //
     private String size; //
     private int version;//版本号，用于更新词典
     private String remark; //备注
+    private BmobFile file;//文件
+
+    public BmobFile getFile() {
+        return file;
+    }
+
+    public void setFile(BmobFile file) {
+        this.file = file;
+    }
 
     public int getVersion() {
         return version;
@@ -57,14 +65,6 @@ public class Dict implements Serializable,Cloneable {
         this.content = content;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -91,10 +91,10 @@ public class Dict implements Serializable,Cloneable {
                 "objectId='" + objectId + '\'' +
                 ", name='" + name + '\'' +
                 ", content='" + content + '\'' +
-                ", url='" + url + '\'' +
                 ", size='" + size + '\'' +
                 ", version=" + version +
                 ", remark='" + remark + '\'' +
+                ", file=" + file +
                 '}';
     }
 }

@@ -21,7 +21,7 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
+import com.englishlearn.myapplication.data.BmobFile;
 
 import java.io.File;
 import java.util.Date;
@@ -1252,7 +1252,7 @@ public interface RemoteData extends DataSource{
     //文件模块
     //*****************************************************************************
     //上传文件
-    Observable<UploadFile> uploadFile(File file);
+    Observable<BmobFile> uploadFile(File file,String type);
 
 
     //离线词典模块

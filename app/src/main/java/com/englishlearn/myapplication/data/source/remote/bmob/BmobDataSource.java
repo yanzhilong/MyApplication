@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import android.util.Log;
 
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -5270,20 +5271,20 @@ public class BmobDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<UploadFile> uploadFile(final File file) {
+    public Observable<BmobFile> uploadFile(final File file,String type) {
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         MultipartBody.Part body =
-                MultipartBody.Part.createFormData("audio/mp3", file.getName(), requestFile);
-        return bmobService.uploadFile(file.getName(),body)
-                .flatMap(new Func1<Response<UploadFile>, Observable<UploadFile>>() {
+                MultipartBody.Part.createFormData(type, file.getName(), requestFile);
+        return bmobService.uploadFile(file.getName(),body,type)
+                .flatMap(new Func1<Response<BmobFile>, Observable<BmobFile>>() {
                     @Override
-                    public Observable<UploadFile> call(Response<UploadFile> bmobTractateCollectResultResponse) {
+                    public Observable<BmobFile> call(Response<BmobFile> bmobTractateCollectResultResponse) {
                         BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
                         if(bmobTractateCollectResultResponse.isSuccessful()){
-                            UploadFile uploadFile = bmobTractateCollectResultResponse.body();
+                            BmobFile uploadFile = bmobTractateCollectResultResponse.body();
 
                             return Observable.just(uploadFile);
                         }else{
@@ -5299,7 +5300,7 @@ public class BmobDataSource implements RemoteData {
                         }
                         return Observable.error(bmobRequestException);
                     }
-                }).compose(RxUtil.<UploadFile>applySchedulers());
+                }).compose(RxUtil.<BmobFile>applySchedulers());
     }
 
     @Override

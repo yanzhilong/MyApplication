@@ -9,7 +9,6 @@ import android.util.Log;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -1184,8 +1183,8 @@ public class BmobDataSourceTest {
         //try {
             //AndroidUtils.newInstance(context).addFile(R.raw.install,"install.tst",true);
             File file = new File("/data/data/com.englishlearn.myapplication/files/hello.mp3");
-            TestSubscriber<UploadFile> testSubscriber_deleteById = new TestSubscriber<>();
-            mBmobRemoteData.uploadFile(file).toBlocking().subscribe(testSubscriber_deleteById);
+            TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+            mBmobRemoteData.uploadFile(file,"audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
             //testSubscriber_deleteById.assertNoErrors();
         /*} catch (IOException e) {
             e.printStackTrace();

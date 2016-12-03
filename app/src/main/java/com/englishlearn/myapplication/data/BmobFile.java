@@ -1,14 +1,23 @@
-package com.englishlearn.myapplication.data.source.remote.bmob;
+package com.englishlearn.myapplication.data;
 
 /**
  * Created by yanzl on 16-10-2.
  */
 
-public class UploadFile {
+public class BmobFile {
+
+    //标记一对多关系
+    private String __type;
+    private String group;
 
     private String filename;
     private String url;
     private String cdn;
+
+    public void setPointer(){
+        __type = "File";
+        group = "upyun";
+    }
 
     public String getFilename() {
         return filename;

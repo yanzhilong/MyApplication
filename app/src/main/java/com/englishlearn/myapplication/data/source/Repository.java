@@ -16,6 +16,7 @@
 
 package com.englishlearn.myapplication.data.source;
 
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -40,7 +41,6 @@ import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesData;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
-import com.englishlearn.myapplication.data.source.remote.bmob.UploadFile;
 import com.englishlearn.myapplication.util.RxUtil;
 
 import java.io.File;
@@ -894,7 +894,7 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<UploadFile> uploadFile(File file) {
+    public Observable<BmobFile> uploadFile(File file,String type) {
         return null;
     }
 
