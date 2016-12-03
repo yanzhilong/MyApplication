@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.text.Layout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
 
@@ -129,6 +130,29 @@ public class AndroidUtils {
             FileOutputStream lOutputStream = new FileOutputStream(file,true);
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(lOutputStream));
             bufferedWriter.append(string);
+        }finally {
+            if(bufferedWriter != null){
+                bufferedWriter.close();
+            }
+        }
+    }
+
+    public static void writeFile(String filePath,String string) throws IOException {
+
+        Log.d(TAG,"writeFile");
+        try {
+
+            String basePath = Environment.getExternalStorageDirectory().getPath();
+            File file = new File(basePath + "/" + filePath);
+
+          /*  if(file.exists()){
+                file.createNewFile();
+            }*/
+
+            //写文件
+            FileOutputStream lOutputStream = new FileOutputStream(file);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(lOutputStream));
+            bufferedWriter.write(string);
         }finally {
             if(bufferedWriter != null){
                 bufferedWriter.close();

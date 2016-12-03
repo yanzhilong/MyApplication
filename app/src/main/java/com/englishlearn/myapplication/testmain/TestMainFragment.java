@@ -27,10 +27,13 @@ import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
+import com.englishlearn.myapplication.util.AndroidUtils;
 import com.englishlearn.myapplication.word.WordActivity;
 import com.englishlearn.myapplication.worddetail.WordDetail;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
+
+import java.io.IOException;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -202,7 +205,11 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 this.startActivity(worddetail);
                 break;
             case R.id.test:
-                testMainHelper.updateWordSoundByIciba(0);
+                try {
+                    AndroidUtils.newInstance(getContext()).writeFile("mdxsource.txt","hello");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;

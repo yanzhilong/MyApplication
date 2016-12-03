@@ -14,7 +14,16 @@ public class Dict implements Serializable,Cloneable {
     private String content;//说明
     private String url; //
     private String size; //
+    private int version;//版本号，用于更新词典
     private String remark; //备注
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String getSize() {
         return size;
@@ -84,6 +93,7 @@ public class Dict implements Serializable,Cloneable {
                 ", content='" + content + '\'' +
                 ", url='" + url + '\'' +
                 ", size='" + size + '\'' +
+                ", version=" + version +
                 ", remark='" + remark + '\'' +
                 '}';
     }

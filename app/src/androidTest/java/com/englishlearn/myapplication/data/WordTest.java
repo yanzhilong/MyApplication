@@ -513,8 +513,61 @@ public class WordTest {
     @Test
     public void getWords(){
 
+
+        List<Word> words = getWordsByBmob();
+        Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+    }
+
+    //得到words并创建词典源文件
+    @Test
+    public void createWordsMDict(){
+
+        List<Word> words = getWordsByBmob();
+        StringBuffer dictstring = new StringBuffer();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < words.size(); i++){
+            Log.d(TAG,"words:" + i);
+            Word word = words.get(i);
+            dictstring.append(word.getName() + System.getProperty("line.separator"));
+            Gson gson = new Gson();
+            String wordjson = gson.toJson(word);
+            dictstring.append(wordjson + System.getProperty("line.separator"));
+            dictstring.append("</>" + System.getProperty("line.separator"));
+            if(i == 0){
+                Log.d(TAG,"writeFile:" + i);
+                try {
+                    AndroidUtils.newInstance(context).writeFile("mdxsource.txt",dictstring.toString());
+                    dictstring = new StringBuffer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(i % 50 == 0){
+                try {
+                    Log.d(TAG,"appendString１:" + i);
+                    AndroidUtils.newInstance(context).appendString１("mdxsource.txt",dictstring.toString());
+                    dictstring = new StringBuffer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            AndroidUtils.newInstance(context).appendString１("mdxsource.txt",dictstring.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+    }
+
+
+    public List<Word> getWordsByBmob(){
+
         int page = 0;
-        int pagesize = 50;
+        int pagesize = 100;
 
         List<Word> words = new ArrayList<>();
         List<Word> wordtemp = new ArrayList<>();
@@ -541,10 +594,11 @@ public class WordTest {
             wordtemp = wordslist.get(0);
             Log.d(TAG,"getWords():" +page+ wordtemp.size());
             words.addAll(wordtemp);
-        }while (wordtemp.size() == 100 && page <= 310);
+        }while (wordtemp.size() == 100);
 
 
-        Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+        //Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+        return words;
     }
 
     @Test

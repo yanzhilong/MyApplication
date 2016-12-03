@@ -70,6 +70,24 @@ public class MdxUtils {
         }
     }
 
+    /**
+     * 获得解释内容
+     * @param dict
+     * @param entry
+     */
+    public static String getTranslate(MdxDictBase dict, DictEntry entry) {
+        byte[] data = dict.getDictTextN(entry, true, false, "", "");
+        String translate = null;
+        if (data != null) {
+            try {
+                translate =  new String(data, "utf-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return translate;
+    }
+
     public static String makeBaseUrl(DictEntry entry){
         StringBuffer buffer=new StringBuffer("content://mdict.cn/mdx/");
         buffer.append(entry.getDictId());

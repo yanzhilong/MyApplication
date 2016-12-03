@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.MdictManager;
+import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -66,6 +68,7 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
 
     private MusicService musicService;
     private Intent musicIntent;
+    private MDict mDict;
 
     @Inject
     Repository repository;
@@ -147,11 +150,15 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         ch_sentence = (TextView) view.findViewById(R.id.ch_sentence);
 
         if(wordstring != null){
-            getWord(wordstring);
+            mDict = getMdict(wordstring);
+            if(mDict != null && mDict.getWord() != null){
+                this.word = mDict.getWord();
+                showWordInfo();
+            }else{
+                getWord(wordstring);
+            }
         }
-
         showWordBase();
-
         return view;
     }
 
@@ -225,23 +232,13 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             case R.id.british_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word != null && word.getBritish_soundurl() != null){
-                    try {
-                        musicService.playUrl(word.getBritish_soundurl());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(WordDetailDialog.this.getContext(),"获取读音失败",Toast.LENGTH_SHORT).show();
-                    }
+                    play(word.getBritish_soundurl());
                 }
                 break;
             case R.id.american_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word != null && word.getAmerican_soundurl() != null){
-                    try {
-                        musicService.playUrl(word.getBritish_soundurl());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(WordDetailDialog.this.getContext(),"获取读音失败",Toast.LENGTH_SHORT).show();
-                    }
+                    play(word.getAmerican_soundurl());
                 }
                 break;
             case R.id.add_sentence:
@@ -257,6 +254,28 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    /**
+     *
+     * @param soundUrl
+     */
+    private void play(String soundUrl){
+
+        if(mDict != null){
+            mDict.play();
+        }else if(soundUrl != null && !soundUrl.equals("")){
+            try {
+                musicService.playUrl(soundUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private MDict getMdict(String wordName){
+        return MdictManager.newInstance(this.getContext()).getMDict(wordName);
     }
 
     @Override
