@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote.bmob.service;
 
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -45,7 +46,6 @@ import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupColle
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateGroupResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.TractateTypeResult;
-import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.source.remote.bmob.UserResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordCollectResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.WordGroupCollectResult;
@@ -56,6 +56,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -68,6 +69,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -1361,6 +1363,14 @@ public interface RetrofitService {
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
     Observable<Response<BmobFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part file,@Header("Content-Type") String ontenttype);
+
+    //下载文件
+    @GET("/resource/example.zip")
+    Call<ResponseBody> downloadFile();
+
+    //下载文件自定义url
+    @GET
+    Call<ResponseBody> downloadFile(@Url String fileUrl);
 
 
     //词典模块****************************************************************************

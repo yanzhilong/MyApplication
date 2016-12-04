@@ -52,6 +52,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import rx.Observable;
 import rx.functions.Func1;
@@ -5301,6 +5302,31 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<BmobFile>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> downloadFile(String url, String filePath) {
+        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+
+        Call<ResponseBody> call = bmobService.downloadFile(url);
+        try {
+            Response<ResponseBody> responseBodyResponse = call.execute();
+            if(responseBodyResponse.isSuccessful()){
+                ResponseBody responseBody = responseBodyResponse.body();
+             //   DownloadManager.downLoadFile(filePath,responseBody,url);
+                return Observable.just(true).compose(RxUtil.<Boolean>applySchedulers());
+            }else{
+                String errjson =  responseBodyResponse.errorBody().string();
+                Gson gson = new GsonBuilder().create();
+                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                return Observable.error(bmobRequestException);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Observable.error(e);
+        }
     }
 
     @Override

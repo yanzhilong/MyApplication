@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -21,7 +22,6 @@ import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
 import com.englishlearn.myapplication.data.source.DataSource;
-import com.englishlearn.myapplication.data.BmobFile;
 
 import java.io.File;
 import java.util.Date;
@@ -1253,6 +1253,14 @@ public interface RemoteData extends DataSource{
     //*****************************************************************************
     //上传文件
     Observable<BmobFile> uploadFile(File file,String type);
+
+    /**
+     * 下载文件
+     * @param url
+     * @param filePath 下载后存放的目录
+     * @return
+     */
+    Observable<Boolean> downloadFile(String url, String filePath);
 
 
     //离线词典模块

@@ -899,6 +899,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<Boolean> downloadFile(String url, String filePath) {
+        return mBmobDataSource.downloadFile(url,filePath);
+    }
+
+    @Override
     public Observable<Dict> addDict(Dict dict) {
         return mBmobDataSource.addDict(dict);
     }

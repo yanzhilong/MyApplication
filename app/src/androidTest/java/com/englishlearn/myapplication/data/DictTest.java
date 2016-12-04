@@ -17,8 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.mdict.mdx.DictEntry;
+import cn.mdict.mdx.DictPref;
+import cn.mdict.mdx.MDictApp;
+import cn.mdict.mdx.MdxDictBase;
+import cn.mdict.mdx.MdxEngine;
 import cn.mdict.utils.IOUtil;
 import rx.observers.TestSubscriber;
 
@@ -138,10 +144,36 @@ public class DictTest {
         AssetManager assets = context.getAssets();
         if(file.exists() && file.isDirectory()){
             IOUtil.copyAssetToFile(assets, "niu.mdx", true, docfolder, null);
-            IOUtil.copyAssetToFile(assets, "33html.mdx", true, docfolder, null);
+           // IOUtil.copyAssetToFile(assets, "33html.mdx", true, docfolder, null);
             String[] files = file.list();
             for (String s : files){
                 Log.d(TAG,s);
+            }
+        }
+    }
+
+
+    @Test
+    public void getDicts(){
+        MDictApp theApp = MDictApp.getInstance();
+        MdxDictBase mainDict;
+
+        theApp.setupAppEnv(context);
+        List<DictPref> dictPrefs = new ArrayList<>();
+        //得到当前目录
+        DictPref dictPref = MdxEngine.getLibMgr().getRootDictPref();
+        int count = dictPref.getChildCount();//当前词典的数量
+        for(int i = 0; i < count; i++){
+            DictPref item = dictPref.getChildDictPrefAtIndex(i);//得到某一个子项
+            dictPrefs.add(item);
+        }
+        if(dictPrefs.size() > 0){
+            //默认只有一个词典
+            mainDict = new MdxDictBase();
+            MdxEngine.openDictById(dictPrefs.get(0).getDictId(), mainDict);
+            for (int i = 0; i < mainDict.getEntryCount(); i++){
+                DictEntry dictEntry = new DictEntry(i,"",mainDict.getDictPref().getDictId());
+                mainDict.getHeadword(dictEntry);
             }
         }
     }

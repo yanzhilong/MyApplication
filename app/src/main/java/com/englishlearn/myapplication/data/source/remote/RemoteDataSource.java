@@ -1,6 +1,7 @@
 
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -21,7 +22,6 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
-import com.englishlearn.myapplication.data.BmobFile;
 
 import java.io.File;
 import java.util.Date;
@@ -790,6 +790,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<BmobFile> uploadFile(File file,String fileType) {
+        return null;
+    }
+
+    @Override
+    public Observable<Boolean> downloadFile(String url, String filePath) {
         return null;
     }
 

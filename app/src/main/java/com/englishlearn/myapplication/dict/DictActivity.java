@@ -16,14 +16,19 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.DownloadManager;
+import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.data.Dict;
-import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.data.DownloadStatus;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
-import com.englishlearn.myapplication.sentencegroups.sentences.SentencesFragment;
+import com.englishlearn.myapplication.observer.DownloadObserver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.inject.Inject;
 
@@ -79,8 +84,29 @@ public class DictActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(View view, int position) {
-
+                String mdictHome = DictActivity.this.getFilesDir().getAbsolutePath() + "/mdict/doc";
                 Log.d(TAG, myAdapter.getStrings().get(position).toString());
+                Dict dict = myAdapter.getStrings().get(position);
+
+                DownloadObserver.newInstance().addObserver(new Observer() {
+                    @Override
+                    public void update(Observable observable, Object data) {
+                        DownloadStatus downloadStatus = (DownloadStatus) data;
+                        if(downloadStatus.isException()){
+                            Toast.makeText(DictActivity.this,"下载失败了",Toast.LENGTH_SHORT).show();
+
+                        }else{
+                            Log.d(TAG,"downFIle Currentsize:" + downloadStatus.getCurrentsizestr() + " Size:" + downloadStatus.getSizeStr() + "Percent:" + downloadStatus.getPercent());
+                        }
+                        if(downloadStatus.isSuccess()){
+                            Toast.makeText(DictActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                            MdictManager.newInstance(DictActivity.this).initMdict();
+                        }
+                    }
+                });
+                DownloadManager.downLoadFile(mdictHome + File.separator + "taoge.mdx",dict.getFile().getUrl());
+                Toast.makeText(DictActivity.this,"正在下载",Toast.LENGTH_SHORT).show();
+
             }
 
         });
