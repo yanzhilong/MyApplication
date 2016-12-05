@@ -263,6 +263,13 @@ public class MdxEngine {
     }
 
     /**
+     * 重新初始化
+     */
+    public static void refresh(){
+        appInited = false;
+    }
+
+    /**
      * Method refreshDictList ...
      */
     static public void refreshDictList() {
@@ -342,5 +349,7 @@ public class MdxEngine {
     private static MdxEngine appOne = new MdxEngine();
     private static MdxEngineSetting appSetting = null;
     private static boolean appInited = false;
+
+
 
 }

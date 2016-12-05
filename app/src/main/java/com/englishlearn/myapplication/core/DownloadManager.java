@@ -127,10 +127,13 @@ public class DownloadManager {
                 DownloadStatus downloadStatus = new DownloadStatus();
                 downloadStatus.setSuccess(true);
                 DownloadObserver.newInstance().notifyObservers(downloadStatus);
+
+
             }
 
             @Override
             public void onError(Throwable e) {
+                e.printStackTrace();
                 DownloadStatus downloadStatus = new DownloadStatus();
                 downloadStatus.setUrl(url);
                 downloadStatus.setException(true);

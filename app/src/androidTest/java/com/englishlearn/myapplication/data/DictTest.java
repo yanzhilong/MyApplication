@@ -143,7 +143,7 @@ public class DictTest {
         File file = new File(docfolder);
         AssetManager assets = context.getAssets();
         if(file.exists() && file.isDirectory()){
-            IOUtil.copyAssetToFile(assets, "niu.mdx", true, docfolder, null);
+            IOUtil.copyAssetToFile(assets, "taoge.mdx", true, docfolder, null);
            // IOUtil.copyAssetToFile(assets, "33html.mdx", true, docfolder, null);
             String[] files = file.list();
             for (String s : files){
