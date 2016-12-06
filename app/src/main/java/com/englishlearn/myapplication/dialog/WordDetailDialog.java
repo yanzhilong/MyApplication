@@ -179,7 +179,6 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                     repository.addWordByHtml(wordstring);
                 }else{
                     Toast.makeText(WordDetailDialog.this.getContext(),"未查到相关单词",Toast.LENGTH_SHORT).show();
-
                 }
             }
 
@@ -273,6 +272,11 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSubscriptions.unsubscribe();
+    }
 
     private MDict getMdict(String wordName){
         return MdictManager.newInstance(this.getContext()).getMDict(wordName);

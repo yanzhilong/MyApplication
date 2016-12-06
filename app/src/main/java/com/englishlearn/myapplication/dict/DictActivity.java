@@ -32,7 +32,6 @@ import java.util.Observer;
 
 import javax.inject.Inject;
 
-import cn.mdict.mdx.MdxEngine;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -101,7 +100,6 @@ public class DictActivity extends AppCompatActivity {
                         }
                         if(downloadStatus.isSuccess()){
 
-                            MdxEngine.refresh();
                             MdictManager.newInstance(DictActivity.this).initMdict();
                             Toast.makeText(DictActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
                         }
