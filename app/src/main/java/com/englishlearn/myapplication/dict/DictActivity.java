@@ -18,13 +18,13 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.core.DownloadManager;
+import com.englishlearn.myapplication.core.DownloadUtil;
 import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.DownloadStatus;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
-import com.englishlearn.myapplication.observer.DownloadObserver;
+import com.englishlearn.myapplication.observer.DownloadUtilObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,6 +46,8 @@ public class DictActivity extends AppCompatActivity {
     private MyAdapter myAdapter;
     private HashMap<String,DownloadStatus> downloadStatusHashMap;
     private CompositeSubscription mSubscriptions;
+
+    android.app.DownloadManager downloadManager;
     @Inject
     Repository repository;
 
@@ -81,6 +83,7 @@ public class DictActivity extends AppCompatActivity {
             mSubscriptions = new CompositeSubscription();
         }
 
+        downloadManager = (android.app.DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         //recyclerView.setLayoutManager(mgrgridview);
         myAdapter = new MyAdapter();
         myAdapter.setOnItemClickListener(new OnItemClickListener() {
@@ -96,12 +99,17 @@ public class DictActivity extends AppCompatActivity {
                 String mdictHome = DictActivity.this.getFilesDir().getAbsolutePath() + "/mdict/doc";
                 Log.d(TAG, myAdapter.getStrings().get(position).toString());
                 Dict dict = myAdapter.getStrings().get(position);
-                DownloadObserver.newInstance().addObserver(new Observer() {
+                final int[] i = {0};
+                DownloadUtilObserver.newInstance().addObserver(new Observer() {
                     @Override
                     public void update(Observable observable, Object data) {
                         DownloadStatus downloadStatus = (DownloadStatus) data;
-                        downloadStatusHashMap.put(downloadStatus.getUrl(),downloadStatus);
-                        myAdapter.notifyDataSetChanged();
+                        if(i[0] < 3){
+                            i[0]++;
+                            downloadStatusHashMap.put(downloadStatus.getUrl(),downloadStatus);
+                            myAdapter.notifyDataSetChanged();
+                        }
+
                         if (downloadStatus.isException()) {
                             Toast.makeText(DictActivity.this, "下载失败了", Toast.LENGTH_SHORT).show();
 
@@ -114,7 +122,7 @@ public class DictActivity extends AppCompatActivity {
 
                     }
                 });
-                DownloadManager.downLoadFile(mdictHome + File.separator + "taoge.mdx", dict.getFile().getUrl());
+                DownloadUtil.downLoadFile(mdictHome + File.separator + "taoge.mdx", dict.getFile().getUrl());
                 //Toast.makeText(DictActivity.this, "正在下载", Toast.LENGTH_SHORT).show();
             }
 
@@ -123,6 +131,13 @@ public class DictActivity extends AppCompatActivity {
         recyclerView.setAdapter(myAdapter);
         getList();
     }
+
+    //下载文件
+    private void downLoadFile(String url){
+
+        android.app.DownloadManager downloadManager
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
