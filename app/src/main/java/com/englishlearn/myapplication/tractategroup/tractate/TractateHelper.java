@@ -544,10 +544,10 @@ public class TractateHelper {
                     int j = 1;
                     for(; j <= currentSentenceChars.length; j++){
                         if(addedWidth + textPaint.measureText(String.valueOf(currentSentenceChars,0,j)) > (width - newLineLength)){
-                            j--;
                             break;
                         }
                     }
+                    j--;
                     line.append(String.valueOf(currentSentenceChars,0,j));
                     if(!isSingleLine){
                         line.append(System.getProperty("line.separator"));

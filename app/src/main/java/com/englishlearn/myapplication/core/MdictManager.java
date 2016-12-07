@@ -27,16 +27,19 @@ import rx.Subscriber;
  */
 public class MdictManager {
 
+    private static final String TAG = MdictManager.class.getSimpleName();
     private static MdictManager mdictManager;
     private Context context;
     private MDictApp theApp;
     private MdxDictBase mainDict;
     private HashMap<String, MDict> dictMap;//保存词典
+    private HashMap<String, DictEntry> dictEntryMap;//保存词典
     private TextToSpeech ttsEngine = null;//tts播放引擎
 
     public MdictManager(Context context) {
         this.context = context;
         dictMap = new HashMap<>();
+        dictEntryMap = new HashMap<>();
         ttsEngine = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -107,16 +110,17 @@ public class MdictManager {
             //默认只有一个词典
             mainDict = new MdxDictBase();
             MdxEngine.openDictById(dictPrefs.get(0).getDictId(), mainDict);
+            long current  = System.currentTimeMillis();
+            Log.d(TAG,"Init Mdict:" + current);
             for (int i = 0; i < mainDict.getEntryCount(); i++) {
                 DictEntry dictEntry = new DictEntry(i, "", mainDict.getDictPref().getDictId());
                 mainDict.getHeadword(dictEntry);
-
-                MDict mDict = getMdict(dictEntry);
-                Word word = null;
-                if (mDict != null && (word = mDict.getWord()) != null) {
-                    dictMap.put(word.getName(), mDict);
-                }
+                dictEntryMap.put(dictEntry.getHeadword(),dictEntry);
+                //Log.d(TAG,"Init Mdict:" + i + dictEntry.getHeadword());
             }
+            long last  = System.currentTimeMillis();
+            Log.d(TAG,"Init Mdict:" + last);
+            Log.d(TAG,"Init Mdict:" + (last - current) / 1000);
         }
     }
 
@@ -149,7 +153,11 @@ public class MdictManager {
      */
     public MDict getMDict(String name) {
 
-        return dictMap.get(name);
+        DictEntry dictEntry = dictEntryMap.get(name);
+        if(dictEntry != null){
+            return getMdict(dictEntry);
+        }
+        return null;
     }
 
     //获得词典名称
