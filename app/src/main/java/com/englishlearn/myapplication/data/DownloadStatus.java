@@ -14,7 +14,18 @@ public class DownloadStatus implements Serializable,Cloneable {
     private String sizeStr;
     private String currentsizestr;//
     private boolean success;
+    private boolean isDownloading;//下载中
     private boolean exception;
+    private int percent;//百分比
+
+
+    public boolean isDownloading() {
+        return isDownloading;
+    }
+
+    public void setDownloading(boolean downloading) {
+        isDownloading = downloading;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -40,7 +51,7 @@ public class DownloadStatus implements Serializable,Cloneable {
         this.exception = exception;
     }
 
-    private int percent;//百分比
+
 
     public long getSize() {
         return size;

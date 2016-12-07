@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.dict;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.englishlearn.myapplication.observer.DownloadObserver;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,7 +44,7 @@ public class DictActivity extends AppCompatActivity {
     private static final String TAG = DictActivity.class.getSimpleName();
 
     private MyAdapter myAdapter;
-    private List<Dict> mList;
+    private HashMap<String,DownloadStatus> downloadStatusHashMap;
     private CompositeSubscription mSubscriptions;
     @Inject
     Repository repository;
@@ -73,7 +76,7 @@ public class DictActivity extends AppCompatActivity {
 
         MyApplication.instance.getAppComponent().inject(this);
 
-        mList = new ArrayList();
+        downloadStatusHashMap = new HashMap<>();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
@@ -84,30 +87,35 @@ public class DictActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onDownLoad(View view, int position) {
+
                 String mdictHome = DictActivity.this.getFilesDir().getAbsolutePath() + "/mdict/doc";
                 Log.d(TAG, myAdapter.getStrings().get(position).toString());
                 Dict dict = myAdapter.getStrings().get(position);
-
                 DownloadObserver.newInstance().addObserver(new Observer() {
                     @Override
                     public void update(Observable observable, Object data) {
                         DownloadStatus downloadStatus = (DownloadStatus) data;
-                        if(downloadStatus.isException()){
-                            Toast.makeText(DictActivity.this,"下载失败了",Toast.LENGTH_SHORT).show();
+                        downloadStatusHashMap.put(downloadStatus.getUrl(),downloadStatus);
+                        myAdapter.notifyDataSetChanged();
+                        if (downloadStatus.isException()) {
+                            Toast.makeText(DictActivity.this, "下载失败了", Toast.LENGTH_SHORT).show();
 
-                        }else{
-                            Log.d(TAG,"downFIle Currentsize:" + downloadStatus.getCurrentsizestr() + " Size:" + downloadStatus.getSizeStr() + "Percent:" + downloadStatus.getPercent());
-                        }
-                        if(downloadStatus.isSuccess()){
-
+                        } else if (downloadStatus.isSuccess()) {
                             MdictManager.newInstance(DictActivity.this).initMdict();
-                            Toast.makeText(DictActivity.this,"下载成功",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DictActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Log.d(TAG, "downFIle Currentsize:" + downloadStatus.getCurrentsizestr() + " Size:" + downloadStatus.getSizeStr() + "Percent:" + downloadStatus.getPercent());
                         }
+
                     }
                 });
-                DownloadManager.downLoadFile(mdictHome + File.separator + "taoge.mdx",dict.getFile().getUrl());
-                Toast.makeText(DictActivity.this,"正在下载",Toast.LENGTH_SHORT).show();
-
+                DownloadManager.downLoadFile(mdictHome + File.separator + "taoge.mdx", dict.getFile().getUrl());
+                //Toast.makeText(DictActivity.this, "正在下载", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -142,19 +150,19 @@ public class DictActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof BmobRequestException){
+                if (e instanceof BmobRequestException) {
                     BmobRequestException bmobRequestException = (BmobRequestException) e;
-                    Toast.makeText(DictActivity.this,bmobRequestException.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DictActivity.this, bmobRequestException.getMessage(), Toast.LENGTH_SHORT).show();
 
-                }else{
-                    Toast.makeText(DictActivity.this,DictActivity.this.getString(R.string.networkerror),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DictActivity.this, DictActivity.this.getString(R.string.networkerror), Toast.LENGTH_SHORT).show();
 
                 }
             }
 
             @Override
             public void onNext(List<Dict> dicts) {
-                if(dicts != null){
+                if (dicts != null) {
                     showList(dicts);
                 }
             }
@@ -169,6 +177,8 @@ public class DictActivity extends AppCompatActivity {
     //接口
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+
+        void onDownLoad(View view, int position);
     }
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -209,6 +219,18 @@ public class DictActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             Log.d(TAG, "onBindViewHolder" + position);
+            DownloadStatus downloadStatus = downloadStatusHashMap.get(strings.get(position).getFile().getUrl());
+            if(downloadStatus != null){
+                if(downloadStatus.isDownloading()){
+                    holder.btn_download.setText("下载中...");
+                    holder.progressBar.setProgress(downloadStatus.getPercent());
+                }else if(downloadStatus.isException()){
+                    holder.btn_download.setText("下载失败");
+                }else if(downloadStatus.isSuccess()){
+                    holder.btn_download.setText("下载成功");
+                    holder.progressBar.setProgress(100);
+                }
+            }
             holder.textView.setText(strings.get(position).getName());
         }
 
@@ -219,23 +241,29 @@ public class DictActivity extends AppCompatActivity {
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView textView;
+            AppCompatButton btn_download;
+            ProgressBar progressBar;
 
             public ViewHolder(final View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(itemView, getAdapterPosition());
-                        }
-                    }
-                });
+                itemView.setOnClickListener(this);
 
                 textView = (TextView) itemView.findViewById(R.id.name);
+                btn_download = (AppCompatButton) itemView.findViewById(R.id.btn_download);
+                progressBar = (ProgressBar) itemView.findViewById(R.id.progress);
+                btn_download.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(itemView, getAdapterPosition());
+                    onItemClickListener.onDownLoad(itemView, getAdapterPosition());
+                }
             }
         }
     }

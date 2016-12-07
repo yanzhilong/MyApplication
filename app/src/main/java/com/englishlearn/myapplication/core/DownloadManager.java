@@ -24,8 +24,6 @@ import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 
-import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
-
 /**
  * Created by yanzl on 16-12-4.
  * 下载管理类
@@ -33,11 +31,9 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class DownloadManager {
 
+    private final static String TAG = DownloadManager.class.getSimpleName();
+
     public static void downLoadFile(final String targetFile, final String url){
-
-
-
-
 
         Observable.create(new Observable.OnSubscribe<DownloadStatus>() {
             @Override
@@ -66,6 +62,9 @@ public class DownloadManager {
                                 outputStream = new FileOutputStream(targetFile);
 
                                 int olepercent = 0;
+
+                                long currenttime = System.currentTimeMillis();
+                                boolean isInit = false;
                                 while (true) {
                                     int read = inputStream.read(fileReader);
 
@@ -77,18 +76,26 @@ public class DownloadManager {
 
                                     fileSizeDownloaded += read;
 
-
                                     int percent = (int)(((float)fileSizeDownloaded / (float)fileSize) * 100);
-                                    if(percent != olepercent){
+                                    if(percent != olepercent && (System.currentTimeMillis() - currenttime) > 5 || percent == 100){
+
+                                        Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                                        currenttime = System.currentTimeMillis();
                                         downloadStatus.setCurrentsize(fileSizeDownloaded);
                                         downloadStatus.setCurrentsizestr(humanReadableByteCount(fileSizeDownloaded,false));
                                         DownloadStatus downloadStatus1 = (DownloadStatus) downloadStatus.clone();
                                         downloadStatus1.setPercent(percent);
                                         subscriber.onNext(downloadStatus1);
                                         olepercent = percent;
+                                    }else if(!isInit){
+                                        //第一次发送
+                                        isInit = true;
+                                        downloadStatus.setCurrentsize(fileSizeDownloaded);
+                                        downloadStatus.setCurrentsizestr(humanReadableByteCount(fileSizeDownloaded,false));
+                                        DownloadStatus downloadStatus1 = (DownloadStatus) downloadStatus.clone();
+                                        downloadStatus1.setPercent(percent);
+                                        subscriber.onNext(downloadStatus1);
                                     }
-
-                                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                                 }
 
                                 outputStream.flush();
@@ -125,16 +132,17 @@ public class DownloadManager {
             @Override
             public void onCompleted() {
                 DownloadStatus downloadStatus = new DownloadStatus();
+                downloadStatus.setUrl(url);
+                downloadStatus.setDownloading(false);
                 downloadStatus.setSuccess(true);
                 DownloadObserver.newInstance().notifyObservers(downloadStatus);
-
-
             }
 
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
                 DownloadStatus downloadStatus = new DownloadStatus();
+                downloadStatus.setDownloading(false);
                 downloadStatus.setUrl(url);
                 downloadStatus.setException(true);
                 DownloadObserver.newInstance().notifyObservers(downloadStatus);
@@ -142,6 +150,7 @@ public class DownloadManager {
 
             @Override
             public void onNext(DownloadStatus downloadStatus) {
+                downloadStatus.setDownloading(true);
                 downloadStatus.setUrl(url);
                 DownloadObserver.newInstance().notifyObservers(downloadStatus);
             }
