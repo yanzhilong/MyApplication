@@ -80,14 +80,13 @@ public class DownloadManager {
                                     if(percent != olepercent && (System.currentTimeMillis() - start) > 500 || percent == 100){
 
                                         long end = System.currentTimeMillis();//当前时间　
-                                        time=end-start;
+                                        time=((end-start) < 1000 ? 1000 : (end-start));
                                         //计算下载速度
                                         float fSpeed=0;
                                         fSpeed=(float)fileSizeDownloaded;  //dwBytes是目前已读取的字节数
                                         fSpeed/=((float)time)/1000.0f;
-                                        fSpeed/=1024.0f;//这些bit代码用于根据所花时间计算下载速度和读取的数据量
-                                        downloadStatus.setSpeed(String.format("%.2fKB/s",fSpeed));
-
+                                        //fSpeed/=1024.0f;//这些bit代码用于根据所花时间计算下载速度和读取的数据量
+                                        downloadStatus.setSpeed(humanReadableByteCount((long) fSpeed,true) + "/S");
 
                                         Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                                         start = System.currentTimeMillis();

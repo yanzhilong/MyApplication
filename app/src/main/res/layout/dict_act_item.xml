@@ -25,6 +25,16 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical|center_horizontal" />
 
+        <TextView
+            android:id="@+id/speed"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/name"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical|center_horizontal" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_download"
             android:layout_width="wrap_content"
