@@ -17,7 +17,16 @@ public class DownloadStatus implements Serializable,Cloneable {
     private boolean isDownloading;//下载中
     private boolean exception;
     private int percent;//百分比
+    private String speed;//下载速度
 
+
+    public String getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(String speed) {
+        this.speed = speed;
+    }
 
     public boolean isDownloading() {
         return isDownloading;

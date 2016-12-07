@@ -35,6 +35,9 @@ public class DownloadManager {
 
     public static void downLoadFile(final String targetFile, final String url){
 
+
+
+
         Observable.create(new Observable.OnSubscribe<DownloadStatus>() {
             @Override
             public void call(Subscriber<? super DownloadStatus> subscriber) {
@@ -53,48 +56,47 @@ public class DownloadManager {
                             try {
                                 byte[] fileReader = new byte[4096];
 
-                                long fileSize = body.contentLength();
-                                long fileSizeDownloaded = 0;
-
+                                long fileSize = body.contentLength();//文件大小
+                                long fileSizeDownloaded = 0;//当前已经下载的数据　
+                                //设置文件大小
                                 downloadStatus.setSize(fileSize);
                                 downloadStatus.setSizeStr(humanReadableByteCount(fileSize,false));
+
                                 inputStream = body.byteStream();
                                 outputStream = new FileOutputStream(targetFile);
 
-                                int olepercent = 0;
-
-                                long currenttime = System.currentTimeMillis();
-                                boolean isInit = false;
+                                int olepercent = 0;//百分比
+                                long time = 10;//下载时间，总的（毫秒）
+                                long start = System.currentTimeMillis();//当前时间　
                                 while (true) {
                                     int read = inputStream.read(fileReader);
-
                                     if (read == -1) {
                                         break;
                                     }
-
                                     outputStream.write(fileReader, 0, read);
-
                                     fileSizeDownloaded += read;
+                                    int percent = (int)(((float)fileSizeDownloaded / (float)fileSize) * 100);//计算百分比
+                                    //500毫秒刷新一次
+                                    if(percent != olepercent && (System.currentTimeMillis() - start) > 500 || percent == 100){
 
-                                    int percent = (int)(((float)fileSizeDownloaded / (float)fileSize) * 100);
-                                    if(percent != olepercent && (System.currentTimeMillis() - currenttime) > 5 || percent == 100){
+                                        long end = System.currentTimeMillis();//当前时间　
+                                        time=end-start;
+                                        //计算下载速度
+                                        float fSpeed=0;
+                                        fSpeed=(float)fileSizeDownloaded;  //dwBytes是目前已读取的字节数
+                                        fSpeed/=((float)time)/1000.0f;
+                                        fSpeed/=1024.0f;//这些bit代码用于根据所花时间计算下载速度和读取的数据量
+                                        downloadStatus.setSpeed(String.format("%.2fKB/s",fSpeed));
+
 
                                         Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
-                                        currenttime = System.currentTimeMillis();
+                                        start = System.currentTimeMillis();
                                         downloadStatus.setCurrentsize(fileSizeDownloaded);
                                         downloadStatus.setCurrentsizestr(humanReadableByteCount(fileSizeDownloaded,false));
                                         DownloadStatus downloadStatus1 = (DownloadStatus) downloadStatus.clone();
                                         downloadStatus1.setPercent(percent);
                                         subscriber.onNext(downloadStatus1);
                                         olepercent = percent;
-                                    }else if(!isInit){
-                                        //第一次发送
-                                        isInit = true;
-                                        downloadStatus.setCurrentsize(fileSizeDownloaded);
-                                        downloadStatus.setCurrentsizestr(humanReadableByteCount(fileSizeDownloaded,false));
-                                        DownloadStatus downloadStatus1 = (DownloadStatus) downloadStatus.clone();
-                                        downloadStatus1.setPercent(percent);
-                                        subscriber.onNext(downloadStatus1);
                                     }
                                 }
 
