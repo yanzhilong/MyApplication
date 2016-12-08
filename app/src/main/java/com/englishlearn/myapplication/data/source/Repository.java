@@ -937,4 +937,14 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     public void cleanUserInfo() {
         mSharedPreferencesData.cleanUserInfo();
     }
+
+    @Override
+    public void saveDict(Dict dict) {
+        mSharedPreferencesData.saveDict(dict);
+    }
+
+    @Override
+    public Dict getDict() {
+        return mSharedPreferencesData.getDict();
+    }
 }

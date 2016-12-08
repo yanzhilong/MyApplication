@@ -118,7 +118,7 @@ public class MdxEngine {
 
         AssetManager assets = context.getAssets();
 
-        String mdictHome = baseContext.getFilesDir().getAbsolutePath() + "/mdict";
+        String mdictHome = baseContext.getExternalFilesDir("/dict").getAbsolutePath();
        // String mdictHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mdict";
         //String mdictHome=context.getExternalFilesDir(null).getAbsolutePath();
         String resDir = mdictHome + "/data"; //getFilesDir().getAbsolutePath();

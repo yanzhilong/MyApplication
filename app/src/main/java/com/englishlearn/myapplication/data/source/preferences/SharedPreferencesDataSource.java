@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.englishlearn.myapplication.core.BasePreferences;
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.User;
 import com.google.gson.Gson;
 
@@ -51,5 +52,23 @@ public class SharedPreferencesDataSource implements SharedPreferencesData{
     @Override
     public void cleanUserInfo() {
         basePreferences.remove("userInfo");
+    }
+
+    @Override
+    public void saveDict(Dict dict) {
+        Gson gson = new Gson();
+        String udictinfo = gson.toJson(dict);
+        basePreferences.putString("dictInfo",udictinfo);
+    }
+
+    @Override
+    public Dict getDict() {
+        Gson gson = new Gson();
+        Dict dict = null;
+        String udictnfo = basePreferences.getString("dictInfo","");
+        if(!udictnfo.equals("")){
+            dict = gson.fromJson(udictnfo,Dict.class);
+        }
+        return dict;
     }
 }

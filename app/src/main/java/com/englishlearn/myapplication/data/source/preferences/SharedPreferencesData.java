@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.data.source.preferences;
 
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.User;
 
 /**
@@ -23,4 +24,16 @@ public interface SharedPreferencesData {
      * 退出登陆时候使用
      */
     void cleanUserInfo();
+
+    /**
+     * 保存词典版本信息
+     */
+    void saveDict(Dict dict);
+
+    /**
+     * 得到词典
+     */
+    Dict getDict();
+
+
 }

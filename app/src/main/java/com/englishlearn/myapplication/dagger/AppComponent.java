@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.dagger;
 
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
+import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
 import com.englishlearn.myapplication.dialog.WordDetailDialog;
@@ -137,5 +138,9 @@ public interface AppComponent {
     void inject(TestMainHelper testMainHelper);
 
     void inject(DictActivity dictActivity);
+
+    void inject(MdictManager mdictManager);
+
+
 
 }

@@ -16,13 +16,6 @@
 
 package com.englishlearn.myapplication.data.source;
 
-import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
-
-import java.util.List;
-
-import rx.Observable;
-
 
 /**
  * 数据接口

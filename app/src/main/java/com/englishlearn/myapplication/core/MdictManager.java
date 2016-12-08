@@ -1,11 +1,16 @@
 package com.englishlearn.myapplication.core;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
+import com.englishlearn.myapplication.MyApplication;
+import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.Word;
+import com.englishlearn.myapplication.data.source.Repository;
+import com.englishlearn.myapplication.observer.DownloadUtilObserver;
 import com.englishlearn.myapplication.util.RxUtil;
 import com.google.gson.Gson;
 
@@ -13,6 +18,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.inject.Inject;
 
 import cn.mdict.mdx.DictEntry;
 import cn.mdict.mdx.DictPref;
@@ -36,7 +45,11 @@ public class MdictManager {
     private HashMap<String, DictEntry> dictEntryMap;//保存词典
     private TextToSpeech ttsEngine = null;//tts播放引擎
 
+    @Inject
+    Repository repository;
+
     public MdictManager(Context context) {
+        MyApplication.instance.getAppComponent().inject(this);
         this.context = context;
         dictMap = new HashMap<>();
         dictEntryMap = new HashMap<>();
@@ -172,5 +185,22 @@ public class MdictManager {
             dictPrefs.add(item);
         }
         return dictPrefs;
+    }
+
+    //获得词典名称
+    public void addDownloadDictObserver(final long downLoadId, final Dict dict) {
+
+        DownloadUtilObserver.newInstance().addObserver(new Observer() {
+            @Override
+            public void update(Observable observable, Object data) {
+                DownloadManagerStatus downloadStatus = (DownloadManagerStatus) data;
+                if(downloadStatus.getDownloadId() == downLoadId){
+                    if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL){
+                        repository.saveDict(dict);
+                        initMdict();
+                    }
+                }
+            }
+        });
     }
 }

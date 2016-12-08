@@ -39,4 +39,10 @@ public class AppModule {
         return BmobDataSource.getInstance();
     }
 
+
+    @Provides
+    public SharedPreferencesDataSource provideSharedPreferencesDataSource() {
+        return SharedPreferencesDataSource.getInstance(mApplication);
+    }
+
 }
