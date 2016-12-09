@@ -269,6 +269,7 @@ public class DictActivity extends AppCompatActivity {
                         case DownloadManager.STATUS_SUCCESSFUL:
                             holder.btn_download.setText("完成");
                             holder.progressBar.setProgress(100);
+                            holder.btn_download.setOnClickListener(null);
                             break;
                     }
                 }

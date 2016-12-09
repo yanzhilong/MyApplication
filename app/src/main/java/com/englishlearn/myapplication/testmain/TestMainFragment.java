@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.MdictManager;
+import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.grammars.GrammarActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
@@ -32,8 +34,6 @@ import com.englishlearn.myapplication.word.WordActivity;
 import com.englishlearn.myapplication.worddetail.WordDetail;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
 import com.englishlearn.myapplication.wordgroups.words.wordcollect.WordCollectActivity;
-
-import java.io.IOException;
 
 /**
  * Created by yanzl on 16-7-20.
@@ -205,14 +205,27 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 this.startActivity(worddetail);
                 break;
             case R.id.test:
-                try {
-                    AndroidUtils.newInstance(getContext()).writeFile("mdxsource.txt","hello");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getWordsWavData();
                 break;
             default:
                 break;
+        }
+    }
+
+    public void getWordsWavData() {
+
+        String wordstr3 = AndroidUtils.newInstance(this.getContext()).getStringByResource(R.raw.google10000english);
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        for (int i = 0; i < wordstr3s.length; i++) {
+            MDict mDict = MdictManager.newInstance(this.getContext()).getMDict(wordstr3s[i]);
+            if (mDict != null) {
+                boolean result = mDict.saveWaveData();
+                Log.d(TAG, i+":" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
+            } else {
+                Log.d(TAG, i+":" + wordstr3s[i] + "保存失败");
+            }
+
         }
     }
 }

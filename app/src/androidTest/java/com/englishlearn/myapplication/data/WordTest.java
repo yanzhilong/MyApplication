@@ -7,6 +7,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.data.source.local.LocalDataSource;
 import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesDataSource;
@@ -637,6 +638,42 @@ public class WordTest {
         List<Boolean> wordslist = testSubscriber.getOnNextEvents();
         if(wordslist != null && wordslist.size() > 0){
             Log.d(TAG,"deleteWords:" + wordslist.get(0));
+        }
+    }
+
+    @Test
+    public void getWordsWavData(){
+
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        for (int i = 0; i < wordstr3s.length; i++){
+            MDict mDict = MdictManager.newInstance(context).getMDict(wordstr3s[i]);
+            if(mDict != null){
+                boolean result = mDict.saveWaveData();
+                Log.d(TAG,"i:" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
+            }else{
+                Log.d(TAG,"i:" + wordstr3s[i] + "保存失败");
+            }
+
+        }
+    }
+
+    @Test
+    public void getWordsnotAdd(){
+
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        for (int i = 0; i < wordstr3s.length; i++){
+            MDict mDict = MdictManager.newInstance(context).getMDict(wordstr3s[i]);
+            if(mDict != null){
+                boolean result = mDict.saveWaveData();
+                Log.d(TAG,"i:" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
+            }else{
+                Log.d(TAG,"i:" + wordstr3s[i] + "保存失败");
+            }
+
         }
     }
 }

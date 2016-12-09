@@ -43,11 +43,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
-import cn.mdict.mdx.MdxDictBase;
-import cn.mdict.mdx.MdxEngine;
-import cn.mdict.mdx.MdxEngineSetting;
-import cn.mdict.mdx.MdxUtils;
-
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.ByteArrayInputStream;
@@ -55,6 +50,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.mdict.mdx.MdxDictBase;
+import cn.mdict.mdx.MdxEngine;
+import cn.mdict.mdx.MdxEngineSetting;
+import cn.mdict.mdx.MdxUtils;
 
 
 
@@ -291,6 +293,36 @@ public class MiscUtils {
         }
         return null;
     }
+
+    /**
+     * 读取声音文件
+     * @param dict
+     * @param dictId
+     * @param headword
+     * @return
+     */
+    public static Map<String,byte[]> getWaveData(MdxDictBase dict, int dictId, String headword) {
+
+        Map<String,byte[]> bytemap = new HashMap<>();
+
+        byte[] waveData = getWaveDataForPath(dict, dictId, getAudioFileNameForWord(headword, ".spx"));
+        if(waveData != null && waveData.length > 0){
+            bytemap.put("spx",waveData);
+            return bytemap;
+        }
+        waveData = getWaveDataForPath(dict, dictId, getAudioFileNameForWord(headword, ".wav"));
+        if(waveData != null && waveData.length > 0){
+            bytemap.put("wav",waveData);
+            return bytemap;
+        }
+        waveData = getWaveDataForPath(dict, dictId, getAudioFileNameForWord(headword, ".mp3"));
+        if(waveData != null && waveData.length > 0){
+            bytemap.put("mp3",waveData);
+            return bytemap;
+        }
+        return null;
+    }
+
 
     public static boolean playAudioForWord(MdxDictBase dict, int dictId, String headword) {
         if (headword.length() > 0) {

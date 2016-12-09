@@ -19,13 +19,15 @@ package cn.mdict.mdx;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.util.Log;
 
 import com.englishlearn.myapplication.R;
-import cn.mdict.utils.IOUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.mdict.utils.IOUtil;
 
 
 /**
@@ -119,6 +121,8 @@ public class MdxEngine {
         AssetManager assets = context.getAssets();
 
         String mdictHome = baseContext.getExternalFilesDir("/dict").getAbsolutePath();
+        String mdictExternal = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge";
+        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/tmp";
        // String mdictHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mdict";
         //String mdictHome=context.getExternalFilesDir(null).getAbsolutePath();
         String resDir = mdictHome + "/data"; //getFilesDir().getAbsolutePath();
@@ -130,6 +134,8 @@ public class MdxEngine {
 
         //初始创建文件夹
         IOUtil.createDir(mdictHome);
+        IOUtil.createDir(mdictExternal);
+        IOUtil.createDir(mdictExternaltmp);
         IOUtil.createDir(resDir);
         IOUtil.createDir(docDir);
         IOUtil.createDir(tmpDir);
@@ -153,12 +159,15 @@ public class MdxEngine {
 //            IOUtil.saveStringToFile(versionFileName, Integer.valueOf(SysUtil.getVersionCode(context)).toString(), "utf-8");
 //        }
 
+        //扩展的搜索目录　
         ArrayList<String> extraSearchPath = new ArrayList<String>();
         //docDir is in the searchPath by default, so don't need to add it.
         mediaDir = mediaDir.trim();
         if (mediaDir != null && mediaDir.length() != 0 && mediaDir.compareTo(docDir) != 0)
             extraSearchPath.add(mediaDir);
 
+        //增加扩展目录
+        extraSearchPath.add(mdictExternal);
         appInited = appOne.initAppN(mdictHome, resDir, tmpDir, extraSearchPath);
         if (appInited) {
             //Maybe we shall not register icon in notification center here, beacause it's setting up engine not app

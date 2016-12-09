@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -85,9 +86,10 @@ public class DictTest {
     @Test
     public void addAndUpdateDict(){
 
-        String mdictHome = context.getFilesDir().getAbsolutePath() + "/mdict";
+        //String mdictHome = context.getFilesDir().getAbsolutePath() + "AAA/zhazhi/mdict";
+        String mdictHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AAA/zhazhi/sound377.mdd";
         File file = new File(mdictHome);
-        AssetManager assets = context.getAssets();
+       /* AssetManager assets = context.getAssets();
         if(file.exists() && file.isDirectory()){
             IOUtil.copyAssetToFile(assets, "taoge.mdx", true, mdictHome, null);
             String[] files = file.list();
@@ -98,12 +100,18 @@ public class DictTest {
 
         File file1 = new File(file.getAbsolutePath()+ "/taoge.mdx");
         //上传读音
-
+*/
         TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
-        mBmobRemoteData.uploadFile(file1,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
-        testSubscriber_deleteById.assertNoErrors();
+        mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
+        //testSubscriber_deleteById.assertNoErrors();
 
         List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_deleteById.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            Throwable throwable = throwables.get(0);
+            Log.d(TAG,"throwable:" + throwable.getMessage());
+        }
+
         BmobFile uploadFile = null;
         if(uploadFiles != null && uploadFiles.size() > 0){
             uploadFile = uploadFiles.get(0);
@@ -118,10 +126,10 @@ public class DictTest {
 
 
         Dict dictAdd = new Dict();
-        dictAdd.setName("涛哥词典");
-        dictAdd.setContent("包含涛哥所有的在线单词");
+        dictAdd.setName("离线语音");
+        dictAdd.setContent("非常全且清晰的离线语音");
         dictAdd.setRemark("remark");
-        dictAdd.setSize("9.2M");
+        dictAdd.setSize("395M");
         dictAdd.setVersion(1);
         dictAdd.setFile(uploadFile);
         TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();

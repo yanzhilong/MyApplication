@@ -1,8 +1,15 @@
 package com.englishlearn.myapplication.data;
 
+import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Map;
 
 import cn.mdict.mdx.DictEntry;
 import cn.mdict.mdx.MdxDictBase;
@@ -84,5 +91,48 @@ public class MDict implements Serializable,Cloneable {
                     ttsEngine.speak(headword, TextToSpeech.QUEUE_FLUSH, null);
             }
         }
+    }
+
+    //保存当前声音文件
+    public boolean saveWaveData(){
+
+        Map<String,byte[]> byteMap = MiscUtils.getWaveData(mdxDictBase, dictEntry.getDictId(), dictEntry.getHeadword());
+        if(byteMap == null){
+            return false;
+        }
+        String extendname = null;
+        byte[] data = null;
+        Iterator iterator = byteMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, byte[]> entry = (Map.Entry<String, byte[]>) iterator.next();
+            extendname = entry.getKey();
+            data = entry.getValue();
+        }
+        if(extendname == null || data == null){
+            return false;
+        }
+        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/tmp";
+        File file = new File(mdictExternaltmp + File.separator + word.getName() + "." + extendname);
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(data);
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            if(fileOutputStream != null){
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
     }
 }
