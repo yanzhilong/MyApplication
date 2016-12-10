@@ -14,6 +14,7 @@ import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesD
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.RemoteDataSource;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.util.AndroidFileUtils;
 import com.englishlearn.myapplication.util.AndroidUtils;
 import com.google.gson.Gson;
@@ -73,7 +74,7 @@ public class WordTest {
 
 
         try {
-            AndroidUtils.newInstance(context).appendString１("word/addsounderror.txt","16" + System.getProperty("line.separator"));
+            AndroidUtils.newInstance(context).appendStringExternal("word/addsounderror.txt","16" + System.getProperty("line.separator"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,14 +127,14 @@ public class WordTest {
                         }
                     }else{
                         try {
-                            AndroidUtils.newInstance(context).appendString１("word/addsounderror.txt",word.getName() + System.getProperty("line.separator"));
+                            AndroidUtils.newInstance(context).appendStringExternal("word/addsounderror.txt",word.getName() + System.getProperty("line.separator"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }else{
                     try {
-                        AndroidUtils.newInstance(context).appendString１("word/addsounderror.txt",word.getName() + System.getProperty("line.separator"));
+                        AndroidUtils.newInstance(context).appendStringExternal("word/addsounderror.txt",word.getName() + System.getProperty("line.separator"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -547,8 +548,8 @@ public class WordTest {
                 }
             }else if(i % 50 == 0){
                 try {
-                    Log.d(TAG,"appendString１:" + i);
-                    AndroidUtils.newInstance(context).appendString１("mdxsource.txt",dictstring.toString());
+                    Log.d(TAG,"appendStringExternal:" + i);
+                    AndroidUtils.newInstance(context).appendStringExternal("mdxsource.txt",dictstring.toString());
                     dictstring = new StringBuffer();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -556,7 +557,7 @@ public class WordTest {
             }
         }
         try {
-            AndroidUtils.newInstance(context).appendString１("mdxsource.txt",dictstring.toString());
+            AndroidUtils.newInstance(context).appendStringExternal("mdxsource.txt",dictstring.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -666,14 +667,106 @@ public class WordTest {
         String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
 
         for (int i = 0; i < wordstr3s.length; i++){
-            MDict mDict = MdictManager.newInstance(context).getMDict(wordstr3s[i]);
-            if(mDict != null){
-                boolean result = mDict.saveWaveData();
-                Log.d(TAG,"i:" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
-            }else{
-                Log.d(TAG,"i:" + wordstr3s[i] + "保存失败");
+
+            TestSubscriber<Word> wordTestSubscriber = new TestSubscriber<>();
+            mRepository.getWordRxByName(wordstr3s[i]).toBlocking().subscribe(wordTestSubscriber);
+            List<Word> wordslist = wordTestSubscriber.getOnNextEvents();
+            List<Throwable> throwables = wordTestSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                Throwable throwable = throwables.get(0);
+                if(throwable instanceof BmobRequestException){
+                    mRepository.addWordByHtml(wordstr3s[i]);
+                }else{
+
+                }
+                Log.d(TAG,"throwable:" + throwable.getMessage());
             }
 
+            if(wordslist != null && wordslist.size() > 0){
+                Word word = wordslist.get(0);
+                Log.d(TAG,"word:" + word);
+            }
         }
     }
+
+
+    //查看10000个单词里面哪些是没有查询到的
+    @Test
+    public void checkWords() throws IOException {
+
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        AndroidUtils.newInstance(context).appendStringExternal("googleNotAdd","000" + System.getProperty("line.separator"));
+        for (int i = 0; i < wordstr3s.length; i++){
+
+            TestSubscriber<Word> wordTestSubscriber = new TestSubscriber<>();
+            mRepository.getWordRxByName(wordstr3s[i]).toBlocking().subscribe(wordTestSubscriber);
+            List<Word> wordslist = wordTestSubscriber.getOnNextEvents();
+            List<Throwable> throwables = wordTestSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                try {
+                    AndroidUtils.newInstance(context).appendStringExternal("googleNotAdd", wordstr3s[i] + System.getProperty("line.separator"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(wordslist != null && wordslist.size() > 0){
+                Word word = wordslist.get(0);
+                //Log.d(TAG,"word:" + word);
+            }
+        }
+    }
+
+    @Test
+    public void addWordsToWordGroup(){
+
+        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
+        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
+
+        for (int i = 0; i < wordstr3s.length; i++){
+
+            TestSubscriber<Word> wordTestSubscriber = new TestSubscriber<>();
+            mRepository.getWordRxByName(wordstr3s[i]).toBlocking().subscribe(wordTestSubscriber);
+            List<Word> wordslist = wordTestSubscriber.getOnNextEvents();
+            List<Throwable> throwables = wordTestSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                continue;
+            }
+            if(wordslist != null && wordslist.size() > 0){
+                Word word = wordslist.get(0);
+                addWOrdCOllect(word.getName());
+                //Log.d(TAG,"word:" + word);
+            }
+        }
+
+
+
+    }
+
+    private void addWOrdCOllect(String wordName){
+        //添加　
+        WordCollect wordCollect = new WordCollect();
+        wordCollect.setName(wordName);
+
+        User user = new User();
+        user.setObjectId("9d7707245a");
+
+        wordCollect.setUser(user);
+
+        WordGroup wordGroup = new WordGroup();
+        wordGroup.setObjectId("6cc72c0845");
+
+        wordCollect.setWordGroup(wordGroup);
+
+        TestSubscriber<WordCollect> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addWordCollect(wordCollect).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<WordCollect> list = testSubscriber_add.getOnNextEvents();
+        if(list != null || list.size() > 0){
+            WordCollect wordCollect1 = list.get(0);
+            Log.d(TAG,"成功");
+        }
+    }
+
 }

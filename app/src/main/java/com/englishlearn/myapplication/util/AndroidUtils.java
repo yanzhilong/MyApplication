@@ -115,11 +115,11 @@ public class AndroidUtils {
         }
     }
 
-    public static void appendString１(String filePath,String string) throws IOException {
+    public static void appendStringExternal(String filePath, String string) throws IOException {
 
         try {
 
-            String basePath = Environment.getExternalStorageDirectory().getPath();
+            String basePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge";
             File file = new File(basePath + "/" + filePath);
 
             if(!file.exists()){
