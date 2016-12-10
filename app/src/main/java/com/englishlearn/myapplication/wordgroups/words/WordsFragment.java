@@ -58,7 +58,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     private final int UPDATEWORDGROUP = 2;//修改词单名称
     private final int DELETEWORDGROUP = 3;//删除词单
     private final int DELETEWORDGROUPCOLLECT = 4;//删除词单
-    private final int PAGESIZE = 10;
+    private final int PAGESIZE = 100;
     private WordGroup wordGroup;
     private WordGroupCollect wordGroupCollect;
     private WordGroupType wordGroupType;

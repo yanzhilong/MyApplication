@@ -94,7 +94,7 @@ public class MDict implements Serializable,Cloneable {
     }
 
     //保存当前声音文件
-    public boolean saveWaveData(){
+    public boolean saveWaveData(String folder){
 
         Map<String,byte[]> byteMap = MiscUtils.getWaveData(mdxDictBase, dictEntry.getDictId(), dictEntry.getHeadword());
         if(byteMap == null){
@@ -111,7 +111,11 @@ public class MDict implements Serializable,Cloneable {
         if(extendname == null || data == null){
             return false;
         }
-        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/tmp";
+        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/" + folder;
+        File filefolder = new File(mdictExternaltmp);
+        if(!filefolder.exists()){
+            filefolder.mkdir();
+        }
         File file = new File(mdictExternaltmp + File.separator + word.getName() + "." + extendname);
         FileOutputStream fileOutputStream = null;
         try {

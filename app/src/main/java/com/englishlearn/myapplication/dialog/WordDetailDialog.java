@@ -263,8 +263,8 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
 
         if(mDict != null){
             mDict.play();
-            boolean save = mDict.saveWaveData();
-            Log.d(TAG,save ? "保存成功" : "保存失败");
+           /* boolean save = mDict.saveWaveData("tmp");
+            Log.d(TAG,save ? "保存成功" : "保存失败");*/
         }else if(soundUrl != null && !soundUrl.equals("")){
             try {
                 musicService.playUrl(soundUrl);

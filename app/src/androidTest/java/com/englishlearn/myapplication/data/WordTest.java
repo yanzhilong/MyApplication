@@ -602,6 +602,44 @@ public class WordTest {
         return words;
     }
 
+
+    public List<WordCollect> getWordsByWordGroupId(String wordGroupId){
+
+        int page = 0;
+        int pagesize = 100;
+
+        List<WordCollect> words = new ArrayList<>();
+        List<WordCollect> wordtemp = new ArrayList<>();
+
+        do{
+            Log.d(TAG,"getWords():" + page);
+            TestSubscriber<List<WordCollect>> testSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.getWordCollectRxByWordGroupId(wordGroupId,page,pagesize).toBlocking().subscribe(testSubscriber);
+            List<List<WordCollect>> wordslist = testSubscriber.getOnNextEvents();
+
+            List<Throwable> throwables = testSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                for(int i = 0; i < throwables.size(); i++){
+                    Log.d(TAG,"getWordsByWordGroupId_error:" + throwables.get(i).getMessage());
+                }
+                continue;
+            }
+            if(wordslist == null || wordslist.size() == 0){
+                page++;
+                continue;
+            }else{
+                page++;
+            }
+            wordtemp = wordslist.get(0);
+            Log.d(TAG,"getWordsByWordGroupId():" +page+ wordtemp.size());
+            words.addAll(wordtemp);
+        }while (wordtemp.size() == 100);
+
+
+        //Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+        return words;
+    }
+
     @Test
     public void deletWords(){
 
@@ -645,18 +683,15 @@ public class WordTest {
     @Test
     public void getWordsWavData(){
 
-        String wordstr3 =  AndroidUtils.newInstance(context).getStringByResource(R.raw.google10000english);
-        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
 
-        for (int i = 0; i < wordstr3s.length; i++){
-            MDict mDict = MdictManager.newInstance(context).getMDict(wordstr3s[i]);
+        List<WordCollect> wordCollects = getWordsByWordGroupId("6cc72c0845");
+        for (int i = 0; i < wordCollects.size(); i++){
+
+            MDict mDict = MdictManager.newInstance(context).getMDict(wordCollects.get(i).getName());
             if(mDict != null){
-                boolean result = mDict.saveWaveData();
-                Log.d(TAG,"i:" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
-            }else{
-                Log.d(TAG,"i:" + wordstr3s[i] + "保存失败");
+                boolean result = mDict.saveWaveData("tmp" + i/3000);
+                Log.d(TAG,"i:" + wordCollects.get(i).getName() + (result ? "保存成功" : "保存失败"));
             }
-
         }
     }
 
