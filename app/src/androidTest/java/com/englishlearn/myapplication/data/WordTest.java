@@ -691,6 +691,8 @@ public class WordTest {
             if(mDict != null){
                 boolean result = mDict.saveWaveData("tmp" + i/3000);
                 Log.d(TAG,"i:" + wordCollects.get(i).getName() + (result ? "保存成功" : "保存失败"));
+//                boolean resultuk = mDict.saveUKWaveData("tmp" + i/3000);
+//                Log.d(TAG,"i:" + wordCollects.get(i).getName()+"_UK" + (resultuk ? "保存成功" : "保存失败"));
             }
         }
     }

@@ -67,7 +67,7 @@ public class BmobDataSource implements RemoteData {
     private static BmobDataSource INSTANCE;
     private RetrofitService bmobService;//请求接口
     private YouDaoService youDaoService;//请求接口
-    private IcibaService baiDuService;//百度接口
+    private IcibaService icibaService;//百度接口
 
     private SearchUtil searchUtil;
 
@@ -81,7 +81,7 @@ public class BmobDataSource implements RemoteData {
     public BmobDataSource(){
         bmobService = ServiceFactory.getInstance().createRetrofitService();
         youDaoService = ServiceFactory.getInstance().createYouDaoService();
-        baiDuService = ServiceFactory.getInstance().createIcibaService();
+        icibaService = ServiceFactory.getInstance().createIcibaService();
         searchUtil = SearchUtil.getInstance();
     }
 
@@ -1564,7 +1564,7 @@ public class BmobDataSource implements RemoteData {
 
     @Override
     public Observable<Word> getWordRxByIciba(final String wordname) {
-        return baiDuService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
+        return icibaService.getWordByHtml(wordname).flatMap(new Func1<Response<ResponseBody>, Observable<Word>>() {
             @Override
             public Observable<Word> call(Response<ResponseBody> responseBodyResponse) {
                 BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
