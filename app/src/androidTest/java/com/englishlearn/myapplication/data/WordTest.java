@@ -761,11 +761,25 @@ public class WordTest {
 
         TestSubscriber<WordCollect> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addWordCollect(wordCollect).toBlocking().subscribe(testSubscriber_add);
-        testSubscriber_add.assertNoErrors();
         List<WordCollect> list = testSubscriber_add.getOnNextEvents();
-        if(list != null || list.size() > 0){
-            WordCollect wordCollect1 = list.get(0);
+        List<Throwable> throwables = testSubscriber_add.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            try {
+                AndroidUtils.newInstance(context).appendStringExternal("addWordCollectFail.txt", wordName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        if(list != null && list.size() > 0){
+            //WordCollect wordCollect1 = list.get(0);
             Log.d(TAG,"成功");
+        }else{
+            try {
+                AndroidUtils.newInstance(context).appendStringExternal("addWordCollectFail.txt", wordName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
