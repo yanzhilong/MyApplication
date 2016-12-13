@@ -165,7 +165,7 @@ public class MDict implements Serializable,Cloneable {
         if(!filefolder.exists()){
             filefolder.mkdir();
         }
-        File file = new File(mdictExternaltmp + File.separator + word.getName() + "." + extendname);
+        File file = new File(mdictExternaltmp + File.separator + word.getName() + "_UK" + "." + extendname);
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file);

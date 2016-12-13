@@ -15,6 +15,7 @@ public class Dict implements Serializable,Cloneable {
     private String size; //
     private int version;//版本号，用于更新词典
     private String remark; //备注
+    private String type;//mdx mdd
     private BmobFile file;//文件
 
     public BmobFile getFile() {

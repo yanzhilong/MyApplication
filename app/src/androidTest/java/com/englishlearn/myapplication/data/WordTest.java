@@ -631,7 +631,7 @@ public class WordTest {
                 page++;
             }
             wordtemp = wordslist.get(0);
-            Log.d(TAG,"getWordsByWordGroupId():" +page+ wordtemp.size());
+            Log.d(TAG,"getWordsByWordGroupId():" + wordtemp.size());
             words.addAll(wordtemp);
         }while (wordtemp.size() == 100);
 
@@ -685,14 +685,20 @@ public class WordTest {
 
 
         List<WordCollect> wordCollects = getWordsByWordGroupId("6cc72c0845");
+        String dir = "";
         for (int i = 0; i < wordCollects.size(); i++){
 
             MDict mDict = MdictManager.newInstance(context).getMDict(wordCollects.get(i).getName());
             if(mDict != null){
-                boolean result = mDict.saveWaveData("tmp" + i/3000);
-                Log.d(TAG,"i:" + wordCollects.get(i).getName() + (result ? "保存成功" : "保存失败"));
-//                boolean resultuk = mDict.saveUKWaveData("tmp" + i/3000);
-//                Log.d(TAG,"i:" + wordCollects.get(i).getName()+"_UK" + (resultuk ? "保存成功" : "保存失败"));
+                String newdir = "tmp" + i/3000;
+                if(!newdir.equals(dir)){
+                    dir = newdir;
+                    Log.d(TAG,"i:" + i + dir);
+                }
+                boolean result = mDict.saveWaveData(dir);
+                //Log.d(TAG,"i:" + wordCollects.get(i).getName() + (result ? "保存成功" : "保存失败"));
+                boolean resultuk = mDict.saveUKWaveData("tmp" + i/3000);
+                //Log.d(TAG,"i:" + wordCollects.get(i).getName()+"_UK" + (resultuk ? "保存成功" : "保存失败"));
             }
         }
     }
