@@ -220,7 +220,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         for (int i = 0; i < wordstr3s.length; i++) {
             MDict mDict = MdictManager.newInstance(this.getContext()).getMDict(wordstr3s[i]);
             if (mDict != null) {
-                boolean result = mDict.saveWaveData();
+                boolean result = mDict.saveWaveData("tmp");
                 Log.d(TAG, i+":" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
             } else {
                 Log.d(TAG, i+":" + wordstr3s[i] + "保存失败");

@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.data;
 import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -94,7 +95,7 @@ public class MDict implements Serializable,Cloneable {
     }
 
     //保存当前声音文件
-    public boolean saveWaveData(){
+    public boolean saveWaveData(String folder){
 
         Map<String,byte[]> byteMap = MiscUtils.getWaveData(mdxDictBase, dictEntry.getDictId(), dictEntry.getHeadword());
         if(byteMap == null){
@@ -111,12 +112,65 @@ public class MDict implements Serializable,Cloneable {
         if(extendname == null || data == null){
             return false;
         }
-        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/tmp";
+        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/" + folder;
+        File filefolder = new File(mdictExternaltmp);
+        if(!filefolder.exists()){
+            filefolder.mkdir();
+        }
+        File file = new File(mdictExternaltmp + File.separator + word.getName() + "." + extendname);
+        BufferedOutputStream bufferedOutputStream = null;
+        try {
+            bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file));
+            bufferedOutputStream.write(data);
+            bufferedOutputStream.flush();
+            bufferedOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            if(bufferedOutputStream != null){
+                try {
+                    bufferedOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }
+
+    //保存当前声音文件
+    public boolean saveUKWaveData(String folder){
+
+        Map<String,byte[]> byteMap = MiscUtils.getWaveData(mdxDictBase, dictEntry.getDictId(), dictEntry.getHeadword() + "_UK");
+        if(byteMap == null){
+            return false;
+        }
+        String extendname = null;
+        byte[] data = null;
+        Iterator iterator = byteMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, byte[]> entry = (Map.Entry<String, byte[]>) iterator.next();
+            extendname = entry.getKey();
+            data = entry.getValue();
+        }
+        if(extendname == null || data == null){
+            return false;
+        }
+        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/" + folder;
+        File filefolder = new File(mdictExternaltmp);
+        if(!filefolder.exists()){
+            filefolder.mkdir();
+        }
         File file = new File(mdictExternaltmp + File.separator + word.getName() + "." + extendname);
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(data);
+            fileOutputStream.flush();
             fileOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
