@@ -244,10 +244,10 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
         User user = repository.getUserInfo();
         user.setPointer();
         sentence.setUser(user);
-        sentence.setContent(ensentence);
+        sentence.setContent(sentenceedit.getText().toString());
         sentenceGroup.setPointer();
         sentence.setSentenceGroup(sentenceGroup);
-        sentence.setTranslation(chsentence);
+        sentence.setTranslation(translationedit.getText().toString());
         sentence.setRemark(tractate != null ? tractate.getTitle() : "");
         Subscription subscription = repository.addSentence(sentence).subscribe(new Subscriber<Sentence>() {
             @Override
