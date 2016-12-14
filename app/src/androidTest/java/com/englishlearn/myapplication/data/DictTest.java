@@ -2,12 +2,12 @@ package com.englishlearn.myapplication.data;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -71,6 +71,8 @@ public class DictTest {
         dictAdd.setContent("包含涛哥所有的在线单词");
         dictAdd.setRemark("remark");
         dictAdd.setSize("9.2M");
+        dictAdd.setOrder(0);
+        dictAdd.setType(ApplicationConfig.DICTTYPE_MDX);
         TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
         testSubscriber_add.assertNoErrors();
@@ -84,12 +86,12 @@ public class DictTest {
     }
 
     @Test
-    public void addAndUpdateDict(){
+    public void addAndUpdateDictMdx(){
 
-        //String mdictHome = context.getFilesDir().getAbsolutePath() + "AAA/zhazhi/mdict";
-        String mdictHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AAA/zhazhi/sound377.mdd";
+        String mdictHome = ApplicationConfig.EXTERNALBASE + File.separator + "mdd0.mdd";
+
         File file = new File(mdictHome);
-       /* AssetManager assets = context.getAssets();
+        AssetManager assets = context.getAssets();
         if(file.exists() && file.isDirectory()){
             IOUtil.copyAssetToFile(assets, "taoge.mdx", true, mdictHome, null);
             String[] files = file.list();
@@ -100,7 +102,7 @@ public class DictTest {
 
         File file1 = new File(file.getAbsolutePath()+ "/taoge.mdx");
         //上传读音
-*/
+
         TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
         mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
         //testSubscriber_deleteById.assertNoErrors();
@@ -121,10 +123,6 @@ public class DictTest {
         }
         uploadFile.setPointer();
 
-
-
-
-
         Dict dictAdd = new Dict();
         dictAdd.setName("离线语音");
         dictAdd.setContent("非常全且清晰的离线语音");
@@ -132,6 +130,55 @@ public class DictTest {
         dictAdd.setSize("395M");
         dictAdd.setVersion(1);
         dictAdd.setFile(uploadFile);
+        TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<Dict> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list != null && list.size() >= 0){
+            Dict dict = list.get(0);
+            Log.d(TAG,"addDict_result:" + dict.toString());
+        }
+
+    }
+
+
+    @Test
+    public void addAndUpdateDictMdd(){
+
+        String mdictHome = ApplicationConfig.EXTERNALBASE + File.separator + "mdd4.mdd";
+        File file = new File(mdictHome);
+
+        TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
+        //testSubscriber_deleteById.assertNoErrors();
+
+        List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_deleteById.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            Throwable throwable = throwables.get(0);
+            Log.d(TAG,"throwable:" + throwable.getMessage());
+        }
+
+        BmobFile uploadFile = null;
+        if(uploadFiles != null && uploadFiles.size() > 0){
+            uploadFile = uploadFiles.get(0);
+        }
+        if(uploadFile == null){
+            return;
+        }
+        uploadFile.setPointer();
+
+        uploadFile.setUrl("http://oi5tga4me.bkt.clouddn.com/mdd4.mdd");
+        Dict dictAdd = new Dict();
+        dictAdd.setName("涛哥离线读音4");
+        dictAdd.setContent("10000个高频词(4)");
+        dictAdd.setRemark("remark");
+        dictAdd.setSize("23.3M");
+        dictAdd.setVersion(0);
+        dictAdd.setType(ApplicationConfig.DICTTYPE_MDD);
+        dictAdd.setFile(uploadFile);
+
         TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
         testSubscriber_add.assertNoErrors();

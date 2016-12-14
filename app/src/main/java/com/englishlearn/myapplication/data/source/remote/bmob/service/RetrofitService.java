@@ -1403,7 +1403,7 @@ public interface RetrofitService {
     Observable<Response<ResponseBody>> updateDictRxById(@Path("id") String id,@Body Dict dict);
 
     //获取所有音标
-    @GET("/1/classes/Dict/")
+    @GET("/1/classes/Dict/?order=order")
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
