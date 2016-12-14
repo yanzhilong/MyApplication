@@ -12,7 +12,8 @@ public class ApplicationConfig {
 
     public final static String FILEBASENAME = "taoge";//文件夹
     public final static String EXTERNALBASE = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + FILEBASENAME;//外置目录
-
+    public final static String INSIDEMDXPATH = File.separator + FILEBASENAME + File.separator + "doc";//内部的词典目录
+    public final static String INSIDEMDXNAME = "taoge.mdx";//内部的词典名称
 
 
     //词典相关

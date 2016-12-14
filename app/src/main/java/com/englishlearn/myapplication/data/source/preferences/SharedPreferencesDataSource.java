@@ -7,6 +7,12 @@ import com.englishlearn.myapplication.core.BasePreferences;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Map;
+
+import static com.englishlearn.myapplication.R.raw.dicts;
 
 /**
  * Created by yanzl on 16-10-11.
@@ -51,24 +57,33 @@ public class SharedPreferencesDataSource implements SharedPreferencesData{
 
     @Override
     public void cleanUserInfo() {
-        basePreferences.remove("userInfo");
+        basePreferences.remove("userInfos");
+    }
+
+    @Override
+    public void saveDicts(Map<String,Dict> dictsMap) {
+        Gson gson = new Gson();
+        String dictsstr = gson.toJson(dicts);
+        basePreferences.putString("dicts",dictsstr);
     }
 
     @Override
     public void saveDict(Dict dict) {
-        Gson gson = new Gson();
-        String udictinfo = gson.toJson(dict);
-        basePreferences.putString("dictInfo",udictinfo);
+        Map<String,Dict> map = getDictsBySp();
+        map.put(dict.getObjectId(),dict);
+        saveDicts(map);
     }
 
     @Override
-    public Dict getDict() {
+    public Map<String,Dict> getDictsBySp() {
         Gson gson = new Gson();
-        Dict dict = null;
-        String udictnfo = basePreferences.getString("dictInfo","");
-        if(!udictnfo.equals("")){
-            dict = gson.fromJson(udictnfo,Dict.class);
+        Map<String,Dict> dictsMap = null;
+        String dictsstr = basePreferences.getString("dicts","");
+        if(!dictsstr.equals("")){
+            Type typemap = new TypeToken<Map<String, Dict>>() {
+            }.getType();
+            dictsMap = gson.fromJson(dictsstr, typemap);
         }
-        return dict;
+        return dictsMap;
     }
 }

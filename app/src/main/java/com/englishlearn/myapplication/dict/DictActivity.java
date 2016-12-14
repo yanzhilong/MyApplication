@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.core.DownloadManagerStatus;
 import com.englishlearn.myapplication.core.DownloadUtil;
 import com.englishlearn.myapplication.core.MdictManager;
@@ -28,6 +29,7 @@ import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesD
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.observer.DownloadUtilObserver;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-
 
 import javax.inject.Inject;
 
@@ -50,8 +51,8 @@ public class DictActivity extends AppCompatActivity {
     private MyAdapter myAdapter;
     private HashMap<String, Long> downloadIdMap;
     private HashMap<String, DownloadManagerStatus> downloadManagerStatusHashMap;
+    private Map<String, Dict> dictHashMap;
     private CompositeSubscription mSubscriptions;
-    private Dict mLocaldict;
 
     @Inject
     Repository repository;
@@ -85,6 +86,7 @@ public class DictActivity extends AppCompatActivity {
 
         MyApplication.instance.getAppComponent().inject(this);
         downloadIdMap = new HashMap<>();
+        dictHashMap = new HashMap<>();
         downloadManagerStatusHashMap = new HashMap<>();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
@@ -102,10 +104,14 @@ public class DictActivity extends AppCompatActivity {
             @Override
             public void onDownLoad(View view, int position) {
 
-                Log.d(TAG, myAdapter.getStrings().get(position).toString());
-                final Dict dict = myAdapter.getStrings().get(position);
-
-                long downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile("/dict/doc", "taoge.mdx", dict.getFile().getUrl());
+                Log.d(TAG, myAdapter.getDicts().get(position).toString());
+                final Dict dict = myAdapter.getDicts().get(position);
+                long downloadId = 0;
+                if(dict.getType() == ApplicationConfig.DICTTYPE_MDX){
+                    downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.INSIDEMDXPATH, ApplicationConfig.INSIDEMDXNAME, dict.getFile().getUrl());
+                }else {
+                    downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.EXTERNALBASE, dict.getName(), dict.getFile().getUrl());
+                }
                 MdictManager.newInstance(DictActivity.this).addDownloadDictObserver(downloadId,dict);//下载成功后刷新初始化
                 downloadIdMap.put(dict.getObjectId(), downloadId);//保存下载id
 
@@ -114,11 +120,31 @@ public class DictActivity extends AppCompatActivity {
             }
 
         });
-        mLocaldict = sharedPreferencesDataSource.getDict();
+
+        dictHashMap = repository.getDictsBySp();
+        checkoutLocalDict();
         //设置适配器
         recyclerView.setAdapter(myAdapter);
         getList();
         DownloadUtilObserver.newInstance().addObserver(observer);
+    }
+
+    private void checkoutLocalDict(){
+
+        if(dictHashMap == null){
+            return;
+        }
+        Iterator iterator = dictHashMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Dict> entry = (Map.Entry<String, Dict>) iterator.next();
+            String fileName = entry.getValue().getName();
+            File file = new File(ApplicationConfig.EXTERNALBASE + File.separator + fileName);
+            if(!file.exists()){
+                iterator.remove();
+                repository.saveDicts(dictHashMap);
+            }
+        }
+        myAdapter.notifyDataSetChanged();
     }
 
     private Observer observer = new Observer() {
@@ -212,16 +238,16 @@ public class DictActivity extends AppCompatActivity {
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-        private List<Dict> strings;
+        private List<Dict> dicts;
 
         private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
-            strings = new ArrayList<>();
+            dicts = new ArrayList<>();
         }
 
-        public List<Dict> getStrings() {
-            return strings;
+        public List<Dict> getDicts() {
+            return dicts;
         }
 
         public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -230,8 +256,8 @@ public class DictActivity extends AppCompatActivity {
 
         public void replaceData(List<Dict> strings) {
             if (strings != null) {
-                this.strings.clear();
-                this.strings.addAll(strings);
+                this.dicts.clear();
+                this.dicts.addAll(strings);
                 notifyDataSetChanged();
             }
         }
@@ -248,7 +274,7 @@ public class DictActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             Log.d(TAG, "onBindViewHolder" + position);
-            Dict dict = strings.get(position);
+            Dict dict = dicts.get(position);
 
             Long donwloadId = downloadIdMap.get(dict.getObjectId());
             if (donwloadId != null) {
@@ -274,11 +300,14 @@ public class DictActivity extends AppCompatActivity {
                     }
                 }
             }else{
-
-                if(mLocaldict != null && mLocaldict.getVersion() == dict.getVersion()){
+                Dict locadDict = null;
+                if(dictHashMap != null){
+                    locadDict = dictHashMap.get(dict.getObjectId());
+                }
+                if(locadDict != null && locadDict.getVersion() == dict.getVersion()){
                     holder.btn_download.setText("已下载");
                     holder.btn_download.setOnClickListener(null);
-                }else if(mLocaldict != null && mLocaldict.getVersion() < dict.getVersion()){
+                }else if(locadDict != null && locadDict.getVersion() < dict.getVersion()){
                     holder.btn_download.setText("有更新");
                     holder.btn_download.setEnabled(true);
                 }else {
@@ -287,12 +316,12 @@ public class DictActivity extends AppCompatActivity {
                 }
             }
 
-            holder.textView.setText(strings.get(position).getName());
+            holder.textView.setText(dicts.get(position).getName());
         }
 
         @Override
         public int getItemCount() {
-            return strings.size();
+            return dicts.size();
         }
 
 

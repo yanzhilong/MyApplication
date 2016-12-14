@@ -47,6 +47,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -939,12 +940,17 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public void saveDicts(Map<String,Dict> dictsMap) {
+        mSharedPreferencesData.saveDicts(dictsMap);
+    }
+
+    @Override
     public void saveDict(Dict dict) {
         mSharedPreferencesData.saveDict(dict);
     }
 
     @Override
-    public Dict getDict() {
-        return mSharedPreferencesData.getDict();
+    public Map<String,Dict> getDictsBySp() {
+        return mSharedPreferencesData.getDictsBySp();
     }
 }

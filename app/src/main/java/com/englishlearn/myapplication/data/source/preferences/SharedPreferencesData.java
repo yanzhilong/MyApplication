@@ -3,6 +3,8 @@ package com.englishlearn.myapplication.data.source.preferences;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.User;
 
+import java.util.Map;
+
 /**
  * Created by yanzl on 16-10-11.
  */
@@ -28,12 +30,18 @@ public interface SharedPreferencesData {
     /**
      * 保存词典版本信息
      */
+    void saveDicts(Map<String,Dict> dictsMap);
+
+    /**
+     * 保存单个词典
+     * @param dict
+     */
     void saveDict(Dict dict);
 
     /**
      * 得到词典
      */
-    Dict getDict();
+    Map<String,Dict> getDictsBySp();
 
 
 }

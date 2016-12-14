@@ -6,6 +6,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.englishlearn.myapplication.MyApplication;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.Word;
@@ -195,9 +196,11 @@ public class MdictManager {
             public void update(Observable observable, Object data) {
                 DownloadManagerStatus downloadStatus = (DownloadManagerStatus) data;
                 if(downloadStatus.getDownloadId() == downLoadId){
-                    if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL){
+                    if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL && dict.getType() == ApplicationConfig.DICTTYPE_MDX){
                         repository.saveDict(dict);
                         initMdict();
+                    }else if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL){
+                        repository.saveDict(dict);
                     }
                 }
             }
