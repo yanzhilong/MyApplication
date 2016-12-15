@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.config.ApplicationConfig;
-import com.englishlearn.myapplication.core.DownloadManagerStatus;
+import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.core.DownloadUtil;
 import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.data.Dict;
@@ -50,7 +50,7 @@ public class DictActivity extends AppCompatActivity {
 
     private MyAdapter myAdapter;
     private HashMap<String, Long> downloadIdMap;
-    private HashMap<String, DownloadManagerStatus> downloadManagerStatusHashMap;
+    private HashMap<String, DownloadStatus> downloadManagerStatusHashMap;
     private Map<String, Dict> dictHashMap;
     private CompositeSubscription mSubscriptions;
 
@@ -150,7 +150,7 @@ public class DictActivity extends AppCompatActivity {
     private Observer observer = new Observer() {
         @Override
         public void update(Observable observable, Object data) {
-            DownloadManagerStatus downloadStatus = (DownloadManagerStatus) data;
+            DownloadStatus downloadStatus = (DownloadStatus) data;
             //遍历找到当前downloadId的ObjectId
             Iterator iterator = downloadIdMap.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -278,7 +278,7 @@ public class DictActivity extends AppCompatActivity {
 
             Long donwloadId = downloadIdMap.get(dict.getObjectId());
             if (donwloadId != null) {
-                DownloadManagerStatus downloadStatus = downloadManagerStatusHashMap.get(dict.getObjectId());
+                DownloadStatus downloadStatus = downloadManagerStatusHashMap.get(dict.getObjectId());
                 if (downloadStatus != null) {
                     switch (downloadStatus.getStatus()) {
                         case DownloadManager.STATUS_RUNNING:

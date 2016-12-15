@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.englishlearn.myapplication.R.raw.dicts;
@@ -70,6 +71,9 @@ public class SharedPreferencesDataSource implements SharedPreferencesData{
     @Override
     public void saveDict(Dict dict) {
         Map<String,Dict> map = getDictsBySp();
+        if(map == null){
+            map = new HashMap<>();
+        }
         map.put(dict.getObjectId(),dict);
         saveDicts(map);
     }

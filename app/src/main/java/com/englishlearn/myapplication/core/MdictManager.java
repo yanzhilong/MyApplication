@@ -194,7 +194,7 @@ public class MdictManager {
         DownloadUtilObserver.newInstance().addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
-                DownloadManagerStatus downloadStatus = (DownloadManagerStatus) data;
+                DownloadStatus downloadStatus = (DownloadStatus) data;
                 if(downloadStatus.getDownloadId() == downLoadId){
                     if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL && dict.getType() == ApplicationConfig.DICTTYPE_MDX){
                         repository.saveDict(dict);

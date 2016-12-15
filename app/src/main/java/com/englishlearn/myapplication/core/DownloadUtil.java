@@ -66,7 +66,7 @@ public class DownloadUtil {
         Log.d(TAG,"下载Id:" + downloadId);
 
         //在执行下载前注册内容监听者
-        context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/"), true, DownloadManagerObserver.newInstance(new Handler(),context,downloadId));
+        context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/"), true, DownloadManagerObserver.newInstance(new Handler(),context));
         return downloadId;
     }
 
