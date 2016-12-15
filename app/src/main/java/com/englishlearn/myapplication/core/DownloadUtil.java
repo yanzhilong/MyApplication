@@ -2,13 +2,17 @@ package com.englishlearn.myapplication.core;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
 import com.englishlearn.myapplication.observer.DownloadManagerObserver;
+import com.englishlearn.myapplication.observer.DownloadUtilObserver;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yanzl on 16-12-4.
@@ -23,10 +27,11 @@ public class DownloadUtil {
     private static DownloadUtil downloadUtil;
 
     private Context context;
+    private DownloadManager downloadManager;
 
     public DownloadUtil(Context context) {
-
         this.context = context;
+        downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     public static synchronized DownloadUtil newInstance(Context context) {
@@ -36,9 +41,15 @@ public class DownloadUtil {
         return downloadUtil;
     }
 
-    public long downLoadFile(String dirType, String subPath, final String url){
+    /**
+     * 下载一个文件
+     * @param dirType
+     * @param subPath
+     * @param url
+     * @return
+     */
+    public long downLoadFile(String dirType, String subPath, final String url,boolean isExternal){
 
-        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         //如果存在就先删除
         final File dirtype = context.getExternalFilesDir(dirType);
         Uri.Builder builder = Uri.fromFile(dirtype).buildUpon();
@@ -47,6 +58,8 @@ public class DownloadUtil {
         if(file.exists()){
             file.delete();
         }
+
+        checkoutDownload(url);//删除原有下载
 
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         /**设置用于下载时的网络状态*/
@@ -59,15 +72,79 @@ public class DownloadUtil {
         我们需要调用Request对象的setVisibleInDownloadsUi方法，传递参数true.*/
         request.setVisibleInDownloadsUi(true);
         /**设置文件保存路径*/
-        request.setDestinationInExternalFilesDir(context, dirType, subPath);
+        if(isExternal){
+            request.setDestinationInExternalPublicDir(dirType,subPath);
+        }else{
+            request.setDestinationInExternalFilesDir(context, dirType, subPath);
+        }
         /**将下载请求放入队列， return下载任务的ID*/
         long downloadId = downloadManager.enqueue(request);
 
         Log.d(TAG,"下载Id:" + downloadId);
 
         //在执行下载前注册内容监听者
-        context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/"), true, DownloadManagerObserver.newInstance(new Handler(),context));
+        context.getContentResolver().registerContentObserver(Uri.parse("content://downloads/"), true, DownloadManagerObserver.newInstance(new Handler(),context, DownloadUtilObserver.newInstance()));
         return downloadId;
+    }
+
+    /**
+     * 检查下载文件的合法性，如果已经下载过了就删除下
+     * @param url
+     * @return
+     */
+    private void checkoutDownload(final String url){
+
+        List<DownloadStatus> downloadStatusList = getDownloadList();
+        for(DownloadStatus downloadStatus : downloadStatusList){
+            if(downloadStatus.getUrl().equals(url)){
+                downloadManager.remove(downloadStatus.getDownloadId());
+            }
+        }
+    }
+
+    /**
+     * 删除下载
+     * @param downloadId
+     */
+    public void deleteDownload(long downloadId){
+
+        downloadManager.remove(downloadId);
+    }
+
+
+
+    /**
+     * 获得全部的下载列表
+     * @return
+     */
+    public List<DownloadStatus> getDownloadList(){
+
+        List<DownloadStatus> downloadStatusList = new ArrayList<>();
+        DownloadManager.Query query = new DownloadManager.Query();
+        Cursor cursor = downloadManager.query(query);
+        while (cursor.moveToNext()){
+
+            int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+            int downId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+            int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+            int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+            int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            String url = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));//下载的url
+            int progress = ((bytes_downloaded * 100) / bytes_total);
+            DownloadStatus downloadStatus = new DownloadStatus();
+            downloadStatus.setDownloadId(downId);
+            downloadStatus.setDownloadedbyte(bytes_downloaded);
+            downloadStatus.setStatus(status);
+            downloadStatus.setReason(reason);
+            downloadStatus.setDownloadtotalbyte(bytes_total);
+            downloadStatus.setFileUri(downloadManager.getUriForDownloadedFile(downId));
+            downloadStatus.setProgress(progress);
+            downloadStatus.setUrl(url);
+            downloadStatusList.add(downloadStatus);
+        }
+        cursor.close();
+
+        return downloadStatusList;
     }
 
 }

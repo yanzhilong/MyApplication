@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.config.ApplicationConfig;
-import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -189,18 +188,21 @@ public class MdictManager {
     }
 
     //获得词典名称
-    public void addDownloadDictObserver(final long downLoadId, final Dict dict) {
+    public void addDownloadDictObserver() {
 
         DownloadUtilObserver.newInstance().addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object data) {
-                DownloadStatus downloadStatus = (DownloadStatus) data;
-                if(downloadStatus.getDownloadId() == downLoadId){
-                    if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL && dict.getType() == ApplicationConfig.DICTTYPE_MDX){
-                        repository.saveDict(dict);
+                List<DownloadStatus> downloadStatusList = (List<DownloadStatus>) data;
+                for(DownloadStatus downloadStatus : downloadStatusList){
+
+                    if(downloadStatus.getStatus() != DownloadManager.STATUS_SUCCESSFUL){
+                        break;
+                    }
+                    String filePath = downloadStatus.getFileUri().getPath();
+                    if(filePath.contains(ApplicationConfig.INSIDEMDXNAME)){
                         initMdict();
-                    }else if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL){
-                        repository.saveDict(dict);
+                        DownloadUtilObserver.newInstance().deleteObserver(this);
                     }
                 }
             }
