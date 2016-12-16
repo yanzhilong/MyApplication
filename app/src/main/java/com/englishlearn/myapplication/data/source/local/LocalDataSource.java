@@ -18,26 +18,36 @@ package com.englishlearn.myapplication.data.source.local;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.englishlearn.myapplication.data.Grammar;
-import com.englishlearn.myapplication.data.Sentence;
+import com.englishlearn.myapplication.core.DownloadStatus;
+import com.englishlearn.myapplication.core.DownloadUtil;
+import com.englishlearn.myapplication.util.RxUtil;
 
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Concrete implementation of a data source as a db.
  */
 public class LocalDataSource implements LocalData {
 
+    private final static String TAG = LocalDataSource.class.getSimpleName();
+
     private static LocalDataSource INSTANCE;
 
     private DbHelper mDbHelper;
 
+    private Context mContext;
+
+
+
     // Prevent direct instantiation.
     private LocalDataSource(@NonNull Context context) {
         mDbHelper = new DbHelper(context);
+        mContext = context;
     }
 
     public static LocalDataSource getInstance(@NonNull Context context) {
@@ -48,4 +58,15 @@ public class LocalDataSource implements LocalData {
     }
 
 
+    @Override
+    public Observable<List<DownloadStatus>> getDownloadList() {
+        return Observable.just(true).flatMap(new Func1<Boolean, Observable<List<DownloadStatus>>>() {
+            @Override
+            public Observable<List<DownloadStatus>> call(Boolean aBoolean) {
+                List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(mContext).getDownloadList();
+                Log.d(TAG,"getDownloadList:" + Thread.currentThread().getName());
+                return Observable.just(downloadStatusList);
+            }
+        }).compose(RxUtil.<List<DownloadStatus>>applySchedulers());
+    }
 }

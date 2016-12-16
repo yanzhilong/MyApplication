@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.data.source.remote.bmob;
 
 import android.util.Log;
 
+import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
@@ -5437,5 +5438,10 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<List<Dict>>applySchedulers());
+    }
+
+    @Override
+    public Observable<List<DownloadStatus>> getDownloadList() {
+        return null;
     }
 }

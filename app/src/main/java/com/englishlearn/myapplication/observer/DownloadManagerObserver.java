@@ -6,11 +6,16 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import android.util.Log;
 
+import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.core.DownloadStatus;
-import com.englishlearn.myapplication.core.DownloadUtil;
+import com.englishlearn.myapplication.data.source.Repository;
 
 import java.util.List;
 import java.util.Observable;
+
+import javax.inject.Inject;
+
+import rx.Subscriber;
 
 /**
  * Created by yanzl on 16-12-8.
@@ -23,6 +28,8 @@ public class DownloadManagerObserver extends ContentObserver {
     private final Observable observable;
     private Context context;
 
+    @Inject
+    Repository repository;
     public static synchronized DownloadManagerObserver newInstance(Handler handler, Context mContext, Observable observable) {
 
         if(INSTANCE == null){
@@ -39,6 +46,7 @@ public class DownloadManagerObserver extends ContentObserver {
         this.context = context;
         mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         this.observable = observable;
+        MyApplication.instance.getAppComponent().inject(this);
     }
 
 
@@ -46,10 +54,27 @@ public class DownloadManagerObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         // 每当/data/data/com.android.providers.download/database/database.db变化后，触发onCHANGE，开始具体查询
         super.onChange(selfChange);
-        Log.d(TAG,"onChange selfChange:" + selfChange);
+        Log.d(TAG,"onChange selfChange:" + Thread.currentThread().getName());
         if(observable != null){
-            List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(context).getDownloadList();
-            observable.notifyObservers(downloadStatusList);
+            //List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(context).getDownloadList();
+            repository.getDownloadList().subscribe(new Subscriber<List<DownloadStatus>>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(List<DownloadStatus> downloadStatuses) {
+                    Log.d(TAG,"onNext:" + Thread.currentThread().getName());
+                    observable.notifyObservers(downloadStatuses);
+                }
+            });
+
         }
     }
 

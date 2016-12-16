@@ -1,6 +1,7 @@
 
 package com.englishlearn.myapplication.data.source.remote;
 
+import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
@@ -815,6 +816,11 @@ public class RemoteDataSource implements RemoteData {
 
     @Override
     public Observable<List<Dict>> getDicts() {
+        return null;
+    }
+
+    @Override
+    public Observable<List<DownloadStatus>> getDownloadList() {
         return null;
     }
 }

@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.core;
 import android.app.DownloadManager;
 import android.net.Uri;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -83,6 +84,18 @@ public class DownloadStatus implements Serializable,Cloneable {
 
     public void setFileUri(Uri fileUri) {
         this.fileUri = fileUri;
+    }
+
+    /**
+     * 判断文件是否存在
+     * @return
+     */
+    public boolean isFileExists(){
+        if(getFileUri() != null){
+            File file = new File(getFileUri().getPath());
+            return file.exists();
+        }
+        return false;
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package com.englishlearn.myapplication.data.source;
 
+import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
@@ -952,5 +953,10 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Map<String,Dict> getDictsBySp() {
         return mSharedPreferencesData.getDictsBySp();
+    }
+
+    @Override
+    public Observable<List<DownloadStatus>> getDownloadList() {
+        return mLocalDataSource.getDownloadList();
     }
 }

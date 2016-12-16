@@ -14,6 +14,7 @@ import com.englishlearn.myapplication.grammardetail.GrammarDetailPresenter;
 import com.englishlearn.myapplication.grammars.GrammarsActivity;
 import com.englishlearn.myapplication.grammars.GrammarsPresenter;
 import com.englishlearn.myapplication.main.MainActivity;
+import com.englishlearn.myapplication.observer.DownloadManagerObserver;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsDetailPresenter;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsDetail.PhoneticsSymbolsDetailActivity;
 import com.englishlearn.myapplication.phoneticssymbols.PhoneticsSymbolsActivity;
@@ -140,6 +141,8 @@ public interface AppComponent {
     void inject(DictActivity dictActivity);
 
     void inject(MdictManager mdictManager);
+
+    void inject(DownloadManagerObserver downloadManagerObserver);
 
 
 

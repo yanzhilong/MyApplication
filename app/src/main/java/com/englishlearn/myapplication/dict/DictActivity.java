@@ -1,7 +1,6 @@
 package com.englishlearn.myapplication.dict;
 
 import android.app.DownloadManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,11 +29,8 @@ import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesD
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobRequestException;
 import com.englishlearn.myapplication.observer.DownloadUtilObserver;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,11 +43,10 @@ import rx.subscriptions.CompositeSubscription;
 public class DictActivity extends AppCompatActivity {
 
     private static final String TAG = DictActivity.class.getSimpleName();
+    private static final int REDOWNLOAD = 1;
+    private static final int DOWNLOAD = 0;
 
     private MyAdapter myAdapter;
-    private HashMap<String, Long> downloadIdMap;
-    private HashMap<String, DownloadStatus> downloadManagerStatusHashMap;
-    private Map<String, Dict> dictHashMap;
     private List<DownloadStatus> downloadStatusList;//下载列表
     private CompositeSubscription mSubscriptions;
 
@@ -87,11 +82,8 @@ public class DictActivity extends AppCompatActivity {
 
         MyApplication.instance.getAppComponent().inject(this);
 
+        downloadStatusList = new ArrayList<>();
         getDownloadStatusList();
-
-        downloadIdMap = new HashMap<>();
-        dictHashMap = new HashMap<>();
-        downloadManagerStatusHashMap = new HashMap<>();
         if (mSubscriptions == null) {
             mSubscriptions = new CompositeSubscription();
         }
@@ -110,22 +102,20 @@ public class DictActivity extends AppCompatActivity {
 
                 Log.d(TAG, myAdapter.getDicts().get(position).toString());
                 final Dict dict = myAdapter.getDicts().get(position);
-                long downloadId = 0;
+                boolean isOveriter = (int)view.getTag() == REDOWNLOAD;
                 if(dict.getType() == ApplicationConfig.DICTTYPE_MDX){
                     MdictManager.newInstance(DictActivity.this).addDownloadDictObserver();//下载成功后刷新初始化
-                    downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.INSIDEMDXPATH, ApplicationConfig.INSIDEMDXNAME, dict.getFile().getUrl(),false);
+                    DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.INSIDEMDXPATH, ApplicationConfig.INSIDEMDXNAME, dict.getFile().getUrl(),false,isOveriter);
                 }else {
-                    downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.FILEBASENAME, dict.getName(), dict.getFile().getUrl(),true);
+                    DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.FILEBASENAME, dict.getName(), dict.getFile().getUrl(),true,isOveriter);
                 }
-                downloadIdMap.put(dict.getObjectId(), downloadId);//保存下载id
 
                 //.mdictHome + File.separator + "taoge.mdx", mLocaldict.getFile().getUrl());
                 //Toast.makeText(DictActivity.this, "正在下载", Toast.LENGTH_SHORT).show();
             }
 
         });
-        checkoutLocalDict();
-        dictHashMap = repository.getDictsBySp();
+
         //设置适配器
         recyclerView.setAdapter(myAdapter);
         getList();
@@ -137,31 +127,24 @@ public class DictActivity extends AppCompatActivity {
      * 得到下载列表
      */
     private void getDownloadStatusList() {
-        downloadStatusList = DownloadUtil.newInstance(this).getDownloadList();
-    }
+        repository.getDownloadList().subscribe(new Subscriber<List<DownloadStatus>>() {
+            @Override
+            public void onCompleted() {
 
-    /**
-     * 检查文件是否存在
-     */
-    private void checkoutLocalDict(){
-
-        for(DownloadStatus downloadStatus : downloadStatusList){
-
-            if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL && downloadStatus.getFileUri() != null){
-
-                Uri uri = downloadStatus.getFileUri();
-                String filePath = uri.getPath();
-                if(filePath.isEmpty()){
-                    continue;
-                }
-                File file = new File(filePath);
-                if(file != null && !file.exists()){
-                    DownloadUtil.newInstance(this).deleteDownload(downloadStatus.getDownloadId());
-                }
             }
-        }
-        getDownloadStatusList();
-        myAdapter.notifyDataSetChanged();
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(List<DownloadStatus> downloadStatuses) {
+                downloadStatusList.clear();
+                downloadStatusList.addAll(downloadStatuses);
+                myAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private Observer observer = new Observer() {
@@ -315,39 +298,50 @@ public class DictActivity extends AppCompatActivity {
             Log.d(TAG, "onBindViewHolder" + position);
             Dict dict = dicts.get(position);
 
-            Long donwloadId = downloadIdMap.get(dict.getObjectId());
             DownloadStatus downloadStatus = getDownloadStatus(dict.getFile().getUrl());
             if (downloadStatus != null) {
                 //DownloadStatus downloadStatus = downloadManagerStatusHashMap.get(dict.getObjectId());
 
                 if (downloadStatus != null) {
-                    switch (downloadStatus.getStatus()) {
-                        case DownloadManager.STATUS_RUNNING:
-                            holder.btn_download.setText("下载中...");
-                            holder.progressBar.setProgress(100);
-                            holder.progressBar.setProgress(downloadStatus.getProgress());
-                            Log.d(TAG,downloadStatus.getDownloadedbyte() + "");
-                            break;
-                        case DownloadManager.STATUS_PAUSED:
-                            holder.btn_download.setText("暂停");
-                            break;
-                        case DownloadManager.STATUS_FAILED:
-                            holder.btn_download.setText("失败,重新下载");
-                            Log.d(TAG,downloadStatus.getErrorReason());
-                            break;
-                        case DownloadManager.STATUS_SUCCESSFUL:
-                            holder.btn_download.setText("已下载");
-                            holder.progressBar.setProgress(100);
-                            holder.btn_download.setOnClickListener(null);
-                            break;
-                    }
+
+                        switch (downloadStatus.getStatus()) {
+                            case DownloadManager.STATUS_RUNNING:
+                                holder.btn_download.setText("下载中...");
+                                holder.progressBar.setProgress(100);
+                                holder.progressBar.setProgress(downloadStatus.getProgress());
+                                Log.d(TAG,downloadStatus.getDownloadedbyte() + "");
+                                holder.btn_download.setOnClickListener(null);
+                                break;
+                            case DownloadManager.STATUS_PAUSED:
+                                holder.btn_download.setText("暂停");
+                                holder.btn_download.setOnClickListener(null);
+                                break;
+                            case DownloadManager.STATUS_FAILED:
+                                holder.btn_download.setText("失败,重新下载");
+                                holder.btn_download.setTag(REDOWNLOAD);
+                                Log.d(TAG,downloadStatus.getErrorReason());
+                                break;
+                            case DownloadManager.STATUS_SUCCESSFUL:
+
+                                if(!downloadStatus.isFileExists()){
+                                    holder.btn_download.setText("文件失效,重新下载");
+                                    holder.btn_download.setTag(REDOWNLOAD);
+                                }else {
+                                    holder.btn_download.setText("已下载");
+                                    holder.progressBar.setProgress(100);
+                                    holder.btn_download.setOnClickListener(null);
+                                }
+                                break;
+                        }
                 }
             }else{
                 if(dict.getVersion() < dict.getVersion()){
                     holder.btn_download.setText("有更新");
                     holder.btn_download.setEnabled(true);
+                    holder.btn_download.setTag(DOWNLOAD);
                 }else {
                     holder.btn_download.setText("下载");
+                    holder.btn_download.setTag(DOWNLOAD);
                     holder.btn_download.setEnabled(true);
                 }
             }
@@ -388,7 +382,7 @@ public class DictActivity extends AppCompatActivity {
                             onItemClickListener.onItemClick(itemView, getAdapterPosition());
                             break;
                         case R.id.btn_download:
-                            onItemClickListener.onDownLoad(itemView, getAdapterPosition());
+                            onItemClickListener.onDownLoad(btn_download, getAdapterPosition());
                             break;
                     }
                 }

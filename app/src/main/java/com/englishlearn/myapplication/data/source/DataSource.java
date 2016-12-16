@@ -17,6 +17,12 @@
 package com.englishlearn.myapplication.data.source;
 
 
+import com.englishlearn.myapplication.core.DownloadStatus;
+
+import java.util.List;
+
+import rx.Observable;
+
 /**
  * 数据接口
  */
@@ -48,4 +54,6 @@ DataSource {
 
     Observable<Boolean> deleteGrammarRxById(String id);*/
 
+
+    Observable<List<DownloadStatus>> getDownloadList();//获得下载列表
 }

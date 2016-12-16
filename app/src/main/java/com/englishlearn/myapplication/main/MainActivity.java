@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -64,6 +65,12 @@ public class MainActivity extends AppCompatActivity
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("");
+
+        StrictMode.setThreadPolicy(
+                new StrictMode.ThreadPolicy.Builder()
+                        .detectDiskReads() // load native libraries
+                        .detectDiskWrites() // write the linphonerc configuration file
+                        .detectNetwork().penaltyLog().build());
 
         //初始Navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
