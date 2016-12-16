@@ -16,6 +16,10 @@ public class ApplicationConfig {
     public final static String INSIDEMDXPATH = File.separator + FILEBASENAME + File.separator + FILEMDXSUBPATH;//内部的词典目录
     public final static String INSIDEBASEPATH = File.separator + FILEBASENAME;//内部的词典目录
     public final static String INSIDEMDXNAME = "taoge.mdx";//内部的词典名称
+    public final static String EXTERNALMDDNAME = "sound";//读音名称
+
+    public final static String MDDUK = "_UK";//内部的词典名称
+    public final static int DOWNLOADREFRESH = 1000;//下载刷新间隔
 
 
     //词典相关

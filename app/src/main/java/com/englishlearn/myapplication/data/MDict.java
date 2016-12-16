@@ -3,6 +3,8 @@ package com.englishlearn.myapplication.data;
 import android.os.Environment;
 import android.speech.tts.TextToSpeech;
 
+import com.englishlearn.myapplication.config.ApplicationConfig;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -70,11 +72,13 @@ public class MDict implements Serializable,Cloneable {
     }
 
     //播放声音
-    public void play() {
+    public void play(boolean isUk) {
         if (dictEntry != null && dictEntry.isValid()
                 && dictEntry.getHeadword().length() != 0) {
+
+            String headWord = isUk ? dictEntry.getHeadword() + ApplicationConfig.MDDUK : dictEntry.getHeadword();
             if (!MiscUtils
-                    .playAudioForWord(mdxDictBase, dictEntry.getDictId(), dictEntry.getHeadword())
+                    .playAudioForWord(mdxDictBase, dictEntry.getDictId(), headWord)
                     && ttsEngine != null && useTTS) {
                 String headword = dictEntry.getHeadword().trim();
                 StringBuilder hw = new StringBuilder(dictEntry.getHeadword()

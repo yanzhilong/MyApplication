@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.englishlearn.myapplication.MyApplication;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.data.source.Repository;
 
@@ -27,6 +28,7 @@ public class DownloadManagerObserver extends ContentObserver {
     private static DownloadManagerObserver INSTANCE;
     private final Observable observable;
     private Context context;
+    private long lastTime = 0;
 
     @Inject
     Repository repository;
@@ -54,9 +56,13 @@ public class DownloadManagerObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         // 每当/data/data/com.android.providers.download/database/database.db变化后，触发onCHANGE，开始具体查询
         super.onChange(selfChange);
+        if(System.currentTimeMillis() - lastTime < ApplicationConfig.DOWNLOADREFRESH){
+            return;
+        }
+        lastTime = System.currentTimeMillis();
         Log.d(TAG,"onChange selfChange:" + Thread.currentThread().getName());
         if(observable != null){
-            //List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(context).getDownloadList();
+            //List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(context).getAllDownloadList();
             repository.getDownloadList().subscribe(new Subscriber<List<DownloadStatus>>() {
                 @Override
                 public void onCompleted() {

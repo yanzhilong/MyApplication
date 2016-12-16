@@ -100,7 +100,7 @@ public class DownloadUtil {
                 file.delete();
             }
             //判断是否在下载列表中，有在下载列表中就先删除
-            List<DownloadStatus> downloadStatusList = getDownloadList();
+            List<DownloadStatus> downloadStatusList = getAllDownloadList();
             for (DownloadStatus downloadStatus : downloadStatusList) {
                 if (downloadStatus.getUrl().equals(url)) {
                     deleteDownload(downloadStatus.getDownloadId());
@@ -129,7 +129,7 @@ public class DownloadUtil {
      *
      * @return
      */
-    public List<DownloadStatus> getDownloadList() {
+    public List<DownloadStatus> getAllDownloadList() {
 
         List<DownloadStatus> downloadStatusList = new ArrayList<>();
         DownloadManager.Query query = new DownloadManager.Query();
@@ -137,8 +137,8 @@ public class DownloadUtil {
         while (cursor.moveToNext()) {
 
             long time = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
-            Log.d(TAG, "time:" + System.currentTimeMillis());
-            Log.d(TAG, "time:" + time);
+//            Log.d(TAG, "time:" + System.currentTimeMillis());
+//            Log.d(TAG, "time:" + time);
             int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
             int downId = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
             int bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));

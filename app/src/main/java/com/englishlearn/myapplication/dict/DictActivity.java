@@ -107,7 +107,7 @@ public class DictActivity extends AppCompatActivity {
                     MdictManager.newInstance(DictActivity.this).addDownloadDictObserver();//下载成功后刷新初始化
                     DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.INSIDEMDXPATH, ApplicationConfig.INSIDEMDXNAME, dict.getFile().getUrl(),false,isOveriter);
                 }else {
-                    DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.FILEBASENAME, dict.getName(), dict.getFile().getUrl(),true,isOveriter);
+                    DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.FILEBASENAME, ApplicationConfig.EXTERNALMDDNAME + dict.getName().substring(dict.getName().length() - 1,dict.getName().length()) + ".mdd", dict.getFile().getUrl(),true,isOveriter);
                 }
 
                 //.mdictHome + File.separator + "taoge.mdx", mLocaldict.getFile().getUrl());

@@ -63,8 +63,8 @@ public class LocalDataSource implements LocalData {
         return Observable.just(true).flatMap(new Func1<Boolean, Observable<List<DownloadStatus>>>() {
             @Override
             public Observable<List<DownloadStatus>> call(Boolean aBoolean) {
-                List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(mContext).getDownloadList();
-                Log.d(TAG,"getDownloadList:" + Thread.currentThread().getName());
+                List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(mContext).getAllDownloadList();
+                Log.d(TAG,"getAllDownloadList:" + Thread.currentThread().getName());
                 return Observable.just(downloadStatusList);
             }
         }).compose(RxUtil.<List<DownloadStatus>>applySchedulers());

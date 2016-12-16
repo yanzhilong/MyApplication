@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.core.MdictManager;
+import com.englishlearn.myapplication.core.NetworkManager;
 import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.Word;
@@ -231,13 +232,13 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
             case R.id.british_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getBritish_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word != null && word.getBritish_soundurl() != null){
-                    play(word.getBritish_soundurl());
+                    play(word.getBritish_soundurl(),true);
                 }
                 break;
             case R.id.american_soundurl:
                 Toast.makeText(WordDetailDialog.this.getContext(),word != null ? word.getAmerican_soundurl() : "",Toast.LENGTH_SHORT).show();
                 if(word != null && word.getAmerican_soundurl() != null){
-                    play(word.getAmerican_soundurl());
+                    play(word.getAmerican_soundurl(),false);
                 }
                 break;
             case R.id.add_sentence:
@@ -259,19 +260,20 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
      *
      * @param soundUrl
      */
-    private void play(String soundUrl){
+    private void play(String soundUrl,boolean isUk){
 
-        if(mDict != null){
-            mDict.play();
-           /* boolean save = mDict.saveWaveData("tmp");
-            Log.d(TAG,save ? "保存成功" : "保存失败");*/
-        }else if(soundUrl != null && !soundUrl.equals("")){
+        if(NetworkManager.newInstance(getContext()).isConnected() && soundUrl != null && !soundUrl.equals("")){
             try {
                 musicService.playUrl(soundUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            if(mDict != null){
+                mDict.play(isUk);
+            }
         }
+
     }
 
     @Override
