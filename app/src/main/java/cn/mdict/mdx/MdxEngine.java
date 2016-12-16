@@ -23,11 +23,14 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.mdict.utils.IOUtil;
+
+import static com.englishlearn.myapplication.config.ApplicationConfig.INSIDEMDXPATH;
 
 
 /**
@@ -120,9 +123,9 @@ public class MdxEngine {
 
         AssetManager assets = context.getAssets();
 
-        String mdictHome = baseContext.getExternalFilesDir("/dict").getAbsolutePath();
-        String mdictExternal = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge";
-        String mdictExternaltmp = Environment.getExternalStorageDirectory().getAbsolutePath() + "/taoge/tmp";
+        String mdictHome = baseContext.getExternalFilesDir(ApplicationConfig.INSIDEBASEPATH).getAbsolutePath();
+        String mdictExternal = ApplicationConfig.EXTERNALBASE;
+        String mdictExternaltmp = ApplicationConfig.EXTERNALBASE + "/tmp";
        // String mdictHome = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mdict";
         //String mdictHome=context.getExternalFilesDir(null).getAbsolutePath();
         String resDir = mdictHome + "/data"; //getFilesDir().getAbsolutePath();

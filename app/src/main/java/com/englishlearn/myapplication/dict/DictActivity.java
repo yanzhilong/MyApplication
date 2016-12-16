@@ -87,8 +87,7 @@ public class DictActivity extends AppCompatActivity {
 
         MyApplication.instance.getAppComponent().inject(this);
 
-        downloadStatusList = DownloadUtil.newInstance(this).getDownloadList();
-
+        getDownloadStatusList();
 
         downloadIdMap = new HashMap<>();
         dictHashMap = new HashMap<>();
@@ -113,12 +112,10 @@ public class DictActivity extends AppCompatActivity {
                 final Dict dict = myAdapter.getDicts().get(position);
                 long downloadId = 0;
                 if(dict.getType() == ApplicationConfig.DICTTYPE_MDX){
+                    MdictManager.newInstance(DictActivity.this).addDownloadDictObserver();//下载成功后刷新初始化
                     downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.INSIDEMDXPATH, ApplicationConfig.INSIDEMDXNAME, dict.getFile().getUrl(),false);
                 }else {
                     downloadId = DownloadUtil.newInstance(DictActivity.this).downLoadFile(ApplicationConfig.FILEBASENAME, dict.getName(), dict.getFile().getUrl(),true);
-                }
-                if(dict.getType() == ApplicationConfig.DICTTYPE_MDX){
-                    MdictManager.newInstance(DictActivity.this).addDownloadDictObserver();//下载成功后刷新初始化
                 }
                 downloadIdMap.put(dict.getObjectId(), downloadId);//保存下载id
 
@@ -137,22 +134,33 @@ public class DictActivity extends AppCompatActivity {
     }
 
     /**
+     * 得到下载列表
+     */
+    private void getDownloadStatusList() {
+        downloadStatusList = DownloadUtil.newInstance(this).getDownloadList();
+    }
+
+    /**
      * 检查文件是否存在
      */
     private void checkoutLocalDict(){
 
         for(DownloadStatus downloadStatus : downloadStatusList){
-            Uri uri = downloadStatus.getFileUri();
-            if(uri == null){
-                DownloadUtil.newInstance(this).deleteDownload(downloadStatus.getDownloadId());
-                continue;
-            }
-            String filePath = uri.getPath();
-            File file = new File(filePath);
-                if(!file.exists()){
+
+            if(downloadStatus.getStatus() == DownloadManager.STATUS_SUCCESSFUL && downloadStatus.getFileUri() != null){
+
+                Uri uri = downloadStatus.getFileUri();
+                String filePath = uri.getPath();
+                if(filePath.isEmpty()){
+                    continue;
+                }
+                File file = new File(filePath);
+                if(file != null && !file.exists()){
                     DownloadUtil.newInstance(this).deleteDownload(downloadStatus.getDownloadId());
                 }
+            }
         }
+        getDownloadStatusList();
         myAdapter.notifyDataSetChanged();
     }
 

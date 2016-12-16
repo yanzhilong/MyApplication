@@ -58,6 +58,8 @@ public class DownloadUtil {
         if(file.exists()){
             file.delete();
         }
+        //判断是否在下载列表中，有在下载列表中就先删除
+
 
         checkoutDownload(url);//删除原有下载
 
@@ -130,7 +132,8 @@ public class DownloadUtil {
             int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
             int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
             String url = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));//下载的url
-            int progress = ((bytes_downloaded * 100) / bytes_total);
+            int progress = (int)((float)bytes_downloaded  / (float) bytes_total * 100);
+            Log.d(TAG,bytes_downloaded + "/" + bytes_total + "--" + progress + "uri" + downloadManager.getUriForDownloadedFile(downId));
             DownloadStatus downloadStatus = new DownloadStatus();
             downloadStatus.setDownloadId(downId);
             downloadStatus.setDownloadedbyte(bytes_downloaded);
