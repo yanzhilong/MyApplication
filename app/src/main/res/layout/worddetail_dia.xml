@@ -4,20 +4,6 @@
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin">
-
-        <ImageButton
-            android:id="@+id/close"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/close"
-            android:background="@null"
-            android:layout_alignParentRight="true"/>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -45,7 +31,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/worddetail_add"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
@@ -105,17 +91,18 @@
             android:orientation="vertical">
             <ImageButton
                 android:id="@+id/british_soundurl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/volume_play"
-                android:background="@null"/>
+                android:background="?selectableItemBackgroundBorderless"/>
 
             <ImageButton
                 android:id="@+id/american_soundurl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/volume_play"
-                android:background="@null"/>
+                android:background="?selectableItemBackgroundBorderless"/>
 
         </LinearLayout>
 
@@ -189,7 +176,7 @@
     <VideoView
         android:layout_width="match_parent"
         android:layout_height="0.2px"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorAccent"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
@@ -209,7 +196,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/worddetail_add"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
 
@@ -242,4 +229,18 @@
         android:layout_height="wrap_content"
         android:text="查看更多相关句子"
         android:background="@null"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent">
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="关闭"
+            android:textColor="@android:color/white"
+            android:background="?selectableItemBackgroundBorderless" />
+    </RelativeLayout>
+
 </LinearLayout>
