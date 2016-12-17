@@ -29,6 +29,7 @@ public class DownloadManagerObserver extends ContentObserver {
     private final Observable observable;
     private Context context;
     private long lastTime = 0;
+    private Handler mHandler;
 
     @Inject
     Repository repository;
@@ -45,6 +46,7 @@ public class DownloadManagerObserver extends ContentObserver {
 
     private DownloadManagerObserver(Handler handler, Context mContext,Observable observable) {
         super(handler);
+        mHandler = handler;
         this.context = context;
         mDownloadManager = (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
         this.observable = observable;
@@ -56,11 +58,34 @@ public class DownloadManagerObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         // 每当/data/data/com.android.providers.download/database/database.db变化后，触发onCHANGE，开始具体查询
         super.onChange(selfChange);
+
         if(System.currentTimeMillis() - lastTime < ApplicationConfig.DOWNLOADREFRESH){
+            mHandler.removeCallbacks(runnable);
+            mHandler.postDelayed(runnable,ApplicationConfig.DOWNLOADREFRESH);
             return;
         }
+        putNotifacation();
         lastTime = System.currentTimeMillis();
         Log.d(TAG,"onChange selfChange:" + Thread.currentThread().getName());
+
+    }
+
+    //执行发送更新任务
+    private Runnable runnable = new Runnable() {
+
+        @Override
+        public void run() {
+            Log.d(TAG,"runnable" + Thread.currentThread().getName());
+            putNotifacation();
+        }
+    };
+
+    /**
+     * 发送更新
+     */
+    private void putNotifacation(){
+
+        Log.d(TAG,"putNotifacation" + Thread.currentThread().getName());
         if(observable != null){
             //List<DownloadStatus> downloadStatusList = DownloadUtil.newInstance(context).getAllDownloadList();
             repository.getDownloadList().subscribe(new Subscriber<List<DownloadStatus>>() {
