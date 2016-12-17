@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.TractateCollectGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -37,7 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCollectTractateGroupsFragment extends Fragment {
+public class MyCollectTractateGroupsFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = MyCollectTractateGroupsFragment.class.getSimpleName();
@@ -159,6 +160,7 @@ public class MyCollectTractateGroupsFragment extends Fragment {
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -216,15 +218,9 @@ public class MyCollectTractateGroupsFragment extends Fragment {
         myAdapter.replaceData(list);
     }
 
-
-    //接口
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    //加载更多接口
-    public interface OnLoadMoreListener {
-        void onLoadMore();
+    @Override
+    public void onNewIntent(Intent intent) {
+        refershList();
     }
 
     private class MyAdapter extends RecyclerViewBaseAdapter {

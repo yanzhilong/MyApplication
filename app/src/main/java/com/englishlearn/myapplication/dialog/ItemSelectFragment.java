@@ -18,7 +18,7 @@ import java.io.Serializable;
 /**
  * Created by yanzl on 16-11-2.
  */
-public class ItemSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener {
+public class ItemSelectFragment extends DialogFragment implements AdapterView.OnItemClickListener{
 
     public static final String ITEMS = "items";
     public static final String ITEMCLICKLISTENER = "ItemClickListener";
@@ -36,7 +36,7 @@ public class ItemSelectFragment extends DialogFragment implements AdapterView.On
 
         Bundle bundle = getArguments();
         if(bundle != null){
-            onItemClickListener = (ItemSelectFragment.onItemClickListener) bundle.getSerializable(ITEMCLICKLISTENER);
+            onItemClickListener = (onItemClickListener) bundle.getSerializable(ITEMCLICKLISTENER);
             tractatetype = bundle.getStringArray(ITEMS);
             flag = bundle.getInt(FLAG);
         }
@@ -70,6 +70,6 @@ public class ItemSelectFragment extends DialogFragment implements AdapterView.On
     }
 
     public interface onItemClickListener extends Serializable{
-        void onItemClick(int flag,int posion);
+        void onItemClick(int flag, int posion);
     }
 }

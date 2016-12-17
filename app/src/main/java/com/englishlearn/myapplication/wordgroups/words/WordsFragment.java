@@ -225,7 +225,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         switch (wordGroupType) {
 
             case CREATEWGROUP:
-                inflater.inflate(R.menu.menu_sentences_createsgroup, menu);
+                inflater.inflate(R.menu.menu_words_creates, menu);
                 break;
         }
     }
@@ -245,7 +245,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     private boolean createsgroup(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.delete_sentences:
+            case R.id.delete_words:
                 Log.d(TAG, "删除单词");
                 wordsMultipleAdapter.operationList(DELETEWORDS);
                 break;
@@ -265,6 +265,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -521,6 +522,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     //删除成功
     private void deleteSuccess() {
         Toast.makeText(this.getContext(), R.string.deletesuccess, Toast.LENGTH_SHORT).show();
+        refershList();
     }
 
     //删除分组成功
@@ -789,7 +791,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ItemViewHolder extends RecyclerView.ViewHolder {
+        class ItemViewHolder extends RecyclerViewBaseAdapter.ViewHolder {
             TextView name;
 
             public ItemViewHolder(final View itemView) {

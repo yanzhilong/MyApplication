@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -37,7 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class WordGroupsTopFragment extends Fragment {
+public class WordGroupsTopFragment extends Fragment implements NewIntentInterface{
 
     private static final String TAG = WordGroupsTopFragment.class.getSimpleName();
 
@@ -157,6 +158,7 @@ public class WordGroupsTopFragment extends Fragment {
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -211,6 +213,11 @@ public class WordGroupsTopFragment extends Fragment {
     private void showList(List list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        refershList();
     }
 
 

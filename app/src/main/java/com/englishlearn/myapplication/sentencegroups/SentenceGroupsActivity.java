@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,11 @@ public class SentenceGroupsActivity extends AppCompatActivity {
 
     public static final String OBJECT = "object";
     private static final String TAG = SentenceGroupsActivity.class.getSimpleName();
+    public static final String NEWINTENT = "newIntent";
     String[] titles;
     private Object object;
     private List<Fragment> list;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +51,11 @@ public class SentenceGroupsActivity extends AppCompatActivity {
         list.add(MyCollectSentenceGroupsFragment.newInstance());
 
         //ViewPager
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) findViewById(R.id.tabLayout);
         viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
-        tableLayout.getTabTextColors();
+
     }
 
 
@@ -60,6 +63,12 @@ public class SentenceGroupsActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG,"onNewIntent");
+
+        if(viewPager != null){
+            NewIntentInterface newIntentInterface = (NewIntentInterface) list.get(viewPager.getCurrentItem());
+            newIntentInterface.onNewIntent(intent);
+        }
+
     }
 
     @Override

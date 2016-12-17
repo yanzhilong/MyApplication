@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.tractategroup.addtractate.AddTractateActivity;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class TractateGroupsActivity extends AppCompatActivity implements View.On
     String[] titles;
     private Object object;
     private List<Fragment> list;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +53,21 @@ public class TractateGroupsActivity extends AppCompatActivity implements View.On
 
 
         //ViewPager
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) findViewById(R.id.tabLayout);
         viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
         tableLayout.getTabTextColors();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if(viewPager != null){
+            NewIntentInterface newIntentInterface = (NewIntentInterface) list.get(viewPager.getCurrentItem());
+            newIntentInterface.onNewIntent(intent);
+        }
     }
 
     @Override

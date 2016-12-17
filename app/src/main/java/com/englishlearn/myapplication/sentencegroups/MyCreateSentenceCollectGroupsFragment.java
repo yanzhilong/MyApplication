@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.sentencegroups.sentences.SentenceGroupType;
@@ -32,7 +33,7 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 
-public class MyCreateSentenceCollectGroupsFragment extends Fragment {
+public class MyCreateSentenceCollectGroupsFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = MyCreateSentenceCollectGroupsFragment.class.getSimpleName();
@@ -136,6 +137,12 @@ public class MyCreateSentenceCollectGroupsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Log.d(TAG,"onNewIntent");
+        getSentenceCollectGroups();
     }
 
 

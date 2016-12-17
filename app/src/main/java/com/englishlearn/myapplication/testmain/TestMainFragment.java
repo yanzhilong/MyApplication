@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.englishlearn.myapplication.R;
-import com.englishlearn.myapplication.core.MdictManager;
-import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.grammars.GrammarActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
 import com.englishlearn.myapplication.registeruser.RegisterUserActivity;
@@ -25,11 +23,11 @@ import com.englishlearn.myapplication.sentence.SentencessActivity;
 import com.englishlearn.myapplication.sentencegroup.SentenceGroupActivity;
 import com.englishlearn.myapplication.sentencegroupcollect.SentenceGroupCollectActivity;
 import com.englishlearn.myapplication.sentencegroups.sentences.sentencecollect.CreateSentenceActivity;
+import com.englishlearn.myapplication.test.dialog.DialogActivity;
 import com.englishlearn.myapplication.tractatecollect.TractateCollectActivity;
 import com.englishlearn.myapplication.tractategroup.TractateGroupActivity;
 import com.englishlearn.myapplication.tractatetype.TractateTypeActivity;
 import com.englishlearn.myapplication.updateuser.UpdateUserActivity;
-import com.englishlearn.myapplication.util.AndroidUtils;
 import com.englishlearn.myapplication.word.WordActivity;
 import com.englishlearn.myapplication.worddetail.WordDetail;
 import com.englishlearn.myapplication.wordgroupcollect.WordGroupCollectActivity;
@@ -84,7 +82,7 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
         Button sentencecollect = (Button) root.findViewById(R.id.sentencecollect);
         Button tractatecollect = (Button) root.findViewById(R.id.tractatecollect);
         Button worddetail = (Button) root.findViewById(R.id.worddetail);
-        Button test = (Button) root.findViewById(R.id.test);
+        Button test = (Button) root.findViewById(R.id.testdialog);
 
         sentence.setOnClickListener(this);
         grammar.setOnClickListener(this);
@@ -204,28 +202,15 @@ public class TestMainFragment extends Fragment implements TestMainContract.View,
                 Intent worddetail = new Intent(this.getContext(),WordDetail.class);
                 this.startActivity(worddetail);
                 break;
-            case R.id.test:
-                getWordsWavData();
+            case R.id.testdialog:
+                Intent dialogactivity = new Intent(this.getContext(),DialogActivity.class);
+                this.startActivity(dialogactivity);
+
                 break;
             default:
                 break;
         }
     }
 
-    public void getWordsWavData() {
 
-        String wordstr3 = AndroidUtils.newInstance(this.getContext()).getStringByResource(R.raw.google10000english);
-        String[] wordstr3s = wordstr3.split(System.getProperty("line.separator"));
-
-        for (int i = 0; i < wordstr3s.length; i++) {
-            MDict mDict = MdictManager.newInstance(this.getContext()).getMDict(wordstr3s[i]);
-            if (mDict != null) {
-                boolean result = mDict.saveWaveData("tmp");
-                Log.d(TAG, i+":" + wordstr3s[i] + (result ? "保存成功" : "保存失败"));
-            } else {
-                Log.d(TAG, i+":" + wordstr3s[i] + "保存失败");
-            }
-
-        }
-    }
 }

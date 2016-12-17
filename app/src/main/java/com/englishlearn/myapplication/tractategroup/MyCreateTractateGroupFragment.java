@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.TractateGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -37,7 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCreateTractateGroupFragment extends Fragment {
+public class MyCreateTractateGroupFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = MyCreateTractateGroupFragment.class.getSimpleName();
@@ -153,6 +154,7 @@ public class MyCreateTractateGroupFragment extends Fragment {
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -210,6 +212,11 @@ public class MyCreateTractateGroupFragment extends Fragment {
     private void showList(List list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        refershList();
     }
 
 

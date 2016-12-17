@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -40,7 +41,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCreateWordGroupsFragment extends Fragment implements View.OnClickListener {
+public class MyCreateWordGroupsFragment extends Fragment implements View.OnClickListener,NewIntentInterface {
 
     private static final String TAG = MyCreateWordGroupsFragment.class.getSimpleName();
     public static final String OBJECT = "object";
@@ -48,7 +49,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     private Object object;
     private MyAdapter myAdapter;
     private int page = 0;
-    private List<String> mList;
+    private List<WordGroup> mList;
 
     private User user;
     private CompositeSubscription mSubscriptions;
@@ -226,6 +227,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -292,6 +294,11 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        refershList();
     }
 
 

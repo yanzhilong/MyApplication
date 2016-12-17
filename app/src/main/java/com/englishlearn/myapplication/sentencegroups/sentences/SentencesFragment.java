@@ -589,9 +589,16 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             @Override
             public void onNext(Boolean b) {
                 deleteSuccess();
+                refershList();
             }
         });
         mSubscriptions.add(subscription);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSubscriptions.unsubscribe();
     }
 
 
@@ -744,6 +751,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             @Override
             public void onNext(Boolean b) {
                 deleteSuccess();
+                refershList();
             }
         });
         mSubscriptions.add(subscription);
@@ -790,6 +798,7 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             @Override
             public void onNext(Boolean b) {
                 deleteSuccess();
+                startSentenceGroupsActivity();
             }
         });
         mSubscriptions.add(subscription);
@@ -965,14 +974,22 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
     //删除分组成功
     private void deleteGroupSuccess() {
         deleteSuccess();
-        Intent intent = new Intent(this.getContext(), SentenceGroupsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        startSentenceGroupsActivity();
     }
 
     //删除成功
     private void deleteSuccess() {
         Toast.makeText(this.getContext(), R.string.deletesuccess, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 删除成功后回退
+     */
+    private void startSentenceGroupsActivity(){
+
+        Intent intent = new Intent(getContext(),SentenceGroupsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     //创建失败
@@ -1019,17 +1036,6 @@ public class SentencesFragment extends Fragment implements View.OnClickListener 
             default:
                 break;
         }
-    }
-
-
-    //接口
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    //加载更多接口
-    public interface OnLoadMoreListener {
-        void onLoadMore();
     }
 
     private class MyAdapter extends RecyclerViewBaseAdapter {

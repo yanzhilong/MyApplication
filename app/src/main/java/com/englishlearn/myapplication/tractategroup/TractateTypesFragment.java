@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
 import com.englishlearn.myapplication.tractategroup.tractatestop.TractatesTopActivity;
@@ -33,7 +34,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * 文章类型列表
  */
-public class TractateTypesFragment extends Fragment {
+public class TractateTypesFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = TractateTypesFragment.class.getSimpleName();
@@ -186,6 +187,11 @@ public class TractateTypesFragment extends Fragment {
 
         swipeRefreshLayout.setRefreshing(false);
         myAdapter.replaceData(list);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        getList();
     }
 
 

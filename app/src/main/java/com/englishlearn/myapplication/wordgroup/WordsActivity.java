@@ -203,6 +203,7 @@ public class WordsActivity extends AppCompatActivity {
     public void refershList(){
         page = 0;
         mList.clear();
+        myAdapter.replace(mList);
         setLoadingIndicator(true);//显示刷新图标
         getNextPage();
     }

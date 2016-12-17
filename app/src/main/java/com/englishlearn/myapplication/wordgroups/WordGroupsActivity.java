@@ -1,5 +1,6 @@
 package com.englishlearn.myapplication.wordgroups;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,14 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class WordGroupsActivity extends AppCompatActivity {
 
     String[] titles;
     private List<Fragment> list;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class WordGroupsActivity extends AppCompatActivity {
         list.add(MyCollectWordGroupsFragment.newInstance());
 
         //ViewPager
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) findViewById(R.id.tabLayout);
         viewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
@@ -53,6 +57,16 @@ public class WordGroupsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if(viewPager != null){
+            NewIntentInterface newIntentInterface = (NewIntentInterface) list.get(viewPager.getCurrentItem());
+            newIntentInterface.onNewIntent(intent);
+        }
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

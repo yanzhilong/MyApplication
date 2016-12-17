@@ -144,6 +144,7 @@ public class TractateTopFragment extends Fragment {
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPageByTractateTypeId();

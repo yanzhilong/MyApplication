@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -37,7 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCreateSentenceGroupsFragment extends Fragment {
+public class MyCreateSentenceGroupsFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = MyCreateSentenceGroupsFragment.class.getSimpleName();
@@ -153,12 +154,19 @@ public class MyCreateSentenceGroupsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        Log.d(TAG,"onNewIntent");
+        refershList();
+    }
+
     /**
      * 刷新列表
      */
     public void refershList() {
         page = 0;
         mList.clear();
+        myAdapter.replaceData(mList);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();

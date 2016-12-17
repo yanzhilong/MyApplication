@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
 import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
+import com.englishlearn.myapplication.core.NewIntentInterface;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -37,7 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by yanzl on 16-7-20.
  */
-public class MyCollectSentenceGroupsFragment extends Fragment {
+public class MyCollectSentenceGroupsFragment extends Fragment implements NewIntentInterface {
 
     public static final String OBJECT = "object";
     private static final String TAG = MyCollectSentenceGroupsFragment.class.getSimpleName();
@@ -73,6 +74,8 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
         }
 
     }
+
+
 
     @Nullable
     @Override
@@ -154,12 +157,19 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        Log.d(TAG,"onNewIntent");
+        refershList();
+    }
+
     /**
      * 刷新列表
      */
     public void refershList() {
         page = 0;
         sentenceGroupCollects.clear();
+        myAdapter.replaceData(sentenceGroupCollects);
         myAdapter.hasMore();
         swipeRefreshLayout.setRefreshing(true);
         getNextPage();
@@ -218,17 +228,6 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     private void showList(List<SentenceGroupCollect> list) {
         Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
-    }
-
-
-    //接口
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    //加载更多接口
-    public interface OnLoadMoreListener {
-        void onLoadMore();
     }
 
     private class MyAdapter extends RecyclerViewBaseAdapter {
