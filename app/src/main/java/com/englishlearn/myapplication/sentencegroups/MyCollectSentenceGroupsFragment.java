@@ -2,7 +2,6 @@ package com.englishlearn.myapplication.sentencegroups;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
 import com.englishlearn.myapplication.data.SentenceGroupCollect;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -93,19 +93,19 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
 
         //recyclerView.setLayoutManager(mgrgridview);
         myAdapter = new MyAdapter();
-        myAdapter.setOnItemClickListener(new OnItemClickListener() {
+        myAdapter.setOnItemClickListener(new RecyclerViewBaseAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
 
                 SentenceGroupCollect sentenceGroupCollect = myAdapter.getSentenceGroupCollects().get(position);
                 Log.d(TAG, sentenceGroupCollect.toString());
-                Intent intent = new Intent(MyCollectSentenceGroupsFragment.this.getContext(),SentencesActivity.class);
+                Intent intent = new Intent(MyCollectSentenceGroupsFragment.this.getContext(), SentencesActivity.class);
 
 
                 Bundle bundle = new Bundle();
 
-                bundle.putSerializable(SentencesActivity.SENTENCEGROUPCOLLECT,sentenceGroupCollect);
+                bundle.putSerializable(SentencesActivity.SENTENCEGROUPCOLLECT, sentenceGroupCollect);
                 bundle.putSerializable(SentencesActivity.TYPE, SentenceGroupType.FAVORITESGROUP);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -113,7 +113,7 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
             }
         });
 
-        myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        myAdapter.setOnLoadMoreListener(new RecyclerViewBaseAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 getNextPage();
@@ -166,14 +166,10 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
     }
 
 
-
-
-
-
     //获取下一页
     public void getNextPage() {
 
-        Subscription subscription = repository.getSentenceGroupCollectRxByUserId(user.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<SentenceGroupCollect>>() {
+        Subscription subscription = repository.getSentenceGroupCollectRxByUserId(user.getObjectId(), page, PAGESIZE).subscribe(new Subscriber<List<SentenceGroupCollect>>() {
             @Override
             public void onCompleted() {
                 loadingComplete();
@@ -186,12 +182,12 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
 
             @Override
             public void onNext(List<SentenceGroupCollect> list) {
-                Log.d(TAG,"onNext size:" + list.size());
+                Log.d(TAG, "onNext size:" + list.size());
 
-                if(list == null || list.size() == 0){
+                if (list == null || list.size() == 0) {
                     myAdapter.loadingGone();
                     myAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     sentenceGroupCollects.addAll(list);
                     page++;//页数增加
                     //mCollectSentenceGroupList.addAll(list);
@@ -235,37 +231,17 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
         void onLoadMore();
     }
 
-    private class MyAdapter extends RecyclerView.Adapter {
+    private class MyAdapter extends RecyclerViewBaseAdapter {
 
-        private boolean isGone = false;//是否加载完成
-        private OnLoadMoreListener mOnLoadMoreListener;
         private List<SentenceGroupCollect> sentenceGroupCollects;
-        private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
             sentenceGroupCollects = new ArrayList<>();
         }
 
-        //已经加载完成了
-        public void loadingGone() {
-            isGone = true;
-        }
-
-        //还有更多
-        public void hasMore() {
-            isGone = false;
-        }
-
-        public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-            this.mOnLoadMoreListener = mOnLoadMoreListener;
-        }
 
         public List<SentenceGroupCollect> getSentenceGroupCollects() {
             return sentenceGroupCollects;
-        }
-
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-            this.onItemClickListener = onItemClickListener;
         }
 
         public void replaceData(List<SentenceGroupCollect> sentenceGroupCollects) {
@@ -277,90 +253,36 @@ public class MyCollectSentenceGroupsFragment extends Fragment {
         }
 
         @Override
-        public int getItemViewType(int position) {
-            if (position != sentenceGroupCollects.size()) {
-                Log.d(TAG, "wordgroupstop_item");
-                return R.layout.sentencegroupstopfragment_frag_item;
-            } else {
-                if (isGone) {
-                    Log.d(TAG, "load_done_layout");
-                    return R.layout.sentencegroupstopfragment_frag_loaddone_item;
-                }
-                Log.d(TAG, "load_more_layout");
-                return R.layout.sentencegroupstopfragment_frag_loadmore_item;
-            }
+        public int getItemViewTypeBase(int position) {
+            return R.layout.sentencegroupstopfragment_frag_item;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolderBase(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-            switch (viewType) {
-                case R.layout.sentencegroupstopfragment_frag_item:
-                    return new ItemViewHolder(v);
-                case R.layout.sentencegroupstopfragment_frag_loadmore_item:
-                    return new LoadingMoreViewHolder(v);
-                case R.layout.sentencegroupstopfragment_frag_loaddone_item:
-                    return new LoadingGoneViewHolder(v);
-            }
-            return null;
+            return new ItemViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Log.d(TAG, "onBindViewHolder" + position);
-            if (holder instanceof ItemViewHolder) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(sentenceGroupCollects.get(position).getSentenceGroup().getName());
-            } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                }, 100);
-            }
+        public void onBindViewHolderBase(RecyclerView.ViewHolder holder, int position) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            itemViewHolder.name.setText(sentenceGroupCollects.get(position).getSentenceGroup().getName());
         }
 
         @Override
-        public int getItemCount() {
-            return sentenceGroupCollects.size() + 1;
+        public int getItemCountBase() {
+            return sentenceGroupCollects.size();
         }
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ItemViewHolder extends RecyclerView.ViewHolder {
+        class ItemViewHolder extends RecyclerViewBaseAdapter.ViewHolder {
             TextView name;
 
             public ItemViewHolder(final View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(itemView, getAdapterPosition());
-                        }
-                    }
-                });
-
                 name = (TextView) itemView.findViewById(R.id.name);
-            }
-        }
-
-        //加载更多
-        class LoadingMoreViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingMoreViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        //加载完成
-        class LoadingGoneViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingGoneViewHolder(View itemView) {
-                super(itemView);
             }
         }
     }

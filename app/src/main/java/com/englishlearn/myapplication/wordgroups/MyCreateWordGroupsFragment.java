@@ -2,7 +2,6 @@ package com.englishlearn.myapplication.wordgroups;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
 import com.englishlearn.myapplication.data.User;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -98,7 +98,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
 
         //recyclerView.setLayoutManager(mgrgridview);
         myAdapter = new MyAdapter();
-        myAdapter.setOnItemClickListener(new OnItemClickListener() {
+        myAdapter.setOnItemClickListener(new RecyclerViewBaseAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
@@ -113,7 +113,7 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
 
         });
 
-        myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        myAdapter.setOnLoadMoreListener(new RecyclerViewBaseAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
                 getNextPage();
@@ -305,37 +305,16 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
         void onLoadMore();
     }
 
-    private class MyAdapter extends RecyclerView.Adapter {
+    private class MyAdapter extends RecyclerViewBaseAdapter {
 
-        private boolean isGone = false;//是否加载完成
-        private OnLoadMoreListener mOnLoadMoreListener;
         private List<WordGroup> wordGroups;
-        private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
             wordGroups = new ArrayList<>();
         }
 
-        //已经加载完成了
-        public void loadingGone() {
-            isGone = true;
-        }
-
-        //还有更多
-        public void hasMore() {
-            isGone = false;
-        }
-
-        public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-            this.mOnLoadMoreListener = mOnLoadMoreListener;
-        }
-
         public List<WordGroup> getWordGroups() {
             return wordGroups;
-        }
-
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-            this.onItemClickListener = onItemClickListener;
         }
 
         public void replaceData(List<WordGroup> wordGroups) {
@@ -347,90 +326,36 @@ public class MyCreateWordGroupsFragment extends Fragment implements View.OnClick
         }
 
         @Override
-        public int getItemViewType(int position) {
-            if (position != wordGroups.size()) {
-                Log.d(TAG, "wordgroupstop_item");
-                return R.layout.mywordgroups_frag_item;
-            } else {
-                if (isGone) {
-                    Log.d(TAG, "load_done_layout");
-                    return R.layout.mywordgroups_frag_loaddone_item;
-                }
-                Log.d(TAG, "load_more_layout");
-                return R.layout.mywordgroups_frag_loadmore_item;
-            }
+        public int getItemViewTypeBase(int position) {
+            return R.layout.mywordgroups_frag_item;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolderBase(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-            switch (viewType) {
-                case R.layout.mywordgroups_frag_item:
                     return new ItemViewHolder(v);
-                case R.layout.mywordgroups_frag_loadmore_item:
-                    return new LoadingMoreViewHolder(v);
-                case R.layout.mywordgroups_frag_loaddone_item:
-                    return new LoadingGoneViewHolder(v);
-            }
-            return null;
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Log.d(TAG, "onBindViewHolder" + position);
-            if (holder instanceof ItemViewHolder) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(wordGroups.get(position).getName());
-            } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                }, 100);
-            }
+        public void onBindViewHolderBase(RecyclerView.ViewHolder holder, int position) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            itemViewHolder.name.setText(wordGroups.get(position).getName());
         }
 
         @Override
-        public int getItemCount() {
-            return wordGroups.size() + 1;
+        public int getItemCountBase() {
+            return wordGroups.size();
         }
 
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ItemViewHolder extends RecyclerView.ViewHolder {
+        class ItemViewHolder extends RecyclerViewBaseAdapter.ViewHolder {
             TextView name;
 
             public ItemViewHolder(final View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(itemView, getAdapterPosition());
-                        }
-                    }
-                });
-
                 name = (TextView) itemView.findViewById(R.id.name);
-            }
-        }
-
-        //加载更多
-        class LoadingMoreViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingMoreViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        //加载完成
-        class LoadingGoneViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingGoneViewHolder(View itemView) {
-                super(itemView);
             }
         }
     }

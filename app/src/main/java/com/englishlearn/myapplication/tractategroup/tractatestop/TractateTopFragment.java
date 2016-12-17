@@ -2,7 +2,6 @@ package com.englishlearn.myapplication.tractategroup.tractatestop;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.adapter.RecyclerViewBaseAdapter;
 import com.englishlearn.myapplication.data.Tractate;
 import com.englishlearn.myapplication.data.TractateType;
 import com.englishlearn.myapplication.data.source.Repository;
@@ -82,7 +82,7 @@ public class TractateTopFragment extends Fragment {
 
         recyclerView.setLayoutManager(mgrlistview);
         myAdapter = new MyAdapter();
-        myAdapter.setOnItemClickListener(new OnItemClickListener() {
+        myAdapter.setOnItemClickListener(new RecyclerViewBaseAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
@@ -97,15 +97,15 @@ public class TractateTopFragment extends Fragment {
 
         });
 
-        myAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+        myAdapter.setOnLoadMoreListener(new RecyclerViewBaseAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
+                Log.d(TAG,"onLoadMore");
                 getNextPageByTractateTypeId();
             }
         });
         //设置适配器
         recyclerView.setAdapter(myAdapter);
-
 
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -152,6 +152,7 @@ public class TractateTopFragment extends Fragment {
     //获取下一页
     public void getNextPageByTractateTypeId() {
 
+        Log.d(TAG,"getNextPageByTractateTypeId");
         Subscription subscription = repository.getTractateRxByTractateTypeId(tractateType.getObjectId(),page,PAGESIZE).subscribe(new Subscriber<List<Tractate>>() {
             @Override
             public void onCompleted() {
@@ -196,53 +197,22 @@ public class TractateTopFragment extends Fragment {
 
     //显示列表
     private void showList(List list) {
-        Log.d(TAG, "showList:" + list.toString());
+//        Log.d(TAG, "showList:" + list.toString());
         myAdapter.replaceData(list);
     }
 
+    private class MyAdapter extends RecyclerViewBaseAdapter {
 
-    //接口
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    //加载更多接口
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
-
-    private class MyAdapter extends RecyclerView.Adapter {
-
-        private boolean isGone = false;//是否加载完成
-        private OnLoadMoreListener mOnLoadMoreListener;
         private List<Tractate> tractates;
-        private OnItemClickListener onItemClickListener = null;
 
         public MyAdapter() {
             tractates = new ArrayList<>();
-        }
-
-        //已经加载完成了
-        public void loadingGone() {
-            isGone = true;
-        }
-
-        //还有更多
-        public void hasMore() {
-            isGone = false;
-        }
-
-        public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-            this.mOnLoadMoreListener = mOnLoadMoreListener;
         }
 
         public List<Tractate> getTractates() {
             return tractates;
         }
 
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-            this.onItemClickListener = onItemClickListener;
-        }
 
         public void replaceData(List<Tractate> tractates) {
             if (tractates != null) {
@@ -253,90 +223,35 @@ public class TractateTopFragment extends Fragment {
         }
 
         @Override
-        public int getItemViewType(int position) {
-            if (position != tractates.size()) {
-                Log.d(TAG, "wordgroupstop_item");
-                return R.layout.tractatetop_frag_item;
-            } else {
-                if (isGone) {
-                    Log.d(TAG, "load_done_layout");
-                    return R.layout.tractatetop_frag_loaddone_item;
-                }
-                Log.d(TAG, "load_more_layout");
-                return R.layout.tractatetop_frag_loadmore_item;
-            }
+        public int getItemViewTypeBase(int position) {
+            return R.layout.tractatetop_frag_item;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolderBase(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-            switch (viewType) {
-                case R.layout.tractatetop_frag_item:
-                    return new ItemViewHolder(v);
-                case R.layout.tractatetop_frag_loadmore_item:
-                    return new LoadingMoreViewHolder(v);
-                case R.layout.tractatetop_frag_loaddone_item:
-                    return new LoadingGoneViewHolder(v);
-            }
-            return null;
+            return new ItemViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Log.d(TAG, "onBindViewHolder" + position);
-            if (holder instanceof ItemViewHolder) {
-                ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-                itemViewHolder.name.setText(tractates.get(position).getTitle());
-            } else if (holder instanceof LoadingMoreViewHolder && mOnLoadMoreListener != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnLoadMoreListener.onLoadMore();
-                    }
-                }, 100);
-            }
+        public void onBindViewHolderBase(RecyclerView.ViewHolder holder, int position) {
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            itemViewHolder.name.setText(tractates.get(position).getTitle());
         }
 
         @Override
-        public int getItemCount() {
-            return tractates.size() + 1;
+        public int getItemCountBase() {
+            return tractates.size();
         }
-
 
         //自定义的ViewHolder,减少findViewById调用次数
-        class ItemViewHolder extends RecyclerView.ViewHolder {
+        class ItemViewHolder extends RecyclerViewBaseAdapter.ViewHolder {
             TextView name;
 
             public ItemViewHolder(final View itemView) {
                 super(itemView);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(itemView, getAdapterPosition());
-                        }
-                    }
-                });
-
                 name = (TextView) itemView.findViewById(R.id.name);
-            }
-        }
-
-        //加载更多
-        class LoadingMoreViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingMoreViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
-
-        //加载完成
-        class LoadingGoneViewHolder extends RecyclerView.ViewHolder {
-
-            public LoadingGoneViewHolder(View itemView) {
-                super(itemView);
             }
         }
     }
