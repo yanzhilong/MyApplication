@@ -52,10 +52,11 @@ public class BmobFileTest {
 
     @Test
     public void uploadFile(){
-        File file = new File(ApplicationConfig.EXTERNALBASE + File.separator + "psbase0.wav");
+        File file = new File(ApplicationConfig.EXTERNALBASE + File.separator + "psbase0.mp3");
         if(file.exists()){
             TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
-            mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
+            //mBmobRemoteData.uploadFile(file,"audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
+            mBmobRemoteData.uploadFile(file,"audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
             testSubscriber_deleteById.assertNoErrors();
 
             List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();

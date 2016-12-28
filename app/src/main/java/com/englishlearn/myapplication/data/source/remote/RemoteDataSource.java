@@ -790,6 +790,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<Boolean> deleteFile(String cdnName, String url) {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> downloadFile(String url, String filePath) {
         return null;
     }

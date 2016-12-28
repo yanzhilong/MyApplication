@@ -891,7 +891,12 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
 
     @Override
     public Observable<BmobFile> uploadFile(File file,String type) {
-        return null;
+        return mBmobDataSource.uploadFile(file,type);
+    }
+
+    @Override
+    public Observable<Boolean> deleteFile(String cdnName, String url) {
+        return mBmobDataSource.deleteFile(cdnName,url);
     }
 
     @Override

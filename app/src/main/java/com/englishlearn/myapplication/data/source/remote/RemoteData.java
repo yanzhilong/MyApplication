@@ -1247,6 +1247,12 @@ public interface RemoteData extends DataSource{
     //上传文件
     Observable<BmobFile> uploadFile(File file,String type);
 
+
+
+    //删除上传文件
+    Observable<Boolean> deleteFile(String cdnName,String url);
+
+
     /**
      * 下载文件
      * @param url

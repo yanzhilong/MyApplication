@@ -5242,7 +5242,8 @@ public class BmobDataSource implements RemoteData {
 
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData(type, file.getName(), requestFile);
-        return bmobService.uploadFile(file.getName(),body,type)
+
+        return bmobService.uploadFile(file.getName(),body)
                 .flatMap(new Func1<Response<BmobFile>, Observable<BmobFile>>() {
                     @Override
                     public Observable<BmobFile> call(Response<BmobFile> bmobTractateCollectResultResponse) {
@@ -5265,6 +5266,31 @@ public class BmobDataSource implements RemoteData {
                         return Observable.error(bmobRequestException);
                     }
                 }).compose(RxUtil.<BmobFile>applySchedulers());
+    }
+
+    @Override
+    public Observable<Boolean> deleteFile(String cdnName, String url) {
+        return bmobService.deleteFile(cdnName,url)
+                .flatMap(new Func1<Response<ResponseBody>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Response<ResponseBody> responseBodyResponse) {
+                        BmobRequestException bmobRequestException = new BmobRequestException(RemoteCode.COMMON.getDefauleError().getMessage());
+                        if(responseBodyResponse.isSuccessful()){
+                            return Observable.just(true);
+                        }else{
+                            Gson gson = new GsonBuilder().create();
+                            try {
+                                String errjson =  responseBodyResponse.errorBody().string();
+                                BmobDefaultError bmobDefaultError = gson.fromJson(errjson,BmobDefaultError.class);
+                                RemoteCode.COMMON createuser = RemoteCode.COMMON.getErrorMessage(bmobDefaultError.getCode());
+                                bmobRequestException = new BmobRequestException(createuser.getMessage());
+                            }catch (IOException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        return Observable.error(bmobRequestException);
+                    }
+                }).compose(RxUtil.<Boolean>applySchedulers());
     }
 
     @Override

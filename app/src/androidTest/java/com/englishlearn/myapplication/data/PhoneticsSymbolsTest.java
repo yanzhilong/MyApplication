@@ -158,32 +158,6 @@ public class PhoneticsSymbolsTest {
 
 
 
-    @Test
-    public void realName(){
-
-        File file = new File(ApplicationConfig.EXTERNALBASE + File.separator + "pbnew");
-        File[] files = file.listFiles();
-        for(int i = 0; i < files.length; i++){
-            File[] files1 = files[i].listFiles();
-            for(int j = 0; j < files1.length; j++){
-                File file1 = files1[j];
-                String name = file1.getName().substring(0,(file1.getName().lastIndexOf(".") == -1 ? file1.getName().length() : file1.getName().lastIndexOf(".")));
-                if(name.equals(files[i].getName())){
-                    Log.d(TAG,"音标：" + name);
-                }else{
-                    Log.d(TAG,"单词：" + name);
-                    realName(files[i].getName(),file1);
-                }
-            }
-        }
-    }
-
-    private void realName(String basename,File file){
-        String rootPath = file.getParent();
-        System.out.println("根路径是："+rootPath);
-        File newFile = new File(rootPath + File.separator + basename + "_" + file.getName());
-        file.renameTo(newFile);
-    }
 
 
 }
