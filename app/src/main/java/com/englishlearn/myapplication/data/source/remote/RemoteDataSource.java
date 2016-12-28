@@ -6,7 +6,7 @@ import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
-import com.englishlearn.myapplication.data.PhoneticsWords;
+import com.englishlearn.myapplication.data.PhoneticsVoice;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
@@ -159,32 +159,27 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
-    public Observable<PhoneticsWords> addPhoneticsWords(PhoneticsWords phoneticsWords) {
+    public Observable<PhoneticsVoice> addPhoneticsSymbolsVoice(PhoneticsVoice phoneticsSymbolsVoice) {
         return null;
     }
 
     @Override
-    public Observable<Boolean> deletePhoneticsWordsById(String phoneticsWordsId) {
+    public Observable<Boolean> deletePhoneticsSymbolsVoiceById(String phoneticsSymbolsVoiceId) {
         return null;
     }
 
     @Override
-    public Observable<Boolean> updatePhoneticsWordsRxById(PhoneticsWords phoneticsWords) {
+    public Observable<Boolean> updatePhoneticsSymbolsVoiceRxById(PhoneticsVoice phoneticsSymbolsVoice) {
         return null;
     }
 
     @Override
-    public Observable<PhoneticsWords> getPhoneticsWordsRxById(String phoneticsWordsId) {
+    public Observable<PhoneticsVoice> getPhoneticsSymbolsVoiceRxById(String phoneticsSymbolsVoiceId) {
         return null;
     }
 
     @Override
-    public Observable<PhoneticsWords> getPhoneticsWordsRxByPhoneticsId(String phoneticsWordsId) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<PhoneticsWords>> getPhoneticsWordsRx() {
+    public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoicesRx(String phoneticsSymbolsId) {
         return null;
     }
 

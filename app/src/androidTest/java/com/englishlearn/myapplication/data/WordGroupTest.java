@@ -92,7 +92,7 @@ public class WordGroupTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setVowel(isvowel);
+               // phoneticsSymbols.setVowel(isvowel);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }

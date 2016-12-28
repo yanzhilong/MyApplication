@@ -7,6 +7,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
 
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +27,8 @@ import java.util.List;
 
 import rx.observers.TestSubscriber;
 
+import static com.englishlearn.myapplication.config.ApplicationConfig.phoneticsSymbolsArray;
+import static com.englishlearn.myapplication.config.ApplicationConfig.phoneticsSymbolsTypes;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -66,17 +70,14 @@ public class PhoneticsSymbolsTest {
         InputStream inputStream = context.getResources().openRawResource(R.raw.phoneticssymbols);
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        boolean isvowel = true;
 
         String line;
 
-        List<WordGroup> wordGroups = getPhoneticsWordGroups();
         while ((line = bufferedReader.readLine()) != null){
 
             Log.d(TAG,line);
             if(!line.startsWith("#") && !line.equals("")){
                 if(line.contains("p")){
-                    isvowel = false;
                 }
                 PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
                 //判断是否有美英
@@ -92,15 +93,8 @@ public class PhoneticsSymbolsTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setVowel(isvowel);
                 WordGroup wordGroup = new WordGroup();
 
-                for(WordGroup w:wordGroups){
-                    if(w.getName().contains(ipaname)){
-                        wordGroup.setObjectId(w.getObjectId());
-                    }
-                }
-                phoneticsSymbols.setWordGroup(wordGroup);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }
@@ -124,26 +118,72 @@ public class PhoneticsSymbolsTest {
         }
     }
 
-    private List<WordGroup> getPhoneticsWordGroups(){
-        //获取所有信息来源　
-        Log.d(TAG,"testWordGroup_getAll");
-        TestSubscriber<List<WordGroup>> testSubscriber_getall = new TestSubscriber<>();
-        mBmobRemoteData.getWordGroupRxByUserId("9d7707245a",0,100).toBlocking().subscribe(testSubscriber_getall);
-        testSubscriber_getall.assertNoErrors();
-        List<List<WordGroup>> listall = testSubscriber_getall.getOnNextEvents();
-        List<WordGroup> sentences = null;
-        if(listall != null && listall.size() > 0){
-            sentences = listall.get(0);
+    /**
+     * 音标数据库初始化,增加音标
+     */
+    @Test
+    public void testAddPhoneticsSymbolsNew() throws IOException {
+
+        List<PhoneticsSymbols> phoneticsSymbolses = new ArrayList<>();
+
+        for(int i = 0; i < phoneticsSymbolsArray.length; i++){
+
+            PhoneticsSymbols phoneticsSymbols = new PhoneticsSymbols();
+            String[] names = phoneticsSymbolsArray[i];
+            phoneticsSymbols.setIpaname(names[0]);
+            phoneticsSymbols.setKkname(names.length > 1 ? names[1] : names[0]);
+            phoneticsSymbols.setAlias(ApplicationConfig.PSBASENAME + i);
+            phoneticsSymbols.setType(phoneticsSymbolsTypes[i]);
+            phoneticsSymbolses.add(phoneticsSymbols);
         }
-        Log.d(TAG,"testWordGroup_getAll_result:" + sentences.toString());
-        List<WordGroup> list = new ArrayList<>();
-        for(WordGroup wordGroup: sentences){
-            if(wordGroup.getName().contains("示例单词")){
-                list.add(wordGroup);
+
+        Log.d(TAG,phoneticsSymbolses.size()+"");
+        Log.d(TAG,phoneticsSymbolses.toString());
+        //48个音标
+        for(PhoneticsSymbols phoneticsSymbols : phoneticsSymbolses){
+            TestSubscriber<PhoneticsSymbols> testSubscriber_add = new TestSubscriber<>();
+            mBmobRemoteData.addPhoneticsSymbols(phoneticsSymbols).toBlocking().subscribe(testSubscriber_add);
+            testSubscriber_add.assertNoErrors();
+            Thread thread = testSubscriber_add.getLastSeenThread();
+            Log.d(TAG,"testPhoneticsSymbols_add_thread:" + thread.getName());
+            List<PhoneticsSymbols> list = testSubscriber_add.getOnNextEvents();
+            Assert.assertNotNull(list);
+            if(list == null || list.size() == 0){
+                return;
+            }
+            PhoneticsSymbols p = list.get(0);
+            Log.d(TAG,"testPhoneticsSymbols_add_result:" + p.toString());
+        }
+    }
+
+
+
+    @Test
+    public void realName(){
+
+        File file = new File(ApplicationConfig.EXTERNALBASE + File.separator + "pbnew");
+        File[] files = file.listFiles();
+        for(int i = 0; i < files.length; i++){
+            File[] files1 = files[i].listFiles();
+            for(int j = 0; j < files1.length; j++){
+                File file1 = files1[j];
+                String name = file1.getName().substring(0,(file1.getName().lastIndexOf(".") == -1 ? file1.getName().length() : file1.getName().lastIndexOf(".")));
+                if(name.equals(files[i].getName())){
+                    Log.d(TAG,"音标：" + name);
+                }else{
+                    Log.d(TAG,"单词：" + name);
+                    realName(files[i].getName(),file1);
+                }
             }
         }
-
-
-        return list;
     }
+
+    private void realName(String basename,File file){
+        String rootPath = file.getParent();
+        System.out.println("根路径是："+rootPath);
+        File newFile = new File(rootPath + File.separator + basename + "_" + file.getName());
+        file.renameTo(newFile);
+    }
+
+
 }

@@ -8,14 +8,21 @@ import java.io.Serializable;
  */
 public class PhoneticsSymbols implements Serializable,Cloneable{
 
+    //标记一对多关系
+    private String __type;
+    private String className;
+
     private String objectId;
     private String ipaname; //英音国际标准（DJ）
     private String kkname; //美音国际标准（KK）
-    private String soundurl;//读音
-    private String videourl;//视频
-    private String content;//发音方法,及相关说明
-    private WordGroup wordGroup;//相关的示例单词
-    private Boolean vowel;//元音
+    private String alias; //别名
+    private String content; //发音方法,及相关说明
+    private String type; //音标类型:元音,单元音，前元音;辅音,爆破音,清辅音;
+
+    public void setPointer(){
+        __type = "Pointer";
+        className = "PhoneticsSymbols";
+    }
 
     public String getObjectId() {
         return objectId;
@@ -23,14 +30,6 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
-    }
-
-    public String getKkname() {
-        return kkname;
-    }
-
-    public void setKkname(String kkname) {
-        this.kkname = kkname;
     }
 
     public String getIpaname() {
@@ -41,20 +40,20 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
         this.ipaname = ipaname;
     }
 
-    public String getSoundurl() {
-        return soundurl;
+    public String getKkname() {
+        return kkname;
     }
 
-    public void setSoundurl(String soundurl) {
-        this.soundurl = soundurl;
+    public void setKkname(String kkname) {
+        this.kkname = kkname;
     }
 
-    public String getVideourl() {
-        return videourl;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setVideourl(String videourl) {
-        this.videourl = videourl;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getContent() {
@@ -65,20 +64,12 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
         this.content = content;
     }
 
-    public Boolean getVowel() {
-        return vowel;
+    public String getType() {
+        return type;
     }
 
-    public void setVowel(Boolean vowel) {
-        this.vowel = vowel;
-    }
-
-    public WordGroup getWordGroup() {
-        return wordGroup;
-    }
-
-    public void setWordGroup(WordGroup wordGroup) {
-        this.wordGroup = wordGroup;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -99,10 +90,9 @@ public class PhoneticsSymbols implements Serializable,Cloneable{
                 "objectId='" + objectId + '\'' +
                 ", ipaname='" + ipaname + '\'' +
                 ", kkname='" + kkname + '\'' +
-                ", soundurl='" + soundurl + '\'' +
-                ", videourl='" + videourl + '\'' +
+                ", alias='" + alias + '\'' +
                 ", content='" + content + '\'' +
-                ", vowel=" + vowel +
+                ", type='" + type + '\'' +
                 '}';
     }
 }

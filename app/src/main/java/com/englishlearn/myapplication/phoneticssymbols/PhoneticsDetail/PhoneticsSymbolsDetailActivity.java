@@ -30,8 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Subscriber;
-import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -90,9 +88,9 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
 
         phonetics_ipaname.setText(phoneticsSymbols.getIpaname());
         phonetics_kkname.setText(phoneticsSymbols.getKkname());
-        phonetics_type.setText(phoneticsSymbols.getVowel() ? "元音" : "輔音");
+        phonetics_type.setText(phoneticsSymbols.getType().contains("元音") ? "元音" : "輔音");
         phonetics_content.setText(phoneticsSymbols.getContent());
-        phonetics_videourl.setText(phoneticsSymbols.getVideourl());
+        //phonetics_videourl.setText(phoneticsSymbols.getVideourl());
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -162,7 +160,7 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
     }
 
     void getWords() {
-        Subscription subscription = repository.getWordsRxByWordGroupId(phoneticsSymbols.getWordGroup().getObjectId(),0,200).
+        /*Subscription subscription = repository.getWordsRxByWordGroupId(phoneticsSymbols.getWordGroup().getObjectId(),0,200).
                 subscribe(new Subscriber<List<Word>>() {
                     @Override
                     public void onCompleted() {
@@ -179,18 +177,18 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
                         showWords(words);
                     }
                 });
-        mSubscriptions.add(subscription);
+        mSubscriptions.add(subscription);*/
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.phonetics_soundurl:
-                Toast.makeText(this,phoneticsSymbols.getSoundurl(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,phoneticsSymbols.getSoundurl(),Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.phonetics_videourl:
-                Toast.makeText(this,phoneticsSymbols.getVideourl(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this,phoneticsSymbols.getVideourl(),Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

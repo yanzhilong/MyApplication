@@ -90,7 +90,7 @@ public class BmobDataSourceTest {
                 }
                 phoneticsSymbols.setIpaname(ipaname);
                 phoneticsSymbols.setKkname(kkname);
-                phoneticsSymbols.setVowel(isvowel);
+                //phoneticsSymbols.setVowel(isvowel);
                 phoneticsSymbolses.add(phoneticsSymbols);
 
             }
@@ -114,7 +114,7 @@ public class BmobDataSourceTest {
         }
     }
 
-    @Test
+   /* @Test
     public void testPhoneticsWords() {
         //添加　
         Log.d(TAG,"testPhoneticsWords_add");
@@ -192,7 +192,7 @@ public class BmobDataSourceTest {
             Log.d(TAG,"testPhoneticsWords_deleteById"+"success");
         }
     }
-
+*/
 
     @Test
     public void testPhoneticsSymbols() {

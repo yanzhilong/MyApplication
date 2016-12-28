@@ -21,8 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="wrap_content"
@@ -31,8 +29,6 @@
                 app:tabMaxWidth="70dp"
                 android:layout_centerInParent="true"
                 app:tabIndicatorHeight="0dp"/>
-
-
 
         </RelativeLayout>
 

@@ -10,7 +10,7 @@ public class SentenceCollect implements Serializable,Cloneable{
     private String objectId;
     private User user; //用户Id
     private SentenceCollectGroup sentenceCollectGroup; //句子收藏分组Id
-    private Sentence sentence; //(句子，单词，文章)
+    private Sentence sentence; //(句子)
 
     public String getObjectId() {
         return objectId;

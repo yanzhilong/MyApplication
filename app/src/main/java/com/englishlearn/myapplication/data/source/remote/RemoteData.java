@@ -4,7 +4,7 @@ import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
 import com.englishlearn.myapplication.data.Grammar;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
-import com.englishlearn.myapplication.data.PhoneticsWords;
+import com.englishlearn.myapplication.data.PhoneticsVoice;
 import com.englishlearn.myapplication.data.Sentence;
 import com.englishlearn.myapplication.data.SentenceCollect;
 import com.englishlearn.myapplication.data.SentenceCollectGroup;
@@ -207,47 +207,40 @@ public interface RemoteData extends DataSource{
     //音标关联单词模块
     //*****************************************************************************
     /**
-     * 增加音标关联单词
-     * @param phoneticsWords
+     * 增加音标读音类
+     * @param phoneticsSymbolsVoice
      * @return
      */
-    Observable<PhoneticsWords> addPhoneticsWords(PhoneticsWords phoneticsWords);
+    Observable<PhoneticsVoice> addPhoneticsSymbolsVoice(PhoneticsVoice phoneticsSymbolsVoice);
 
     /**
-     * 删除音标关联单词
-     * @param phoneticsWordsId
+     * 删除音标读音类
+     * @param phoneticsSymbolsVoiceId
      * @return
      */
-    Observable<Boolean> deletePhoneticsWordsById(String phoneticsWordsId);
+    Observable<Boolean> deletePhoneticsSymbolsVoiceById(String phoneticsSymbolsVoiceId);
 
     /**
-     * 修改音标关联单词
-     * @param phoneticsWords
+     * 修改音标读音类
+     * @param phoneticsSymbolsVoice
      * @return
      */
-    Observable<Boolean> updatePhoneticsWordsRxById(PhoneticsWords phoneticsWords);
+    Observable<Boolean> updatePhoneticsSymbolsVoiceRxById(PhoneticsVoice phoneticsSymbolsVoice);
 
     /**
-     * 根据id获取音标关联单词
-     * @param phoneticsWordsId
+     * 根据id获取音标读音类
+     * @param phoneticsSymbolsVoiceId
      * @return
      */
-    Observable<PhoneticsWords> getPhoneticsWordsRxById(String phoneticsWordsId);
-
-
-    /**
-     * 根据音标id获取单词收藏分组
-     * @param phoneticsWordsId
-     * @return
-     */
-    Observable<PhoneticsWords> getPhoneticsWordsRxByPhoneticsId(String phoneticsWordsId);
+    Observable<PhoneticsVoice> getPhoneticsSymbolsVoiceRxById(String phoneticsSymbolsVoiceId);
 
 
     /**
-     * 获取所有音标关联单词
+     * 根据音标Id获取所有音标读音类
+     * @param phoneticsSymbolsId
      * @return
      */
-    Observable<List<PhoneticsWords>> getPhoneticsWordsRx();
+    Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoicesRx(String phoneticsSymbolsId);
 
 
     //文章分类模块
