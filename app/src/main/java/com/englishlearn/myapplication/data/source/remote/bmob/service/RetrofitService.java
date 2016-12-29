@@ -1351,10 +1351,10 @@ public interface RetrofitService {
     @Headers({
             "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
-            "Content-Type: audio/wav"
+
 
     })
-    Observable<Response<BmobFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part filecontenttype);
+    Observable<Response<BmobFile>> uploadFile(@Path("fileName") String fileName, @Part MultipartBody.Part filecontenttype,@Header("Content-Type") String type);
 
 
 

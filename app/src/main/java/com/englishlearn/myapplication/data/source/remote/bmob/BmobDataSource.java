@@ -5243,7 +5243,7 @@ public class BmobDataSource implements RemoteData {
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData(type, file.getName(), requestFile);
 
-        return bmobService.uploadFile(file.getName(),body)
+        return bmobService.uploadFile(file.getName(),body,type)
                 .flatMap(new Func1<Response<BmobFile>, Observable<BmobFile>>() {
                     @Override
                     public Observable<BmobFile> call(Response<BmobFile> bmobTractateCollectResultResponse) {

@@ -228,27 +228,27 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
 
     @Override
     public Observable<PhoneticsVoice> addPhoneticsSymbolsVoice(PhoneticsVoice phoneticsSymbolsVoice) {
-        return null;
+        return mRemoteDataSource.addPhoneticsSymbolsVoice(phoneticsSymbolsVoice);
     }
 
     @Override
     public Observable<Boolean> deletePhoneticsSymbolsVoiceById(String phoneticsSymbolsVoiceId) {
-        return null;
+        return mRemoteDataSource.deletePhoneticsSymbolsVoiceById(phoneticsSymbolsVoiceId);
     }
 
     @Override
     public Observable<Boolean> updatePhoneticsSymbolsVoiceRxById(PhoneticsVoice phoneticsSymbolsVoice) {
-        return null;
+        return mBmobDataSource.updatePhoneticsSymbolsVoiceRxById(phoneticsSymbolsVoice);
     }
 
     @Override
     public Observable<PhoneticsVoice> getPhoneticsSymbolsVoiceRxById(String phoneticsSymbolsVoiceId) {
-        return null;
+        return mBmobDataSource.getPhoneticsSymbolsVoiceRxById(phoneticsSymbolsVoiceId);
     }
 
     @Override
     public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoicesRx(String phoneticsSymbolsId) {
-        return null;
+        return mBmobDataSource.getPhoneticsSymbolsVoicesRx(phoneticsSymbolsId);
     }
 
     @Override

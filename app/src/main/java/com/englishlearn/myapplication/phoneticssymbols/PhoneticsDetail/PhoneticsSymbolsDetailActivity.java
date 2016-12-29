@@ -28,7 +28,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.englishlearn.myapplication.R.id.phonetics_videourl;
 
 public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -153,10 +152,7 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
         switch (v.getId()){
             case R.id.phonetics_soundurl:
                 //Toast.makeText(this,phoneticsSymbols.getSoundurl(),Toast.LENGTH_LONG).show();
-
-                break;
-            case phonetics_videourl:
-                //Toast.makeText(this,phoneticsSymbols.getVideourl(),Toast.LENGTH_SHORT).show();
+                getMediaController().getTransportControls().playFromMediaId();
                 break;
             default:
                 break;

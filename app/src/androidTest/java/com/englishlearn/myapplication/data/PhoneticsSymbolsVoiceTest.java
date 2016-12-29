@@ -83,10 +83,15 @@ public class PhoneticsSymbolsVoiceTest {
             Log.d(TAG, phoneticsVoice.toString());
             BmobFile bmobFile = uploadFile(file1);
             if(bmobFile == null){
+                Log.d(TAG,"testAddPhoneticsSymbolsVoice:uploadFileFail" + file1.getName());
                 continue;
             }
             phoneticsVoice.setFile(bmobFile);
-            addPhoneticesVoice(phoneticsVoice);
+            PhoneticsVoice phoneticsVoice1 = addPhoneticesVoice(phoneticsVoice);
+            if(phoneticsVoice1 == null){
+                Log.d(TAG,"testAddPhoneticsSymbolsVoice:addPhoneticsSymbolsVoiceFail" + phoneticsVoice.getName());
+            }
+
         }
     }
 
@@ -101,7 +106,7 @@ public class PhoneticsSymbolsVoiceTest {
 
         if (file.exists()) {
             TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
-            mBmobRemoteData.uploadFile(file, "audio/wav").toBlocking().subscribe(testSubscriber_deleteById);
+            mBmobRemoteData.uploadFile(file, "audio/mp3").toBlocking().subscribe(testSubscriber_deleteById);
             //testSubscriber_deleteById.assertNoErrors();
             List<Throwable> throwables = testSubscriber_deleteById.getOnErrorEvents();
             List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
@@ -110,14 +115,12 @@ public class PhoneticsSymbolsVoiceTest {
                 uploadFile = uploadFiles.get(0);
                 return uploadFile;
             }
-
-            if(throwables.size() > 0){
-
-                Log.d(TAG,"uploadFileFail" + file.getName());
-            }
-
+            Log.d(TAG,"testAddPhoneticsSymbolsVoice:reUploadFile:" + file.getName());
+            return uploadFile(file);
+        }else{
+            Log.d(TAG,"uploadFileFail" + "file empty");
+            return null;
         }
-        return null;
     }
 
 
@@ -142,16 +145,22 @@ public class PhoneticsSymbolsVoiceTest {
     }
 
 
-    private void addPhoneticesVoice(PhoneticsVoice phoneticsVoice) {
+    private PhoneticsVoice addPhoneticesVoice(PhoneticsVoice phoneticsVoice) {
         TestSubscriber<PhoneticsVoice> testSubscriber_getall = new TestSubscriber<>();
         mBmobRemoteData.addPhoneticsSymbolsVoice(phoneticsVoice).toBlocking().subscribe(testSubscriber_getall);
         //testSubscriber_getall.assertNoErrors();
+        List<Throwable> throwables = testSubscriber_getall.getOnErrorEvents();
         List<PhoneticsVoice> listall = testSubscriber_getall.getOnNextEvents();
         PhoneticsVoice msSourceall = null;
         if (listall != null && listall.size() > 0) {
             msSourceall = listall.get(0);
+            return msSourceall;
         }
-        Log.d(TAG, "testPhoneticsSymbols_all_result:" + msSourceall.toString());
+        if(throwables.size() > 0){
+            Log.d(TAG,"testAddPhoneticsSymbolsVoice:reAddPhone:" + phoneticsVoice.getName());
+            return addPhoneticesVoice(phoneticsVoice);
+        }
+        return null;
     }
 
 
