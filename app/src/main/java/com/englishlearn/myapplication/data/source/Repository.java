@@ -247,6 +247,11 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
+    public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoiceRx(int page, int pageSize) {
+        return mBmobDataSource.getPhoneticsSymbolsVoiceRx(page,pageSize);
+    }
+
+    @Override
     public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoicesRx(String phoneticsSymbolsId) {
         return mBmobDataSource.getPhoneticsSymbolsVoicesRx(phoneticsSymbolsId);
     }

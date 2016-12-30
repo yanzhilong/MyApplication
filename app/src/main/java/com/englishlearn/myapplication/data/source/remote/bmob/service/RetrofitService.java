@@ -31,6 +31,7 @@ import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetMobil
 import com.englishlearn.myapplication.data.source.remote.bmob.PasswordResetOldPwd;
 import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsSymbolsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsSymbolsVoicesResult;
+import com.englishlearn.myapplication.data.source.remote.bmob.PhoneticsVoiceResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.QuerySmsResult;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCode;
 import com.englishlearn.myapplication.data.source.remote.bmob.RequestSmsCodeResult;
@@ -322,6 +323,14 @@ public interface RetrofitService {
             "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
     })
     Observable<Response<PhoneticsVoice>> getPhoneticsSymbolsVoiceRxById(@Path("id") String phoneticsSymbolsVoiceId);
+
+    //根据id获取音标单词
+    @GET("/1/classes/PhoneticsVoice/")
+    @Headers({
+            "X-Bmob-Application-Id: 02b18803d9dbb1956c99ef7896fe4466",
+            "X-Bmob-REST-API-Key: 4c7b2adda2785883c546efdfbfd6ca09",
+    })
+    Observable<Response<PhoneticsVoiceResult>> getPhoneticsSymbolsVoiceRx(@Query("limit") int limit, @Query("skip")int skip);
 
     //根据音标id获取音标单词
     @GET("/1/classes/PhoneticsVoice/")

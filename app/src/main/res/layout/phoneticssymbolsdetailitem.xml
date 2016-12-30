@@ -16,37 +16,54 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp">
+        android:layout_height="72dp"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/word_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
             android:text="456"/>
 
-        <!-- 单词音标 -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/word_name"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/word_name"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/british_phonogram"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"/>
 
-            <!-- 英音 -->
             <TextView
+                android:id="@+id/american_phonogram"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="英:"/>
-            <TextView
-                android:id="@+id/word_british_phonogram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                />
 
         </LinearLayout>
+
+        <!-- 分割 -->
+       <!-- <View
+            android:layout_width="0.2px"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:layout_toLeftOf="@+id/voiceurl"/>
+-->
+        <ImageButton
+            android:id="@+id/voiceurl"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/volume_play"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?selectableItemBackgroundBorderless"/>
 
     </RelativeLayout>
 

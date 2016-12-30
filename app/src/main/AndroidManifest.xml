@@ -204,7 +204,10 @@
         <activity
             android:name=".dict.DictActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".test.dialog.DialogActivity"></activity>
+        <activity android:name=".test.dialog.DialogActivity" />
+        <activity
+            android:name=".musicplay.MusicPlayActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

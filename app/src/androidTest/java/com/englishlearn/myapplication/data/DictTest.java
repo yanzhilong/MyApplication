@@ -144,6 +144,99 @@ public class DictTest {
 
 
     @Test
+    public void addPhoneticsSymbolsDictMdx(){
+
+        String mdictHome = ApplicationConfig.EXTERNALBASE + File.separator + "phoneticssymbols.mdx";
+
+        File file = new File(mdictHome);
+        //上传读音
+
+        TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
+        //testSubscriber_deleteById.assertNoErrors();
+
+        List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_deleteById.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            Throwable throwable = throwables.get(0);
+            Log.d(TAG,"throwable:" + throwable.getMessage());
+        }
+
+        BmobFile uploadFile = null;
+        if(uploadFiles != null && uploadFiles.size() > 0){
+            uploadFile = uploadFiles.get(0);
+        }
+        if(uploadFile == null){
+            return;
+        }
+        Dict dictAdd = new Dict();
+        dictAdd.setName("涛哥音标词典");
+        dictAdd.setContent("");
+        dictAdd.setRemark("remark");
+        dictAdd.setSize("0.38M");
+        dictAdd.setVersion(0);
+        dictAdd.setFile(uploadFile);
+        TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<Dict> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list != null && list.size() >= 0){
+            Dict dict = list.get(0);
+            Log.d(TAG,"addDict_result:" + dict.toString());
+        }
+    }
+
+
+
+    @Test
+    public void addPhoneticsSymbolsDictMdd(){
+
+        String mdictHome = ApplicationConfig.EXTERNALBASE + File.separator + "phoneticssymbols.mdd";
+        File file = new File(mdictHome);
+
+        TestSubscriber<BmobFile> testSubscriber_deleteById = new TestSubscriber<>();
+        mBmobRemoteData.uploadFile(file,"application/octet-stream").toBlocking().subscribe(testSubscriber_deleteById);
+        //testSubscriber_deleteById.assertNoErrors();
+
+        List<BmobFile> uploadFiles = testSubscriber_deleteById.getOnNextEvents();
+        List<Throwable> throwables = testSubscriber_deleteById.getOnErrorEvents();
+        if(throwables != null && throwables.size() > 0){
+            Throwable throwable = throwables.get(0);
+            Log.d(TAG,"throwable:" + throwable.getMessage());
+        }
+
+        BmobFile uploadFile = null;
+        if(uploadFiles != null && uploadFiles.size() > 0){
+            uploadFile = uploadFiles.get(0);
+        }
+        if(uploadFile == null){
+            return;
+        }
+
+        Dict dictAdd = new Dict();
+        dictAdd.setName("涛哥音标读音");
+        dictAdd.setContent("");
+        dictAdd.setRemark("remark");
+        dictAdd.setSize("0.87M");
+        dictAdd.setVersion(0);
+        dictAdd.setType(ApplicationConfig.DICTTYPE_MDD);
+        dictAdd.setFile(uploadFile);
+
+        TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
+        mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
+        testSubscriber_add.assertNoErrors();
+        List<Dict> list = testSubscriber_add.getOnNextEvents();
+        Assert.assertNotNull(list);
+        if(list != null && list.size() >= 0){
+            Dict dict = list.get(0);
+            Log.d(TAG,"addDict_result:" + dict.toString());
+        }
+
+    }
+
+
+    @Test
     public void addAndUpdateDictMdd(){
 
         String mdictHome = ApplicationConfig.EXTERNALBASE + File.separator + "mdd4.mdd";

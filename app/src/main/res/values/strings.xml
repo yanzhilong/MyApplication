@@ -331,4 +331,6 @@
 
     <string name="title_dict">Dict</string>
 
+    <string name="title_musicplay">MusicPlay</string>
+
 </resources>

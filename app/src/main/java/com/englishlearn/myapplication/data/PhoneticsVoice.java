@@ -10,6 +10,7 @@ public class PhoneticsVoice implements Serializable,Cloneable{
 
     private String objectId;
     private String name; //单词名称
+    private Word word;//相关单词实体//用于显示音标
     private BmobFile file;//读音链接
     private boolean isSymbols;//是否是音标读音
     private String remark;//备注
@@ -29,6 +30,14 @@ public class PhoneticsVoice implements Serializable,Cloneable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
     }
 
     public BmobFile getFile() {

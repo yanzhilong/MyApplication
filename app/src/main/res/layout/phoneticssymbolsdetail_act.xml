@@ -7,96 +7,59 @@
 
     <include layout="@layout/toolbar" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="24dp">
+        android:orientation="vertical">
 
-        <!-- 音标详情 -->
-        <android.support.v7.widget.CardView
-            android:layout_marginTop="@dimen/space_small"
-            android:layout_marginBottom="@dimen/space_small"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="@dimen/space_normal"
-            android:layout_marginRight="@dimen/space_normal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <!-- 英音 -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="英:"/>
-                    <TextView
-                        android:id="@+id/phonetics_ipaname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                    <!-- 美音 -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="英:" />
-                    <TextView
-                        android:id="@+id/phonetics_kkname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-                <!-- 读音 -->
-                <ImageButton
-                    android:id="@+id/phonetics_soundurl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/phonetics_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-        <!-- 发音说明 -->
-        <android.support.v7.widget.CardView
-            android:layout_marginTop="@dimen/space_small"
-            android:layout_marginBottom="@dimen/space_small"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/space_normal"
-            android:layout_marginRight="@dimen/space_normal">
-
+            android:layout_marginLeft="5dp"
+            android:orientation="horizontal">
+            <!-- 标题 -->
             <TextView
-                android:id="@+id/phonetics_content"
+                android:id="@+id/phonetics_name"
+                android:layout_width="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:layout_height="50dp" />
+
+            <!-- 读音 -->
+            <LinearLayout
+                android:id="@+id/voicelayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="音标说明"/>
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/phonetics_name"
+                android:orientation="horizontal">
+            </LinearLayout>
+        </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
 
-        <!--  相差单詞 -->
+        <!-- 音标类型 -->
+        <TextView
+            android:id="@+id/phonetics_type"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:textSize="15sp"
+            android:layout_height="20dp" />
+
+
+
+        <!-- 音标说明 -->
+        <TextView
+            android:id="@+id/phonetics_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--  相关单詞 -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </android.support.v7.widget.RecyclerView>
-
     </LinearLayout>
-
 </LinearLayout>

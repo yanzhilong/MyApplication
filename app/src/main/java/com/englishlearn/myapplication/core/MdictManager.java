@@ -120,20 +120,23 @@ public class MdictManager {
         theApp.setupAppEnv(context);
         List<DictPref> dictPrefs = getDictPrefsEntry();
         if (dictPrefs.size() > 0) {
-            //默认只有一个词典
-            mainDict = new MdxDictBase();
-            MdxEngine.openDictById(dictPrefs.get(0).getDictId(), mainDict);
-            long current  = System.currentTimeMillis();
-            Log.d(TAG,"Init Mdict:" + current);
-            for (int i = 0; i < mainDict.getEntryCount(); i++) {
-                DictEntry dictEntry = new DictEntry(i, "", mainDict.getDictPref().getDictId());
-                mainDict.getHeadword(dictEntry);
-                dictEntryMap.put(dictEntry.getHeadword(),dictEntry);
-                //Log.d(TAG,"Init Mdict:" + i + dictEntry.getHeadword());
+
+            for(int i = 0; i < dictPrefs.size(); i++){
+                //默认只有一个词典
+                mainDict = new MdxDictBase();
+                MdxEngine.openDictById(dictPrefs.get(i).getDictId(), mainDict);
+                long current  = System.currentTimeMillis();
+                Log.d(TAG,"Init Mdict:" + current);
+                for (int j = 0; j < mainDict.getEntryCount(); j++) {
+                    DictEntry dictEntry = new DictEntry(j, "", mainDict.getDictPref().getDictId());
+                    mainDict.getHeadword(dictEntry);
+                    dictEntryMap.put(dictEntry.getHeadword(),dictEntry);
+                    //Log.d(TAG,"Init Mdict:" + i + dictEntry.getHeadword());
+                }
+                long last  = System.currentTimeMillis();
+                Log.d(TAG,"Init Mdict:" + last);
+                Log.d(TAG,"Init Mdict:" + (last - current) / 1000);
             }
-            long last  = System.currentTimeMillis();
-            Log.d(TAG,"Init Mdict:" + last);
-            Log.d(TAG,"Init Mdict:" + (last - current) / 1000);
         }
     }
 

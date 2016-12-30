@@ -10,121 +10,148 @@
             android:id="@+id/sentences"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sentence_btn" />
+            android:text="@string/sentence_btn"
+            android:onClick="onClick"/>
         <Button
             android:id="@+id/grammars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/grammar_btn"/>
+            android:text="@string/grammar_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_btn"/>
+            android:text="@string/search_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/searchsentences"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_sentences_btn"/>
+            android:text="@string/search_sentences_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/registeruser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/registeruser_btn"/>
+            android:text="@string/registeruser_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/loginuser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loginuser_btn"/>
+            android:text="@string/loginuser_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/updateuser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/updateuser_btn"/>
+            android:text="@string/updateuser_btn"
+            android:onClick="onClick"/>
 
 
         <Button
             android:id="@+id/messagesource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/messagesource_btn"/>
+            android:text="@string/messagesource_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/tractatetype"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tractatetype_btn"/>
+            android:text="@string/tractatetype_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/word_btn"/>
+            android:text="@string/word_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/wordgroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wordgroup_btn"/>
+            android:text="@string/wordgroup_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/wordgroupcollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wordgroupcollect_btn"/>
+            android:text="@string/wordgroupcollect_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/sentencegroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sentencegroup_btn"/>
+            android:text="@string/sentencegroup_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/sentencegroupcollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sentencegroupcollect_btn"/>
+            android:text="@string/sentencegroupcollect_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/tractategroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tractategroup_btn"/>
+            android:text="@string/tractategroup_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/wordcollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/wordcollect_btn"/>
+            android:text="@string/wordcollect_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/sentencecollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sentencecollect_btn"/>
+            android:text="@string/sentencecollect_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:id="@+id/tractatecollect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tractatecollect_btn"/>
+            android:text="@string/tractatecollect_btn"
+            android:onClick="onClick"/>
 
         <Button
             android:text="WordDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/worddetail" />
+            android:id="@+id/worddetail"
+            android:onClick="onClick"/>
 
         <Button
             android:text="testDialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/testdialog" />
+            android:id="@+id/testdialog"
+            android:onClick="onClick"/>
+
+        <Button
+            android:text="musicplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/musicplay"
+            android:onClick="onClick"/>
 
     </LinearLayout>
 

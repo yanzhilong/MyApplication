@@ -9,6 +9,8 @@ import android.util.Log;
 import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
 import com.englishlearn.myapplication.data.source.remote.bmob.BmobDataSource;
+import com.englishlearn.myapplication.util.AndroidUtils;
+import com.google.gson.Gson;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -18,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.observers.TestSubscriber;
@@ -71,7 +74,7 @@ public class PhoneticsSymbolsVoiceTest {
             String wodName = name.substring(isPb ? name.indexOf("_") + 1 : 0, name.indexOf("."));
 
             PhoneticsVoice phoneticsVoice = new PhoneticsVoice();
-            phoneticsVoice.setSymbols(isPb);
+            phoneticsVoice.setSymbols(!isPb);
             phoneticsVoice.setName(wodName);
             phoneticsVoice.setRemark("people");
             for (PhoneticsSymbols phoneticsSymbols : phoneticsSymbolses) {
@@ -93,6 +96,72 @@ public class PhoneticsSymbolsVoiceTest {
             }
 
         }
+    }
+
+    @Test
+    public void updatePhoneticsVoices(){
+
+        List<PhoneticsVoice> phoneticsVoices = getphoneticsVoices();
+        for(PhoneticsVoice phoneticsVoice : phoneticsVoices){
+            boolean isUpdate = false;
+            if(phoneticsVoice.getFile().getFilename().contains("_") && phoneticsVoice.isSymbols()){
+                phoneticsVoice.setSymbols(false);
+                isUpdate = true;
+            }
+            if(!phoneticsVoice.getFile().getFilename().contains("_") && !phoneticsVoice.isSymbols()){
+                phoneticsVoice.setSymbols(true);
+                isUpdate = true;
+            }
+            if(isUpdate){
+                updatePhoneticsVoice(phoneticsVoice);
+            }
+        }
+    }
+
+
+    //得到PhoneticsVoice并创建词典源文件
+    @Test
+    public void createPhoneticsVoicesMDict(){
+
+        List<PhoneticsVoice> phoneticsVoices = getphoneticsVoices();
+        StringBuffer dictstring = new StringBuffer();
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < phoneticsVoices.size(); i++){
+            Log.d(TAG,"words:" + i);
+            PhoneticsVoice phoneticsVoice = phoneticsVoices.get(i);
+            dictstring.append(phoneticsVoice.getName() + System.getProperty("line.separator"));
+            Gson gson = new Gson();
+            String wordjson = gson.toJson(phoneticsVoice);
+            dictstring.append(wordjson + System.getProperty("line.separator"));
+            dictstring.append("</>" + System.getProperty("line.separator"));
+            if(i == 0){
+                Log.d(TAG,"writeFile:" + i);
+                try {
+                    AndroidUtils.newInstance(context).writeFile("mdxsource.txt",dictstring.toString());
+                    dictstring = new StringBuffer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(i % 50 == 0){
+                try {
+                    Log.d(TAG,"appendStringExternal:" + i);
+                    AndroidUtils.newInstance(context).appendStringExternal("mdxsource.txt",dictstring.toString());
+                    dictstring = new StringBuffer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            AndroidUtils.newInstance(context).appendStringExternal("mdxsource.txt",dictstring.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
     }
 
 
@@ -122,6 +191,45 @@ public class PhoneticsSymbolsVoiceTest {
             return null;
         }
     }
+
+
+    public List<PhoneticsVoice> getphoneticsVoices(){
+
+        int page = 0;
+        int pagesize = 100;
+
+        List<PhoneticsVoice> words = new ArrayList<>();
+        List<PhoneticsVoice> wordtemp = new ArrayList<>();
+
+        do{
+            Log.d(TAG,"getWords():" + page);
+            TestSubscriber<List<PhoneticsVoice>> testSubscriber = new TestSubscriber<>();
+            mBmobRemoteData.getPhoneticsSymbolsVoiceRx(page,pagesize).toBlocking().subscribe(testSubscriber);
+            testSubscriber.assertNoErrors();
+            List<List<PhoneticsVoice>> wordslist = testSubscriber.getOnNextEvents();
+
+            List<Throwable> throwables = testSubscriber.getOnErrorEvents();
+            if(throwables != null && throwables.size() > 0){
+                for(int i = 0; i < throwables.size(); i++){
+                    Log.d(TAG,"addWordBYYouDao_error:" + throwables.get(i).getMessage());
+                }
+            }
+            if(wordslist == null || wordslist.size() == 0){
+                page++;
+                continue;
+            }else{
+                page++;
+            }
+            wordtemp = wordslist.get(0);
+            Log.d(TAG,"getWords():" +page+ wordtemp.size());
+            words.addAll(wordtemp);
+        }while (wordtemp.size() == 100);
+
+
+        //Log.d(TAG,"getWordsRxByPhoneticsIdTest():" + words);
+        return words;
+    }
+
 
 
     /**
@@ -206,6 +314,18 @@ public class PhoneticsSymbolsVoiceTest {
         TestSubscriber<Boolean> testSubscriber_getall = new TestSubscriber<>();
         mBmobRemoteData.updatePhoneticsSymbolsVoiceRxById(phoneticsSymbolsVoice).toBlocking().subscribe(testSubscriber_getall);
         testSubscriber_getall.assertNoErrors();
+        List<Boolean> listdeleteById = testSubscriber_getall.getOnNextEvents();
+        if (listdeleteById != null && listdeleteById.size() > 0) {
+            Log.d(TAG, "testPhoneticsWords_deleteById" + "success");
+        }
+    }
+
+
+    private void updatePhoneticsVoice(PhoneticsVoice phoneticsVoice) {
+
+        TestSubscriber<Boolean> testSubscriber_getall = new TestSubscriber<>();
+        mBmobRemoteData.updatePhoneticsSymbolsVoiceRxById(phoneticsVoice).toBlocking().subscribe(testSubscriber_getall);
+        //testSubscriber_getall.assertNoErrors();
         List<Boolean> listdeleteById = testSubscriber_getall.getOnNextEvents();
         if (listdeleteById != null && listdeleteById.size() > 0) {
             Log.d(TAG, "testPhoneticsWords_deleteById" + "success");

@@ -236,6 +236,15 @@ public interface RemoteData extends DataSource{
 
 
     /**
+     * 查询所有的音标读音类
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoiceRx(int page,int pageSize);
+
+
+    /**
      * 根据音标Id获取所有音标读音类
      * @param phoneticsSymbolsId
      * @return

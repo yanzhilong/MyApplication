@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton android:id="@+id/voiceurl"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:src="@drawable/volume_play"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:background="?selectableItemBackgroundBorderless"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

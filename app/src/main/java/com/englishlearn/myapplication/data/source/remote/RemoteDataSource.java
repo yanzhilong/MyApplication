@@ -179,6 +179,11 @@ public class RemoteDataSource implements RemoteData {
     }
 
     @Override
+    public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoiceRx(int page, int pageSize) {
+        return null;
+    }
+
+    @Override
     public Observable<List<PhoneticsVoice>> getPhoneticsSymbolsVoicesRx(String phoneticsSymbolsId) {
         return null;
     }
