@@ -30,7 +30,6 @@ import java.util.List;
 
 import cn.mdict.utils.IOUtil;
 
-import static com.englishlearn.myapplication.config.ApplicationConfig.INSIDEMDXPATH;
 
 
 /**

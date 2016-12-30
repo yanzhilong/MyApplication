@@ -175,6 +175,7 @@ public class DictTest {
         dictAdd.setRemark("remark");
         dictAdd.setSize("0.38M");
         dictAdd.setVersion(0);
+        dictAdd.setType(ApplicationConfig.DICTTYPE_MDX);
         dictAdd.setFile(uploadFile);
         TestSubscriber<Dict> testSubscriber_add = new TestSubscriber<>();
         mBmobRemoteData.addDict(dictAdd).toBlocking().subscribe(testSubscriber_add);
