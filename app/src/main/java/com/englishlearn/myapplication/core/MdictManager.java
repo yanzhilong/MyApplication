@@ -121,59 +121,47 @@ public class MdictManager {
         List<DictPref> dictPrefs = getDictPrefsEntry();
         if (dictPrefs.size() > 0) {
 
-            for(int i = 0; i < dictPrefs.size(); i++){
+            for (int i = 0; i < dictPrefs.size(); i++) {
                 //默认只有一个词典
-                mainDict = new MdxDictBase();
+                MdxDictBase mainDict = new MdxDictBase();
                 MdxEngine.openDictById(dictPrefs.get(i).getDictId(), mainDict);
-                long current  = System.currentTimeMillis();
-                Log.d(TAG,"Init Mdict:" + current);
+                long current = System.currentTimeMillis();
+                Log.d(TAG, "Init Mdict:" + current);
                 for (int j = 0; j < mainDict.getEntryCount(); j++) {
                     DictEntry dictEntry = new DictEntry(j, "", mainDict.getDictPref().getDictId());
                     mainDict.getHeadword(dictEntry);
-                    dictEntryMap.put(dictEntry.getHeadword(),dictEntry);
+                    MDict mDict = new MDict();
+                    mDict.setDictEntry(dictEntry);
+                    mDict.setMdxDictBase(mainDict);
+                    dictMap.put(dictEntry.getHeadword(), mDict);
+                    dictEntryMap.put(dictEntry.getHeadword(), dictEntry);
                     //Log.d(TAG,"Init Mdict:" + i + dictEntry.getHeadword());
                 }
-                long last  = System.currentTimeMillis();
-                Log.d(TAG,"Init Mdict:" + last);
-                Log.d(TAG,"Init Mdict:" + (last - current) / 1000);
+                long last = System.currentTimeMillis();
+                Log.d(TAG, "Init Mdict:" + last);
+                Log.d(TAG, "Init Mdict:" + (last - current) / 1000);
             }
         }
     }
 
-    //获得词典Mdict
-    private MDict getMdict(DictEntry dictEntry) {
+    public MDict getMDict(String name) {
 
+        MDict mDict = dictMap.get(name);
+        if (mDict == null) {
+            return null;
+        }
         Word word = null;
-        MDict mDict = null;
-        String translate = MdxUtils.getTranslate(mainDict, dictEntry);
+        String translate = MdxUtils.getTranslate(mDict.getMdxDictBase(), mDict.getDictEntry());
         Gson gson = new Gson();
         try {
             word = gson.fromJson(translate, Word.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mDict = new MDict();
         mDict.setWord(word);
         mDict.setUseTTS(true);
-        mDict.setDictEntry(dictEntry);
-        mDict.setMdxDictBase(mainDict);
         mDict.setTtsEngine(ttsEngine);
         return mDict;
-    }
-
-
-    /**
-     * 获得一个单词的解释
-     *
-     * @param name
-     */
-    public MDict getMDict(String name) {
-
-        DictEntry dictEntry = dictEntryMap.get(name);
-        if(dictEntry != null){
-            return getMdict(dictEntry);
-        }
-        return null;
     }
 
     //获得词典名称
@@ -197,13 +185,13 @@ public class MdictManager {
             @Override
             public void update(Observable observable, Object data) {
                 List<DownloadStatus> downloadStatusList = (List<DownloadStatus>) data;
-                for(DownloadStatus downloadStatus : downloadStatusList){
+                for (DownloadStatus downloadStatus : downloadStatusList) {
 
-                    if(downloadStatus.getStatus() != DownloadManager.STATUS_SUCCESSFUL){
+                    if (downloadStatus.getStatus() != DownloadManager.STATUS_SUCCESSFUL) {
                         break;
                     }
                     String filePath = downloadStatus.getFileUri().getPath();
-                    if(filePath.contains(ApplicationConfig.INSIDEMDXNAME)){
+                    if (filePath.contains(ApplicationConfig.INSIDEMDXNAME)) {
                         initMdict();
                         DownloadUtilObserver.newInstance().deleteObserver(this);
                     }

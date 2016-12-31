@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.englishlearn.myapplication.MyApplication;
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.config.ApplicationConfig;
 import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.data.MDict;
 import com.englishlearn.myapplication.data.PhoneticsSymbols;
@@ -273,6 +274,18 @@ public class PhoneticsSymbolsDetailActivity extends AppCompatActivity implements
         Playback.newInstance(this).play(url);
         Log.d(TAG,url);
     }
+
+    private String getPbBaseName(PhoneticsSymbols phoneticsSymbols){
+        for(int i = 0; i < ApplicationConfig.phoneticsSymbolsArray.length;i++){
+            String[] pbs = ApplicationConfig.phoneticsSymbolsArray[i];
+            if(pbs[0].equals(phoneticsSymbols.getIpaname())){
+                return ApplicationConfig.PSBASENAME + i;
+            }
+        }
+        return "";
+    }
+
+
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 

@@ -273,7 +273,6 @@ public class WordDetailDialog extends DialogFragment implements View.OnClickList
                 mDict.play(isUk);
             }
         }
-
     }
 
     @Override
