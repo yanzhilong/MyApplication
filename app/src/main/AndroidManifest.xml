@@ -35,6 +35,8 @@
 
     <!-- DownloadManager -->
     <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".MyApplication"
@@ -51,7 +53,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.LearnService"/>
+        <service android:name=".service.LearnService" />
+
         <activity
             android:name=".sentence.SentencessActivity"
             android:launchMode="singleTop"
@@ -212,6 +215,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".clipblard.ClipboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".clipboard.ClipboardActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 

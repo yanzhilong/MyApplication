@@ -23,4 +23,7 @@ public class LearnService extends Service {
         super.onCreate();
         ClipboardMonitor.newInstance(this).init();
     }
+
+
+
 }

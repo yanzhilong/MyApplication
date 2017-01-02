@@ -26,5 +26,5 @@
     <dimen name="space_normal">8dp</dimen>
     <dimen name="space_small">4dp</dimen>
 
-
+    <dimen name="float_width">700dp</dimen>
 </resources>

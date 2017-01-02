@@ -1,29 +1,25 @@
-package com.englishlearn.myapplication.clipblard;
+package com.englishlearn.myapplication.clipboard;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.englishlearn.myapplication.R;
 
-
 public class ClipboardActivity extends AppCompatActivity {
 
-    public static final String CLIPBOARDVALUE = "clipboardvalue";
+    public static final String OBJECT = "object";
     private static final String TAG = ClipboardActivity.class.getSimpleName();
-    private String clipboadvalue;
-
+    private Object object;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.clipboard_act);
 
-        if (getIntent().hasExtra(CLIPBOARDVALUE)) {
-            clipboadvalue = getIntent().getStringExtra(CLIPBOARDVALUE);
-            Log.d(TAG,"数据" + clipboadvalue);
+        if (getIntent().hasExtra(OBJECT)) {
+            object = getIntent().getSerializableExtra(OBJECT);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

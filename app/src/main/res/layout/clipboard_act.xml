@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.englishlearn.myapplication.clipblard.ClipboardActivity">
+    tools:context="com.englishlearn.myapplication.clipboard.ClipboardActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,11 +21,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/contentFrame"
+    <EditText
+        android:id="@+id/demotext"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:editable="true"
+        android:text="@string/demo_text"/>
 
-    </FrameLayout>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.clipboard.ClipboardActivity;
 import com.englishlearn.myapplication.grammars.GrammarActivity;
 import com.englishlearn.myapplication.loginuser.LoginUserActivity;
 import com.englishlearn.myapplication.musicplay.MusicPlayActivity;
@@ -124,6 +125,10 @@ public class TestMainActivity extends AppCompatActivity {
             case R.id.musicplay:
                 Intent musicplayactivity = new Intent(this,MusicPlayActivity.class);
                 this.startActivity(musicplayactivity);
+                break;
+            case R.id.clipboard:
+                Intent clipboardactivity = new Intent(this,ClipboardActivity.class);
+                this.startActivity(clipboardactivity);
                 break;
             default:
                 break;

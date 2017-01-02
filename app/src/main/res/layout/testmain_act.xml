@@ -159,6 +159,13 @@
                 android:id="@+id/musicplay"
                 android:onClick="onClick"/>
 
+            <Button
+                android:text="clipboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/clipboard"
+                android:onClick="onClick"/>
+
         </LinearLayout>
 
     </ScrollView>
