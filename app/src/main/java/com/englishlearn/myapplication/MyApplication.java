@@ -2,11 +2,13 @@ package com.englishlearn.myapplication;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
 import com.englishlearn.myapplication.core.LearnEnglishManager;
 import com.englishlearn.myapplication.dagger.AppComponent;
 import com.englishlearn.myapplication.dagger.AppModule;
 import com.englishlearn.myapplication.dagger.DaggerAppComponent;
+import com.englishlearn.myapplication.service.LearnService;
 
 
 /**
@@ -30,6 +32,11 @@ public class MyApplication extends Application{
 
         appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
         LearnEnglishManager.newInstance(this).init();
+        init();
 
+    }
+
+    private void init(){
+        startService(new Intent(this, LearnService.class));
     }
 }

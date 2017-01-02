@@ -26,6 +26,7 @@ public class LearnEnglishManager {
      */
     public void init(){
 
+
         MdictManager.newInstance(context).initMdict();
     }
 

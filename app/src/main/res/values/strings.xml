@@ -333,4 +333,6 @@
 
     <string name="title_musicplay">MusicPlay</string>
 
+    <string name="title_clipboard">Clipboard</string>
+
 </resources>

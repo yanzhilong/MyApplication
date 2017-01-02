@@ -50,6 +50,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".service.LearnService"/>
         <activity
             android:name=".sentence.SentencessActivity"
             android:launchMode="singleTop"
@@ -207,6 +209,9 @@
         <activity android:name=".test.dialog.DialogActivity" />
         <activity
             android:name=".musicplay.MusicPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".clipblard.ClipboardActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
