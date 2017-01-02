@@ -112,6 +112,7 @@ public class CreateSentenceActivity extends AppCompatActivity implements View.On
         }*/
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

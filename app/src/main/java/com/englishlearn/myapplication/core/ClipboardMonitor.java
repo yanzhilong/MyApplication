@@ -3,6 +3,7 @@ package com.englishlearn.myapplication.core;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.englishlearn.myapplication.R;
+import com.englishlearn.myapplication.clipboard.ClipboardActivity;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -97,14 +99,18 @@ public class ClipboardMonitor {
             return;
         }
 
-        if (!isInit) {
+        Intent intent = new Intent(context, ClipboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(ClipboardActivity.OBJECT,value);
+        context.startActivity(intent);
+       /* if (!isInit) {
             createFloatView();
         }
         if (!isAdded) {
             wm.addView(floatView, params);
             isAdded = true;
         }
-        setupCellView(floatView,value);
+        setupCellView(floatView,value);*/
     }
 
     /**
@@ -124,7 +130,7 @@ public class ClipboardMonitor {
     private void createFloatView() {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         floatView = layoutInflater.inflate(R.layout.dict_popup_window, null);
-
+        View floating_frame = floatView.findViewById(R.id.floating_frame);
         wm = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         params = new WindowManager.LayoutParams();
 
@@ -147,7 +153,7 @@ public class ClipboardMonitor {
 		 */
 
         // 设置悬浮窗的长得宽
-        params.width = context.getResources().getDimensionPixelSize(R.dimen.float_width);
+        //params.width = context.getResources().getDimensionPixelSize(R.dimen.float_width);
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         params.gravity = Gravity.LEFT | Gravity.TOP;
@@ -155,7 +161,9 @@ public class ClipboardMonitor {
         params.y = 0;
 
         // 设置悬浮窗的Touch监听
-        floatView.setOnTouchListener(new View.OnTouchListener() {
+        floating_frame.setOnTouchListener(new View.OnTouchListener() {
+
+            int ignoreOffset = 30;//移动忽略值
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -166,14 +174,24 @@ public class ClipboardMonitor {
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getX();
                         startY = event.getY();
+                        Log.d(TAG,"startX:" + startX + "startY:" + startY);
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        Log.d(TAG,"startX:" + startX + "startY:" + startY);
+                        Log.d(TAG,"moveX:" + event.getRawX() + "moveY:" + event.getRawY());
+                        if (Math.abs(startY - (int) event.getRawY()) < ignoreOffset){
+                            break;
+                        }
                         params.x = (int) (x - startX);
                         params.y = (int) (y - startY);
                         wm.updateViewLayout(floatView, params);
                         break;
                     case MotionEvent.ACTION_UP:
                         startX = startY = 0;
+                        if (Math.abs(startX - (int) event.getRawX()) < 10
+                                && Math.abs(startY - (int) event.getRawY()) < 10) {
+                            hideClipboard();
+                        }
                         break;
                 }
                 return true;

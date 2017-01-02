@@ -2,6 +2,7 @@ package com.englishlearn.myapplication.dagger;
 
 import com.englishlearn.myapplication.addeditgrammar.AddEditGrammarPresenter;
 import com.englishlearn.myapplication.addeditsentence.AddEditSentencePresenter;
+import com.englishlearn.myapplication.clipboard.ClipboardActivity;
 import com.englishlearn.myapplication.core.MdictManager;
 import com.englishlearn.myapplication.dialog.SentenceCollectGroupsSelectFragment;
 import com.englishlearn.myapplication.dialog.SentenceDetailFragment;
@@ -141,6 +142,7 @@ public interface AppComponent {
 
     void inject(DownloadManagerObserver downloadManagerObserver);
 
+    void inject(ClipboardActivity clipboardActivity);
 
 
 }

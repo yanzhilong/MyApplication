@@ -214,10 +214,9 @@
             android:name=".musicplay.MusicPlayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".clipblard.ClipboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".clipboard.ClipboardActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/Clipboard.Translucent"
             android:screenOrientation="portrait"></activity>
     </application>
 
