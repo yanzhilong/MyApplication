@@ -828,4 +828,14 @@ public class RemoteDataSource implements RemoteData {
     public Observable<List<DownloadStatus>> getDownloadList() {
         return null;
     }
+
+    @Override
+    public void saveSentenceGroups(String userId, List<SentenceGroup> sentenceGroups) {
+
+    }
+
+    @Override
+    public List<SentenceGroup> getSentenceGroupByUserId(String userId) {
+        return null;
+    }
 }

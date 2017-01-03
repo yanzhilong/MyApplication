@@ -18,6 +18,7 @@ package com.englishlearn.myapplication.data.source;
 
 
 import com.englishlearn.myapplication.core.DownloadStatus;
+import com.englishlearn.myapplication.data.SentenceGroup;
 
 import java.util.List;
 
@@ -30,30 +31,21 @@ public interface
 
 DataSource {
 
-    /*Observable<List<Sentence>> getSentencesRx(int page,int pageSize);
-
-    Observable<List<Sentence>> getSentencesRx(String searchword,int page,int pageSize);
-
-    Observable<List<Grammar>> getGrammarsRx();
-
-    Observable<List<Grammar>> getGrammarsRx(int page,int pageSize);
-
-    Observable<Sentence> getSentenceRxById(String id);
-
-    Observable<Grammar> getGrammarRxById(String id);
-
-    Observable<Boolean> addSentenceRx(Sentence sentence);
-
-    Observable<Boolean> addGrammarRx(Grammar grammar);
-
-    Observable<Boolean> updateSentenceRx(Sentence sentence);
-
-    Observable<Boolean> updateGrammarRx(Grammar grammar);
-
-    Observable<Boolean> deleteSentenceRxById(String id);
-
-    Observable<Boolean> deleteGrammarRxById(String id);*/
-
 
     Observable<List<DownloadStatus>> getDownloadList();//获得下载列表
+
+
+    /**
+     * 保存句子分组列表
+     * @param sentenceGroups
+     * @return
+     */
+    void saveSentenceGroups(String userId, List<SentenceGroup> sentenceGroups);
+
+    /**
+     * 从本地获取句子分组列表
+     * @param userId
+     * @return
+     */
+    List<SentenceGroup> getSentenceGroupByUserId(String userId);
 }

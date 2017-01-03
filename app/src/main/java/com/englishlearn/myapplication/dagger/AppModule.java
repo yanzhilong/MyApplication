@@ -31,7 +31,7 @@ public class AppModule {
 
     @Provides
     public Repository provideRepository() {
-        return Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication), SharedPreferencesDataSource.getInstance(mApplication));
+        return Repository.getInstance(mApplication,RemoteDataSource.getInstance(), LocalDataSource.getInstance(mApplication), SharedPreferencesDataSource.getInstance(mApplication));
     }
 
     @Provides

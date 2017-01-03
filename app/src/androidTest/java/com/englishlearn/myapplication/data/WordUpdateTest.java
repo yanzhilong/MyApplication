@@ -44,7 +44,7 @@ public class WordUpdateTest {
     @Before
     public void setup() {
         mBmobRemoteData = BmobDataSource.getInstance();
-        mRepository = Repository.getInstance(RemoteDataSource.getInstance(), LocalDataSource.getInstance(context), SharedPreferencesDataSource.getInstance(context));
+        mRepository = Repository.getInstance(context,RemoteDataSource.getInstance(), LocalDataSource.getInstance(context), SharedPreferencesDataSource.getInstance(context));
         context = InstrumentationRegistry.getTargetContext();
     }
 

@@ -16,6 +16,8 @@
 
 package com.englishlearn.myapplication.data.source;
 
+import android.content.Context;
+
 import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.data.BmobFile;
 import com.englishlearn.myapplication.data.Dict;
@@ -38,6 +40,8 @@ import com.englishlearn.myapplication.data.Word;
 import com.englishlearn.myapplication.data.WordCollect;
 import com.englishlearn.myapplication.data.WordGroup;
 import com.englishlearn.myapplication.data.WordGroupCollect;
+import com.englishlearn.myapplication.data.source.cache.ACache;
+import com.englishlearn.myapplication.data.source.cache.CacheDataSource;
 import com.englishlearn.myapplication.data.source.local.LocalData;
 import com.englishlearn.myapplication.data.source.preferences.SharedPreferencesData;
 import com.englishlearn.myapplication.data.source.remote.RemoteData;
@@ -52,6 +56,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 public class Repository implements DataSource,RemoteData,LocalData,SharedPreferencesData {
 
@@ -63,26 +68,33 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
 
     private final RemoteData mBmobDataSource;
 
+    private final CacheDataSource cacheDataSource;
+
     private final SharedPreferencesData mSharedPreferencesData;
 
+    private ACache mCache;
 
+    private Context mContext;
 
     boolean mCacheIsDirty = false;
 
-    private Repository(RemoteData remoteDataSource,
+    private Repository(Context context, RemoteData remoteDataSource,
                        LocalData localDataSource,
                        SharedPreferencesData sharedPreferencesData) {
+        mContext = context;
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
         mSharedPreferencesData = sharedPreferencesData;
         mBmobDataSource = BmobDataSource.getInstance();
+        cacheDataSource = CacheDataSource.getInstance();
+        mCache = ACache.get(mContext);
     }
 
-    public static Repository getInstance(RemoteData remoteData,
+    public static Repository getInstance(Context context, RemoteData remoteData,
                                          LocalData localData,
                                          SharedPreferencesData sharedPreferencesData) {
         if (INSTANCE == null) {
-            INSTANCE = new Repository(remoteData, localData,sharedPreferencesData);
+            INSTANCE = new Repository(context,remoteData, localData,sharedPreferencesData);
         }
         return INSTANCE;
     }
@@ -620,8 +632,15 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     }
 
     @Override
-    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(String userId) {
-        return mBmobDataSource.getSentenceGroupRxByUserId(userId);
+    public Observable<List<SentenceGroup>> getSentenceGroupRxByUserId(final String userId) {
+        return mBmobDataSource.getSentenceGroupRxByUserId(userId).map(new Func1<List<SentenceGroup>, List<SentenceGroup>>() {
+            @Override
+            public List<SentenceGroup> call(List<SentenceGroup> sentenceGroups) {
+
+                saveSentenceGroups(userId,sentenceGroups);
+                return sentenceGroups;
+            }
+        });
     }
 
     @Override
@@ -962,5 +981,15 @@ public class Repository implements DataSource,RemoteData,LocalData,SharedPrefere
     @Override
     public Observable<List<DownloadStatus>> getDownloadList() {
         return mLocalDataSource.getDownloadList();
+    }
+
+    @Override
+    public void saveSentenceGroups(String userId,List<SentenceGroup> sentenceGroups) {
+        cacheDataSource.saveSentenceGroups(userId,sentenceGroups);
+    }
+
+    @Override
+    public List<SentenceGroup> getSentenceGroupByUserId(String userId) {
+        return cacheDataSource.getSentenceGroupByUserId(userId);
     }
 }

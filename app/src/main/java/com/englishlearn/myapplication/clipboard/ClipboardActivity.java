@@ -278,6 +278,12 @@ public class ClipboardActivity extends AppCompatActivity {
 
     private void getSentenceGroup(){
 
+        List<SentenceGroup> list = repository.getSentenceGroupByUserId(repository.getUserInfo().getObjectId());
+        if(list != null){
+            showSentenceGroups(list);
+            return;
+        }
+
         Subscription subscription = repository.getSentenceGroupRxByUserId(repository.getUserInfo().getObjectId()).subscribe(new Subscriber<List<SentenceGroup>>() {
             @Override
             public void onCompleted() {
@@ -290,18 +296,22 @@ public class ClipboardActivity extends AppCompatActivity {
 
             @Override
             public void onNext(List<SentenceGroup> list) {
-                mSentenceGroups = list;
-                sentencegrouparray = new String[list.size()];
-                for(int i = 0; i < list.size(); i++){
-                    sentencegrouparray[i] = list.get(i).getName();
-                }
-                adapter = new ArrayAdapter<String>(
-                        ClipboardActivity.this, android.R.layout.simple_spinner_item,
-                        sentencegrouparray);
-                sentencegroup.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
             }
         });
+    }
+
+    private void showSentenceGroups(List<SentenceGroup> list){
+        mSentenceGroups = list;
+        sentencegrouparray = new String[list.size()];
+        for(int i = 0; i < list.size(); i++){
+            sentencegrouparray[i] = list.get(i).getName();
+        }
+        adapter = new ArrayAdapter<String>(
+                ClipboardActivity.this, android.R.layout.simple_spinner_item,
+                sentencegrouparray);
+        sentencegroup.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     /**

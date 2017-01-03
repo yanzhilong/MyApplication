@@ -22,6 +22,7 @@ import android.util.Log;
 
 import com.englishlearn.myapplication.core.DownloadStatus;
 import com.englishlearn.myapplication.core.DownloadUtil;
+import com.englishlearn.myapplication.data.SentenceGroup;
 import com.englishlearn.myapplication.util.RxUtil;
 
 import java.util.List;
@@ -68,5 +69,15 @@ public class LocalDataSource implements LocalData {
                 return Observable.just(downloadStatusList);
             }
         }).compose(RxUtil.<List<DownloadStatus>>applySchedulers());
+    }
+
+    @Override
+    public void saveSentenceGroups(String userId, List<SentenceGroup> sentenceGroups) {
+
+    }
+
+    @Override
+    public List<SentenceGroup> getSentenceGroupByUserId(String userId) {
+        return null;
     }
 }
