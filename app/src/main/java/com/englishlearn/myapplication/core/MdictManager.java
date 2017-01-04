@@ -2,7 +2,6 @@ package com.englishlearn.myapplication.core;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 import com.englishlearn.myapplication.MyApplication;
@@ -17,7 +16,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,10 +38,8 @@ public class MdictManager {
     private static MdictManager mdictManager;
     private Context context;
     private MDictApp theApp;
-    private MdxDictBase mainDict;
     private HashMap<String, MDict> dictMap;//保存词典
     private HashMap<String, DictEntry> dictEntryMap;//保存词典
-    private TextToSpeech ttsEngine = null;//tts播放引擎
 
     @Inject
     Repository repository;
@@ -53,19 +49,6 @@ public class MdictManager {
         this.context = context;
         dictMap = new HashMap<>();
         dictEntryMap = new HashMap<>();
-        ttsEngine = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.ERROR) {
-                    if (ttsEngine != null) {
-                        ttsEngine.shutdown();
-                        ttsEngine = null;
-                    }
-                } else {
-                    ttsEngine.setLanguage(new Locale("en_GB"));
-                }
-            }
-        });
     }
 
     public static synchronized MdictManager newInstance(Context context) {
@@ -159,8 +142,6 @@ public class MdictManager {
             e.printStackTrace();
         }
         mDict.setWord(word);
-        mDict.setUseTTS(true);
-        mDict.setTtsEngine(ttsEngine);
         return mDict;
     }
 

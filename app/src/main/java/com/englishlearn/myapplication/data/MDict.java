@@ -1,7 +1,6 @@
 package com.englishlearn.myapplication.data;
 
 import android.os.Environment;
-import android.speech.tts.TextToSpeech;
 
 import com.englishlearn.myapplication.config.ApplicationConfig;
 
@@ -28,9 +27,6 @@ public class MDict implements Serializable,Cloneable {
     private DictEntry dictEntry;
     private MdxDictBase mdxDictBase;
     private Word word;//当前单词
-    private TextToSpeech ttsEngine = null;//tts播放引擎
-    private boolean useTTS;//如果没有音频则使用tts播放
-
     public DictEntry getDictEntry() {
         return dictEntry;
     }
@@ -55,47 +51,18 @@ public class MDict implements Serializable,Cloneable {
         this.word = word;
     }
 
-    public TextToSpeech getTtsEngine() {
-        return ttsEngine;
-    }
-
-    public void setTtsEngine(TextToSpeech ttsEngine) {
-        this.ttsEngine = ttsEngine;
-    }
-
-    public boolean isUseTTS() {
-        return useTTS;
-    }
-
-    public void setUseTTS(boolean useTTS) {
-        this.useTTS = useTTS;
-    }
-
     //播放声音
-    public void play(boolean isUk) {
+    public boolean play(boolean isUk) {
         if (dictEntry != null && dictEntry.isValid()
                 && dictEntry.getHeadword().length() != 0) {
 
             String headWord = isUk ? dictEntry.getHeadword() + ApplicationConfig.MDDUK : dictEntry.getHeadword();
-            if (!MiscUtils
-                    .playAudioForWord(mdxDictBase, dictEntry.getDictId(), headWord)
-                    && ttsEngine != null && useTTS) {
-                String headword = dictEntry.getHeadword().trim();
-                StringBuilder hw = new StringBuilder(dictEntry.getHeadword()
-                        .length());
-                char c;
-                for (int i = 0; i < headword.length(); ++i) {
-                    c = headword.charAt(i);
-                    if (c == ' ' || c >= '1')
-                        hw.append(c);
-                }
-                if (hw.length() > 0)
-                    ttsEngine.speak(hw.toString(), TextToSpeech.QUEUE_FLUSH,
-                            null);
-                else
-                    ttsEngine.speak(headword, TextToSpeech.QUEUE_FLUSH, null);
+            if (MiscUtils
+                    .playAudioForWord(mdxDictBase, dictEntry.getDictId(), headWord)) {
+                return true;
             }
         }
+        return false;
     }
 
     //保存当前声音文件
