@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,6 +27,7 @@ import com.englishlearn.myapplication.dict.DictActivity;
 import com.englishlearn.myapplication.elementary.ElementaryFragment;
 import com.englishlearn.myapplication.intermediate.IntermediateFragment;
 import com.englishlearn.myapplication.setting.SettingActivity;
+import com.englishlearn.myapplication.util.ActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,12 +93,19 @@ public class MainActivity extends AppCompatActivity
 
         //selectItem(NavigationActivitysEnum.LEARN);
 
+
+        ElementaryFragment elementaryFragment = (ElementaryFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (elementaryFragment == null) {
+            elementaryFragment = ElementaryFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), elementaryFragment, R.id.contentFrame);
+        }
+
         //ViewPager
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        /*ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         android.support.design.widget.TabLayout tableLayout = (android.support.design.widget.TabLayout) findViewById(R.id.tabLayout);
         viewPager.setAdapter(new MainFragmentPagerAdapter(this.getSupportFragmentManager()));
         tableLayout.setupWithViewPager(viewPager);
-        tableLayout.getTabTextColors();
+        tableLayout.getTabTextColors();*/
 
         //检查用户
         checkoutLogin();
